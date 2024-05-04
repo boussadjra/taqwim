@@ -1,0 +1,37 @@
+{
+  "name": "@taqwim/core-utils",
+  "version": "0.0.1",
+  "description": "Date utils",
+  "main": "dist/index.mjs",
+  "typings": "dist/index.d.mts",
+  "module": "dist/index.mjs",
+  "license": "MIT",
+  "keywords": [],
+  "scripts": {
+    "build": "rimraf dist && tsup",
+    "test": "vitest",
+    "dev": "vite",
+    "preview": "vite preview"
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "devDependencies": {
+    "date-fns": "^3.6.0",
+    "tsup": "^8.0.2"
+  },
+  "files": [
+    "build/main",
+    "build/module",
+    "!**/*.spec.*",
+    "!**/*.json",
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md"
+  ],
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  }
+}

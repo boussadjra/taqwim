@@ -1,0 +1,30 @@
+{
+  "name": "@taqwim",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "vue:dev": "pnpm --filter @taqwim/vue-date-picker dev",
+    "vue:build": "pnpm --filter @taqwim/vue-date-picker build",
+    "docs:dev": "pnpm --filter @taqwim/docs docs:dev",
+    "docs:build": "pnpm --filter @taqwim/docs docs:build",
+    "core:dev": "pnpm --filter @taqwim/core-utils dev",
+    "core:build": "pnpm --filter @taqwim/core-utils build",
+    "core:test": "pnpm --filter @taqwim/core-utils test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@biomejs/biome": "^1.7.2",
+    "@taqwim/core-utils": "workspace:^",
+    "cspell": "^8.8.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "rimraf": "^5.0.5",
+    "ts-node": "^10.9.2",
+    "typedoc": "^0.25.13",
+    "typescript": "~5.4.5",
+    "vitest": "^1.6.0",
+    "vite": "^5.2.10"
+  }
+}
