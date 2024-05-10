@@ -10,8 +10,10 @@
   "scripts": {
     "build": "rimraf dist && tsup",
     "test": "vitest",
+    "test:ui": "vitest --ui",
     "dev": "vite",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:api": "jsdoc2md example.js > API.md"
   },
   "engines": {
     "node": ">=10"

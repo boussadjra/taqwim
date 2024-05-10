@@ -198,3 +198,22 @@ export interface IUtils<TDate, TLocale> {
   /** Allow to customize displaying "am/pm" strings */
   getMeridiemText(ampm: "am" | "pm"): string;
 }
+
+
+
+
+export function createUtils<TDate, TLocale>(options?: ConstructorOptions<TLocale>): IUtils<TDate, TLocale> {
+  const { formats, locale, instance } = options || {};
+
+  return {
+    formats: formats || {},
+    locale: locale,
+    lib: instance ? instance.lib : 'default',
+
+    date: (value) => {
+
+    },
+    toJsDate: (value) => {
+    },
+  };
+}

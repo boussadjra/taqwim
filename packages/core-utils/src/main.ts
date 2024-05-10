@@ -1,6 +1,7 @@
-import { toHijri } from ".";
+import { toGregorian } from ".";
 
-console.log("core-utils");
-const gregorianDate = new Date(2024, 2, 11); // 2024-03-10
-const result = toHijri(gregorianDate);
-console.log("result", result);
+const hijriYear = 1445;
+const hijriMonth = 9;
+
+const result1 = toGregorian(hijriYear, hijriMonth);
+console.log(result1);
