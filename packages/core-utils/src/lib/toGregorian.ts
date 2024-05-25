@@ -1,11 +1,5 @@
 import { set, addDays, toDate } from "date-fns";
-import { hDatesTable, isValidHijriDate } from ".";
-
-interface HijriDateObject {
-	hy: number;
-	hm: number;
-	hd: number;
-}
+import { type HijriDateObject, hDatesTable, isValidHijriDate } from ".";
 
 export function toGregorian(date: HijriDateObject): Date | null;
 export function toGregorian(hy: number, hm: number, hd: number): Date | null;
@@ -18,51 +12,51 @@ export function toGregorian(hy: number, hm: number, hd: number): Date | null;
  * @throws Error if the arguments are invalid or the Hijri date is invalid.
  */
 export function toGregorian(
-	dateOrHy: HijriDateObject | number,
-	hm?: number,
-	hd?: number,
+  dateOrHy: HijriDateObject | number,
+  hm?: number,
+  hd?: number
 ): Date | null {
-	let hijriYear: number;
-	let hijriMonth: number;
-	let hijriDay: number;
+  let hijriYear: number;
+  let hijriMonth: number;
+  let hijriDay: number;
 
-	if (typeof dateOrHy === "number") {
-		if (hm === undefined || hd === undefined) {
-			throw new Error("Invalid arguments");
-		}
-		hijriYear = dateOrHy;
-		hijriMonth = hm;
-		hijriDay = hd;
-	} else {
-		hijriYear = dateOrHy.hy;
-		hijriMonth = dateOrHy.hm;
-		hijriDay = dateOrHy.hd;
-	}
+  if (typeof dateOrHy === "number") {
+    if (hm === undefined || hd === undefined) {
+      throw new Error("Invalid arguments");
+    }
+    hijriYear = dateOrHy;
+    hijriMonth = hm;
+    hijriDay = hd;
+  } else {
+    hijriYear = dateOrHy.hy;
+    hijriMonth = dateOrHy.hm;
+    hijriDay = dateOrHy.hd;
+  }
 
-	//validate hijri date
-	if (!isValidHijriDate(hijriYear, hijriMonth, hijriDay)) {
-		throw new Error("Invalid Hijri date");
-	}
+  //validate hijri date
+  if (!isValidHijriDate(hijriYear, hijriMonth, hijriDay)) {
+    throw new Error("Invalid Hijri date");
+  }
 
-	const hijriYearRecord = hDatesTable.find((record) => record.hy === hijriYear);
+  const hijriYearRecord = hDatesTable.find((record) => record.hy === hijriYear);
 
-	if (hijriYearRecord) {
-		let totalDaysTillMonthStart = 0;
-		for (let i = 0; i < hijriMonth - 1; i++) {
-			totalDaysTillMonthStart += (hijriYearRecord.dpm >> i) & 1 ? 30 : 29;
-		}
+  if (hijriYearRecord) {
+    let totalDaysTillMonthStart = 0;
+    for (let i = 0; i < hijriMonth - 1; i++) {
+      totalDaysTillMonthStart += (hijriYearRecord.dpm >> i) & 1 ? 30 : 29;
+    }
 
-		const totalDays = totalDaysTillMonthStart + hijriDay - 1;
+    const totalDays = totalDaysTillMonthStart + hijriDay - 1;
 
-		const startDate = set(new Date(), {
-			year: hijriYearRecord.gy,
-			month: hijriYearRecord.gm - 1,
-			date: hijriYearRecord.gd,
-		});
-		const gregorianDate = addDays(startDate, totalDays);
+    const startDate = set(new Date(), {
+      year: hijriYearRecord.gy,
+      month: hijriYearRecord.gm - 1,
+      date: hijriYearRecord.gd,
+    });
+    const gregorianDate = addDays(startDate, totalDays);
 
-		return toDate(gregorianDate);
-	}
+    return toDate(gregorianDate);
+  }
 
-	return null;
+  return null;
 }

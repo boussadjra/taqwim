@@ -21,6 +21,7 @@
     "@biomejs/biome": "^1.7.2",
     "@taqwim/core-utils": "workspace:^",
     "@types/node": "^20.12.7",
+    "@vitest/ui": "^1.6.0",
     "cspell": "^8.8.0",
     "cz-conventional-changelog": "^3.3.0",
     "rimraf": "^5.0.5",

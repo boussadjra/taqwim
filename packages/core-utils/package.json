@@ -18,8 +18,10 @@
   "engines": {
     "node": ">=10"
   },
+  "dependencies": {
+    "date-fns": "^3.6.0"
+  },
   "devDependencies": {
-    "date-fns": "^3.6.0",
     "tsup": "^8.0.2"
   },
   "files": [

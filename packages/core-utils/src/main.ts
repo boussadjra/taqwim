@@ -1,7 +1,7 @@
-import { toGregorian } from ".";
+import { addHijriMonths, toGregorian } from "./lib";
 
-const hijriYear = 1445;
-const hijriMonth = 9;
+const date = { hy: 1445, hm: 9, hd: 30 };
 
-const result1 = toGregorian(hijriYear, hijriMonth);
-console.log(result1);
+console.log(addHijriMonths(date, 100));
+console.log(toGregorian({ hy: 1454, hm: 1, hd: 29 }));
+console.log(toGregorian(addHijriMonths(date, 100)));
