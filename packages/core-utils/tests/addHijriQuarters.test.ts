@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { addHijriQuarters } from "../src/lib/addQuarters";
+import { addHijriQuarters } from "../src/lib/addHijriQuarters";
 
 describe("addHijriQuarters", () => {
   it("should add 2 quarters to the given Hijri date", () => {
