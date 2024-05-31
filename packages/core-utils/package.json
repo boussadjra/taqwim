@@ -3,9 +3,17 @@
   "version": "0.0.1-alpha.7",
   "private": false,
   "description": "Hijri Date utils",
-  "main": "dist/taqwim-core-utils",
+  "main": "dist/taqwim-core-utils.mjs",
   "typings": "dist/index.d.mts",
-  "module": "dist/taqwim-core-utils",
+  "module": "dist/taqwim-core-utils.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/taqwim-core-utils.mjs",
+      "require": "./dist/taqwim-core-utils.umd.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./*": "./dist/taqwim-core-utils.mjs"
+  },
   "license": "MIT",
   "keywords": [],
   "scripts": {
@@ -28,10 +36,7 @@
     "tsup": "^8.0.2"
   },
   "files": [
-    "build/main",
-    "build/module",
-    "!**/*.spec.*",
-    "!**/*.json",
+    "dist/**/*",
     "CHANGELOG.md",
     "LICENSE",
     "README.md"
