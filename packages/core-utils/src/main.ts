@@ -1,7 +1,10 @@
-import { addHijriMonths, toGregorian } from "./lib";
+import { addHijriMonths, formatHijriDate } from "./lib";
 
-const date = { hy: 1445, hm: 9, hd: 30 };
+const hijriDate = { hy: 1445, hm: 9, hd: 1 };
+const formatStr = " dd MMMM, yyyy ";
+const locale = "en";
+const expectedFormattedDate = "1 Ramadan, 1445 (2 April, 2024)";
 
-console.log(addHijriMonths(date, 100));
-console.log(toGregorian({ hy: 1454, hm: 1, hd: 29 }));
-console.log(toGregorian(addHijriMonths(date, 100)));
+const formattedDate = formatHijriDate(hijriDate, formatStr, locale);
+
+console.log(formattedDate);

@@ -18,7 +18,7 @@ The locale for which to retrieve the data.
 
 • **key**: `"day"` \| `"month"` \| `"year"` \| `"week"` \| `"monthsLong"` \| `"monthsMedium"` \| `"monthsShort"` \| `"weekDaysLong"` \| `"weekDaysMedium"` \| `"weekDaysShort"` \| `"today"` \| `"from"` \| `"to"`
 
-The key indicating the specific data to retrieve, such as "monthsLong" or "weekDaysShort".
+The key indicating the specific data to retrieve.
 
 ## Returns
 

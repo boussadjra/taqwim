@@ -1,7 +1,6 @@
-import { defineConfig, useData } from "vitepress";
+import { defineConfig } from "vitepress";
 
-const { site } = useData();
-console.log("site ", site.value);
+
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({

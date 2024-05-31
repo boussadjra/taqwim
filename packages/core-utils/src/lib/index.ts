@@ -19,4 +19,5 @@ export * from "./subHijriMonths";
 export * from "./subHijriQuarters";
 export * from "./subHijriYears";
 export * from "./getDaysLengthInMonth";
+export * from "./formatHijriDate";
 export * from "./types";
