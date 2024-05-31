@@ -15,7 +15,8 @@
     "dev": "vite",
     "preview": "vite preview",
     "build:api": "jsdoc2md example.js > API.md",
-    "publish": "pnpm publish --access public"
+    "publish": "pnpm publish --access public",
+    "analyse": "vite-bundle-visualizer dist --port 3000"
   },
   "engines": {
     "node": ">=10"

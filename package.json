@@ -15,6 +15,7 @@
     "core:test:ui": "pnpm --filter taqwim-core-utils test:ui",
     "core:publish": "pnpm --filter taqwim-core-utils publish",
     "core:build:api": "typedoc --excludeNotDocumented",
+    "core:analyse": "pnpm --filter taqwim-core-utils analyse",
     "release": "bumpp package.json packages/**/package.json docs/package.json --tag --tag-name v${version}"
   },
   "keywords": [],
