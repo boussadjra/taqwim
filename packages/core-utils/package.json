@@ -1,5 +1,5 @@
 {
-  "name": "@taqwim/core-utils",
+  "name": "taqwim-core-utils",
   "version": "0.0.1-alpha.3",
   "private": false,
   "description": "Hijri Date utils",

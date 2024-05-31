@@ -1,3 +1,3 @@
-# @taqwim/core-utils
+# taqwim-core-utils
 
 Hijri date utils
