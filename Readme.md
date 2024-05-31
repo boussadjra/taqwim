@@ -7,13 +7,13 @@ Taqwim provides a collection of utilities and components designed for managing H
 ## Installation
 
 ```bash
-npm install @taqwim/core-utils
+npm install taqwim-core-utils
 ```
 
 ## Usage
 
 ```javascript
-import { toHijri } from '@taqwim/core-utils';
+import { toHijri } from 'taqwim-core-utils';
 
 const gregorianDate = new Date('2024-03-11');
 

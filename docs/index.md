@@ -3,7 +3,7 @@
 layout: home
 
 hero:
-  name: "@taqwim/docs"
+  name: "taqwim-docs"
   text: "Docs for taqwim date picker and calendar"
   tagline:  "A modern date utility library for frontend"
   actions:

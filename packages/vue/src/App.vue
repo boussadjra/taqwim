@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {double} from '@taqwim/core-utils'
+import {double} from 'taqwim-core-utils'
 </script>
 
 <template>

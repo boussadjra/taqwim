@@ -1,8 +1,8 @@
-[**@taqwim/core-utils**](../README.md) • **Docs**
+[**taqwim-core-utils**](../README.md) • **Docs**
 
 ***
 
-[@taqwim/core-utils](../globals.md) / subHijriMonths
+[taqwim-core-utils](../globals.md) / subHijriMonths
 
 # Function: subHijriMonths()
 

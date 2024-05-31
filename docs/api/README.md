@@ -1,7 +1,7 @@
-**@taqwim/core-utils** • [**Docs**](globals.md)
+**taqwim-core-utils** • [**Docs**](globals.md)
 
 ***
 
-# @taqwim/core-utils
+# taqwim-core-utils
 
 Hijri date utils

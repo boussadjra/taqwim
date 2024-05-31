@@ -1,8 +1,8 @@
-[**@taqwim/core-utils**](../README.md) • **Docs**
+[**taqwim-core-utils**](../README.md) • **Docs**
 
 ***
 
-[@taqwim/core-utils](../globals.md) / subHijriBusinessDays
+[taqwim-core-utils](../globals.md) / subHijriBusinessDays
 
 # Function: subHijriBusinessDays()
 

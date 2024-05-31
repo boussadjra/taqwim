@@ -1,8 +1,8 @@
-[**@taqwim/core-utils**](../README.md) • **Docs**
+[**taqwim-core-utils**](../README.md) • **Docs**
 
 ***
 
-[@taqwim/core-utils](../globals.md) / getLocaleData
+[taqwim-core-utils](../globals.md) / getLocaleData
 
 # Function: getLocaleData()
 

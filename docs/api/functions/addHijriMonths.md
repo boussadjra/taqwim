@@ -1,8 +1,8 @@
-[**@taqwim/core-utils**](../README.md) • **Docs**
+[**taqwim-core-utils**](../README.md) • **Docs**
 
 ***
 
-[@taqwim/core-utils](../globals.md) / addHijriMonths
+[taqwim-core-utils](../globals.md) / addHijriMonths
 
 # Function: addHijriMonths()
 

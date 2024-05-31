@@ -1,8 +1,8 @@
-[**@taqwim/core-utils**](../README.md) • **Docs**
+[**taqwim-core-utils**](../README.md) • **Docs**
 
 ***
 
-[@taqwim/core-utils](../globals.md) / toHijri
+[taqwim-core-utils](../globals.md) / toHijri
 
 # Function: toHijri()
 

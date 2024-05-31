@@ -1,8 +1,8 @@
-[**@taqwim/core-utils**](README.md) • **Docs**
+[**taqwim-core-utils**](README.md) • **Docs**
 
 ***
 
-# @taqwim/core-utils
+# taqwim-core-utils
 
 ## Day Helpers
 
