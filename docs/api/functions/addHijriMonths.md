@@ -57,4 +57,4 @@ const result = addHijriMonths(
 
 ## Source
 
-addHijriMonths.ts:39
+[addHijriMonths.ts:39](https://github.com/boussadjra/taqwim/blob/b6011f3ed342a975f52680743fe89e4925ba0553/packages/core-utils/src/lib/addHijriMonths.ts#L39)

@@ -28,4 +28,4 @@ The length of the month in days. Returns -1 if the month is invalid.
 
 ## Source
 
-getDaysLengthInMonth.ts:9
+[getDaysLengthInMonth.ts:9](https://github.com/boussadjra/taqwim/blob/b6011f3ed342a975f52680743fe89e4925ba0553/packages/core-utils/src/lib/getDaysLengthInMonth.ts#L9)

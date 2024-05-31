@@ -1,6 +1,6 @@
 {
   "name": "@taqwim/docs",
-  "version": "0.0.1",
+  "version": "0.0.1-alpha.0",
   "scripts": {
     "docs:dev": "vitepress dev --port 1444",
     "docs:build": "vitepress build",

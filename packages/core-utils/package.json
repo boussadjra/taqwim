@@ -1,7 +1,7 @@
 {
   "name": "@taqwim/core-utils",
-  "version": "0.0.1",
-  "description": "Date utils",
+  "version": "0.0.1-alpha.0",
+  "description": "Hijri Date utils",
   "main": "dist/index.mjs",
   "typings": "dist/index.d.mts",
   "module": "dist/index.mjs",
@@ -13,7 +13,8 @@
     "test:ui": "vitest --ui",
     "dev": "vite",
     "preview": "vite preview",
-    "build:api": "jsdoc2md example.js > API.md"
+    "build:api": "jsdoc2md example.js > API.md",
+    "publish": "pnpm publish --access public"
   },
   "engines": {
     "node": ">=10"

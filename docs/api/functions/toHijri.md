@@ -28,7 +28,7 @@ If the input is invalid or the conversion fails.
 
 ### Source
 
-toHijri.ts:10
+[toHijri.ts:10](https://github.com/boussadjra/taqwim/blob/b6011f3ed342a975f52680743fe89e4925ba0553/packages/core-utils/src/lib/toHijri.ts#L10)
 
 ## toHijri(year, month, day)
 
@@ -60,7 +60,7 @@ If the input is invalid or the conversion fails.
 
 ### Source
 
-toHijri.ts:13
+[toHijri.ts:13](https://github.com/boussadjra/taqwim/blob/b6011f3ed342a975f52680743fe89e4925ba0553/packages/core-utils/src/lib/toHijri.ts#L13)
 
 ## toHijri(date)
 
@@ -84,4 +84,4 @@ If the input is invalid or the conversion fails.
 
 ### Source
 
-toHijri.ts:18
+[toHijri.ts:18](https://github.com/boussadjra/taqwim/blob/b6011f3ed342a975f52680743fe89e4925ba0553/packages/core-utils/src/lib/toHijri.ts#L18)

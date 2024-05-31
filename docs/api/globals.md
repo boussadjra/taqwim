@@ -18,6 +18,7 @@
 - [addHijriQuarters](functions/addHijriQuarters.md)
 - [addHijriWeeks](functions/addHijriWeeks.md)
 - [addHijriYears](functions/addHijriYears.md)
+- [formatHijriDate](functions/formatHijriDate.md)
 - [getDaysLengthInMonth](functions/getDaysLengthInMonth.md)
 - [getLocaleData](functions/getLocaleData.md)
 - [isValidHijriDate](functions/isValidHijriDate.md)

@@ -30,7 +30,7 @@ A boolean indicating whether the Hijri date is valid or not.
 
 ### Source
 
-isValidHijriDate.ts:4
+[isValidHijriDate.ts:4](https://github.com/boussadjra/taqwim/blob/b6011f3ed342a975f52680743fe89e4925ba0553/packages/core-utils/src/lib/isValidHijriDate.ts#L4)
 
 ## isValidHijriDate(date, separator)
 
@@ -52,7 +52,7 @@ A boolean indicating whether the Hijri date is valid or not.
 
 ### Source
 
-isValidHijriDate.ts:9
+[isValidHijriDate.ts:9](https://github.com/boussadjra/taqwim/blob/b6011f3ed342a975f52680743fe89e4925ba0553/packages/core-utils/src/lib/isValidHijriDate.ts#L9)
 
 ## isValidHijriDate(hy, hm, hd)
 
@@ -82,4 +82,4 @@ A boolean indicating whether the Hijri date is valid or not.
 
 ### Source
 
-isValidHijriDate.ts:10
+[isValidHijriDate.ts:10](https://github.com/boussadjra/taqwim/blob/b6011f3ed342a975f52680743fe89e4925ba0553/packages/core-utils/src/lib/isValidHijriDate.ts#L10)

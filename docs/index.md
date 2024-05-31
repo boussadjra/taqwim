@@ -13,7 +13,9 @@ hero:
     - theme: alt
       text: API Reference
       link: /api/convert
-
+  image:
+    src: /assets/logo.svg
+    alt: Taqwim
 features:
   - title: Agnostic
     details: Agnostic utility library for date and time manipulation in frontend

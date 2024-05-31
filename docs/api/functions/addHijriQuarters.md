@@ -48,4 +48,4 @@ const result = addHijriQuarters(
 
 ## Source
 
-addHijriQuarters.ts:23
+[addHijriQuarters.ts:23](https://github.com/boussadjra/taqwim/blob/b6011f3ed342a975f52680743fe89e4925ba0553/packages/core-utils/src/lib/addHijriQuarters.ts#L23)

@@ -14,6 +14,7 @@ export default defineConfig({
 	},
 	themeConfig: {
 		// https://vitepress.dev/reference/default-theme-config
+		logo: "../assets/logo.svg",
 		nav: [
 			{ text: "Home", link: "/get-started" },
 			{ text: "API", link: "/api/convert" },
@@ -36,7 +37,7 @@ export default defineConfig({
 		siteTitle: "@taqwim/docs",
 
 		socialLinks: [
-			{ icon: "github", link: "https://github.com/vuejs/vitepress" },
+			{ icon: "github", link: "https://github.com/boussadjra/taqwim" },
 		],
 	},
 });

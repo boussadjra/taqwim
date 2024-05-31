@@ -48,4 +48,4 @@ const result = subHijriBusinessDays(
 
 ## Source
 
-subHijriBusinessDays.ts:32
+[subHijriBusinessDays.ts:32](https://github.com/boussadjra/taqwim/blob/b6011f3ed342a975f52680743fe89e4925ba0553/packages/core-utils/src/lib/subHijriBusinessDays.ts#L32)

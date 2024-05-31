@@ -28,4 +28,4 @@ The locale data as an array of strings or a single string.
 
 ## Source
 
-getLocaleData.ts:13
+[getLocaleData.ts:13](https://github.com/boussadjra/taqwim/blob/b6011f3ed342a975f52680743fe89e4925ba0553/packages/core-utils/src/lib/getLocaleData.ts#L13)
