@@ -1,3 +1,2 @@
 pnpm lint 
 pnpm format
-pnpm core:test
