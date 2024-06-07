@@ -1,9 +1,4 @@
-import {
-  isValidHijriDate,
-  hDatesTable,
-  type HijriDateObject,
-  getDaysLengthInMonth,
-} from ".";
+import { isValidHijriDate, hDatesTable, type HijriDateObject, getDaysLengthInMonth } from '.'
 
 /**
  * Adds a specified number of Months to a Hijri date.
@@ -36,28 +31,23 @@ import {
  * );
  * //=> { hy: 1447, hm: 12, hd: 29 }
  */
-export function addHijriMonths(
-  date: HijriDateObject,
-  amount: number
-): HijriDateObject | null {
+export function addHijriMonths(date: HijriDateObject, amount: number): HijriDateObject | null {
   if (date && isValidHijriDate(date)) {
-    const newDate = { ...date };
-    newDate.hm += amount;
+    const newDate = { ...date }
+    newDate.hm += amount
     while (newDate.hm > 12) {
-      newDate.hy++;
-      newDate.hm -= 12;
+      newDate.hy++
+      newDate.hm -= 12
     }
 
-    const hijriYearRecord = hDatesTable.find(
-      (record) => record.hy === newDate.hy
-    );
+    const hijriYearRecord = hDatesTable.find(record => record.hy === newDate.hy)
     if (hijriYearRecord) {
-      const daysInMonth = getDaysLengthInMonth(hijriYearRecord.hy, newDate.hm);
+      const daysInMonth = getDaysLengthInMonth(hijriYearRecord.hy, newDate.hm)
       if (newDate.hd > daysInMonth) {
-        newDate.hd = daysInMonth;
+        newDate.hd = daysInMonth
       }
     }
-    return newDate;
+    return newDate
   }
-  return null;
+  return null
 }

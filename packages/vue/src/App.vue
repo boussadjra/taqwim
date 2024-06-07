@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import {double} from 'taqwim-core-utils'
+import { double } from 'taqwim-core-utils'
 </script>
 
 <template>
-
-  <main>
-   test {{ double(2) }}
-  </main>
+  <main>test {{ double(2) }}</main>
 </template>
 
 <style scoped>

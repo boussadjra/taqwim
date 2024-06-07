@@ -3,9 +3,9 @@
 layout: home
 
 hero:
-  name: "taqwim-docs"
-  text: "Docs for taqwim date picker and calendar"
-  tagline:  "A modern date utility library for frontend"
+  name: 'taqwim-docs'
+  text: 'Docs for taqwim date picker and calendar'
+  tagline: 'A modern date utility library for frontend'
   actions:
     - theme: brand
       text: Get Started

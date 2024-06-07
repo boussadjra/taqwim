@@ -22,12 +22,12 @@ const hijriDate = toHijri(gregorianDate);
 ```bash [npm]
 npm install taqwim-core-utils
 ```
-    
+
 ```bash [pnpm]
 pnpm add taqwim-core-utils
 ```
-    
-```bash  [yarn]
+
+```bash [yarn]
 yarn add taqwim-core-utils
 ```
 
@@ -36,13 +36,13 @@ yarn add taqwim-core-utils
 ## Usage
 
 ```js
-import { toHijri } from 'taqwim-core-utils';
+import { toHijri } from 'taqwim-core-utils'
 
-const gregorianDate = new Date('2024-03-11');
+const gregorianDate = new Date('2024-03-11')
 
-const hijriDate = toHijri(gregorianDate); 
+const hijriDate = toHijri(gregorianDate)
 ```
 
-output : 
+output :
 
     {{ hijriDate}}

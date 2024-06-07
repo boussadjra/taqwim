@@ -1,10 +1,5 @@
-import { subBusinessDays } from "date-fns";
-import {
-  toHijri,
-  toGregorian,
-  isValidHijriDate,
-  type HijriDateObject,
-} from ".";
+import { subBusinessDays } from 'date-fns'
+import { toHijri, toGregorian, isValidHijriDate, type HijriDateObject } from '.'
 
 /**
  * @name subHijriBusinessDays
@@ -29,16 +24,13 @@ import {
  * //=> { hy: 1445, hm: 8, hd: 19 }
  */
 
-export function subHijriBusinessDays(
-  date: HijriDateObject,
-  amount: number
-): HijriDateObject | null {
+export function subHijriBusinessDays(date: HijriDateObject, amount: number): HijriDateObject | null {
   if (date && isValidHijriDate(date)) {
-    const gregorianDate = toGregorian(date);
+    const gregorianDate = toGregorian(date)
     if (gregorianDate) {
-      const newGregorianDate = subBusinessDays(gregorianDate, amount);
-      return toHijri(newGregorianDate);
+      const newGregorianDate = subBusinessDays(gregorianDate, amount)
+      return toHijri(newGregorianDate)
     }
   }
-  return null;
+  return null
 }

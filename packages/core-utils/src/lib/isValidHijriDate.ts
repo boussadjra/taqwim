@@ -1,13 +1,9 @@
 // utils.ts
-import { hDatesTable } from "./hDates";
+import { hDatesTable } from './hDates'
 
-export function isValidHijriDate(date: {
-  hy: number;
-  hm: number;
-  hd: number;
-}): boolean;
-export function isValidHijriDate(date: string, separator?: string): boolean;
-export function isValidHijriDate(hy: number, hm: number, hd: number): boolean;
+export function isValidHijriDate(date: { hy: number; hm: number; hd: number }): boolean
+export function isValidHijriDate(date: string, separator?: string): boolean
+export function isValidHijriDate(hy: number, hm: number, hd: number): boolean
 /**
  * Checks if a given Hijri date is valid.
  *
@@ -19,28 +15,23 @@ export function isValidHijriDate(hy: number, hm: number, hd: number): boolean;
 export function isValidHijriDate(
   hy: number | string | { hy: number; hm: number; hd: number },
   hm?: number | string,
-  hd?: number
+  hd?: number,
 ): boolean {
-  if (typeof hy === "string") {
-    const dateParts = hy.split((hm as string) || "-").map(Number);
-    if (dateParts.length !== 3 || dateParts.some(Number.isNaN)) return false;
-    const [year, month, day] = dateParts;
+  if (typeof hy === 'string') {
+    const dateParts = hy.split((hm as string) || '-').map(Number)
+    if (dateParts.length !== 3 || dateParts.some(Number.isNaN)) return false
+    const [year, month, day] = dateParts
 
-    return isValidHijriDate(year, month, day);
+    return isValidHijriDate(year, month, day)
   }
-  if (typeof hy === "object") {
-    return isValidHijriDate(hy.hy, hy.hm, hy.hd);
+  if (typeof hy === 'object') {
+    return isValidHijriDate(hy.hy, hy.hm, hy.hd)
   }
-  const yearRecord = hDatesTable.find((record) => record.hy === hy);
+  const yearRecord = hDatesTable.find(record => record.hy === hy)
   if (!yearRecord) {
-    return false;
+    return false
   }
 
-  const daysInMonth = (yearRecord.dpm >> ((hm as number) - 1)) & 1 ? 30 : 29;
-  return (
-    (hm as number) >= 1 &&
-    (hm as number) <= 12 &&
-    hd! >= 1 &&
-    hd! <= daysInMonth
-  );
+  const daysInMonth = (yearRecord.dpm >> ((hm as number) - 1)) & 1 ? 30 : 29
+  return (hm as number) >= 1 && (hm as number) <= 12 && hd! >= 1 && hd! <= daysInMonth
 }

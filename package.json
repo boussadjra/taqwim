@@ -5,8 +5,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "vue:dev": "pnpm --filter taqwim-vue-date-picker dev",
-    "vue:build": "pnpm --filter taqwim-vue-date-picker build",
+    "vue:dev": "pnpm --filter taqwim-vue dev",
+    "vue:build": "pnpm --filter taqwim-vue build",
+    "vue:play:dev": "pnpm --filter vue3 dev",
     "docs:dev": "pnpm --filter taqwim-docs docs:dev",
     "docs:build": "pnpm --filter taqwim-docs docs:build",
     "core:dev": "pnpm --filter taqwim-core-utils dev",
@@ -16,28 +17,60 @@
     "core:publish": "pnpm --filter taqwim-core-utils publish",
     "core:build:api": "typedoc --excludeNotDocumented",
     "core:analyse": "pnpm --filter taqwim-core-utils analyse",
-    "release": "bumpp package.json packages/**/package.json docs/package.json --tag --tag-name v${version}"
+    "release": "bumpp package.json packages/**/package.json docs/package.json --tag --tag-name v${version}",
+    "prepare": "husky",
+    "lint": "eslint \"*/**/*.{js,ts,tsx,vue}\" --quiet --fix ",
+    "format": "prettier .  --write"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "taqwim-core-utils": "workspace:^"
+  },
   "devDependencies": {
-    "@biomejs/biome": "^1.7.2",
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2",
+    "@nuxt/eslint-config": "^0.3.13",
     "@types/node": "^20.12.7",
     "@vitest/ui": "^1.6.0",
     "bumpp": "^9.4.1",
-    "cspell": "^8.8.0",
+    "commitizen": "^4.3.0",
+    "cspell": "^8.8.4",
     "cz-conventional-changelog": "^3.3.0",
-    "rimraf": "^5.0.5",
+    "eslint": "^9.4.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-cypress": "^3.3.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-n": "^17.8.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-promise": "^6.2.0",
+    "eslint-plugin-vue": "^9.26.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.5",
+    "prettier": "^3.3.1",
+    "rimraf": "^5.0.7",
     "semver": "^7.6.2",
-    "taqwim-core-utils": "workspace:^",
     "ts-node": "^10.9.2",
     "typedoc": "^0.25.13",
-    "typedoc-plugin-markdown": "^4.0.1",
+    "typedoc-plugin-markdown": "^4.0.3",
     "typescript": "~5.4.5",
-    "vite": "^5.2.10",
+    "vite": "^5.2.13",
     "vite-bundle-visualizer": "^1.2.1",
     "vite-plugin-dts": "^3.9.1",
     "vitest": "^1.6.0"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "lint-staged": {
+    "*/**/*.{js,ts,tsx,vue}": "eslint --quiet --fix ",
+    "*.{json,js,ts,tsx,vue,html}": [
+      "prettier --write --ignore-unknown"
+    ]
   }
 }

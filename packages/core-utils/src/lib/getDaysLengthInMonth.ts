@@ -1,4 +1,4 @@
-import { hDatesTable } from ".";
+import { hDatesTable } from '.'
 
 /**
  * Returns the length of a month in the Hijri calendar.
@@ -8,12 +8,12 @@ import { hDatesTable } from ".";
  */
 export function getDaysLengthInMonth(hy: number, hm: number): number {
   if (hm < 1 || hm > 12) {
-    return -1;
+    return -1
   }
-  const hijriYearRecord = hDatesTable.find((record) => record.hy === hy);
+  const hijriYearRecord = hDatesTable.find(record => record.hy === hy)
   if (hijriYearRecord) {
-    return (hijriYearRecord.dpm >> (hm - 1)) & 1 ? 30 : 29;
+    return (hijriYearRecord.dpm >> (hm - 1)) & 1 ? 30 : 29
   }
 
-  return -1;
+  return -1
 }

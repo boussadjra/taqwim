@@ -1,4 +1,4 @@
-import { addHijriYears, type HijriDateObject } from ".";
+import { addHijriYears, type HijriDateObject } from '.'
 
 /**
  * Adds a specified number of years to a Hijri date.
@@ -23,9 +23,6 @@ import { addHijriYears, type HijriDateObject } from ".";
  * );
  * //=> { hy: 1444, hm: 9, hd: 29 }
  */
-export function subHijriYears(
-  date: HijriDateObject,
-  amount: number
-): HijriDateObject | null {
-  return addHijriYears(date, -amount);
+export function subHijriYears(date: HijriDateObject, amount: number): HijriDateObject | null {
+  return addHijriYears(date, -amount)
 }

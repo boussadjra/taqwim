@@ -5,11 +5,11 @@ https://github.com/ussunnah/luxon-hijri
 // hDates.ts
 // Hijri Dates Reference Table
 export interface hDates {
-  hy: number; // Hijri Year
-  dpm: number; // Days Per Month
-  gy: number; // Gregorian Year
-  gm: number; // Gregorian Month
-  gd: number; // Gregorian Day
+  hy: number // Hijri Year
+  dpm: number // Days Per Month
+  gy: number // Gregorian Year
+  gm: number // Gregorian Month
+  gd: number // Gregorian Day
 }
 
 export const hDatesTable: hDates[] = [
@@ -197,4 +197,4 @@ export const hDatesTable: hDates[] = [
   { hy: 1499, dpm: 0x06aa, gy: 2075, gm: 12, gd: 9 },
   { hy: 1500, dpm: 0x0e93, gy: 2076, gm: 11, gd: 27 },
   { hy: 1501, dpm: 0, gy: 2077, gm: 11, gd: 17 },
-];
+]

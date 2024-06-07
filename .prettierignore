@@ -1,0 +1,16 @@
+node_modules/
+dist/
+**/cache/
+**/tmp/
+**/temp/
+**/build/
+**/builds/
+**/dist/
+**/out/
+**/output/
+**/public/
+**/publish/
+**/release/
+**/bin/
+**/target/
+**/gen/

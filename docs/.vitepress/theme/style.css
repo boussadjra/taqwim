@@ -43,13 +43,11 @@
  *   in custom container, badges, etc.
  * -------------------------------------------------------------------------- */
 
- :root {
-  --vp-c-brand-1:#00d8da;
+:root {
+  --vp-c-brand-1: #00d8da;
   --vp-c-brand-2: #03adb7;
-  --vp-c-brand-3:#0a8994;
+  --vp-c-brand-3: #0a8994;
   --vp-c-brand-soft: #1cf4f3;
-
-  
 
   --vp-c-default-1: var(--vp-c-gray-1);
   --vp-c-default-2: var(--vp-c-gray-2);
@@ -99,17 +97,9 @@
 
 :root {
   --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: -webkit-linear-gradient(
-    120deg,
-    #03ADB7 30%,
-    #E7BE0B
-  );
+  --vp-home-hero-name-background: -webkit-linear-gradient(120deg, #03adb7 30%, #e7be0b);
 
-  --vp-home-hero-image-background-image: linear-gradient(
-    -45deg,
-    #03ADB7 50%,
-    #E7BE0B 50%
-  );
+  --vp-home-hero-image-background-image: linear-gradient(-45deg, #03adb7 50%, #e7be0b 50%);
   --vp-home-hero-image-filter: blur(44px);
 }
 
@@ -143,4 +133,3 @@
 .DocSearch {
   --docsearch-primary-color: var(--vp-c-brand-1) !important;
 }
-

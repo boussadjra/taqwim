@@ -1,4 +1,4 @@
-# Taqwim 
+# Taqwim
 
 ## Overview
 
@@ -13,13 +13,15 @@ npm install taqwim-core-utils
 ## Usage
 
 ```javascript
-import { toHijri } from 'taqwim-core-utils';
+import { toHijri } from 'taqwim-core-utils'
 
-const gregorianDate = new Date('2024-03-11');
+const gregorianDate = new Date('2024-03-11')
 
-const hijriDate = toHijri(gregorianDate);
+const hijriDate = toHijri(gregorianDate)
 
-console.log(hijriDate); // { hy: 1445, hm:9, hd: 1 }
+console.log(hijriDate) // { hy: 1445, hm:9, hd: 1 }
 ```
 
+## API
 
+- [Full API Documentation](docs/api/globals.md)

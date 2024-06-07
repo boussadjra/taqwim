@@ -1,6 +1,6 @@
 [**taqwim-core-utils**](../README.md) • **Docs**
 
-***
+---
 
 [taqwim-core-utils](../globals.md) / formatHijriDate
 
@@ -39,37 +39,37 @@ The formatted Hijri date as a string.
 ## Examples
 
 ```ts
-formatHijriDate({ hy: 1443, hm: 3, hd: 10 }, "iYYYY/iMM/iDD", "ar");
+formatHijriDate({ hy: 1443, hm: 3, hd: 10 }, 'iYYYY/iMM/iDD', 'ar')
 //=> "1443/03/10"
 ```
 
 ```ts
-formatHijriDate({ hy: 1443, hm: 3, hd: 10 }, "iD iMMM, iYYYY", "en");
+formatHijriDate({ hy: 1443, hm: 3, hd: 10 }, 'iD iMMM, iYYYY', 'en')
 //=> "10 Rabiʻ II, 1443"
 ```
 
 ```ts
-formatHijriDate({ hy: 1443, hm: 3, hd: 10 }, "iEEEE, iD iMMMM iYYYY", "ar");
+formatHijriDate({ hy: 1443, hm: 3, hd: 10 }, 'iEEEE, iD iMMMM iYYYY', 'ar')
 //=> "الأحد, 10 جمادى الثاني 1443"
 ```
 
 ```ts
-formatHijriDate({ hy: 1443, hm: 3, hd: 10 }, "iE, iD iMMM iYYYY", "en");
+formatHijriDate({ hy: 1443, hm: 3, hd: 10 }, 'iE, iD iMMM iYYYY', 'en')
 //=> "7, 10 Rabiʻ II 1443"
 ```
 
 ```ts
-formatHijriDate({ hy: 1443, hm: 3, hd: 10 }, "iD iMMM, iYYYY", "fr");
+formatHijriDate({ hy: 1443, hm: 3, hd: 10 }, 'iD iMMM, iYYYY', 'fr')
 //=> "10 Rabiʻ II, 1443"
 ```
 
 ```ts
-formatHijriDate({ hy: 1443, hm: 3, hd: 10 }, "iD iMMM, iYYYY", "ar");
+formatHijriDate({ hy: 1443, hm: 3, hd: 10 }, 'iD iMMM, iYYYY', 'ar')
 //=> "10 ربيع الثاني, 1443"
 ```
 
 ```ts
-formatHijriDate({ hy: 1443, hm: 3, hd: 10 }, "iD iMMM, iYYYY", "en");
+formatHijriDate({ hy: 1443, hm: 3, hd: 10 }, 'iD iMMM, iYYYY', 'en')
 //=> "10 Rabiʻ II, 1443"
 ```
 

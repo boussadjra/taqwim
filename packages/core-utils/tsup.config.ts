@@ -1,9 +1,9 @@
-import { defineConfig } from "tsup";
+import { defineConfig } from 'tsup'
 
 export default defineConfig({
-  entry: ["src/lib/**/*@(ts|tsx)"],
+  entry: ['src/lib/**/*@(ts|tsx)'],
 
   dts: true,
-  format: ["esm"],
-  target: "esnext",
-});
+  format: ['esm'],
+  target: 'esnext',
+})

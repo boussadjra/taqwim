@@ -1,10 +1,5 @@
-import { addDays } from "date-fns";
-import {
-  toHijri,
-  toGregorian,
-  isValidHijriDate,
-  type HijriDateObject,
-} from ".";
+import { addDays } from 'date-fns'
+import { toHijri, toGregorian, isValidHijriDate, type HijriDateObject } from '.'
 
 /**
  * @name addHijriDays
@@ -29,16 +24,13 @@ import {
  * //=> { hy: 1445, hm: 10, hd: 11 }
  */
 
-export function addHijriDays(
-  date: HijriDateObject,
-  amount: number
-): HijriDateObject | null {
+export function addHijriDays(date: HijriDateObject, amount: number): HijriDateObject | null {
   if (date && isValidHijriDate(date)) {
-    const gregorianDate = toGregorian(date);
+    const gregorianDate = toGregorian(date)
     if (gregorianDate) {
-      const newGregorianDate = addDays(gregorianDate, amount);
-      return toHijri(newGregorianDate);
+      const newGregorianDate = addDays(gregorianDate, amount)
+      return toHijri(newGregorianDate)
     }
   }
-  return null;
+  return null
 }
