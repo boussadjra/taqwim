@@ -1,8 +1,8 @@
-# Taqwim core utils
+# Taqwim
 
 ## Overview
 
-Taqwim core a collection of utilities designed for managing Hijri dates in frontend applications. It includes a Hijri date converter, handler, and format, it uses the Umm al-Qura calendar system and date-fns library.
+Taqwim provides a collection of utilities and components designed for managing Hijri dates in frontend applications. It includes a Hijri date converter, handler, and format, it uses the Umm al-Qura calendar system and date-fns library.
 
 ## Installation
 
@@ -21,3 +21,7 @@ const hijriDate = toHijri(gregorianDate)
 
 console.log(hijriDate) // { hy: 1445, hm:9, hd: 1 }
 ```
+
+## API
+
+- [Full API Documentation](../../docs/api/globals.md)
