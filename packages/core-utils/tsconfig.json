@@ -23,6 +23,8 @@
     "tests/addHijriQuarters.test.ts",
     "tests/parseDateString.test.ts",
     "tests/normalizeHijriDate.test.ts",
-    "tests/normalizeHijriDate.test.ts"
+    "tests/normalizeHijriDate.test.ts",
+    "tests/getDayInWeek.test.ts",
+    "tests/getDayInWeek.test.ts"
   ]
 }

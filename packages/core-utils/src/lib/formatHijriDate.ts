@@ -166,7 +166,6 @@ export function formatHijriDate(
         case 'ccc':
         case 'cccc':
           // get the corresponding Gregorian date
-          console.log(gregorianDate)
           if (!gregorianDate) return ''
           return format(gregorianDate, match, {
             locale: availablelocales[locale],

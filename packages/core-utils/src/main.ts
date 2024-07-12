@@ -6,5 +6,3 @@ const locale = 'ar'
 const expectedFormattedDate = '1 Ramadan, 1445 (2 April, 2024)'
 
 const formattedDate = formatHijriDate(hijriDate, formatStr, locale)
-
-console.log(formattedDate)
