@@ -18,5 +18,11 @@
     "noFallthroughCasesInSwitch": true,
     "declaration": true
   },
-  "include": ["src", "tests/addHijriQuarters.test.ts", "tests/parseDateString.test.ts"]
+  "include": [
+    "src",
+    "tests/addHijriQuarters.test.ts",
+    "tests/parseDateString.test.ts",
+    "tests/normalizeHijriDate.test.ts",
+    "tests/normalizeHijriDate.test.ts"
+  ]
 }

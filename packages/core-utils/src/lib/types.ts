@@ -14,3 +14,5 @@ export type HijriDuration = {
 export type DateTextSeparator = '/' | '-'
 
 export type TripleNumberFormat = `${number}${DateTextSeparator}${number}${DateTextSeparator}${number}`
+
+export type ValidHijriDate = HijriDateObject | TripleNumberFormat
