@@ -1,5 +1,6 @@
 import { startOfDay, set, toDate, differenceInDays, parseISO } from 'date-fns'
 import { hDatesTable, type hDates } from './hDates'
+import { getHijriYear } from '.'
 
 interface DateObject {
   year: number
@@ -55,10 +56,7 @@ export function toHijri(
     return prev
   }, new Date(0))
 
-  const correspondingHijriYear = hDatesTable.find((date: hDates) => {
-    const dt = startOfDay(set(new Date(), { year: date.gy, month: date.gm - 1, date: date.gd }))
-    return toDate(dt).getTime() === closestDate.getTime()
-  })
+  const correspondingHijriYear = getHijriYear(closestDate)
 
   if (correspondingHijriYear) {
     const _differenceInDays = differenceInDays(inputDate, startOfDay(closestDate))

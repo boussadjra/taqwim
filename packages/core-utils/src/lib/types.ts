@@ -10,3 +10,7 @@ export type HijriDuration = {
   days: number
   weeks: number
 }
+
+export type DateTextSeparator = '/' | '-'
+
+export type TripleNumberFormat = `${number}${DateTextSeparator}${number}${DateTextSeparator}${number}`

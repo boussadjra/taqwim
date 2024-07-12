@@ -18,5 +18,5 @@
     "noFallthroughCasesInSwitch": true,
     "declaration": true
   },
-  "include": ["src", "tests/addHijriQuarters.test.ts"]
+  "include": ["src", "tests/addHijriQuarters.test.ts", "tests/parseDateString.test.ts"]
 }
