@@ -1,8 +1,8 @@
-import { addHijriMonths, formatHijriDate } from './lib'
+import { getMonthAdjacentDays } from './lib'
 
-const hijriDate = { hy: 1445, hm: 9, hd: 1 }
-const formatStr = ' dd Mo, yyyy '
-const locale = 'ar'
-const expectedFormattedDate = '1 Ramadan, 1445 (2 April, 2024)'
+const hijriDate = { hy: 1444, hm: 12, hd: 1 }
 
-const formattedDate = formatHijriDate(hijriDate, formatStr, locale)
+const { prevMonthDays, nextMonthDays } = getMonthAdjacentDays(hijriDate)
+
+console.log(prevMonthDays)
+console.log(nextMonthDays)

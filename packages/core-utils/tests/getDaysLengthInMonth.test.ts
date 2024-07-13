@@ -11,6 +11,32 @@ describe('getDaysLengthInMonth', () => {
 
     expect(result).toEqual(expectedLength)
   })
+  it('should return 30 for valid Hijri Date with month with 30 days', () => {
+    const hy = 1445
+    const hm = 9
+    const expectedLength = 30
+
+    const result = getDaysLengthInMonth({
+      hy,
+      hm,
+      hd: 5,
+    })
+
+    expect(result).toEqual(expectedLength)
+  })
+  it('should return 29 for valid Hijri Date with month with 29 days', () => {
+    const hy = 1446
+    const hm = 1
+    const expectedLength = 29
+
+    const result = getDaysLengthInMonth({
+      hy,
+      hm,
+      hd: 1,
+    })
+
+    expect(result).toEqual(expectedLength)
+  })
 
   it('should return 29 for valid Hijri month with 29 days', () => {
     const hy = 1445
