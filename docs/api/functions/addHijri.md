@@ -1,6 +1,6 @@
 [**taqwim-core-utils**](../README.md) • **Docs**
 
-***
+---
 
 [taqwim-core-utils](../globals.md) / addHijri
 
@@ -30,19 +30,13 @@ The new Hijri date after adding the duration.
 
 ```ts
 // Add 10 days to 1 Ramadan 1445 ({ hy: 1445, hm: 9, hd: 1 })
-const result = addHijri(
-{ hy: 1445, hm: 9, hd: 1 },
-{ years: 0, months: 0, weeks: 0, days: 10 }
-)
+const result = addHijri({ hy: 1445, hm: 9, hd: 1 }, { years: 0, months: 0, weeks: 0, days: 10 })
 //=> { hy: 1445, hm: 9, hd: 11 }
 ```
 
 ```ts
 // Add 1 year, 2 months, 3 weeks, and 4 days to 1 Ramadan 1445 ({ hy: 1445, hm: 9, hd: 1 })
-const result = addHijri(
-{ hy: 1445, hm: 9, hd: 1 },
-{ years: 1, months: 2, weeks: 3, days: 4 }
-)
+const result = addHijri({ hy: 1445, hm: 9, hd: 1 }, { years: 1, months: 2, weeks: 3, days: 4 })
 //=> { hy: 1446, hm: 11, hd: 25 }
 ```
 

@@ -1,6 +1,6 @@
 [**taqwim-core-utils**](../README.md) • **Docs**
 
-***
+---
 
 [taqwim-core-utils](../globals.md) / addHijriWeeks
 
@@ -30,10 +30,7 @@ The resulting Hijri date object after adding the specified number of weeks, or `
 
 ```ts
 // Add 10 weeks to 1 Ramadan 1445 ({ hy: 1445, hm: 9, hd: 1 })
-const result = addHijriWeeks(
-{ hy: 1445, hm: 9, hd: 1 },
-10
-);
+const result = addHijriWeeks({ hy: 1445, hm: 9, hd: 1 }, 10)
 //=> { hy: 1445, hm: 11, hd: 12 }
 ```
 

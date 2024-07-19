@@ -1,6 +1,6 @@
 **taqwim-core-utils** • [**Docs**](globals.md)
 
-***
+---
 
 # Taqwim
 

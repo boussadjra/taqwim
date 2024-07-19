@@ -1,6 +1,6 @@
 [**taqwim-core-utils**](../README.md) • **Docs**
 
-***
+---
 
 [taqwim-core-utils](../globals.md) / subHijriWeeks
 
@@ -30,10 +30,7 @@ The resulting Hijri date object after subing the specified number of weeks, or `
 
 ```ts
 // Substract 10 weeks from 1 Ramadan 1445 ({ hy: 1445, hm: 9, hd: 1 })
-const result = subHijriWeeks(
-{  hy: 1445, hm: 11, hd: 12 },
-10
-);
+const result = subHijriWeeks({ hy: 1445, hm: 11, hd: 12 }, 10)
 //=> { hy: 1445, hm: 9, hd: 1 }
 ```
 

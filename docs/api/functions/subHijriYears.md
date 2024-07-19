@@ -1,6 +1,6 @@
 [**taqwim-core-utils**](../README.md) • **Docs**
 
-***
+---
 
 [taqwim-core-utils](../globals.md) / subHijriYears
 
@@ -30,19 +30,13 @@ The resulting Hijri date object after subing the specified number of years, or `
 
 ```ts
 // Substract 10 years from 1 Ramadan 1445 ({ hy: 1445, hm: 9, hd: 1 })
-const result = subHijriYears(
-{ hy: 1445, hm: 9, hd: 1 },
-10
-);
+const result = subHijriYears({ hy: 1445, hm: 9, hd: 1 }, 10)
 //=> { hy: 1435, hm: 9, hd: 1 }
 ```
 
 ```ts
 // Substract 1 year to 1 Ramadan 1445 ({ hy: 1445, hm: 9, hd: 30 }) and adjust the month
-const result = subHijriYears(
-{ hy: 1445, hm: 9, hd: 30 },
-1
-);
+const result = subHijriYears({ hy: 1445, hm: 9, hd: 30 }, 1)
 //=> { hy: 1444, hm: 9, hd: 29 }
 ```
 

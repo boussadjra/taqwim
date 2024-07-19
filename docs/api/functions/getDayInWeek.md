@@ -1,6 +1,6 @@
 [**taqwim-core-utils**](../README.md) • **Docs**
 
-***
+---
 
 [taqwim-core-utils](../globals.md) / getDayInWeek
 
@@ -21,7 +21,7 @@ The Hijri date to get the day of the week for.
 `number`
 
 The day of the week as a number (0-6), where 0 represents Sunday, 1 represents Monday, and so on.
-         Returns `undefined` if the provided Hijri date is invalid.
+Returns `undefined` if the provided Hijri date is invalid.
 
 ## Source
 
