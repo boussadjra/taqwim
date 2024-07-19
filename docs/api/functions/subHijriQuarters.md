@@ -1,6 +1,6 @@
 [**taqwim-core-utils**](../README.md) • **Docs**
 
----
+***
 
 [taqwim-core-utils](../globals.md) / subHijriQuarters
 
@@ -30,16 +30,22 @@ A new Hijri date object that is the result of subing the specified number of qua
 
 ```ts
 // Substract 2 quarters from 1 Ramadan 1445 ({ hy: 1445, hm: 9, hd: 1 })
-const result = subHijriQuarters({ hy: 1445, hm: 9, hd: 1 }, 2)
+const result = subHijriQuarters(
+{ hy: 1445, hm: 9, hd: 1 },
+2
+);
 //=> { hy: 1445, hm: 3, hd: 1 }
 ```
 
 ```ts
 // Substract 1 quarter from 1 Ramadan 1445 ({ hy: 1445, hm: 9, hd: 30 }) and adjust the month
-const result = subHijriQuarters({ hy: 1445, hm: 9, hd: 30 }, 1)
+const result = subHijriQuarters(
+{ hy: 1445, hm: 9, hd: 30 },
+1
+);
 //=> { hy: 1444, hm: 9, hd: 29 };
 ```
 
 ## Source
 
-[subHijriQuarters.ts:23](https://github.com/boussadjra/taqwim/blob/b6011f3ed342a975f52680743fe89e4925ba0553/packages/core-utils/src/lib/subHijriQuarters.ts#L23)
+[subHijriQuarters.ts:23](https://github.com/boussadjra/taqwim/blob/a16e0483140d22a326ae33586f5bfb208d318d3e/packages/core-utils/src/lib/subHijriQuarters.ts#L23)

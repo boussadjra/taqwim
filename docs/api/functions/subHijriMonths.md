@@ -1,6 +1,6 @@
 [**taqwim-core-utils**](../README.md) • **Docs**
 
----
+***
 
 [taqwim-core-utils](../globals.md) / subHijriMonths
 
@@ -30,22 +30,31 @@ The resulting Hijri date object after subing the specified number of Months, or 
 
 ```ts
 // Substract 10 Months to 1 Ramadan 1445 ({ hy: 1445, hm: 9, hd: 1 })
-const result = subHijriMonths({ hy: 1445, hm: 9, hd: 1 }, 10)
+const result = subHijriMonths(
+{ hy: 1445, hm: 9, hd: 1 },
+10
+);
 //=> { hy: 1444, hm: 11, hd: 1 }
 ```
 
 ```ts
 // Substract 1 Month from 30 Ramadan 1445 ({ hy: 1445, hm: 9, hd: 30 })
-const result = subHijriMonths({ hy: 1445, hm: 9, hd: 30 }, 1)
+const result = subHijriMonths(
+{ hy: 1445, hm: 9, hd: 30 },
+1
+);
 //=> { hy: 1445, hm: 8, hd: 29 }
 ```
 
 ```ts
 // Substract 26 Months from 30 Ramadan 1445 ({ hy: 1445, hm: 9, hd: 30 })
-const result = subHijriMonths({ hy: 1447, hm: 12, hd: 29 }, 26)
+const result = subHijriMonths(
+{  hy: 1447, hm: 12, hd: 29 },
+26
+);
 //=> { hy: 1445, hm: 9, hd: 30 }
 ```
 
 ## Source
 
-[subHijriMonths.ts:39](https://github.com/boussadjra/taqwim/blob/b6011f3ed342a975f52680743fe89e4925ba0553/packages/core-utils/src/lib/subHijriMonths.ts#L39)
+[subHijriMonths.ts:34](https://github.com/boussadjra/taqwim/blob/a16e0483140d22a326ae33586f5bfb208d318d3e/packages/core-utils/src/lib/subHijriMonths.ts#L34)

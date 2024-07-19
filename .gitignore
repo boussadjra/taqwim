@@ -21,6 +21,7 @@ coverage
 
 # Nested dist folders
 **/cache 
+**/dist
 **/build
 **/node_modules
 

@@ -1,24 +1,22 @@
 <script setup lang="ts">
-import { toHijri, formatHijriDate } from 'taqwim-core-utils'
-import { format } from 'date-fns'
+import { ref } from 'vue'
+import { DatePicker } from 'taqwim-vue'
+
+const date = ref({ hy: 1446, hm: 1, hd: 7 })
+
+const formattedDate = ref('1446/01/07')
 </script>
 
 <template>
-  <div class="flex justify-center p-4" dir="rtl">
-    {{ format(new Date(), 'yyyy-Mo-dd') }}
-    <br />
-    {{ toHijri(new Date()) }}
-    <br />
-    {{
-      formatHijriDate(
-        {
-          hy: 1445,
-          hm: 9,
-          hd: 1,
-        },
-        'iYYYY-iMMMM-iDD <> yyyy-MMMM-dd',
-        'ar',
-      )
-    }}
+  <div class="flex flex-col items-center p-4">
+    <div class="font-bold">
+      {{ date }}
+    </div>
+    <div class="font-bold">
+      {{ formattedDate }}
+    </div>
+    <div>
+      <DatePicker v-model="date" v-model:formatted-value="formattedDate" format="iD iMMM, iYYYY" />
+    </div>
   </div>
 </template>

@@ -3,7 +3,18 @@
   "version": "0.0.1-alpha.13",
   "private": false,
   "type": "module",
-  "main": "src/index.ts",
+  "main": "./dist/taqwim-vue.umd.cjs",
+  "module": "./dist/taqwim-vue.js",
+  "exports": {
+    ".": {
+      "import": "./dist/taqwim-vue.js",
+      "require": "./dist/taqwim-vue.umd.cjs"
+    },
+    "./dist/style.css": {
+      "import": "./dist/style.css",
+      "require": "./dist/style.css"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
@@ -12,9 +23,13 @@
     "test:e2e": "start-server-and-test preview http://localhost:4173 'cypress run --e2e'",
     "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' http://localhost:4173 'cypress open --e2e'",
     "build-only": "vite build",
-    "type-check": "vue-tsc --build --force"
+    "type-check": "vue-tsc --build --force",
+    "publish": "pnpm publish --access public"
   },
   "dependencies": {
+    "vue": "^3.4.26"
+  },
+  "peerDependencies": {
     "vue": "^3.4.26"
   },
   "devDependencies": {
@@ -30,5 +45,26 @@
     "start-server-and-test": "^2.0.3",
     "vite-plugin-vue-devtools": "^7.1.3",
     "vue-tsc": "^2.0.14"
+  },
+  "keywords": [
+    "taqwim",
+    "taqwim-core-utils",
+    "taqwim-vue",
+    "taqwim-docs",
+    "date",
+    "hijri",
+    "islamic",
+    "calendar",
+    "vue",
+    "vite",
+    "typescript"
+  ],
+  "files": [
+    "dist",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/boussadjra/taqwim.git"
   }
 }

@@ -52,9 +52,13 @@ export namespace French {
 
   export const today = "Aujourd'hui"
   export const day = 'Jour'
+  export const days = 'Jours'
   export const week = 'Semaine'
+  export const weeks = 'Semaines'
   export const month = 'Mois'
+  export const months = 'Mois'
   export const year = 'Année'
+  export const years = 'Années'
   export const from = 'De'
   export const to = 'À'
 }

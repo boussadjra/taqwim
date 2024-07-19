@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  title: 'taqwim-docs',
+  title: 'Taqwim',
   description: 'Docs for taqwim date picker and calendar',
   markdown: {
     theme: {
@@ -32,8 +32,11 @@ export default defineConfig({
         items: [{ text: 'Functions', link: '/api/globals' }],
       },
     ],
-    siteTitle: 'taqwim-docs',
-
+    siteTitle: 'Taqwim',
+    footer: {
+      message: 'Released under the MIT License.',
+      copyright: 'Copyright © 2024-present Boussadjra Brahim',
+    },
     socialLinks: [{ icon: 'github', link: 'https://github.com/boussadjra/taqwim' }],
   },
 })

@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "vue": "^3.4.21",
-    "vue-router": "^4.3.0"
+    "vue-router": "^4.3.0",
+    "taqwim-vue": "link:../../packages/vue"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.8.0",
@@ -32,5 +33,18 @@
     "vite": "^5.2.8",
     "vite-plugin-vue-devtools": "^7.0.25",
     "vue-tsc": "^2.0.11"
-  }
+  },
+  "keywords": [
+    "taqwim",
+    "taqwim-core-utils",
+    "taqwim-vue",
+    "taqwim-docs",
+    "date",
+    "hijri",
+    "islamic",
+    "calendar",
+    "vue",
+    "vite",
+    "typescript"
+  ]
 }

@@ -1,6 +1,6 @@
 [**taqwim-core-utils**](../README.md) • **Docs**
 
----
+***
 
 [taqwim-core-utils](../globals.md) / addHijriQuarters
 
@@ -30,16 +30,22 @@ A new Hijri date object that is the result of adding the specified number of qua
 
 ```ts
 // Add 2 quarters to 1 Ramadan 1445 ({ hy: 1445, hm: 9, hd: 1 })
-const result = addHijriQuarters({ hy: 1445, hm: 9, hd: 1 }, 2)
+const result = addHijriQuarters(
+{ hy: 1445, hm: 9, hd: 1 },
+2
+);
 //=> { hy: 1446, hm: 3, hd: 1 }
 ```
 
 ```ts
 // Add 1 quarter to 1 Ramadan 1445 ({ hy: 1445, hm: 9, hd: 30 }) and adjust the month
-const result = addHijriQuarters({ hy: 1445, hm: 9, hd: 30 }, 1)
+const result = addHijriQuarters(
+{ hy: 1445, hm: 9, hd: 30 },
+1
+);
 //=> { hy: 1446, hm: 1, hd: 29 }
 ```
 
 ## Source
 
-[addHijriQuarters.ts:23](https://github.com/boussadjra/taqwim/blob/b6011f3ed342a975f52680743fe89e4925ba0553/packages/core-utils/src/lib/addHijriQuarters.ts#L23)
+[addHijriQuarters.ts:23](https://github.com/boussadjra/taqwim/blob/a16e0483140d22a326ae33586f5bfb208d318d3e/packages/core-utils/src/lib/addHijriQuarters.ts#L23)

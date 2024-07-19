@@ -1,6 +1,6 @@
 [**taqwim-core-utils**](../README.md) • **Docs**
 
----
+***
 
 [taqwim-core-utils](../globals.md) / subHijriDays
 
@@ -48,4 +48,4 @@ const result = subHijriDays(
 
 ## Source
 
-[subHijriDays.ts:32](https://github.com/boussadjra/taqwim/blob/b6011f3ed342a975f52680743fe89e4925ba0553/packages/core-utils/src/lib/subHijriDays.ts#L32)
+[subHijriDays.ts:27](https://github.com/boussadjra/taqwim/blob/a16e0483140d22a326ae33586f5bfb208d318d3e/packages/core-utils/src/lib/subHijriDays.ts#L27)

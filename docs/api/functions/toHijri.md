@@ -1,6 +1,6 @@
 [**taqwim-core-utils**](../README.md) • **Docs**
 
----
+***
 
 [taqwim-core-utils](../globals.md) / toHijri
 
@@ -28,7 +28,7 @@ If the input is invalid or the conversion fails.
 
 ### Source
 
-[toHijri.ts:10](https://github.com/boussadjra/taqwim/blob/b6011f3ed342a975f52680743fe89e4925ba0553/packages/core-utils/src/lib/toHijri.ts#L10)
+[toHijri.ts:11](https://github.com/boussadjra/taqwim/blob/a16e0483140d22a326ae33586f5bfb208d318d3e/packages/core-utils/src/lib/toHijri.ts#L11)
 
 ## toHijri(year, month, day)
 
@@ -60,7 +60,7 @@ If the input is invalid or the conversion fails.
 
 ### Source
 
-[toHijri.ts:13](https://github.com/boussadjra/taqwim/blob/b6011f3ed342a975f52680743fe89e4925ba0553/packages/core-utils/src/lib/toHijri.ts#L13)
+[toHijri.ts:12](https://github.com/boussadjra/taqwim/blob/a16e0483140d22a326ae33586f5bfb208d318d3e/packages/core-utils/src/lib/toHijri.ts#L12)
 
 ## toHijri(date)
 
@@ -84,4 +84,4 @@ If the input is invalid or the conversion fails.
 
 ### Source
 
-[toHijri.ts:18](https://github.com/boussadjra/taqwim/blob/b6011f3ed342a975f52680743fe89e4925ba0553/packages/core-utils/src/lib/toHijri.ts#L18)
+[toHijri.ts:13](https://github.com/boussadjra/taqwim/blob/a16e0483140d22a326ae33586f5bfb208d318d3e/packages/core-utils/src/lib/toHijri.ts#L13)

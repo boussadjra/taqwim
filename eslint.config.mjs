@@ -16,6 +16,7 @@ export default defineFlatConfigs(eslintConfigPrettier, {
         ignores: ['default', 'index'],
       },
     ],
+    '@typescript-eslint/no-explicit-any': 'off',
 
     '@typescript-eslint/no-unused-vars': [
       'warn',
@@ -61,7 +62,7 @@ export default defineFlatConfigs(eslintConfigPrettier, {
   },
   ignores: [
     'node_modules/*',
-    'dist/**/*',
+    'dist/**/*', // Ensure this matches your destination folder's path
     'out',
     'coverage',
     'test',
@@ -72,6 +73,10 @@ export default defineFlatConfigs(eslintConfigPrettier, {
     'public',
     'static',
     'docs/**/*',
-    '**/cache/**/*',
+    '**/cache/**/*', // Ensure this matches your cache folder's path
+    'docs/.vitepress/cache/*',
+    '**/dist/**/*',
+    'packages/vue/dist/*',
+    '**/.*',
   ],
 })

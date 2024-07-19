@@ -27,6 +27,8 @@
     "tests/getDayInWeek.test.ts",
     "tests/getDayInWeek.test.ts",
     "tests/getMonthAdjacentDays.test.ts",
-    "tests/getMonthAdjacentDays.test.ts"
+    "tests/getMonthAdjacentDays.test.ts",
+    "tests/isEqual.test.ts",
+    "tests/isEqual.test.ts"
   ]
 }

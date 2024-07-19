@@ -39,9 +39,13 @@ export namespace English {
 
   export const today = 'Today'
   export const day = 'Day'
+  export const days = 'Days'
   export const week = 'Week'
+  export const weeks = 'Weeks'
   export const month = 'Month'
+  export const months = 'Months'
   export const year = 'Year'
+  export const years = 'Years'
   export const from = 'From'
   export const to = 'To'
 }

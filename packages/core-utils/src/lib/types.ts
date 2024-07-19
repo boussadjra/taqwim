@@ -21,4 +21,6 @@ export interface MonthDay {
   dayInMonth: number
   dayInWeek: number
   date: HijriDateObject
+  isToday?: boolean
+  isAdjacent?: boolean
 }

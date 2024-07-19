@@ -6,8 +6,9 @@
   "main": "index.js",
   "scripts": {
     "vue:dev": "pnpm --filter taqwim-vue dev",
-    "vue:build": "pnpm --filter taqwim-vue build",
+    "vue:build": "pnpm --filter taqwim-vue build-only",
     "vue:play:dev": "pnpm --filter vue3 dev",
+    "vue:publish": "pnpm --filter taqwim-vue publish",
     "docs:dev": "pnpm --filter taqwim-docs docs:dev",
     "docs:build": "pnpm --filter taqwim-docs docs:build",
     "core:dev": "pnpm --filter taqwim-core-utils dev",
@@ -19,12 +20,24 @@
     "core:analyse": "pnpm --filter taqwim-core-utils analyse",
     "release": "bumpp package.json packages/**/package.json docs/package.json --tag --tag-name v${version}",
     "prepare": "husky",
-    "lint": "eslint \"*/**/*.{js,ts,tsx,vue}\" --quiet --fix ",
+    "lint": "eslint --quiet --fix",
     "format": "prettier .  --write"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "taqwim",
+    "taqwim-core-utils",
+    "taqwim-vue",
+    "taqwim-docs",
+    "date",
+    "hijri",
+    "islamic",
+    "calendar",
+    "vue",
+    "vite",
+    "typescript"
+  ],
+  "author": "Brahim Boussadjra",
+  "license": "MIT",
   "dependencies": {
     "taqwim-core-utils": "workspace:^"
   },
@@ -67,6 +80,10 @@
       "@commitlint/config-conventional"
     ]
   },
+  "eslintIgnore": [
+    "dist",
+    "node_modules"
+  ],
   "lint-staged": {
     "*/**/*.{js,ts,tsx,vue}": "eslint --quiet --fix ",
     "*.{json,js,ts,tsx,vue,html}": [

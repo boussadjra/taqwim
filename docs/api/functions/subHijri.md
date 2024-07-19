@@ -1,6 +1,6 @@
 [**taqwim-core-utils**](../README.md) • **Docs**
 
----
+***
 
 [taqwim-core-utils](../globals.md) / subHijri
 
@@ -30,16 +30,22 @@ The new Hijri date after subing the duration.
 
 ```ts
 // Substract 10 days from 1 Ramadan 1445 ({ hy: 1445, hm: 9, hd: 1 })
-const result = subHijri({ hy: 1445, hm: 9, hd: 1 }, { years: 0, months: 0, weeks: 0, days: 10 })
+const result = subHijri(
+{ hy: 1445, hm: 9, hd: 1 },
+{ years: 0, months: 0, weeks: 0, days: 10 }
+)
 //=> { hy: 1445, hm: 8, hd: 21 }
 ```
 
 ```ts
 // Substract 1 year, 2 months, 3 weeks, and 4 days from 1 Ramadan 1445 ({ hy: 1445, hm: 9, hd: 1 })
-const result = subHijri({ hy: 1445, hm: 9, hd: 1 }, { years: 1, months: 2, weeks: 3, days: 4 })
+const result = subHijri(
+{ hy: 1445, hm: 9, hd: 1 },
+{ years: 1, months: 2, weeks: 3, days: 4 }
+)
 //=> { hy: 1444, hm: 6, hd: 5 }
 ```
 
 ## Source
 
-[subHijri.ts:32](https://github.com/boussadjra/taqwim/blob/b6011f3ed342a975f52680743fe89e4925ba0553/packages/core-utils/src/lib/subHijri.ts#L32)
+[subHijri.ts:25](https://github.com/boussadjra/taqwim/blob/a16e0483140d22a326ae33586f5bfb208d318d3e/packages/core-utils/src/lib/subHijri.ts#L25)

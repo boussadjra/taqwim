@@ -1,6 +1,6 @@
 [**taqwim-core-utils**](../README.md) • **Docs**
 
----
+***
 
 [taqwim-core-utils](../globals.md) / toGregorian
 
@@ -28,7 +28,7 @@ Error if the arguments are invalid or the Hijri date is invalid.
 
 ### Source
 
-[toGregorian.ts:4](https://github.com/boussadjra/taqwim/blob/b6011f3ed342a975f52680743fe89e4925ba0553/packages/core-utils/src/lib/toGregorian.ts#L4)
+[toGregorian.ts:4](https://github.com/boussadjra/taqwim/blob/a16e0483140d22a326ae33586f5bfb208d318d3e/packages/core-utils/src/lib/toGregorian.ts#L4)
 
 ## toGregorian(hy, hm, hd)
 
@@ -60,4 +60,4 @@ Error if the arguments are invalid or the Hijri date is invalid.
 
 ### Source
 
-[toGregorian.ts:5](https://github.com/boussadjra/taqwim/blob/b6011f3ed342a975f52680743fe89e4925ba0553/packages/core-utils/src/lib/toGregorian.ts#L5)
+[toGregorian.ts:5](https://github.com/boussadjra/taqwim/blob/a16e0483140d22a326ae33586f5bfb208d318d3e/packages/core-utils/src/lib/toGregorian.ts#L5)

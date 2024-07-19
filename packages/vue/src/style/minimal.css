@@ -1,0 +1,81 @@
+.tq-date-picker {
+  display: flex;
+  flex-direction: column;
+}
+
+.tq-date-picker__container,
+.tq-date-picker__month-view,
+.tq-date-picker__months-view,
+.tq-date-picker__years-view {
+  margin: 10px;
+}
+
+.tq-date-picker__title,
+.tq-date-picker__header {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.tq-date-picker__month-button,
+.tq-date-picker__mode-button,
+.tq-date-picker__prev-button,
+.tq-date-picker__next-button {
+  cursor: pointer;
+  padding: 5px 10px;
+  margin-right: 5px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.tq-date-picker[dir='rtl'] .tq-date-picker__prev-button svg,
+.tq-date-picker[dir='rtl'] .tq-date-picker__next-button svg {
+  transform: rotate(180deg);
+}
+
+.tq-date-picker__weekdays {
+  display: flex;
+  justify-content: space-between;
+}
+
+.tq-date-picker__weekday {
+  flex: 1;
+  text-align: center;
+  padding: 5px 0;
+  font-weight: bold;
+}
+
+.tq-date-picker__days,
+.tq-date-picker__months,
+.tq-date-picker__years {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.tq-date-picker__day,
+.tq-date-picker__month,
+.tq-date-picker__year {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  min-width: 40px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  padding: 2px;
+}
+
+.tq-date-picker__day--adjacent {
+  opacity: 0.5;
+  pointer-events: none;
+  color: #999;
+}
+
+.tq-date-picker__day:hover,
+.tq-date-picker__month:hover,
+.tq-date-picker__year:hover {
+  background-color: #e9e9e9;
+}

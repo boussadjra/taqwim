@@ -13,5 +13,6 @@
   ],
   "compilerOptions": {
     "module": "NodeNext"
-  }
+  },
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
 }

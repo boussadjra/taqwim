@@ -39,9 +39,13 @@ export namespace Arabic {
 
   export const today = 'اليوم'
   export const day = 'يوم'
+  export const days = 'أيام'
   export const week = 'أسبوع'
+  export const weeks = 'أسابيع'
   export const month = 'شهر'
+  export const months = 'شهور'
   export const year = 'سنة'
+  export const years = 'سنوات'
   export const from = 'من'
   export const to = 'إلى'
 }

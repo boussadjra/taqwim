@@ -3,24 +3,24 @@
 layout: home
 
 hero:
-  name: 'taqwim-docs'
-  text: 'Docs for taqwim date picker and calendar'
-  tagline: 'A modern date utility library for frontend'
+  name: 'Taqwim'
+  text: 'Docs for Taqwim date picker and calendar'
+  tagline: 'The versatile and lightweight Hijri date utility library'
   actions:
     - theme: brand
       text: Get Started
       link: /guide/get-started
     - theme: alt
       text: API Reference
-      link: /api/convert
+      link: /api/globals
   image:
     src: /assets/logo.svg
     alt: Taqwim
 features:
   - title: Agnostic
-    details: Agnostic utility library for date and time manipulation in frontend
+    details: Compatible with any framework, Taqwim seamlessly integrates into your existing projects for effortless date manipulation.
   - title: Modern
-    details: Modern utility library for date and time manipulation in frontend
+    details: Built with the latest JavaScript standards, Taqwim offers a sleek and efficient way to manage Hijri dates.
   - title: Lightweight
-    details: Lightweight utility library for date and time manipulation in frontend
+    details: Designed to be minimal in footprint, Taqwim ensures fast performance without compromising on functionality.
 ---
