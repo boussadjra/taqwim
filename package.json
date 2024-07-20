@@ -9,6 +9,7 @@
     "vue:build": "pnpm --filter taqwim-vue build-only",
     "vue:play:dev": "pnpm --filter vue3 dev",
     "vue:publish": "pnpm --filter taqwim-vue publish",
+    "vue:release": "bumpp  packages/core-utils/package.json  --tag --tag-name v${version}",
     "docs:dev": "pnpm --filter taqwim-docs docs:dev",
     "docs:build": "pnpm --filter taqwim-docs docs:build",
     "core:dev": "pnpm --filter taqwim-core-utils dev",
@@ -18,7 +19,7 @@
     "core:publish": "pnpm --filter taqwim-core-utils publish",
     "core:build:api": "typedoc --excludeNotDocumented",
     "core:analyse": "pnpm --filter taqwim-core-utils analyse",
-    "release": "bumpp package.json packages/**/package.json docs/package.json --tag --tag-name v${version}",
+    "core:release": "bumpp  packages/vue/package.json  --tag --tag-name v${version}",
     "prepare": "husky",
     "lint": "eslint --quiet --fix",
     "format": "prettier .  --write"
