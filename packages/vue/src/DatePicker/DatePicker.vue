@@ -9,16 +9,12 @@ import ArrowLeft from '../icons/ArrowLeft.vue'
 </script>
 <script setup lang="ts">
 const props = withDefaults(defineProps<DatePickerProps>(), {
-  disabled: false,
-
-  hideWeekdays: false,
-  multiple: 'single',
   locale: 'en',
   modelValue: () => {
     const date = new Date()
     return toHijri(date)!
   },
-  title: 'Select Date',
+  title: '',
   weekDayFormat: 'weekDaysMedium',
   monthFormat: 'monthsMedium',
   showAdjacentDays: true,
@@ -26,8 +22,6 @@ const props = withDefaults(defineProps<DatePickerProps>(), {
 })
 
 const emit = defineEmits<DatePickerEmits>()
-
-const { hideWeekdays, nextIcon, prevIcon } = toRefs(props)
 
 const { monthDays, prevMonth, nextMonth, normalizedHijriDate, years } = useDate({
   initialDate: props.modelValue,
@@ -52,7 +46,7 @@ const selectDay = (day: HijriDateObject) => {
 
 const weekdays = getLocaleData(props.locale, props.weekDayFormat)
 
-const viewMode = ref('month')
+const viewMode = ref<ViewMode>('month')
 
 const changeMode = (mode?: ViewMode) => {
   if (mode) {
@@ -75,42 +69,42 @@ const selectYear = (year: number) => {
 <template>
   <div class="tq-date-picker">
     <div class="tq-date-picker__container">
-      <slot name="title" class="tq-date-picker__title-slot">
+      <slot name="title">
         <div class="tq-date-picker__title">{{ title }}</div>
       </slot>
 
-      <slot name="header" class="tq-date-picker__header-slot">
+      <slot name="header">
         <div class="tq-date-picker__header">{{ formatHijriDate(normalizedHijriDate, 'iDD iMMMM iYYYY', locale) }}</div>
       </slot>
 
-      <slot name="controls" class="tq-date-picker__controls-slot">
-        <slot name="month" class="tq-date-picker__month-slot">
+      <slot name="controls">
+        <slot name="month" :date="normalizedHijriDate" :locale="locale" :changeMode="changeMode">
           <button class="tq-date-picker__month-button" @click="changeMode('months')">
             {{ formatHijriDate(normalizedHijriDate, 'iMMMM iYYYY', locale) }}
           </button>
         </slot>
-        <slot name="mode" class="tq-date-picker__mode-slot">
+        <slot name="mode" :date="normalizedHijriDate" :locale="locale" :changeMode="changeMode" :viewMode="viewMode">
           <button class="tq-date-picker__mode-button" @click="changeMode()">
             {{ getLocaleData(locale, viewMode) }}
           </button>
         </slot>
-        <slot name="prev" class="tq-date-picker__prev-slot">
+        <slot name="prev" :prevMonth="prevMonth">
           <button class="tq-date-picker__prev-button" @click="prevMonth">
             <ArrowLeft />
           </button>
         </slot>
-        <slot name="next" class="tq-date-picker__next-slot">
+        <slot name="next" :nextMonth="nextMonth">
           <button class="tq-date-picker__next-button" @click="nextMonth"><ArrowRight /></button>
         </slot>
       </slot>
     </div>
     <div v-if="viewMode === 'month'" class="tq-date-picker__month-view">
-      <slot name="weekdays" class="tq-date-picker__weekdays-slot">
-        <div v-if="!hideWeekdays" class="tq-date-picker__weekdays">
+      <slot name="weekdays" :weekdays="weekdays">
+        <div class="tq-date-picker__weekdays">
           <div v-for="day in weekdays" :key="day" class="tq-date-picker__weekday">{{ day }}</div>
         </div>
       </slot>
-      <slot name="days" :days="monthDays" class="tq-date-picker__days-slot">
+      <slot name="days" :days="monthDays">
         <div class="tq-date-picker__days">
           <div
             v-for="day in monthDays"
@@ -119,6 +113,7 @@ const selectYear = (year: number) => {
             class="tq-date-picker__day"
             :class="{
               'tq-date-picker__day--adjacent': day.isAdjacent,
+              'tq-date-picker__day--adjacent-hidden': day.isAdjacent && !showAdjacentDays,
               'tq-date-picker__day--today': day.isToday,
               'tq-date-picker__day--selected': isEqual(day.date, normalizedHijriDate),
             }"
@@ -129,7 +124,7 @@ const selectYear = (year: number) => {
       </slot>
     </div>
     <div v-else-if="viewMode === 'months'" class="tq-date-picker__months-view">
-      <slot name="months" :months="getLocaleData(locale, monthFormat)" class="tq-date-picker__months-slot">
+      <slot name="months" :months="getLocaleData(locale, monthFormat)">
         <div class="tq-date-picker__months">
           <div
             v-for="(month, index) in getLocaleData(locale, monthFormat)"
@@ -143,7 +138,7 @@ const selectYear = (year: number) => {
       </slot>
     </div>
     <div v-else-if="viewMode === 'years'" class="tq-date-picker__years-view">
-      <slot name="years" :years="years" class="tq-date-picker__years-slot">
+      <slot name="years" :years="years">
         <div class="tq-date-picker__years">
           <div v-for="year in years" :key="year" @click="selectYear(year)" class="tq-date-picker__year">
             {{ year }}
@@ -161,6 +156,8 @@ const selectYear = (year: number) => {
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   color: rgba(0, 0, 0, 0.87);
+  padding: 16px;
+  min-width: 360px;
 }
 
 .tq-date-picker__container {
@@ -226,6 +223,10 @@ const selectYear = (year: number) => {
   padding: 8px 0;
 }
 
+.tq-date-picker__months {
+  grid-template-columns: repeat(2, 1fr);
+}
+
 .tq-date-picker__day,
 .tq-date-picker__month,
 .tq-date-picker__year {
@@ -242,6 +243,12 @@ const selectYear = (year: number) => {
     color 0.3s;
 }
 
+.tq-date-picker__month,
+.tq-date-picker__year {
+  width: auto;
+  border-radius: 4px;
+}
+
 .tq-date-picker__day:hover,
 .tq-date-picker__month:hover,
 .tq-date-picker__year:hover {
@@ -250,6 +257,10 @@ const selectYear = (year: number) => {
 
 .tq-date-picker__day--adjacent {
   color: rgba(0, 0, 0, 0.38);
+}
+
+.tq-date-picker__day--adjacent-hidden {
+  visibility: hidden;
 }
 
 .tq-date-picker__day--today {

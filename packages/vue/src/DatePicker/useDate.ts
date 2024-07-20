@@ -44,25 +44,23 @@ export function useDate(options: {
 
   const monthDays = computed(() => {
     const days = currentMonthDays.value
-    if (options.showAdjacentDays) {
-      const { prevMonthDays, nextMonthDays } = getMonthAdjacentDays(normalizedHijriDate.value)
-      const todayValue = today.value
-      return [
-        ...prevMonthDays.map(day => ({
-          ...day,
-          isAdjacent: true,
-        })),
-        ...days.map(day => ({
-          ...day,
-          isAdjacent: false,
-          isToday: day.date.hy === todayValue.hy && day.date.hm === todayValue.hm && day.dayInMonth === todayValue.hd,
-        })),
-        ...nextMonthDays.map(day => ({
-          ...day,
-          isAdjacent: true,
-        })),
-      ]
-    }
+    const { prevMonthDays, nextMonthDays } = getMonthAdjacentDays(normalizedHijriDate.value)
+    const todayValue = today.value
+    return [
+      ...prevMonthDays.map(day => ({
+        ...day,
+        isAdjacent: true,
+      })),
+      ...days.map(day => ({
+        ...day,
+        isAdjacent: false,
+        isToday: day.date.hy === todayValue.hy && day.date.hm === todayValue.hm && day.dayInMonth === todayValue.hd,
+      })),
+      ...nextMonthDays.map(day => ({
+        ...day,
+        isAdjacent: true,
+      })),
+    ]
     return days
   })
 

@@ -20,11 +20,32 @@ export default defineConfig({
 
     sidebar: [
       {
-        text: 'Guide',
+        text: 'Core',
         items: [
           { text: 'Getting Started', link: '/guide/get-started' },
           { text: 'Convert to Hijri', link: '/guide/to-hijri' },
           { text: 'Convert to Gregorian', link: '/guide/to-gregorian' },
+        ],
+      },
+      {
+        text: 'Vue',
+        items: [
+          { text: 'Getting Started', link: '/guide/vue/get-started' },
+          {
+            text: 'Components',
+            link: '/guide/vue/components',
+            items: [
+              {
+                text: 'DatePicker',
+                link: '/guide/vue/datepicker',
+                items: [
+                  { text: 'Props', link: '/guide/vue/datepicker/props' },
+                  { text: 'Slots', link: '/guide/vue/datepicker/slots' },
+                  { text: 'Events', link: '/guide/vue/datepicker/events' },
+                ],
+              },
+            ],
+          },
         ],
       },
       {

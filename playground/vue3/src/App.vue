@@ -16,7 +16,18 @@ const formattedDate = ref('1446/01/07')
       {{ formattedDate }}
     </div>
     <div>
-      <DatePicker v-model="date" v-model:formatted-value="formattedDate" format="iD iMMM, iYYYY" />
+      <DatePicker
+        v-model="date"
+        v-model:formatted-value="formattedDate"
+        format="iYYYY/iMM/iD"
+        :showAdjacentDays="false"
+      >
+        <template #month="{ date, changeMode, locale }">
+          <div class="" @click="changeMode('months')">
+            {{ date.hm }}
+          </div>
+        </template>
+      </DatePicker>
     </div>
   </div>
 </template>

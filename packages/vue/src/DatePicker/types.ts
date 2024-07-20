@@ -5,14 +5,7 @@ export type MonthFormat = 'monthsMedium' | 'monthsLong' | 'monthsShort'
 export type ViewMode = 'month' | 'months' | 'years'
 
 export interface DatePickerProps {
-  disabled: boolean
-  nextIcon: string
-  prevIcon: string
-  modeIcon: string
-  text: string
   viewMode: ViewMode
-  hideWeekdays: boolean
-  multiple: 'single' | 'range' | 'multiple'
   locale: string
   modelValue: ValidHijriDate
   formattedValue: string

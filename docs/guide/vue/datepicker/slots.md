@@ -1,0 +1,13 @@
+| Name       | Description                                                                 | Slot Props                                                                                   |
+|------------|-----------------------------------------------------------------------------|----------------------------------------------------------------------------------------------|
+| `title`    | Custom content for the title area.                                          |                                                                                              |
+| `header`   | Custom content for the header area, typically showing the selected date.    |                                                                                              |
+| `controls` | Custom content for the date picker controls, including navigation buttons.  |                                                                                              |
+| `month`    | Custom content for the month navigation control.                            | `{ date: HijriDateObject, locale: string, changeMode: Function }`                            |
+| `mode`     | Custom content for the mode toggle button (month/year view).                | `{ date: HijriDateObject, locale: string, changeMode: Function, viewMode: ViewMode }`        |
+| `prev`     | Custom content for the previous month navigation button.                    | `{ prevMonth: Function }`                                                                    |
+| `next`     | Custom content for the next month navigation button.                        | `{ nextMonth: Function }`                                                                    |
+| `weekdays` | Custom content for displaying weekdays.                                     | `{ weekdays: string[] }`                                                                     |
+| `days`     | Custom content for displaying days in the month view.                       | `{ days: { date: HijriDateObject, dayInMonth: number, isAdjacent: boolean, isToday: boolean, isSelected: boolean }[] }` |
+| `months`   | Custom content for displaying months in the year view.                      | `{ months: string[] }`                                                                       |
+| `years`    | Custom content for displaying years in the decade view.                     | `{ years: number[] }`                                                                        |
