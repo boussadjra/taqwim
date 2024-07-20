@@ -14,7 +14,7 @@ const date = ref({hy: 1446, hm: 1, hd: 1})
 
 ## Introduction
 
-`taqwim-vue` is a set of components and composables that  
+`taqwim-vue` is a set of components and composables that
 
 ## Installation
 
@@ -41,7 +41,7 @@ yarn add taqwim-vue
 import { ref } from 'vue'
 import { DatePicker } from 'taqwim-vue'
 
-const date = ref({hy: 1446, hm: 1, hd: 1})
+const date = ref({ hy: 1446, hm: 1, hd: 1 })
 </script>
 
 <template>
