@@ -112,7 +112,7 @@ const selectYear = (year: number) => {
           <div v-for="day in weekdays" :key="day" class="tq-date-picker__weekday">{{ day }}</div>
         </div>
       </slot>
-      <slot name="days" :days="monthDays">
+      <slot name="days" :days="monthDays" :selectDay="selectDay">
         <div class="tq-date-picker__days">
           <div
             v-for="day in monthDays"
@@ -132,7 +132,7 @@ const selectYear = (year: number) => {
       </slot>
     </div>
     <div v-else-if="viewMode === 'months'" class="tq-date-picker__months-view">
-      <slot name="months" :months="getLocaleData(locale, monthFormat)">
+      <slot name="months" :months="getLocaleData(locale, monthFormat)" :changeMonth="changeMonth">
         <div class="tq-date-picker__months">
           <div
             v-for="(month, index) in getLocaleData(locale, monthFormat)"
@@ -146,7 +146,7 @@ const selectYear = (year: number) => {
       </slot>
     </div>
     <div v-else-if="viewMode === 'years'" class="tq-date-picker__years-view">
-      <slot name="years" :years="years">
+      <slot name="years" :years="years" :selectYear="selectYear">
         <div class="tq-date-picker__years">
           <div v-for="year in years" :key="year" @click="selectYear(year)" class="tq-date-picker__year">
             {{ year }}
