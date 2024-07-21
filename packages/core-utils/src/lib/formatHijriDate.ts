@@ -45,8 +45,8 @@ export function formatHijriDate(
   const hmLong = getLocaleData(locale, 'monthsLong')
   const hwShort = getLocaleData(locale, 'weekDaysShort')
   const hwLong = getLocaleData(locale, 'weekDaysLong')
-  const hwNumeric = [1, 2, 3, 4, 5, 6, 7]
-  const gregorianDate = toGregorian(hijriDate)
+  const hwNumeric = [0, 1, 2, 3, 4, 5, 6]
+  const gregorianDate = toGregorian(hijriDate) ?? new Date()
 
   if (!Object.prototype.hasOwnProperty.call(availablelocales, locale)) {
     throw new Error(`The locale "${locale}" is not supported.`)
@@ -79,11 +79,11 @@ export function formatHijriDate(
         case 'iD':
           return String(hijriDate.hd)
         case 'iE':
-          return String(hwNumeric[getDay(simulatedGregDate)])
+          return String(hwNumeric[getDay(gregorianDate)])
         case 'iEEE':
-          return hwShort[getDay(simulatedGregDate)]
+          return hwShort[getDay(gregorianDate)]
         case 'iEEEE':
-          return hwLong[getDay(simulatedGregDate)]
+          return hwLong[getDay(gregorianDate)]
 
         // the following patterns are the same for Gregorian only
 
