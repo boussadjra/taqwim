@@ -14,7 +14,7 @@ hero:
       text: API Reference
       link: /api/globals
   image:
-    src: /assets/logo.svg
+    src: https://raw.githubusercontent.com/boussadjra/taqwim/main/docs/assets/logo.svg
     alt: Taqwim
 features:
   - title: Agnostic
