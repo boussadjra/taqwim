@@ -20,7 +20,7 @@ const date = ref({ hy: 1446, hm: 1, hd: 1 })
 </template>
 ```
 
-### Props 
+### Props
 
 | Name               | Description                                     | Type                                                                      | Default                      |
 | ------------------ | ----------------------------------------------- | ------------------------------------------------------------------------- | ---------------------------- |
@@ -34,13 +34,10 @@ const date = ref({ hy: 1446, hm: 1, hd: 1 })
 | `monthFormat`      | Format for displaying months.                   | `MonthFormat` (`'monthsMedium'`, `'monthsLong'`, `'monthsShort'`)         | `'monthsMedium'`             |
 | `showAdjacentDays` | Whether to show dates from adjacent months.     | `boolean`                                                                 | `true`                       |
 
-
 ### Events
 
-| Name    | Description                          | Payload |
-| ------- | ------------------------------------ | ------- |
-
-
+| Name | Description | Payload |
+| ---- | ----------- | ------- |
 
 ### Slots
 
