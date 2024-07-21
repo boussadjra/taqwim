@@ -33,7 +33,6 @@ const { monthDays, prevMonth, nextMonth, normalizedHijriDate, years } = useDate(
 watchEffect(() => {
   emit('update:modelValue', normalizedHijriDate.value)
 
-  console.log(props.format)
   emit(
     'update:formattedValue',
     formatHijriDate(normalizedHijriDate.value, props.format ?? 'iD iMMM, iYYYY', props.locale),
@@ -77,7 +76,15 @@ const selectYear = (year: number) => {
         <div class="tq-date-picker__header">{{ formatHijriDate(normalizedHijriDate, 'iDD iMMMM iYYYY', locale) }}</div>
       </slot>
 
-      <slot name="controls">
+      <slot
+        name="controls"
+        :date="normalizedHijriDate"
+        :locale="locale"
+        :changeMode="changeMode"
+        :viewMode="viewMode"
+        :prevMonth="prevMonth"
+        :nextMonth="nextMonth"
+      >
         <slot name="month" :date="normalizedHijriDate" :locale="locale" :changeMode="changeMode">
           <button class="tq-date-picker__month-button" @click="changeMode('months')">
             {{ formatHijriDate(normalizedHijriDate, 'iMMMM iYYYY', locale) }}
