@@ -6,6 +6,10 @@ import { formatHijriDate } from 'taqwim-core-utils'
 const date = ref({ hy: 1446, hm: 1, hd: 7 })
 
 const formattedDate = ref('1446/01/07')
+
+const selectDay = day => {
+  console.log(day)
+}
 </script>
 
 <template>
@@ -22,6 +26,7 @@ const formattedDate = ref('1446/01/07')
         v-model:formatted-value="formattedDate"
         format="iYYYY/iMM/iD"
         :showAdjacentDays="false"
+        @select-day="selectDay"
       >
         <template #header>
           <div class="v-picker__header">

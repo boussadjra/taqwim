@@ -3,7 +3,7 @@ import { getLocaleData, toHijri, formatHijriDate, isEqual } from 'taqwim-core-ut
 import type { HijriDateObject } from 'taqwim-core-utils'
 import type { DatePickerProps, DatePickerEmits, ViewMode } from './types'
 import { useDate } from './useDate'
-import { toRefs, ref, watchEffect } from 'vue'
+import { ref, watchEffect } from 'vue'
 import ArrowRight from '../icons/ArrowRight.vue'
 import ArrowLeft from '../icons/ArrowLeft.vue'
 </script>
@@ -41,6 +41,7 @@ watchEffect(() => {
 
 const selectDay = (day: HijriDateObject) => {
   normalizedHijriDate.value = day
+  emit('select-day', day)
 }
 
 const weekdays = getLocaleData(props.locale, props.weekDayFormat)

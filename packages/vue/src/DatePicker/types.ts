@@ -19,4 +19,5 @@ export interface DatePickerProps {
 export interface DatePickerEmits {
   (event: 'update:modelValue', value: HijriDateObject): boolean
   (event: 'update:formattedValue', value: string): boolean
+  (event: 'select-day', value: HijriDateObject): boolean
 }
