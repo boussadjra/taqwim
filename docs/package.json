@@ -9,6 +9,6 @@
   },
   "dependencies": {
     "vitepress": "^1.1.4",
-    "taqwim-vue": "link:../packages/vue"
+    "taqwim-vue": "0.0.5"
   }
 }
