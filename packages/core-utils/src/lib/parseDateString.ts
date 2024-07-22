@@ -1,4 +1,4 @@
-import { isValidHijriDate } from '.'
+import { isValidHijriDate, toHijri } from '.'
 import type { HijriDateObject, TripleNumberFormat } from './types'
 
 /**
@@ -8,7 +8,7 @@ import type { HijriDateObject, TripleNumberFormat } from './types'
  * @returns The parsed HijriDateObject.
  * @throws Error if the date format is invalid.
  */
-export function parseDateString(dateString: TripleNumberFormat): HijriDateObject {
+export function parseDateString(dateString: TripleNumberFormat | '' | null | undefined): HijriDateObject {
   // Define regular expressions for the different date formats
   const regexes = {
     yyyyMMdd: /^\d{4}[-/]\d{2}[-/]\d{2}$/,
@@ -16,6 +16,15 @@ export function parseDateString(dateString: TripleNumberFormat): HijriDateObject
   }
 
   let date = null
+
+  if (dateString === '' || dateString === null || dateString === undefined) {
+    const now = new Date()
+    date = toHijri(now)
+  }
+
+  if (!dateString) {
+    return date as HijriDateObject
+  }
 
   if (regexes.yyyyMMdd.test(dateString)) {
     // Format: yyyy-MM-dd or yyyy/MM/dd

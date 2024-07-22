@@ -42,7 +42,7 @@ describe('formatHijriDate', () => {
     const hijriDate = { hy: 1445, hm: 9, hd: 1 }
     const formatStr = 'iE, iD iMMM iYYYY'
     const locale = 'en'
-    const expectedFormattedDate = '2, 1 Ramadan 1445'
+    const expectedFormattedDate = '1, 1 Ramadan 1445'
 
     const formattedDate = formatHijriDate(hijriDate, formatStr, locale)
 

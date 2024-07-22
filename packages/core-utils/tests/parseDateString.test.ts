@@ -16,6 +16,12 @@ describe('parseDateString', () => {
     expect(result).toEqual(expectedDate)
   })
 
+  it('should return the current date if the passed parameter is empty', () => {
+    const dateString = ''
+    const expectedDate = { hy: 1446, hm: 1, hd: 16 }
+    const result = parseDateString(dateString)
+    expect(result).toEqual(expectedDate)
+  })
   it('should throw an error for an invalid date', () => {
     const dateString = '1446/01/31'
     // console.log(parseDateString(dateString))

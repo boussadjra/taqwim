@@ -22,7 +22,7 @@ export function getMonthAdjacentDays(hijriDate: HijriDateObject): {
   const prevMonthLength = getDaysLengthInMonth(prevYear, prevMonth)
   const prevMonthStartDay = dayInWeek
   const prevMonthDays: MonthDay[] = []
-  console.log(prevMonthStartDay)
+
   for (let i = prevMonthStartDay; i > 0; i--) {
     prevMonthDays.push({
       dayInMonth: prevMonthLength - i + 1,

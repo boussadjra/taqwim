@@ -19,7 +19,9 @@ describe('getDayInWeek', () => {
     expect(dayOfWeek).toBe(0) // Sunday
   })
 
-  it('should throw an error if the input is invalid', () => {
-    expect(() => getDayInWeek('')).toThrowError('Invalid date format')
+  it('should return the today weekday ', () => {
+    const now = new Date()
+
+    expect(getDayInWeek('')).toBe(now.getDay())
   })
 })
