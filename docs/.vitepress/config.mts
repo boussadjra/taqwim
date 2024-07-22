@@ -12,7 +12,7 @@ export default defineConfig({
   },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-    logo: '../assets/logo.svg',
+    logo: 'https://raw.githubusercontent.com/boussadjra/taqwim/main/docs/assets/logo.svg',
     nav: [
       { text: 'Home', link: '/get-started' },
       { text: 'API', link: '/api/convert' },
