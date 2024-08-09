@@ -15,19 +15,6 @@
     "./*": "./dist/taqwim-core-utils.mjs"
   },
   "license": "MIT",
-  "keywords": [
-    "taqwim",
-    "taqwim-core-utils",
-    "taqwim-vue",
-    "taqwim-docs",
-    "date",
-    "hijri",
-    "islamic",
-    "calendar",
-    "vue",
-    "vite",
-    "typescript"
-  ],
   "scripts": {
     "build": "rimraf dist && vite build",
     "test": "vitest",
@@ -57,5 +44,18 @@
     "commitizen": {
       "path": "cz-conventional-changelog"
     }
-  }
+  },
+  "keywords": [
+    "taqwim",
+    "taqwim-core-utils",
+    "taqwim-vue",
+    "taqwim-docs",
+    "date",
+    "hijri",
+    "islamic",
+    "calendar",
+    "vue",
+    "vite",
+    "typescript"
+  ]
 }

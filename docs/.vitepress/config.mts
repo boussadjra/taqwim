@@ -30,14 +30,14 @@ export default defineConfig({
       {
         text: 'Vue',
         items: [
-          { text: 'Getting Started', link: '/guide/vue/get-started' },
+          { text: 'Getting Started' },
           {
             text: 'Components',
-            link: '/guide/vue/components',
+
             items: [
               {
                 text: 'DatePicker',
-                link: '/guide/vue/datepicker',
+
                 items: [
                   { text: 'Props', link: '/guide/vue/datepicker/props' },
                   { text: 'Slots', link: '/guide/vue/datepicker/slots' },
