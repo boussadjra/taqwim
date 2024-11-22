@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": false,
   "description": "Hijri Date utils",
+  "author": "Brahim Boussadjra",
+  "repository": "https://github.com/boussadjra/taqwim",
+  "license": "MIT",
   "main": "dist/taqwim-core-utils.mjs",
   "typings": "dist/index.d.mts",
   "module": "dist/taqwim-core-utils.mjs",
@@ -14,7 +17,6 @@
     },
     "./*": "./dist/taqwim-core-utils.mjs"
   },
-  "license": "MIT",
   "scripts": {
     "build": "rimraf dist && vite build",
     "test": "vitest",

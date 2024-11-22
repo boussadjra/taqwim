@@ -15,7 +15,7 @@ export default defineConfig({
     logo: 'https://raw.githubusercontent.com/boussadjra/taqwim/main/docs/assets/logo.svg',
     nav: [
       { text: 'Home', link: '/get-started' },
-      { text: 'API', link: '/api/convert' },
+      { text: 'API', link: '/api/globals' },
     ],
 
     sidebar: [

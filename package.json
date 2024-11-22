@@ -4,6 +4,9 @@
   "private": false,
   "description": "",
   "main": "index.js",
+  "author": "Brahim Boussadjra",
+  "repository": "https://github.com/boussadjra/taqwim",
+  "license": "MIT",
   "scripts": {
     "vue:dev": "pnpm --filter taqwim-vue dev",
     "vue:build": "pnpm --filter taqwim-vue build-only",
@@ -37,8 +40,6 @@
     "vite",
     "typescript"
   ],
-  "author": "Brahim Boussadjra",
-  "license": "MIT",
   "dependencies": {
     "taqwim-core-utils": "workspace:^"
   },

@@ -22,6 +22,6 @@ const hijriDate = toHijri(gregorianDate)
 console.log(hijriDate) // { hy: 1445, hm:9, hd: 1 }
 ```
 
-## API
+## Docs
 
-- [Full API Documentation](../../docs/api/globals.md)
+- [Full Documentation](https://taqwim.vercel.app)
