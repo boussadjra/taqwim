@@ -18,7 +18,7 @@
     "./*": "./dist/taqwim-core-utils.mjs"
   },
   "scripts": {
-    "build": "rimraf dist && vite build",
+    "build": "tsdown",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "dev": "vite",
@@ -31,10 +31,10 @@
     "node": ">=10"
   },
   "dependencies": {
-    "date-fns": "^3.6.0"
+    "date-fns": "^4.1.0"
   },
   "devDependencies": {
-    "tsup": "^8.0.2"
+    "tsdown": "^0.13.1"
   },
   "files": [
     "dist/**/*",
