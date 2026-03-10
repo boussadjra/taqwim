@@ -14,7 +14,8 @@
   "dependencies": {
     "vue": "^3.4.21",
     "vue-router": "^4.3.0",
-    "taqwim-vue": "link:../../packages/vue"
+    "taqwim-vue": "link:../../packages/vue",
+    "taqwim-core-utils": "link:../../packages/core-utils"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.8.0",
