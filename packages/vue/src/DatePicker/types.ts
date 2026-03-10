@@ -5,15 +5,15 @@ export type MonthFormat = 'monthsMedium' | 'monthsLong' | 'monthsShort'
 export type ViewMode = 'month' | 'months' | 'years'
 
 export interface DatePickerProps {
-  viewMode: ViewMode
-  locale: string
-  modelValue: ValidHijriDate
-  formattedValue: string
-  format: string
-  title: string
-  weekDayFormat: WeekDayFormat
-  monthFormat: MonthFormat
-  showAdjacentDays: boolean
+  viewMode?: ViewMode
+  locale?: string
+  modelValue?: ValidHijriDate
+  formattedValue?: string
+  format?: string
+  title?: string
+  weekDayFormat?: WeekDayFormat
+  monthFormat?: MonthFormat
+  showAdjacentDays?: boolean
 }
 
 export interface DatePickerEmits {

@@ -1,0 +1,239 @@
+/* HijriCalendar CSS Variables - Base Design System */
+
+:root {
+  /* === Core Colors === */
+  --hijri-calendar-background: #ffffff;
+  --hijri-calendar-foreground: #111827;
+  --hijri-calendar-border: #e5e7eb;
+  --hijri-calendar-border-radius: 0.5rem;
+  --hijri-calendar-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+  /* === Primary Colors === */
+  --hijri-calendar-primary: #2563eb;
+  --hijri-calendar-primary-foreground: #ffffff;
+  --hijri-calendar-primary-hover: #1d4ed8;
+
+  /* === Secondary Colors === */
+  --hijri-calendar-secondary: #f3f4f6;
+  --hijri-calendar-secondary-foreground: #6b7280;
+  --hijri-calendar-secondary-hover: #e5e7eb;
+
+  /* === Accent Colors === */
+  --hijri-calendar-accent: #dbeafe;
+  --hijri-calendar-accent-foreground: #1e40af;
+
+  /* === Muted Colors === */
+  --hijri-calendar-muted: #f9fafb;
+  --hijri-calendar-muted-foreground: #9ca3af;
+
+  /* === State Colors === */
+  --hijri-calendar-selected: var(--hijri-calendar-primary);
+  --hijri-calendar-selected-foreground: var(--hijri-calendar-primary-foreground);
+  --hijri-calendar-selected-hover: var(--hijri-calendar-primary-hover);
+
+  --hijri-calendar-today: var(--hijri-calendar-accent);
+  --hijri-calendar-today-foreground: var(--hijri-calendar-accent-foreground);
+
+  --hijri-calendar-outside-view: var(--hijri-calendar-muted-foreground);
+  --hijri-calendar-disabled: var(--hijri-calendar-muted-foreground);
+  --hijri-calendar-unavailable: #ef4444;
+
+  /* === Interactive States === */
+  --hijri-calendar-hover: var(--hijri-calendar-secondary);
+  --hijri-calendar-focus-ring: 0 0 0 2px var(--hijri-calendar-primary);
+  --hijri-calendar-focus-ring-offset: 0 0 0 4px rgba(59, 130, 246, 0.1);
+
+  /* === Typography === */
+  --hijri-calendar-font-size-sm: 0.75rem;
+  --hijri-calendar-font-size-base: 0.875rem;
+  --hijri-calendar-font-size-lg: 1.125rem;
+  --hijri-calendar-font-size-xl: 1.25rem;
+  --hijri-calendar-font-weight-normal: 400;
+  --hijri-calendar-font-weight-medium: 500;
+  --hijri-calendar-font-weight-semibold: 600;
+  --hijri-calendar-font-weight-bold: 700;
+
+  /* === Spacing === */
+  --hijri-calendar-spacing-xs: 0.25rem;
+  --hijri-calendar-spacing-sm: 0.5rem;
+  --hijri-calendar-spacing-md: 1rem;
+  --hijri-calendar-spacing-lg: 1.5rem;
+  --hijri-calendar-spacing-xl: 2rem;
+
+  /* === Component Specific === */
+  --hijri-calendar-header-padding: var(--hijri-calendar-spacing-md);
+  --hijri-calendar-header-border: 1px solid var(--hijri-calendar-border);
+
+  --hijri-calendar-cell-size: 2rem;
+  --hijri-calendar-cell-border-radius: 0.375rem;
+  --hijri-calendar-cell-gap: var(--hijri-calendar-spacing-xs);
+
+  --hijri-calendar-nav-button-size: 2rem;
+  --hijri-calendar-nav-button-border-radius: var(--hijri-calendar-cell-border-radius);
+
+  --hijri-calendar-grid-gap: var(--hijri-calendar-cell-gap);
+  --hijri-calendar-grid-padding: var(--hijri-calendar-spacing-sm);
+
+  /* === Transitions === */
+  --hijri-calendar-transition: all 0.15s ease-in-out;
+  --hijri-calendar-transition-fast: all 0.1s ease-in-out;
+  --hijri-calendar-transition-slow: all 0.3s ease-in-out;
+
+  /* === Z-Index === */
+  --hijri-calendar-z-index: 50;
+}
+
+/* === Dark Theme Variables === */
+.hijri-calendar-dark {
+  --hijri-calendar-background: #1f2937;
+  --hijri-calendar-foreground: #f9fafb;
+  --hijri-calendar-border: #374151;
+  --hijri-calendar-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+
+  --hijri-calendar-primary: #2563eb;
+  --hijri-calendar-primary-foreground: #ffffff;
+  --hijri-calendar-primary-hover: #1d4ed8;
+
+  --hijri-calendar-secondary: #374151;
+  --hijri-calendar-secondary-foreground: #9ca3af;
+  --hijri-calendar-secondary-hover: #4b5563;
+
+  --hijri-calendar-accent: #1e3a8a;
+  --hijri-calendar-accent-foreground: #60a5fa;
+
+  --hijri-calendar-muted: #111827;
+  --hijri-calendar-muted-foreground: #6b7280;
+
+  --hijri-calendar-hover: var(--hijri-calendar-secondary);
+  --hijri-calendar-outside-view: var(--hijri-calendar-muted-foreground);
+  --hijri-calendar-disabled: var(--hijri-calendar-muted-foreground);
+  --hijri-calendar-unavailable: #ef4444;
+}
+
+/* === Modern Theme Variables === */
+.hijri-calendar-modern {
+  --hijri-calendar-background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --hijri-calendar-foreground: #ffffff;
+  --hijri-calendar-border: none;
+  --hijri-calendar-border-radius: 1rem;
+  --hijri-calendar-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  --hijri-calendar-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --hijri-calendar-primary-foreground: #ffffff;
+  --hijri-calendar-primary-hover: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+
+  --hijri-calendar-secondary: rgba(255, 255, 255, 0.1);
+  --hijri-calendar-secondary-foreground: rgba(255, 255, 255, 0.8);
+  --hijri-calendar-secondary-hover: rgba(255, 255, 255, 0.2);
+
+  --hijri-calendar-accent: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  --hijri-calendar-accent-foreground: #ffffff;
+
+  --hijri-calendar-muted: rgba(255, 255, 255, 0.05);
+  --hijri-calendar-muted-foreground: rgba(255, 255, 255, 0.5);
+
+  --hijri-calendar-cell-border-radius: 50%;
+  --hijri-calendar-nav-button-border-radius: 50%;
+  --hijri-calendar-nav-button-size: 2.5rem;
+  --hijri-calendar-cell-size: 2.5rem;
+
+  --hijri-calendar-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --hijri-calendar-header-padding: var(--hijri-calendar-spacing-lg);
+  --hijri-calendar-grid-gap: var(--hijri-calendar-spacing-sm);
+}
+
+/* === Islamic Theme Variables === */
+.hijri-calendar-islamic {
+  --hijri-calendar-background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+  --hijri-calendar-foreground: #ecfdf5;
+  --hijri-calendar-border: 2px solid #34d399;
+  --hijri-calendar-border-radius: 0.75rem;
+  --hijri-calendar-shadow: 0 10px 25px rgba(6, 95, 70, 0.3);
+
+  --hijri-calendar-primary: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  --hijri-calendar-primary-foreground: #ffffff;
+  --hijri-calendar-primary-hover: linear-gradient(135deg, #047857 0%, #059669 100%);
+
+  --hijri-calendar-secondary: rgba(52, 211, 153, 0.2);
+  --hijri-calendar-secondary-foreground: var(--hijri-calendar-foreground);
+  --hijri-calendar-secondary-hover: rgba(52, 211, 153, 0.3);
+
+  --hijri-calendar-accent: linear-gradient(135deg, #fbbf24 0%, #34d399 100%);
+  --hijri-calendar-accent-foreground: #065f46;
+
+  --hijri-calendar-muted: rgba(6, 95, 70, 0.8);
+  --hijri-calendar-muted-foreground: rgba(236, 253, 245, 0.7);
+
+  --hijri-calendar-nav-button-size: 2.5rem;
+  --hijri-calendar-cell-size: 2.25rem;
+  --hijri-calendar-header-padding: var(--hijri-calendar-spacing-lg);
+  --hijri-calendar-grid-gap: 0.375rem;
+  --hijri-calendar-transition: all 0.3s ease;
+}
+
+/* === Minimal Theme Variables === */
+.hijri-calendar-minimal {
+  --hijri-calendar-background: transparent;
+  --hijri-calendar-foreground: inherit;
+  --hijri-calendar-border: none;
+  --hijri-calendar-border-radius: 0;
+  --hijri-calendar-shadow: none;
+
+  --hijri-calendar-primary: currentColor;
+  --hijri-calendar-primary-foreground: inherit;
+  --hijri-calendar-primary-hover: currentColor;
+
+  --hijri-calendar-secondary: transparent;
+  --hijri-calendar-secondary-foreground: inherit;
+  --hijri-calendar-secondary-hover: rgba(0, 0, 0, 0.05);
+
+  --hijri-calendar-accent: rgba(0, 0, 0, 0.1);
+  --hijri-calendar-accent-foreground: inherit;
+
+  --hijri-calendar-muted: transparent;
+  --hijri-calendar-muted-foreground: rgba(0, 0, 0, 0.6);
+
+  --hijri-calendar-header-border: none;
+  --hijri-calendar-header-padding: 0;
+  --hijri-calendar-grid-padding: 0;
+  --hijri-calendar-cell-gap: 0.125rem;
+}
+
+/* === Responsive Design === */
+@media (max-width: 640px) {
+  :root {
+    --hijri-calendar-cell-size: 1.75rem;
+    --hijri-calendar-nav-button-size: 1.75rem;
+    --hijri-calendar-header-padding: 0.75rem;
+    --hijri-calendar-font-size-base: 0.75rem;
+    --hijri-calendar-font-size-lg: 1rem;
+  }
+}
+
+/* === High Contrast Mode === */
+@media (prefers-contrast: high) {
+  :root {
+    --hijri-calendar-border: #000000;
+    --hijri-calendar-foreground: #000000;
+    --hijri-calendar-background: #ffffff;
+    --hijri-calendar-primary: #0000ff;
+    --hijri-calendar-focus-ring: 0 0 0 3px #000000;
+  }
+
+  .hijri-calendar-dark {
+    --hijri-calendar-border: #ffffff;
+    --hijri-calendar-foreground: #ffffff;
+    --hijri-calendar-background: #000000;
+    --hijri-calendar-primary: #00ffff;
+    --hijri-calendar-focus-ring: 0 0 0 3px #ffffff;
+  }
+}
+
+/* === Reduced Motion === */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --hijri-calendar-transition: none;
+    --hijri-calendar-transition-fast: none;
+    --hijri-calendar-transition-slow: none;
+  }
+}

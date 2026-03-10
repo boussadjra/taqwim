@@ -1,3 +1,12 @@
+/**
+ * Copied and adapted from Reka UI (https://github.com/unovue/reka-ui)
+ * Copyright (c) 2023 UnoVue
+ * Licensed under the MIT License
+ * See:  * See: https://github.com/unovue/reka-ui/blob/main/LICENSE
+ *
+ * Original file url: https://github.com/unovue/reka-ui/blob/7ad854c1ab1f54a512b4c3d4d0549d6dceeed04b/packages/core/src/shared/createContext.ts
+ */
+
 import { type InjectionKey, inject, provide } from 'vue'
 
 /**

@@ -1,0 +1,254 @@
+/* HijriCalendar Luxurious Theme */
+.hijri-calendar-luxurious {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  border: 2px solid #d4af37;
+  border-radius: 1rem;
+  box-shadow:
+    0 20px 60px rgba(212, 175, 55, 0.3),
+    0 8px 24px rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.hijri-calendar-luxurious::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.hijri-calendar-luxurious .hijri-calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.2), rgba(255, 215, 0, 0.1));
+  backdrop-filter: blur(15px);
+  position: relative;
+}
+
+.hijri-calendar-luxurious .hijri-calendar-heading {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #d4af37;
+  text-shadow: 0 2px 8px rgba(212, 175, 55, 0.5);
+  letter-spacing: 0.05em;
+}
+
+.hijri-calendar-luxurious .hijri-calendar-nav-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.75rem;
+  color: #d4af37;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(255, 215, 0, 0.1));
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.2);
+  position: relative;
+}
+
+.hijri-calendar-luxurious .hijri-calendar-nav-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(255, 215, 0, 0.2));
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.hijri-calendar-luxurious .hijri-calendar-nav-button:hover::before {
+  opacity: 1;
+}
+
+.hijri-calendar-luxurious .hijri-calendar-nav-button:hover {
+  color: #ffffff;
+  border-color: #d4af37;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.4);
+}
+
+.hijri-calendar-luxurious .hijri-calendar-nav-button:focus {
+  outline: none;
+  box-shadow:
+    0 0 0 3px rgba(212, 175, 55, 0.6),
+    0 8px 24px rgba(212, 175, 55, 0.4);
+}
+
+.hijri-calendar-luxurious .hijri-calendar-nav-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.hijri-calendar-luxurious .hijri-calendar-grid {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.hijri-calendar-luxurious .hijri-calendar-grid-head {
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+  background: rgba(212, 175, 55, 0.1);
+}
+
+.hijri-calendar-luxurious .hijri-calendar-grid-body {
+  background: transparent;
+}
+
+.hijri-calendar-luxurious .hijri-calendar-grid-row {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.hijri-calendar-luxurious .hijri-calendar-head-cell {
+  padding: 0.75rem;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #d4af37;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-shadow: 0 1px 3px rgba(212, 175, 55, 0.3);
+}
+
+.hijri-calendar-luxurious .hijri-calendar-cell {
+  position: relative;
+  text-align: center;
+}
+
+.hijri-calendar-luxurious .hijri-calendar-cell-trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #ffffff;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.hijri-calendar-luxurious .hijri-calendar-cell-trigger:hover {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(255, 215, 0, 0.2));
+  border-color: rgba(212, 175, 55, 0.5);
+  color: #d4af37;
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
+}
+
+.hijri-calendar-luxurious .hijri-calendar-cell-trigger:focus {
+  outline: none;
+  box-shadow:
+    0 0 0 2px rgba(212, 175, 55, 0.8),
+    0 4px 16px rgba(212, 175, 55, 0.3);
+  z-index: 1;
+}
+
+.hijri-calendar-luxurious .hijri-calendar-cell-trigger[data-selected] {
+  background: linear-gradient(135deg, #d4af37, #ffd700);
+  color: #1a1a2e;
+  border-color: #ffd700;
+  font-weight: 700;
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.5);
+}
+
+.hijri-calendar-luxurious .hijri-calendar-cell-trigger[data-selected]:hover {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  box-shadow: 0 12px 32px rgba(212, 175, 55, 0.6);
+}
+
+.hijri-calendar-luxurious .hijri-calendar-cell-trigger[data-today]:not([data-selected]) {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(212, 175, 55, 0.2));
+  color: #ffd700;
+  border: 1px solid rgba(255, 215, 0, 0.5);
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(255, 215, 0, 0.3);
+}
+
+.hijri-calendar-luxurious .hijri-calendar-cell-trigger[data-outside-view] {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.hijri-calendar-luxurious .hijri-calendar-cell-trigger[data-unavailable] {
+  color: #ff6b6b;
+  text-decoration: line-through;
+  pointer-events: none;
+}
+
+.hijri-calendar-luxurious .hijri-calendar-cell-trigger[data-disabled] {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Luxurious theme selector styles */
+.hijri-calendar-luxurious .year-month-selector {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  border: 2px solid #d4af37;
+  box-shadow: 0 20px 60px rgba(212, 175, 55, 0.3);
+}
+
+.hijri-calendar-luxurious .selector-header {
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.2), rgba(255, 215, 0, 0.1));
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.hijri-calendar-luxurious .selector-title {
+  color: #d4af37;
+  text-shadow: 0 2px 8px rgba(212, 175, 55, 0.5);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.hijri-calendar-luxurious .selector-close {
+  color: #d4af37;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(255, 215, 0, 0.1));
+}
+
+.hijri-calendar-luxurious .selector-close:hover {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(255, 215, 0, 0.2));
+  border-color: #d4af37;
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.4);
+}
+
+.hijri-calendar-luxurious .selector-item {
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  color: #ffffff;
+  background: rgba(212, 175, 55, 0.1);
+}
+
+.hijri-calendar-luxurious .selector-item:hover {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(255, 215, 0, 0.2));
+  border-color: rgba(212, 175, 55, 0.5);
+  color: #d4af37;
+  transform: scale(1.02);
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
+}
+
+.hijri-calendar-luxurious .selector-item.selected {
+  background: linear-gradient(135deg, #d4af37, #ffd700);
+  color: #1a1a2e;
+  border-color: #ffd700;
+  font-weight: 700;
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.5);
+}

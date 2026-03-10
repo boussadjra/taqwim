@@ -1,8 +1,8 @@
 <script lang="ts">
 import { getLocaleData, toHijri, formatHijriDate, isEqual } from 'taqwim-core-utils'
 import type { HijriDateObject } from 'taqwim-core-utils'
-import type { DatePickerProps, DatePickerEmits, ViewMode } from './types'
-import { useDate } from './useDate'
+import type { DatePickerProps, DatePickerEmits, ViewMode } from './types.js'
+import { useDate } from './useDate.js'
 import { ref, watchEffect } from 'vue'
 import ArrowRight from '../icons/ArrowRight.vue'
 import ArrowLeft from '../icons/ArrowLeft.vue'

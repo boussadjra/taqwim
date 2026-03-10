@@ -1,0 +1,200 @@
+/* HijriCalendar Minimalist Theme */
+.hijri-calendar-minimalist {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  color: #333333;
+  position: relative;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.hijri-calendar-minimalist .hijri-calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fafafa;
+  position: relative;
+}
+
+.hijri-calendar-minimalist .hijri-calendar-heading {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333333;
+  margin: 0;
+}
+
+.hijri-calendar-minimalist .hijri-calendar-nav-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.25rem;
+  color: #666666;
+  background: transparent;
+  border: 1px solid #e0e0e0;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+}
+
+.hijri-calendar-minimalist .hijri-calendar-nav-button:hover {
+  color: #333333;
+  background: #f5f5f5;
+  border-color: #d0d0d0;
+}
+
+.hijri-calendar-minimalist .hijri-calendar-nav-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #007aff;
+}
+
+.hijri-calendar-minimalist .hijri-calendar-nav-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.hijri-calendar-minimalist .hijri-calendar-grid {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.hijri-calendar-minimalist .hijri-calendar-grid-head {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.hijri-calendar-minimalist .hijri-calendar-grid-body {
+  background: #ffffff;
+}
+
+.hijri-calendar-minimalist .hijri-calendar-grid-row {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0;
+}
+
+.hijri-calendar-minimalist .hijri-calendar-head-cell {
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #666666;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.hijri-calendar-minimalist .hijri-calendar-cell {
+  position: relative;
+  text-align: center;
+  border-bottom: 1px solid #f8f8f8;
+}
+
+.hijri-calendar-minimalist .hijri-calendar-cell-trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: #333333;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  margin: 0.125rem auto;
+}
+
+.hijri-calendar-minimalist .hijri-calendar-cell-trigger:hover {
+  background: #f5f5f5;
+  color: #333333;
+}
+
+.hijri-calendar-minimalist .hijri-calendar-cell-trigger:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #007aff;
+  z-index: 1;
+}
+
+.hijri-calendar-minimalist .hijri-calendar-cell-trigger[data-selected] {
+  background: #007aff;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.hijri-calendar-minimalist .hijri-calendar-cell-trigger[data-selected]:hover {
+  background: #0056b3;
+}
+
+.hijri-calendar-minimalist .hijri-calendar-cell-trigger[data-today]:not([data-selected]) {
+  background: #e3f2fd;
+  color: #1976d2;
+  font-weight: 500;
+}
+
+.hijri-calendar-minimalist .hijri-calendar-cell-trigger[data-outside-view] {
+  color: #cccccc;
+}
+
+.hijri-calendar-minimalist .hijri-calendar-cell-trigger[data-unavailable] {
+  color: #f44336;
+  text-decoration: line-through;
+  pointer-events: none;
+}
+
+.hijri-calendar-minimalist .hijri-calendar-cell-trigger[data-disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Minimalist theme selector styles */
+.hijri-calendar-minimalist .year-month-selector {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.hijri-calendar-minimalist .selector-header {
+  background: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.hijri-calendar-minimalist .selector-title {
+  color: #333333;
+  font-weight: 500;
+}
+
+.hijri-calendar-minimalist .selector-close {
+  color: #666666;
+  border: 1px solid #e0e0e0;
+  background: transparent;
+}
+
+.hijri-calendar-minimalist .selector-close:hover {
+  background: #f5f5f5;
+  color: #333333;
+  border-color: #d0d0d0;
+}
+
+.hijri-calendar-minimalist .selector-item {
+  border: 1px solid #f0f0f0;
+  color: #333333;
+  background: #ffffff;
+}
+
+.hijri-calendar-minimalist .selector-item:hover {
+  background: #f5f5f5;
+  border-color: #e0e0e0;
+}
+
+.hijri-calendar-minimalist .selector-item.selected {
+  background: #007aff;
+  color: #ffffff;
+  border-color: #007aff;
+}

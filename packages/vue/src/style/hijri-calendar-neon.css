@@ -1,0 +1,221 @@
+/* HijriCalendar Neon Theme */
+.hijri-calendar-neon {
+  background: linear-gradient(135deg, #0a0a0f 0%, #1a0a2e 100%);
+  border: 1px solid #ff0081;
+  border-radius: 0.75rem;
+  box-shadow:
+    0 0 20px rgba(255, 0, 129, 0.3),
+    0 4px 15px rgba(0, 0, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.hijri-calendar-neon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 0, 129, 0.1) 50%, transparent 70%);
+  pointer-events: none;
+}
+
+.hijri-calendar-neon .hijri-calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-bottom: 1px solid #ff0081;
+  background: rgba(255, 0, 129, 0.1);
+  backdrop-filter: blur(10px);
+  position: relative;
+}
+
+.hijri-calendar-neon .hijri-calendar-heading {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #00ffff;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.hijri-calendar-neon .hijri-calendar-nav-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.375rem;
+  color: #ff0081;
+  background: rgba(255, 0, 129, 0.2);
+  border: 1px solid #ff0081;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  box-shadow: 0 0 10px rgba(255, 0, 129, 0.3);
+}
+
+.hijri-calendar-neon .hijri-calendar-nav-button:hover {
+  color: #00ffff;
+  background: rgba(0, 255, 255, 0.2);
+  border-color: #00ffff;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+  transform: scale(1.05);
+}
+
+.hijri-calendar-neon .hijri-calendar-nav-button:focus {
+  outline: none;
+  box-shadow:
+    0 0 0 2px #ff0081,
+    0 0 20px rgba(255, 0, 129, 0.5);
+}
+
+.hijri-calendar-neon .hijri-calendar-nav-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.hijri-calendar-neon .hijri-calendar-grid {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.hijri-calendar-neon .hijri-calendar-grid-head {
+  border-bottom: 1px solid #ff0081;
+}
+
+.hijri-calendar-neon .hijri-calendar-grid-body {
+  background: transparent;
+}
+
+.hijri-calendar-neon .hijri-calendar-grid-row {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.25rem;
+}
+
+.hijri-calendar-neon .hijri-calendar-head-cell {
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #00ffff;
+  text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+}
+
+.hijri-calendar-neon .hijri-calendar-cell {
+  position: relative;
+  text-align: center;
+}
+
+.hijri-calendar-neon .hijri-calendar-cell-trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: #ffffff;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+}
+
+.hijri-calendar-neon .hijri-calendar-cell-trigger:hover {
+  background: rgba(255, 0, 129, 0.2);
+  border-color: #ff0081;
+  color: #00ffff;
+  box-shadow: 0 0 15px rgba(255, 0, 129, 0.4);
+}
+
+.hijri-calendar-neon .hijri-calendar-cell-trigger:focus {
+  outline: none;
+  box-shadow:
+    0 0 0 2px #00ffff,
+    0 0 15px rgba(0, 255, 255, 0.5);
+}
+
+.hijri-calendar-neon .hijri-calendar-cell-trigger[data-selected] {
+  background: linear-gradient(45deg, #ff0081, #00ffff);
+  color: #000000;
+  border-color: #00ffff;
+  box-shadow: 0 0 20px rgba(255, 0, 129, 0.6);
+  font-weight: 600;
+}
+
+.hijri-calendar-neon .hijri-calendar-cell-trigger[data-selected]:hover {
+  box-shadow: 0 0 25px rgba(255, 0, 129, 0.8);
+}
+
+.hijri-calendar-neon .hijri-calendar-cell-trigger[data-today]:not([data-selected]) {
+  background: rgba(0, 255, 255, 0.2);
+  color: #00ffff;
+  border-color: #00ffff;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+.hijri-calendar-neon .hijri-calendar-cell-trigger[data-outside-view] {
+  color: #666666;
+}
+
+.hijri-calendar-neon .hijri-calendar-cell-trigger[data-unavailable] {
+  color: #ff4444;
+  text-decoration: line-through;
+  pointer-events: none;
+}
+
+.hijri-calendar-neon .hijri-calendar-cell-trigger[data-disabled] {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Neon theme selector styles */
+.hijri-calendar-neon .year-month-selector {
+  background: linear-gradient(135deg, #0a0a0f 0%, #1a0a2e 100%);
+  border: 1px solid #ff0081;
+  box-shadow: 0 0 20px rgba(255, 0, 129, 0.3);
+}
+
+.hijri-calendar-neon .selector-header {
+  background: rgba(255, 0, 129, 0.1);
+  border-bottom: 1px solid #ff0081;
+}
+
+.hijri-calendar-neon .selector-title {
+  color: #00ffff;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.hijri-calendar-neon .selector-close {
+  color: #ff0081;
+  border: 1px solid #ff0081;
+}
+
+.hijri-calendar-neon .selector-close:hover {
+  background: rgba(0, 255, 255, 0.2);
+  color: #00ffff;
+  border-color: #00ffff;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+}
+
+.hijri-calendar-neon .selector-item {
+  border: 1px solid #ff0081;
+  color: #ffffff;
+  background: rgba(255, 0, 129, 0.1);
+}
+
+.hijri-calendar-neon .selector-item:hover {
+  background: rgba(0, 255, 255, 0.2);
+  color: #00ffff;
+  border-color: #00ffff;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+.hijri-calendar-neon .selector-item.selected {
+  background: linear-gradient(45deg, #ff0081, #00ffff);
+  color: #000000;
+  border-color: #00ffff;
+  box-shadow: 0 0 20px rgba(255, 0, 129, 0.6);
+}

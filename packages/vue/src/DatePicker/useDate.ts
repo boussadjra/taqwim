@@ -12,7 +12,7 @@ import {
   getLocaleData,
 } from 'taqwim-core-utils'
 import type { ValidHijriDate, MonthDay } from 'taqwim-core-utils'
-import type { MonthFormat } from './types'
+import type { MonthFormat } from './types.js'
 export function useDate(options: {
   initialDate: ValidHijriDate
   showAdjacentDays: boolean
