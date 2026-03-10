@@ -1,0 +1,68 @@
+{
+  "folders": [
+    {
+      "name": "🏠 Root",
+      "path": ".",
+    },
+    {
+      "name": "📦 Core Utils",
+      "path": "./packages/core-utils",
+    },
+    {
+      "name": "🎨 Vue Components",
+      "path": "./packages/vue",
+    },
+    {
+      "name": "📚 Documentation",
+      "path": "./docs",
+    },
+    {
+      "name": "🎮 Playground",
+      "path": "./playground/vue3",
+    },
+  ],
+  "settings": {
+    "typescript.preferences.includePackageJsonAutoImports": "on",
+    "typescript.workspaceSymbols.scope": "allOpenProjects",
+    "eslint.workingDirectories": ["packages/core-utils", "packages/vue", "playground/vue3", "docs"],
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/dist": true,
+      "**/coverage": true,
+      "**/.nuxt": true,
+      "**/.output": true,
+      "**/.vitepress/cache": true,
+    },
+    "files.exclude": {
+      "**/node_modules": true,
+      "**/dist": true,
+      "**/coverage": true,
+    },
+    "typescript.preferences.experimentalDecorators": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit",
+    },
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+    },
+    "[vue]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+    },
+  },
+  "extensions": {
+    "recommendations": [
+      "vue.volar",
+      "esbenp.prettier-vscode",
+      "dbaeumer.vscode-eslint",
+      "bradlc.vscode-tailwindcss",
+      "ms-vscode.vscode-typescript-next",
+      "streetsidesoftware.code-spell-checker",
+      "github.copilot",
+      "github.copilot-chat",
+      "ms-vscode.test-adapter-converter",
+      "vitest.explorer",
+    ],
+  },
+}
