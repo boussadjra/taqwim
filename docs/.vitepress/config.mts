@@ -14,7 +14,9 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     logo: 'https://raw.githubusercontent.com/boussadjra/taqwim/main/docs/assets/logo.svg',
     nav: [
-      { text: 'Home', link: '/get-started' },
+      { text: 'Home', link: '/' },
+      { text: 'Guide', link: '/guide/get-started' },
+      { text: 'Playground', link: '/guide/playground' },
       { text: 'API', link: '/api/globals' },
     ],
 
@@ -28,28 +30,42 @@ export default defineConfig({
         ],
       },
       {
-        text: 'Vue',
+        text: 'Vue Components',
         items: [
-          { text: 'Getting Started' },
+          { text: 'Getting Started', link: '/guide/vue/get-started' },
+          { text: 'Interactive Demo', link: '/guide/playground' },
           {
-            text: 'Components',
-
+            text: 'Calendar Components',
             items: [
-              {
-                text: 'DatePicker',
-
-                items: [
-                  { text: 'Props', link: '/guide/vue/datepicker/props' },
-                  { text: 'Slots', link: '/guide/vue/datepicker/slots' },
-                  { text: 'Events', link: '/guide/vue/datepicker/events' },
-                ],
-              },
+              { text: 'HijriCalendarRoot', link: '/guide/vue/calendar/root' },
+              { text: 'HijriCalendarHeader', link: '/guide/vue/calendar/header' },
+              { text: 'HijriCalendarGrid', link: '/guide/vue/calendar/grid' },
+              { text: 'Theming System', link: '/guide/themes' },
+            ],
+          },
+          {
+            text: 'DatePicker Components',
+            items: [
+              { text: 'Props', link: '/guide/vue/datepicker/props' },
+              { text: 'Slots', link: '/guide/vue/datepicker/slots' },
+              { text: 'Events', link: '/guide/vue/datepicker/events' },
             ],
           },
         ],
       },
       {
-        text: 'API',
+        text: 'Themes & Playground',
+        items: [
+          { text: 'Theme System', link: '/guide/themes' },
+          { text: 'Interactive Playground', link: '/guide/playground' },
+          { text: 'Brutalist Theme', link: '/themes/default' },
+          { text: 'Islamic Royal Themes', link: '/themes/islamic' },
+          { text: 'Vercel Inspired', link: '/themes/modern' },
+          { text: 'Custom Themes', link: '/themes/custom' },
+        ],
+      },
+      {
+        text: 'API Reference',
         items: [{ text: 'Functions', link: '/api/globals' }],
       },
     ],
@@ -59,5 +75,13 @@ export default defineConfig({
       copyright: 'Copyright © 2024-present Boussadjra Brahim',
     },
     socialLinks: [{ icon: 'github', link: 'https://github.com/boussadjra/taqwim' }],
+  },
+  vue: {
+    // Enable Vue components in markdown
+    template: {
+      compilerOptions: {
+        isCustomElement: tag => tag.includes('-'),
+      },
+    },
   },
 })

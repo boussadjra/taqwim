@@ -12,6 +12,6 @@ export default {
     })
   },
   enhanceApp({ app, router, siteData }) {
-    // ...
+    // Enhanced app functionality can be added here
   },
 } satisfies Theme
