@@ -1,0 +1,60 @@
+name: Documentation Issue
+description: Report an issue with documentation
+title: '[Docs]: '
+labels: ['documentation', 'triage']
+assignees:
+  - boussadjra
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve our documentation!
+
+  - type: dropdown
+    id: doc-type
+    attributes:
+      label: Documentation Type
+      description: What type of documentation issue is this?
+      options:
+        - API Documentation
+        - User Guide
+        - Getting Started
+        - Examples
+        - README
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: page
+    attributes:
+      label: Page/Section
+      description: Which page or section is affected?
+      placeholder: 'e.g., toHijri function, Vue DatePicker component'
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue
+    attributes:
+      label: Issue Description
+      description: What's wrong with the current documentation?
+      placeholder: Describe what's unclear, incorrect, or missing
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested Improvement
+      description: How should the documentation be improved?
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checklist
+      options:
+        - label: I have checked that this documentation issue doesn't already exist
+          required: true

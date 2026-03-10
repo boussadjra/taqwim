@@ -1,0 +1,80 @@
+name: Feature Request
+description: Suggest an idea for Taqwim
+title: '[Feature]: '
+labels: ['enhancement', 'triage']
+assignees:
+  - boussadjra
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to suggest a new feature!
+
+  - type: dropdown
+    id: package
+    attributes:
+      label: Package
+      description: Which package would this feature affect?
+      options:
+        - taqwim-core-utils
+        - taqwim-vue
+        - Documentation
+        - Build/Development
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Description
+      description: Is your feature request related to a problem? Please describe.
+      placeholder: A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the solution you'd like
+      placeholder: A clear and concise description of what you want to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: api
+    attributes:
+      label: Proposed API (if applicable)
+      description: Show how you envision the API looking
+      render: typescript
+      placeholder: |
+        // Example:
+        import { newFunction } from 'taqwim-core-utils'
+
+        const result = newFunction(input)
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Describe any alternative solutions or features you've considered.
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context, mockups, or examples about the feature request here.
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checklist
+      description: By submitting this feature request, you agree to follow our contributing guidelines.
+      options:
+        - label: I have searched for existing feature requests before creating this one
+          required: true
+        - label: This feature request is specific and actionable
+          required: true
+        - label: I would be willing to help implement this feature
+          required: false

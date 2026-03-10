@@ -1,0 +1,101 @@
+name: CI
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint code
+        run: pnpm lint
+
+      - name: Type check
+        run: |
+          pnpm --filter taqwim-core-utils run build
+          pnpm --filter taqwim-vue run type-check
+
+      - name: Test Core Utils
+        run: pnpm core:test --coverage
+
+      - name: Test Vue Components
+        run: pnpm --filter taqwim-vue test:unit
+
+      - name: Build Core Utils
+        run: pnpm core:build
+
+      - name: Build Vue Components
+        run: pnpm vue:build
+
+      - name: Install Playwright browsers
+        run: pnpm --filter taqwim-vue exec playwright install --with-deps
+
+      - name: Run E2E tests with Playwright
+        run: pnpm --filter taqwim-vue test:e2e
+
+      - name: Upload Playwright test results
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report-node-${{ matrix.node-version }}
+          path: packages/vue/playwright-report/
+          retention-days: 7
+
+      - name: Build Documentation
+        run: pnpm docs:build
+
+      - name: Upload coverage to Codecov
+        if: matrix.node-version == 20
+        uses: codecov/codecov-action@v3
+        with:
+          directory: ./packages/core-utils/coverage
+          fail_ci_if_error: true
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run npm audit
+        run: pnpm audit --audit-level moderate
+
+      - name: Run license check
+        run: npx license-checker --onlyAllow 'MIT;Apache-2.0;BSD-3-Clause;BSD-2-Clause;ISC;0BSD'
