@@ -2,6 +2,7 @@
 import { resolve } from 'node:path'
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 export default defineConfig({
   build: {
@@ -22,6 +23,14 @@ export default defineConfig({
         globals: {
           'date-fns': 'dateFns',
         },
+        manualChunks: undefined, // Disable manual chunks for library builds
+      },
+    },
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
       },
     },
   },
@@ -29,6 +38,12 @@ export default defineConfig({
     dts({
       insertTypesEntry: true,
       include: ['src/lib/**/*'],
+    }),
+    visualizer({
+      filename: 'dist/stats.html',
+      open: false,
+      gzipSize: true,
+      brotliSize: true,
     }),
   ],
 })

@@ -6,35 +6,38 @@
   "author": "Brahim Boussadjra",
   "repository": "https://github.com/boussadjra/taqwim",
   "license": "MIT",
-  "main": "dist/taqwim-core-utils.mjs",
-  "typings": "dist/index.d.mts",
-  "module": "dist/taqwim-core-utils.mjs",
+  "sideEffects": false,
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "module": "dist/index.mjs",
   "exports": {
     ".": {
-      "import": "./dist/taqwim-core-utils.mjs",
-      "require": "./dist/taqwim-core-utils.umd.cjs",
-      "types": "./dist/index.d.ts"
-    },
-    "./*": "./dist/taqwim-core-utils.mjs"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
   },
   "scripts": {
     "build": "tsdown",
     "test": "vitest",
+    "test:coverage": "vitest --coverage",
     "test:ui": "vitest --ui",
     "dev": "vite",
     "preview": "vite preview",
     "build:api": "jsdoc2md example.js > API.md",
+    "prepublishOnly": "tsdown",
     "publish": "pnpm publish --access public",
     "analyse": "vite-bundle-visualizer dist --port 3000"
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=16"
   },
   "dependencies": {
     "date-fns": "^4.1.0"
   },
   "devDependencies": {
-    "tsdown": "^0.13.1"
+    "@vitest/coverage-v8": "^1.6.0",
+    "rollup-plugin-visualizer": "^5.12.0"
   },
   "files": [
     "dist/**/*",
@@ -58,6 +61,10 @@
     "calendar",
     "vue",
     "vite",
-    "typescript"
+    "typescript",
+    "nodejs",
+    "nestjs",
+    "backend",
+    "server-side"
   ]
 }
