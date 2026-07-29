@@ -2,45 +2,61 @@ import type { HijriDateObject, MonthDay } from './types'
 import { getDaysLengthInMonth, getDayInWeek } from '.'
 
 /**
- * Get the days of the previous and next months of the given Hijri date.
- * @param hijriDate - The Hijri date to get the adjacent days of.
- * @returns An object containing the days of the previous and next months.
+ * Get the days of the previous and next months needed to pad the given month
+ * into whole weeks.
+ *
+ * @param hijriDate - Any date in the month to pad.
+ * @param weekStartsOn - Day the week starts on, `0` (Sunday) .. `6` (Saturday).
+ *                       Defaults to Sunday.
+ * @returns The leading days from the previous month and the trailing days from
+ *          the next. `dayInWeek` is the true day of the week (0 = Sunday).
  */
-export function getMonthAdjacentDays(hijriDate: HijriDateObject): {
+export function getMonthAdjacentDays(
+  hijriDate: HijriDateObject,
+  weekStartsOn = 0,
+): {
   prevMonthDays: MonthDay[]
   nextMonthDays: MonthDay[]
 } {
-  // dayInWeek is the day of the week of the first day of the month
-  const dayInWeek = getDayInWeek({
-    ...hijriDate,
-    hd: 1,
-  })
-  if (dayInWeek === undefined) return { prevMonthDays: [], nextMonthDays: [] }
+  const firstDayInWeek = getDayInWeek({ ...hijriDate, hd: 1 })
+  if (firstDayInWeek === undefined) return { prevMonthDays: [], nextMonthDays: [] }
+
   const { hy, hm } = hijriDate
+  const daysInMonth = getDaysLengthInMonth(hy, hm)
+  if (daysInMonth < 0) return { prevMonthDays: [], nextMonthDays: [] }
+
+  // How many cells precede day 1 in this layout.
+  const leading = (firstDayInWeek - weekStartsOn + 7) % 7
+
   const prevMonth = hm === 1 ? 12 : hm - 1
   const prevYear = hm === 1 ? hy - 1 : hy
   const prevMonthLength = getDaysLengthInMonth(prevYear, prevMonth)
-  const prevMonthStartDay = dayInWeek
   const prevMonthDays: MonthDay[] = []
 
-  for (let i = prevMonthStartDay; i > 0; i--) {
+  for (let i = leading; i > 0; i--) {
+    const dayInMonth = prevMonthLength - i + 1
     prevMonthDays.push({
-      dayInMonth: prevMonthLength - i + 1,
-      dayInWeek: dayInWeek - i,
-      date: { hy: prevYear, hm: prevMonth, hd: prevMonthLength - i + 1 },
+      dayInMonth,
+      dayInWeek: (firstDayInWeek - i + 7) % 7,
+      date: { hy: prevYear, hm: prevMonth, hd: dayInMonth },
     })
   }
 
   const nextMonth = hm === 12 ? 1 : hm + 1
   const nextYear = hm === 12 ? hy + 1 : hy
 
-  const endDayInWeek = (dayInWeek + getDaysLengthInMonth(hy, hm)) % 7
+  // Day of the week immediately after the last day of the month.
+  const dayAfterEnd = (firstDayInWeek + daysInMonth) % 7
+  // Cells left to fill in the final week. Zero when the month ends exactly on
+  // the last column — the previous implementation added a whole spurious week
+  // in that case, because `i <= 6 - 0` still ran seven times.
+  const trailing = (weekStartsOn - dayAfterEnd + 7) % 7
 
   const nextMonthDays: MonthDay[] = []
-  for (let i = 0; i <= 6 - endDayInWeek; i++) {
+  for (let i = 0; i < trailing; i++) {
     nextMonthDays.push({
       dayInMonth: i + 1,
-      dayInWeek: endDayInWeek + i,
+      dayInWeek: (dayAfterEnd + i) % 7,
       date: { hy: nextYear, hm: nextMonth, hd: i + 1 },
     })
   }
