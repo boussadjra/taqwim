@@ -3,8 +3,8 @@ import { mount } from '@vue/test-utils'
 import { h, ref } from 'vue'
 import { HijriCalendarRoot, injectHijriCalendarRootContext } from '../src/HijriCalendar'
 
-// Mock taqwim-core-utils
-vi.mock('taqwim-core-utils', () => ({
+// Mock @taqwim/core
+vi.mock('@taqwim/core', () => ({
   toHijri: vi.fn(() => ({ hy: 1446, hm: 1, hd: 15 })),
   formatHijriDate: vi.fn((date, format) => {
     if (format === 'iD') return date.hd.toString()

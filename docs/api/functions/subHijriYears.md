@@ -1,28 +1,34 @@
-[**taqwim-core-utils**](../README.md) • **Docs**
+[**@taqwim/core**](../README.md)
 
 ---
 
-[taqwim-core-utils](../globals.md) / subHijriYears
+[@taqwim/core](../globals.md) / subHijriYears
 
 # Function: subHijriYears()
 
-> **subHijriYears**(`date`, `amount`): `HijriDateObject` \| `null`
+> **subHijriYears**(`date`, `amount`): `HijriDateObject`
+
+Defined in: [packages/core/src/lib/subHijriYears.ts:26](https://github.com/boussadjra/taqwim/blob/967b462e7dccdb8cffe50f13ba37d6f2e3f2a4a2/packages/core/src/lib/subHijriYears.ts#L26)
 
 Adds a specified number of years to a Hijri date.
 
 ## Parameters
 
-• **date**: `HijriDateObject`
+### date
+
+`HijriDateObject`
 
 The Hijri date object to substract years to.
 
-• **amount**: `number`
+### amount
+
+`number`
 
 The number of years to sub.
 
 ## Returns
 
-`HijriDateObject` \| `null`
+`HijriDateObject`
 
 The resulting Hijri date object after subing the specified number of years, or `null` if the input date is invalid.
 
@@ -39,7 +45,3 @@ const result = subHijriYears({ hy: 1445, hm: 9, hd: 1 }, 10)
 const result = subHijriYears({ hy: 1445, hm: 9, hd: 30 }, 1)
 //=> { hy: 1444, hm: 9, hd: 29 }
 ```
-
-## Source
-
-[subHijriYears.ts:26](https://github.com/boussadjra/taqwim/blob/a16e0483140d22a326ae33586f5bfb208d318d3e/packages/core-utils/src/lib/subHijriYears.ts#L26)

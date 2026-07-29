@@ -10,8 +10,8 @@ import {
   subHijriMonths,
   hDatesTable,
   getLocaleData,
-} from 'taqwim-core-utils'
-import type { ValidHijriDate, MonthDay } from 'taqwim-core-utils'
+} from '@taqwim/core'
+import type { ValidHijriDate, MonthDay } from '@taqwim/core'
 import type { MonthFormat } from './types.js'
 export function useDate(options: {
   initialDate: ValidHijriDate

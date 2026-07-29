@@ -1,5 +1,4 @@
-// utils.ts
-import { hDatesTable } from './hDates'
+import { daysInHijriMonth, recordForHijriYear } from './hDatesIndex'
 
 export function isValidHijriDate(date: { hy: number; hm: number; hd: number }): boolean
 export function isValidHijriDate(date: string, separator?: string): boolean
@@ -27,11 +26,15 @@ export function isValidHijriDate(
   if (typeof hy === 'object') {
     return isValidHijriDate(hy.hy, hy.hm, hy.hd)
   }
-  const yearRecord = hDatesTable.find(record => record.hy === hy)
+  const yearRecord = recordForHijriYear(hy)
   if (!yearRecord) {
     return false
   }
 
-  const daysInMonth = (yearRecord.dpm >> ((hm as number) - 1)) & 1 ? 30 : 29
-  return (hm as number) >= 1 && (hm as number) <= 12 && hd! >= 1 && hd! <= daysInMonth
+  const month = hm as number
+  if (month < 1 || month > 12) {
+    return false
+  }
+
+  return hd! >= 1 && hd! <= daysInHijriMonth(yearRecord.dpm, month)
 }

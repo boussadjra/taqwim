@@ -52,7 +52,7 @@ jobs:
 
       - name: Coverage
         if: matrix.node-version == 22
-        run: pnpm exec vp run -F taqwim-core-utils test:coverage
+        run: pnpm exec vp run -F @taqwim/core test:coverage
 
       - name: Install Playwright browsers
         run: pnpm --filter taqwim-vue exec playwright install --with-deps
@@ -75,7 +75,7 @@ jobs:
         if: matrix.node-version == 22
         uses: codecov/codecov-action@v4
         with:
-          directory: ./packages/core-utils/coverage
+          directory: ./packages/core/coverage
           fail_ci_if_error: true
 
   security:

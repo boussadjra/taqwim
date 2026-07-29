@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { HijriDateObject } from 'taqwim-core-utils'
+import type { HijriDateObject } from '@taqwim/core'
 import type { Ref } from 'vue'
 
 export interface HijriCalendarCellTriggerProps {
@@ -33,7 +33,7 @@ export interface HijriCalendarCellTriggerSlot {
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { toHijri, isEqual, formatHijriDate } from 'taqwim-core-utils'
+import { toHijri, isEqual, formatHijriDate } from '@taqwim/core'
 import { injectHijriCalendarRootContext } from './HijriCalendarRoot.vue'
 
 const props = defineProps<HijriCalendarCellTriggerProps>()

@@ -627,7 +627,7 @@ interface HijriCalendarRootContext {
 ### Date Comparison
 
 ```typescript
-import { isEqual, isGreaterThan, isLessThan } from 'taqwim-core-utils'
+import { isEqual, isGreaterThan, isLessThan } from '@taqwim/core'
 
 // Check if two dates are equal
 const equal = isEqual(date1, date2)
@@ -642,14 +642,7 @@ const less = isLessThan(date1, date2)
 ### Date Arithmetic
 
 ```typescript
-import {
-  addHijriDays,
-  addHijriMonths,
-  addHijriYears,
-  subHijriDays,
-  subHijriMonths,
-  subHijriYears,
-} from 'taqwim-core-utils'
+import { addHijriDays, addHijriMonths, addHijriYears, subHijriDays, subHijriMonths, subHijriYears } from '@taqwim/core'
 
 // Add/subtract days
 const nextWeek = addHijriDays(date, 7)
@@ -667,7 +660,7 @@ const lastYear = subHijriYears(date, 1)
 ### Date Formatting
 
 ```typescript
-import { formatHijriDate } from 'taqwim-core-utils'
+import { formatHijriDate } from '@taqwim/core'
 
 // Format with default pattern
 const formatted = formatHijriDate(date, 'ar')
@@ -691,7 +684,7 @@ const custom = formatHijriDate(date, 'iYYYY/iMM/iDD', 'en')
 ### Date Conversion
 
 ```typescript
-import { toHijri, toGregorian } from 'taqwim-core-utils'
+import { toHijri, toGregorian } from '@taqwim/core'
 
 // Convert Gregorian to Hijri
 const hijriDate = toHijri(new Date())
@@ -703,7 +696,7 @@ const gregorianDate = toGregorian(hijriDate)
 ### Date Validation
 
 ```typescript
-import { isValidHijriDate } from 'taqwim-core-utils'
+import { isValidHijriDate } from '@taqwim/core'
 
 // Check if a date is valid
 const valid = isValidHijriDate({ hy: 1446, hm: 1, hd: 15 })
@@ -712,7 +705,7 @@ const valid = isValidHijriDate({ hy: 1446, hm: 1, hd: 15 })
 ### Calendar Utilities
 
 ```typescript
-import { getDayInWeek, getDaysLengthInMonth, getMonthAdjacentDays } from 'taqwim-core-utils'
+import { getDayInWeek, getDaysLengthInMonth, getMonthAdjacentDays } from '@taqwim/core'
 
 // Get day of week (0 = Sunday, 6 = Saturday)
 const dayOfWeek = getDayInWeek(date)

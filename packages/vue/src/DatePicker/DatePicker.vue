@@ -1,6 +1,6 @@
 <script lang="ts">
-import { getLocaleData, toHijri, formatHijriDate, isEqual } from 'taqwim-core-utils'
-import type { HijriDateObject } from 'taqwim-core-utils'
+import { getLocaleData, toHijri, formatHijriDate, isEqual } from '@taqwim/core'
+import type { HijriDateObject } from '@taqwim/core'
 import type { DatePickerProps, DatePickerEmits, ViewMode } from './types.js'
 import { useDate } from './useDate.js'
 import { ref, watchEffect } from 'vue'

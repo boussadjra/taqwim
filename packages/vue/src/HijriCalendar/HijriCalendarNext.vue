@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { HijriDateObject } from 'taqwim-core-utils'
+import type { HijriDateObject } from '@taqwim/core'
 
 export interface HijriCalendarNextProps {
   /** The function to be used for the next page. Overwrites the `nextPage` function set on the `HijriCalendarRoot`. */

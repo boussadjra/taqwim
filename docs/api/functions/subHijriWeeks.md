@@ -1,28 +1,34 @@
-[**taqwim-core-utils**](../README.md) • **Docs**
+[**@taqwim/core**](../README.md)
 
 ---
 
-[taqwim-core-utils](../globals.md) / subHijriWeeks
+[@taqwim/core](../globals.md) / subHijriWeeks
 
 # Function: subHijriWeeks()
 
-> **subHijriWeeks**(`date`, `amount`): `HijriDateObject` \| `null`
+> **subHijriWeeks**(`date`, `amount`): `HijriDateObject`
+
+Defined in: [packages/core/src/lib/subHijriWeeks.ts:19](https://github.com/boussadjra/taqwim/blob/967b462e7dccdb8cffe50f13ba37d6f2e3f2a4a2/packages/core/src/lib/subHijriWeeks.ts#L19)
 
 Substracts a specified number of weeks from a Hijri date.
 
 ## Parameters
 
-• **date**: `HijriDateObject`
+### date
+
+`HijriDateObject`
 
 The Hijri date object to sub weeks to.
 
-• **amount**: `number`
+### amount
+
+`number`
 
 The number of weeks to sub.
 
 ## Returns
 
-`HijriDateObject` \| `null`
+`HijriDateObject`
 
 The resulting Hijri date object after subing the specified number of weeks, or `null` if the input date is invalid.
 
@@ -33,7 +39,3 @@ The resulting Hijri date object after subing the specified number of weeks, or `
 const result = subHijriWeeks({ hy: 1445, hm: 11, hd: 12 }, 10)
 //=> { hy: 1445, hm: 9, hd: 1 }
 ```
-
-## Source
-
-[subHijriWeeks.ts:19](https://github.com/boussadjra/taqwim/blob/a16e0483140d22a326ae33586f5bfb208d318d3e/packages/core-utils/src/lib/subHijriWeeks.ts#L19)

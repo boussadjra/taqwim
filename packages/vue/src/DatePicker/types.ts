@@ -1,4 +1,4 @@
-import type { HijriDateObject, ValidHijriDate } from 'taqwim-core-utils'
+import type { HijriDateObject, ValidHijriDate } from '@taqwim/core'
 
 export type WeekDayFormat = 'weekDaysMedium' | 'weekDaysLong' | 'weekDaysShort'
 export type MonthFormat = 'monthsMedium' | 'monthsLong' | 'monthsShort'

@@ -1,22 +1,28 @@
-[**taqwim-core-utils**](../README.md) • **Docs**
+[**@taqwim/core**](../README.md)
 
 ---
 
-[taqwim-core-utils](../globals.md) / addHijri
+[@taqwim/core](../globals.md) / addHijri
 
 # Function: addHijri()
 
 > **addHijri**(`date`, `duration`): `HijriDateObject`
 
+Defined in: [packages/core/src/lib/addHijri.ts:25](https://github.com/boussadjra/taqwim/blob/967b462e7dccdb8cffe50f13ba37d6f2e3f2a4a2/packages/core/src/lib/addHijri.ts#L25)
+
 Adds a Hijri duration to a given Hijri date.
 
 ## Parameters
 
-• **date**: `HijriDateObject`
+### date
+
+`HijriDateObject`
 
 The Hijri date to which the duration will be added.
 
-• **duration**: `HijriDuration`
+### duration
+
+`HijriDuration`
 
 The Hijri duration to add.
 
@@ -39,7 +45,3 @@ const result = addHijri({ hy: 1445, hm: 9, hd: 1 }, { years: 0, months: 0, weeks
 const result = addHijri({ hy: 1445, hm: 9, hd: 1 }, { years: 1, months: 2, weeks: 3, days: 4 })
 //=> { hy: 1446, hm: 11, hd: 25 }
 ```
-
-## Source
-
-[addHijri.ts:25](https://github.com/boussadjra/taqwim/blob/a16e0483140d22a326ae33586f5bfb208d318d3e/packages/core-utils/src/lib/addHijri.ts#L25)

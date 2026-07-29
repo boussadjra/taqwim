@@ -15,7 +15,7 @@ updates:
 
   # Enable version updates for npm packages in core-utils
   - package-ecosystem: 'npm'
-    directory: '/packages/core-utils'
+    directory: '/packages/core'
     schedule:
       interval: 'weekly'
     commit-message:

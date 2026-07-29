@@ -8,7 +8,7 @@ All Hijri date conversions and calculations must be correct against the Umm al-Q
 
 ### II. Tree-Shakeable & Lightweight
 
-Both `taqwim-core-utils` and `taqwim-vue` must remain tree-shakeable. Each exported function should be independently importable. Bundle size impact must be considered for every addition.
+Both `@taqwim/core` and `taqwim-vue` must remain tree-shakeable. Each exported function should be independently importable. Bundle size impact must be considered for every addition.
 
 ### III. TypeScript Strictness
 
@@ -20,11 +20,11 @@ Every public function and component must have unit tests. Core date utilities re
 
 ### V. Framework Agnostic Core
 
-`taqwim-core-utils` must have zero framework dependencies. It depends only on `date-fns` for Gregorian date operations. The Vue package (`taqwim-vue`) consumes the core as a workspace dependency.
+`@taqwim/core` must have zero framework dependencies. It depends only on `date-fns` for Gregorian date operations. The Vue package (`taqwim-vue`) consumes the core as a workspace dependency.
 
 ## Monorepo Structure
 
-- `packages/core-utils/` — Pure TypeScript Hijri date utilities (npm: `taqwim-core-utils`)
+- `packages/core/` — Pure TypeScript Hijri date utilities (npm: `@taqwim/core`)
 - `packages/vue/` — Vue 3 components: HijriCalendar, DatePicker (npm: `taqwim-vue`)
 - `playground/vue3/` — Development playground for manual testing
 - `docs/` — VitePress documentation site

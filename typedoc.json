@@ -1,6 +1,6 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "entryPoints": ["./packages/core-utils/src/lib/index.ts"],
+  "entryPoints": ["./packages/core/src/lib/index.ts"],
   "out": "docs/api",
   "plugin": ["typedoc-plugin-markdown"],
   "excludeNotDocumentedKinds": ["Property", "Interface", "Namespace", "Variable", "TypeAlias"],
@@ -10,7 +10,7 @@
     "target": "ES5",
     "baseUrl": ".",
     "paths": {
-      "@core-utils/*": ["./packages/core-utils/src/lib/*"]
+      "@core-utils/*": ["./packages/core/src/lib/*"]
     }
   }
 }

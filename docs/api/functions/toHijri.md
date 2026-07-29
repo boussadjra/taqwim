@@ -1,87 +1,85 @@
-[**taqwim-core-utils**](../README.md) • **Docs**
+[**@taqwim/core**](../README.md)
 
 ---
 
-[taqwim-core-utils](../globals.md) / toHijri
+[@taqwim/core](../globals.md) / toHijri
 
 # Function: toHijri()
 
-## toHijri(date)
-
-> **toHijri**(`date`): `object` \| `null`
-
 Converts a Gregorian date to Hijri (Islamic) date.
 
-### Parameters
+## Param
 
-• **date**: `Date` \| `DateObject`
+The Gregorian date or year to convert.
 
-### Returns
-
-`object` \| `null`
-
-An object representing the Hijri date in the format `{ hy: number; hm: number; hd: number }`, or `null` if the conversion fails.
-
-### Throws
-
-If the input is invalid or the conversion fails.
-
-### Source
-
-[toHijri.ts:11](https://github.com/boussadjra/taqwim/blob/a16e0483140d22a326ae33586f5bfb208d318d3e/packages/core-utils/src/lib/toHijri.ts#L11)
-
-## toHijri(year, month, day)
-
-> **toHijri**(`year`, `month`, `day`): `object` \| `null`
-
-Converts a Gregorian date to Hijri (Islamic) date.
-
-### Parameters
-
-• **year**: `number`
-
-• **month**: `number`
+## Param
 
 The month of the Gregorian date (optional, required if `dateOrYear` is a number).
 
-• **day**: `number`
+## Param
 
 The day of the Gregorian date (optional, required if `dateOrYear` is a number).
 
-### Returns
+## Throws
 
-`object` \| `null`
+If the input is not a usable Gregorian date.
 
-An object representing the Hijri date in the format `{ hy: number; hm: number; hd: number }`, or `null` if the conversion fails.
+## Throws
 
-### Throws
+If the date falls outside the Umm al-Qura table's coverage.
 
-If the input is invalid or the conversion fails.
+## Call Signature
 
-### Source
+> **toHijri**(`date`): `HijriDateObject`
 
-[toHijri.ts:12](https://github.com/boussadjra/taqwim/blob/a16e0483140d22a326ae33586f5bfb208d318d3e/packages/core-utils/src/lib/toHijri.ts#L12)
-
-## toHijri(date)
-
-> **toHijri**(`date`): `object` \| `null`
-
-Converts a Gregorian date to Hijri (Islamic) date.
+Defined in: [packages/core/src/lib/toHijri.ts:12](https://github.com/boussadjra/taqwim/blob/967b462e7dccdb8cffe50f13ba37d6f2e3f2a4a2/packages/core/src/lib/toHijri.ts#L12)
 
 ### Parameters
 
-• **date**: `string`
+#### date
+
+`Date` | `DateObject`
 
 ### Returns
 
-`object` \| `null`
+`HijriDateObject`
 
-An object representing the Hijri date in the format `{ hy: number; hm: number; hd: number }`, or `null` if the conversion fails.
+## Call Signature
 
-### Throws
+> **toHijri**(`year`, `month`, `day`): `HijriDateObject`
 
-If the input is invalid or the conversion fails.
+Defined in: [packages/core/src/lib/toHijri.ts:13](https://github.com/boussadjra/taqwim/blob/967b462e7dccdb8cffe50f13ba37d6f2e3f2a4a2/packages/core/src/lib/toHijri.ts#L13)
 
-### Source
+### Parameters
 
-[toHijri.ts:13](https://github.com/boussadjra/taqwim/blob/a16e0483140d22a326ae33586f5bfb208d318d3e/packages/core-utils/src/lib/toHijri.ts#L13)
+#### year
+
+`number`
+
+#### month
+
+`number`
+
+#### day
+
+`number`
+
+### Returns
+
+`HijriDateObject`
+
+## Call Signature
+
+> **toHijri**(`date`): `HijriDateObject`
+
+Defined in: [packages/core/src/lib/toHijri.ts:14](https://github.com/boussadjra/taqwim/blob/967b462e7dccdb8cffe50f13ba37d6f2e3f2a4a2/packages/core/src/lib/toHijri.ts#L14)
+
+### Parameters
+
+#### date
+
+`string`
+
+### Returns
+
+`HijriDateObject`

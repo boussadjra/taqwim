@@ -1,18 +1,22 @@
-[**taqwim-core-utils**](../README.md) • **Docs**
+[**@taqwim/core**](../README.md)
 
 ---
 
-[taqwim-core-utils](../globals.md) / normalizeHijriDate
+[@taqwim/core](../globals.md) / normalizeHijriDate
 
 # Function: normalizeHijriDate()
 
 > **normalizeHijriDate**(`hijriDate`): `HijriDateObject`
 
+Defined in: [packages/core/src/lib/normalizeHijriDate.ts:10](https://github.com/boussadjra/taqwim/blob/967b462e7dccdb8cffe50f13ba37d6f2e3f2a4a2/packages/core/src/lib/normalizeHijriDate.ts#L10)
+
 Normalizes the given Hijri date to a HijriDateObject.
 
 ## Parameters
 
-• **hijriDate**: `ValidHijriDate`
+### hijriDate
+
+`ValidHijriDate`
 
 The Hijri date to normalize.
 
@@ -25,7 +29,3 @@ The normalized Hijri date as a HijriDateObject.
 ## Throws
 
 Error if the hijriDate is of invalid type.
-
-## Source
-
-[normalizeHijriDate.ts:10](https://github.com/boussadjra/taqwim/blob/a16e0483140d22a326ae33586f5bfb208d318d3e/packages/core-utils/src/lib/normalizeHijriDate.ts#L10)

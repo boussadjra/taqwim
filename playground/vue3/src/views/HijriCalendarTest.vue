@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 // import HijriCalendar from '../../../../packages/vue/src/HijriCalendar/HijriCalendar.vue'
-import type { HijriDateObject } from 'taqwim-core-utils'
+import type { HijriDateObject } from '@taqwim/core'
 import { HijriCalendar } from 'taqwim-vue'
 
 const selectedDate = ref<HijriDateObject>({ hy: 1446, hm: 2, hd: 15 })

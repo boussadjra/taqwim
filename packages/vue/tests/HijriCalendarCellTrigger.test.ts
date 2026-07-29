@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { h, ref } from 'vue'
-import { toHijri } from 'taqwim-core-utils'
+import { toHijri } from '@taqwim/core'
 import { HijriCalendarCellTrigger } from '../src/HijriCalendar'
 
 // Mock the context injection
@@ -20,8 +20,8 @@ vi.mock('../src/HijriCalendar/HijriCalendarRoot.vue', () => ({
   injectHijriCalendarRootContext: () => mockContext,
 }))
 
-// Mock taqwim-core-utils
-vi.mock('taqwim-core-utils', () => ({
+// Mock @taqwim/core
+vi.mock('@taqwim/core', () => ({
   toHijri: vi.fn(() => ({ hy: 1446, hm: 1, hd: 15 })),
   formatHijriDate: vi.fn((date, format) => {
     if (format === 'iD') return date.hd.toString()

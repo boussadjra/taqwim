@@ -9,7 +9,7 @@ Taqwim is a Hijri (Islamic) date library for JavaScript/TypeScript. It provides 
 ```
 taqwim/
 ├── packages/
-│   ├── core-utils/          # Pure TS Hijri date utilities (npm: taqwim-core-utils)
+│   ├── core-utils/          # Pure TS Hijri date utilities (npm: @taqwim/core)
 │   │   ├── src/lib/         # All exported functions (one per file)
 │   │   ├── src/lib/types.ts # HijriDateObject, HijriDuration, MonthDay
 │   │   ├── src/lib/hDates.ts # Umm al-Qura calendar data
@@ -44,7 +44,7 @@ interface HijriDateObject {
 
 ### Module Pattern
 
-Each core function lives in its own file under `packages/core-utils/src/lib/` and is re-exported through `packages/core-utils/src/lib/index.ts`. Follow this pattern when adding new utilities.
+Each core function lives in its own file under `packages/core/src/lib/` and is re-exported through `packages/core/src/lib/index.ts`. Follow this pattern when adding new utilities.
 
 ### Naming
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { HijriDateObject, ValidHijriDate, MonthDay } from 'taqwim-core-utils'
+import type { HijriDateObject, ValidHijriDate, MonthDay } from '@taqwim/core'
 import type { Ref } from 'vue'
 import type { WeekDayFormat, MonthFormat } from '../DatePicker/types'
 import type { Direction, Matcher, HijriCalendarRootProps, HijriCalendarRootEmits } from './HijriCalendarRoot.vue'
@@ -164,7 +164,7 @@ import {
 } from './index'
 import ArrowLeft from '../icons/ArrowLeft.vue'
 import ArrowRight from '../icons/ArrowRight.vue'
-import { formatHijriDate } from 'taqwim-core-utils'
+import { formatHijriDate } from '@taqwim/core'
 import { useHijriLocale } from '../composables/useHijriLocale'
 
 const props = withDefaults(defineProps<HijriCalendarProps>(), {

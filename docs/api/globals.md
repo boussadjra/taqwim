@@ -1,8 +1,8 @@
-[**taqwim-core-utils**](README.md) • **Docs**
+[**@taqwim/core**](README.md)
 
 ---
 
-# taqwim-core-utils
+# @taqwim/core
 
 ## Day Helpers
 
@@ -13,17 +13,31 @@
 
 ## Other
 
+- [HijriRangeError](classes/HijriRangeError.md)
+- [Weekend](type-aliases/Weekend.md)
+- [DEFAULT\_WEEKEND](variables/DEFAULT_WEEKEND.md)
+- [EPOCH\_DAY\_RANGE](variables/EPOCH_DAY_RANGE.md)
+- [MAX\_GREGORIAN\_DATE](variables/MAX_GREGORIAN_DATE.md)
+- [MAX\_HIJRI\_YEAR](variables/MAX_HIJRI_YEAR.md)
+- [MIN\_GREGORIAN\_DATE](variables/MIN_GREGORIAN_DATE.md)
+- [MIN\_HIJRI\_YEAR](variables/MIN_HIJRI_YEAR.md)
 - [addHijri](functions/addHijri.md)
 - [addHijriMonths](functions/addHijriMonths.md)
 - [addHijriQuarters](functions/addHijriQuarters.md)
 - [addHijriWeeks](functions/addHijriWeeks.md)
 - [addHijriYears](functions/addHijriYears.md)
+- [dayOfWeekFromEpochDay](functions/dayOfWeekFromEpochDay.md)
+- [daysInHijriMonth](functions/daysInHijriMonth.md)
+- [daysInHijriYear](functions/daysInHijriYear.md)
+- [epochDayOf](functions/epochDayOf.md)
+- [epochDayToDate](functions/epochDayToDate.md)
 - [formatHijriDate](functions/formatHijriDate.md)
 - [getDayInWeek](functions/getDayInWeek.md)
 - [getDaysLengthInMonth](functions/getDaysLengthInMonth.md)
 - [getHijriYear](functions/getHijriYear.md)
 - [getLocaleData](functions/getLocaleData.md)
 - [getMonthAdjacentDays](functions/getMonthAdjacentDays.md)
+- [hijriYearStartEpochDay](functions/hijriYearStartEpochDay.md)
 - [isEqual](functions/isEqual.md)
 - [isGreaterThan](functions/isGreaterThan.md)
 - [isGreaterThanOrEqual](functions/isGreaterThanOrEqual.md)
@@ -32,10 +46,14 @@
 - [isValidHijriDate](functions/isValidHijriDate.md)
 - [normalizeHijriDate](functions/normalizeHijriDate.md)
 - [parseDateString](functions/parseDateString.md)
+- [recordForEpochDay](functions/recordForEpochDay.md)
+- [recordForHijriYear](functions/recordForHijriYear.md)
+- [shiftBusinessDays](functions/shiftBusinessDays.md)
 - [subHijri](functions/subHijri.md)
 - [subHijriMonths](functions/subHijriMonths.md)
 - [subHijriQuarters](functions/subHijriQuarters.md)
 - [subHijriWeeks](functions/subHijriWeeks.md)
 - [subHijriYears](functions/subHijriYears.md)
+- [toEpochDay](functions/toEpochDay.md)
 - [toGregorian](functions/toGregorian.md)
 - [toHijri](functions/toHijri.md)

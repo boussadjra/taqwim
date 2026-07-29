@@ -1,28 +1,34 @@
-[**taqwim-core-utils**](../README.md) • **Docs**
+[**@taqwim/core**](../README.md)
 
 ---
 
-[taqwim-core-utils](../globals.md) / subHijriMonths
+[@taqwim/core](../globals.md) / subHijriMonths
 
 # Function: subHijriMonths()
 
-> **subHijriMonths**(`date`, `amount`): `HijriDateObject` \| `null`
+> **subHijriMonths**(`date`, `amount`): `HijriDateObject`
+
+Defined in: [packages/core/src/lib/subHijriMonths.ts:34](https://github.com/boussadjra/taqwim/blob/967b462e7dccdb8cffe50f13ba37d6f2e3f2a4a2/packages/core/src/lib/subHijriMonths.ts#L34)
 
 Substracts a specified number of Months from a Hijri date.
 
 ## Parameters
 
-• **date**: `HijriDateObject`
+### date
+
+`HijriDateObject`
 
 The Hijri date object to sub Months to.
 
-• **amount**: `number`
+### amount
+
+`number`
 
 The number of Months to sub.
 
 ## Returns
 
-`HijriDateObject` \| `null`
+`HijriDateObject`
 
 The resulting Hijri date object after subing the specified number of Months, or `null` if the input date is invalid.
 
@@ -45,7 +51,3 @@ const result = subHijriMonths({ hy: 1445, hm: 9, hd: 30 }, 1)
 const result = subHijriMonths({ hy: 1447, hm: 12, hd: 29 }, 26)
 //=> { hy: 1445, hm: 9, hd: 30 }
 ```
-
-## Source
-
-[subHijriMonths.ts:34](https://github.com/boussadjra/taqwim/blob/a16e0483140d22a326ae33586f5bfb208d318d3e/packages/core-utils/src/lib/subHijriMonths.ts#L34)

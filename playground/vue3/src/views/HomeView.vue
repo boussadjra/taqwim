@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
-import { formatHijriDate, toHijri } from 'taqwim-core-utils'
+import { formatHijriDate, toHijri } from '@taqwim/core'
 
 const today = toHijri(new Date())!
 const currentTime = ref(new Date().toLocaleTimeString())

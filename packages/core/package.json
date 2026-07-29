@@ -1,24 +1,19 @@
 {
-  "name": "taqwim-core-utils",
+  "name": "@taqwim/core",
   "version": "0.1.1",
   "private": false,
-  "description": "Hijri Date utils",
+  "description": "Umm al-Qura Hijri date conversion, arithmetic and formatting for JavaScript",
   "keywords": [
     "backend",
     "calendar",
     "date",
     "hijri",
     "islamic",
-    "nestjs",
     "nodejs",
     "server-side",
     "taqwim",
-    "taqwim-core-utils",
-    "taqwim-docs",
-    "taqwim-vue",
     "typescript",
-    "vite",
-    "vue"
+    "umm-al-qura"
   ],
   "license": "MIT",
   "author": "Brahim Boussadjra",
@@ -40,11 +35,14 @@
       "require": "./dist/index.js"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "_comment": "build / test / test:coverage are declared as vp tasks in vite.config.ts",
     "test:watch": "vp exec vitest",
     "prepublishOnly": "vp run build",
-    "publish": "pnpm publish --access public"
+    "publish": "pnpm publish"
   },
   "dependencies": {
     "date-fns": "^4.1.0"

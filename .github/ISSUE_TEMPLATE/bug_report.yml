@@ -25,7 +25,7 @@ body:
       label: Package
       description: Which package is affected?
       options:
-        - taqwim-core-utils
+        - '@taqwim/core'
         - taqwim-vue
         - Documentation
         - Other

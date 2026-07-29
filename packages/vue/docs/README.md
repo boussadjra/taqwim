@@ -18,7 +18,7 @@ A comprehensive set of headless Vue 3 components for building accessible Hijri (
 ## 📦 Installation
 
 ```bash
-npm install taqwim-vue taqwim-core-utils
+npm install taqwim-vue @taqwim/core
 ```
 
 ## 🚀 Quick Start
@@ -76,7 +76,7 @@ import {
   HijriCalendarCell,
   HijriCalendarCellTrigger,
 } from 'taqwim-vue'
-import type { HijriDateObject } from 'taqwim-core-utils'
+import type { HijriDateObject } from '@taqwim/core'
 
 const selectedDate = ref<HijriDateObject>()
 </script>
@@ -153,7 +153,7 @@ const selectedDate = ref<HijriDateObject>()
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { HijriDateObject } from 'taqwim-core-utils'
+import type { HijriDateObject } from '@taqwim/core'
 
 const selectedDates = ref<HijriDateObject[]>([])
 </script>
@@ -169,8 +169,8 @@ const selectedDates = ref<HijriDateObject[]>([])
 </template>
 
 <script setup lang="ts">
-import { getDayInWeek } from 'taqwim-core-utils'
-import type { HijriDateObject } from 'taqwim-core-utils'
+import { getDayInWeek } from '@taqwim/core'
+import type { HijriDateObject } from '@taqwim/core'
 
 const isWeekend = (date: HijriDateObject) => {
   const dayInWeek = getDayInWeek(date)
@@ -361,7 +361,7 @@ MIT License - see [LICENSE](../../LICENSE) for details.
 ## 🙏 Acknowledgments
 
 - Inspired by [reka-ui](https://github.com/reka-ui/reka-ui) architecture and patterns
-- Built on top of [taqwim-core-utils](../core-utils) for Hijri date calculations
+- Built on top of [@taqwim/core](../core-utils) for Hijri date calculations
 - Following [WAI-ARIA](https://www.w3.org/WAI/ARIA/) guidelines for accessibility
 
 ---

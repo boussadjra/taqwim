@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { HijriDateObject, ValidHijriDate, MonthDay } from 'taqwim-core-utils'
+import type { HijriDateObject, ValidHijriDate, MonthDay } from '@taqwim/core'
 import type { Ref } from 'vue'
 import type { WeekDayFormat, MonthFormat } from '../DatePicker/types'
 import { createContext } from '../shared'
@@ -117,7 +117,7 @@ import {
   formatHijriDate,
   toHijri,
   isEqual,
-} from 'taqwim-core-utils'
+} from '@taqwim/core'
 
 // Simple useVModel implementation
 function useVModel<T>(props: any, key: string, emit: any, options: { defaultValue?: T; passive?: boolean } = {}) {

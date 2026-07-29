@@ -1,4 +1,4 @@
-**taqwim-core-utils** • [**Docs**](globals.md)
+**@taqwim/core**
 
 ---
 
@@ -11,13 +11,13 @@ Taqwim provides a collection of utilities and components designed for managing H
 ## Installation
 
 ```bash
-npm install taqwim-core-utils
+npm install @taqwim/core
 ```
 
 ## Usage
 
 ```javascript
-import { toHijri } from 'taqwim-core-utils'
+import { toHijri } from '@taqwim/core'
 
 const gregorianDate = new Date('2024-03-11')
 
@@ -26,6 +26,6 @@ const hijriDate = toHijri(gregorianDate)
 console.log(hijriDate) // { hy: 1445, hm:9, hd: 1 }
 ```
 
-## API
+## Docs
 
-- [Full API Documentation](../../docs/api/globals.md)
+- [Full Documentation](https://taqwim.vercel.app)

@@ -1,6 +1,6 @@
 # Taqwim
 
-[![npm version](https://badge.fury.io/js/taqwim-core-utils.svg)](https://badge.fury.io/js/taqwim-core-utils)
+[![npm version](https://img.shields.io/npm/v/@taqwim/core.svg)](https://www.npmjs.com/package/@taqwim/core)
 [![CI Status](https://github.com/boussadjra/taqwim/workflows/CI/badge.svg)](https://github.com/boussadjra/taqwim/actions)
 [![Vue Version](https://img.shields.io/badge/vue-3.x-brightgreen.svg)](https://vuejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
@@ -23,31 +23,31 @@ A comprehensive Hijri (Islamic) date library for JavaScript applications, provid
 
 ## Packages
 
-| Package                                      | Version                                                                                                       | Description                            |
-| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| [`taqwim-core-utils`](./packages/core-utils) | [![npm](https://img.shields.io/npm/v/taqwim-core-utils.svg)](https://www.npmjs.com/package/taqwim-core-utils) | Core Hijri date utilities              |
-| [`taqwim-vue`](./packages/vue)               | [![npm](https://img.shields.io/npm/v/taqwim-vue.svg)](https://www.npmjs.com/package/taqwim-vue)               | Vue 3 calendar & datepicker components |
+| Package                           | Version                                                                                             | Description                            |
+| --------------------------------- | --------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| [`@taqwim/core`](./packages/core) | [![npm](https://img.shields.io/npm/v/@taqwim/core.svg)](https://www.npmjs.com/package/@taqwim/core) | Core Hijri date utilities              |
+| [`taqwim-vue`](./packages/vue)    | [![npm](https://img.shields.io/npm/v/taqwim-vue.svg)](https://www.npmjs.com/package/taqwim-vue)     | Vue 3 calendar & datepicker components |
 
 ## Quick Start
 
 ### Core Utils
 
 ```bash
-npm install taqwim-core-utils
+npm install @taqwim/core
 # or
-pnpm add taqwim-core-utils
+pnpm add @taqwim/core
 ```
 
 ```typescript
-import { toHijri, toGregorian, formatHijriDate } from 'taqwim-core-utils'
+import { toHijri, toGregorian, formatHijriDate } from '@taqwim/core'
 
 // Convert Gregorian to Hijri
 const hijriDate = toHijri(new Date('2024-03-11'))
 // => { hy: 1445, hm: 9, hd: 1 }
 
-// Convert Hijri to Gregorian
+// Convert Hijri to Gregorian (local midnight)
 const gregorian = toGregorian({ hy: 1445, hm: 9, hd: 1 })
-// => 2024-03-11T00:00:00.000Z
+// => Mon Mar 11 2024 00:00:00
 
 // Format with locale
 const formatted = formatHijriDate(hijriDate, 'iYYYY/iMM/iDD', 'ar')
@@ -104,27 +104,61 @@ type ValidHijriDate = HijriDateObject | `${number}/${'/' | '-'}${number}/${'/' |
 
 ### Date Arithmetic — Addition
 
-| Function                        | Description                                    |
-| ------------------------------- | ---------------------------------------------- |
-| `addHijri(date, duration)`      | Add years, months, weeks, and days in one call |
-| `addHijriDays(date, n)`         | Add `n` days                                   |
-| `addHijriWeeks(date, n)`        | Add `n` weeks                                  |
-| `addHijriMonths(date, n)`       | Add `n` months (adjusts day-of-month)          |
-| `addHijriQuarters(date, n)`     | Add `n` quarters (3-month periods)             |
-| `addHijriYears(date, n)`        | Add `n` years                                  |
-| `addHijriBusinessDays(date, n)` | Add `n` business days (Mon–Fri)                |
+| Function                               | Description                                         |
+| -------------------------------------- | --------------------------------------------------- |
+| `addHijri(date, duration)`             | Add years, months, weeks, and days in one call      |
+| `addHijriDays(date, n)`                | Add `n` days                                        |
+| `addHijriWeeks(date, n)`               | Add `n` weeks                                       |
+| `addHijriMonths(date, n)`              | Add `n` months (adjusts day-of-month)               |
+| `addHijriQuarters(date, n)`            | Add `n` quarters (3-month periods)                  |
+| `addHijriYears(date, n)`               | Add `n` years                                       |
+| `addHijriBusinessDays(date, n, opts?)` | Add `n` business days (weekend defaults to Fri–Sat) |
 
 ### Date Arithmetic — Subtraction
 
-| Function                        | Description                                         |
-| ------------------------------- | --------------------------------------------------- |
-| `subHijri(date, duration)`      | Subtract years, months, weeks, and days in one call |
-| `subHijriDays(date, n)`         | Subtract `n` days                                   |
-| `subHijriWeeks(date, n)`        | Subtract `n` weeks                                  |
-| `subHijriMonths(date, n)`       | Subtract `n` months                                 |
-| `subHijriQuarters(date, n)`     | Subtract `n` quarters                               |
-| `subHijriYears(date, n)`        | Subtract `n` years                                  |
-| `subHijriBusinessDays(date, n)` | Subtract `n` business days                          |
+| Function                               | Description                                              |
+| -------------------------------------- | -------------------------------------------------------- |
+| `subHijri(date, duration)`             | Subtract years, months, weeks, and days in one call      |
+| `subHijriDays(date, n)`                | Subtract `n` days                                        |
+| `subHijriWeeks(date, n)`               | Subtract `n` weeks                                       |
+| `subHijriMonths(date, n)`              | Subtract `n` months                                      |
+| `subHijriQuarters(date, n)`            | Subtract `n` quarters                                    |
+| `subHijriYears(date, n)`               | Subtract `n` years                                       |
+| `subHijriBusinessDays(date, n, opts?)` | Subtract `n` business days (weekend defaults to Fri–Sat) |
+
+Business days skip the weekend, which defaults to **Friday and Saturday** — the
+working week across most of the Arab world. Pass a different one where needed:
+
+```typescript
+import { addHijriBusinessDays } from '@taqwim/core'
+
+// Default: Friday/Saturday weekend
+addHijriBusinessDays({ hy: 1445, hm: 9, hd: 1 }, 20)
+
+// Western Saturday/Sunday weekend
+addHijriBusinessDays({ hy: 1445, hm: 9, hd: 1 }, 20, { weekend: [6, 0] })
+
+// Single-day weekend
+addHijriBusinessDays({ hy: 1445, hm: 9, hd: 1 }, 20, { weekend: [5] })
+```
+
+### Supported range
+
+Conversion is table-driven (Umm al-Qura), covering **1343–1500 AH**
+(1924–2076 CE). Dates outside that range throw a `HijriRangeError` rather than
+returning a silently incorrect result:
+
+```typescript
+import { HijriRangeError, MIN_HIJRI_YEAR, MAX_HIJRI_YEAR, toGregorian } from '@taqwim/core'
+
+try {
+  toGregorian({ hy: 1200, hm: 1, hd: 1 })
+} catch (error) {
+  if (error instanceof HijriRangeError) {
+    console.warn(`Supported range is ${MIN_HIJRI_YEAR}-${MAX_HIJRI_YEAR} AH`)
+  }
+}
+```
 
 ### Comparison
 

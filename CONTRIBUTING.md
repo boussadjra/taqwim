@@ -144,7 +144,7 @@ test(core): add edge case tests for leap years
 
 ## Package-Specific Guidelines
 
-### Core Utils (`packages/core-utils`)
+### Core Utils (`packages/core`)
 
 - Pure functions only, no side effects
 - Comprehensive unit tests required

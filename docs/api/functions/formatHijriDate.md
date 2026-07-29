@@ -1,32 +1,44 @@
-[**taqwim-core-utils**](../README.md) • **Docs**
+[**@taqwim/core**](../README.md)
 
 ---
 
-[taqwim-core-utils](../globals.md) / formatHijriDate
+[@taqwim/core](../globals.md) / formatHijriDate
 
 # Function: formatHijriDate()
 
 > **formatHijriDate**(`hijriDate`, `formatStr`, `locale`): `string`
 
+Defined in: [packages/core/src/lib/formatHijriDate.ts:39](https://github.com/boussadjra/taqwim/blob/967b462e7dccdb8cffe50f13ba37d6f2e3f2a4a2/packages/core/src/lib/formatHijriDate.ts#L39)
+
 Formats a Hijri date based on the provided format string.
 
 ## Parameters
 
-• **hijriDate**
+### hijriDate
 
 The Hijri date object containing the year, month, and day.
 
-• **hijriDate.hd**: `number`
+#### hd
 
-• **hijriDate.hm**: `number`
+`number`
 
-• **hijriDate.hy**: `number`
+#### hm
 
-• **formatStr**: `string`
+`number`
+
+#### hy
+
+`number`
+
+### formatStr
+
+`string`
 
 The format string specifying how the Hijri date should be formatted.
 
-• **locale**: `string`= `'en'`
+### locale
+
+`string` = `'en'`
 
 The locale to use for formatting the date. Defaults to "en".
 
@@ -72,7 +84,3 @@ formatHijriDate({ hy: 1443, hm: 3, hd: 10 }, 'iD iMMM, iYYYY', 'ar')
 formatHijriDate({ hy: 1443, hm: 3, hd: 10 }, 'iD iMMM, iYYYY', 'en')
 //=> "10 Rabiʻ II, 1443"
 ```
-
-## Source
-
-[formatHijriDate.ts:39](https://github.com/boussadjra/taqwim/blob/a16e0483140d22a326ae33586f5bfb208d318d3e/packages/core-utils/src/lib/formatHijriDate.ts#L39)

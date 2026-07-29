@@ -1,28 +1,34 @@
-[**taqwim-core-utils**](../README.md) • **Docs**
+[**@taqwim/core**](../README.md)
 
 ---
 
-[taqwim-core-utils](../globals.md) / addHijriWeeks
+[@taqwim/core](../globals.md) / addHijriWeeks
 
 # Function: addHijriWeeks()
 
-> **addHijriWeeks**(`date`, `amount`): `HijriDateObject` \| `null`
+> **addHijriWeeks**(`date`, `amount`): `HijriDateObject`
+
+Defined in: [packages/core/src/lib/addHijriWeeks.ts:19](https://github.com/boussadjra/taqwim/blob/967b462e7dccdb8cffe50f13ba37d6f2e3f2a4a2/packages/core/src/lib/addHijriWeeks.ts#L19)
 
 Adds a specified number of weeks to a Hijri date.
 
 ## Parameters
 
-• **date**: `HijriDateObject`
+### date
+
+`HijriDateObject`
 
 The Hijri date object to add weeks to.
 
-• **amount**: `number`
+### amount
+
+`number`
 
 The number of weeks to add.
 
 ## Returns
 
-`HijriDateObject` \| `null`
+`HijriDateObject`
 
 The resulting Hijri date object after adding the specified number of weeks, or `null` if the input date is invalid.
 
@@ -33,7 +39,3 @@ The resulting Hijri date object after adding the specified number of weeks, or `
 const result = addHijriWeeks({ hy: 1445, hm: 9, hd: 1 }, 10)
 //=> { hy: 1445, hm: 11, hd: 12 }
 ```
-
-## Source
-
-[addHijriWeeks.ts:19](https://github.com/boussadjra/taqwim/blob/a16e0483140d22a326ae33586f5bfb208d318d3e/packages/core-utils/src/lib/addHijriWeeks.ts#L19)

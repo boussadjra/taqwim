@@ -14,7 +14,7 @@ import {
   HijriCalendarPrev,
   HijriCalendarNext,
 } from 'taqwim-vue'
-import { formatHijriDate, toHijri } from 'taqwim-core-utils'
+import { formatHijriDate, toHijri } from '@taqwim/core'
 
 const today = toHijri(new Date())!
 const calendarDate = ref()

@@ -58,7 +58,7 @@ This document provides comprehensive examples of how to use the HijriCalendar co
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { HijriDateObject } from 'taqwim-core-utils'
+import type { HijriDateObject } from '@taqwim/core'
 
 const selectedDate = ref<HijriDateObject>()
 </script>
@@ -225,8 +225,8 @@ const getThemeClass = () => {
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { formatHijriDate } from 'taqwim-core-utils'
-import type { HijriDateObject } from 'taqwim-core-utils'
+import { formatHijriDate } from '@taqwim/core'
+import type { HijriDateObject } from '@taqwim/core'
 
 const selectedDates = ref<HijriDateObject[]>([])
 </script>
@@ -245,7 +245,7 @@ const selectedDates = ref<HijriDateObject[]>([])
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { HijriDateObject } from 'taqwim-core-utils'
+import type { HijriDateObject } from '@taqwim/core'
 
 const selectedDates = ref<HijriDateObject[]>([])
 const maxSelection = 3
@@ -274,8 +274,8 @@ const handleSelectionChange = (dates: HijriDateObject[]) => {
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { getDayInWeek } from 'taqwim-core-utils'
-import type { HijriDateObject } from 'taqwim-core-utils'
+import { getDayInWeek } from '@taqwim/core'
+import type { HijriDateObject } from '@taqwim/core'
 
 const selectedDate = ref<HijriDateObject>()
 
@@ -297,7 +297,7 @@ const isWeekend = (date: HijriDateObject) => {
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { HijriDateObject } from 'taqwim-core-utils'
+import type { HijriDateObject } from '@taqwim/core'
 
 const selectedDate = ref<HijriDateObject>()
 
@@ -326,8 +326,8 @@ const isHoliday = (date: HijriDateObject) => {
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { toHijri, addHijriMonths } from 'taqwim-core-utils'
-import type { HijriDateObject } from 'taqwim-core-utils'
+import { toHijri, addHijriMonths } from '@taqwim/core'
+import type { HijriDateObject } from '@taqwim/core'
 
 const selectedDate = ref<HijriDateObject>()
 
@@ -356,8 +356,8 @@ const maxDate = addHijriMonths(minDate, 3)
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { formatHijriDate, isGreaterThan } from 'taqwim-core-utils'
-import type { HijriDateObject } from 'taqwim-core-utils'
+import { formatHijriDate, isGreaterThan } from '@taqwim/core'
+import type { HijriDateObject } from '@taqwim/core'
 
 const selectedRange = ref<HijriDateObject[]>([])
 
@@ -399,8 +399,8 @@ const handleRangeSelection = (dates: HijriDateObject[]) => {
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { getDayInWeek, subHijriDays, addHijriDays } from 'taqwim-core-utils'
-import type { HijriDateObject } from 'taqwim-core-utils'
+import { getDayInWeek, subHijriDays, addHijriDays } from '@taqwim/core'
+import type { HijriDateObject } from '@taqwim/core'
 
 const selectedRange = ref<HijriDateObject[]>([])
 
@@ -441,7 +441,7 @@ const handleRangeSelection = (dates: HijriDateObject[]) => {
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { HijriDateObject } from 'taqwim-core-utils'
+import type { HijriDateObject } from '@taqwim/core'
 
 const selectedDate = ref<HijriDateObject>()
 </script>
@@ -472,7 +472,7 @@ const selectedDate = ref<HijriDateObject>()
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import type { HijriDateObject } from 'taqwim-core-utils'
+import type { HijriDateObject } from '@taqwim/core'
 
 const selectedDate = ref<HijriDateObject>()
 const windowWidth = ref(window.innerWidth)
@@ -651,8 +651,8 @@ onUnmounted(() => {
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { formatHijriDate } from 'taqwim-core-utils'
-import type { HijriDateObject } from 'taqwim-core-utils'
+import { formatHijriDate } from '@taqwim/core'
+import type { HijriDateObject } from '@taqwim/core'
 
 const selectedDate = ref<HijriDateObject>()
 const currentLocale = ref<'ar' | 'en' | 'fr'>('ar')
@@ -685,7 +685,7 @@ const currentLocale = ref<'ar' | 'en' | 'fr'>('ar')
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { HijriDateObject, WeekDayFormat } from 'taqwim-core-utils'
+import type { HijriDateObject, WeekDayFormat } from '@taqwim/core'
 
 const selectedDate = ref<HijriDateObject>()
 const weekdayFormat = ref<WeekDayFormat>('weekDaysMedium')
@@ -722,8 +722,8 @@ const weekdayFormat = ref<WeekDayFormat>('weekDaysMedium')
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { isGreaterThan, toHijri } from 'taqwim-core-utils'
-import type { HijriDateObject } from 'taqwim-core-utils'
+import { isGreaterThan, toHijri } from '@taqwim/core'
+import type { HijriDateObject } from '@taqwim/core'
 
 interface FormData {
   birthDate?: HijriDateObject
@@ -794,7 +794,7 @@ const handleSubmit = () => {
 <script setup lang="ts">
 import { Form, Field } from 'vee-validate'
 import * as yup from 'yup'
-import { isGreaterThan } from 'taqwim-core-utils'
+import { isGreaterThan } from '@taqwim/core'
 
 const schema = yup.object({
   startDate: yup.object().required('Start date is required'),
@@ -841,8 +841,8 @@ const onSubmit = (values: any) => {
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { formatHijriDate } from 'taqwim-core-utils'
-import type { HijriDateObject } from 'taqwim-core-utils'
+import { formatHijriDate } from '@taqwim/core'
+import type { HijriDateObject } from '@taqwim/core'
 
 const selectedDate = ref<HijriDateObject>()
 const eventLog = ref<string[]>([])
@@ -910,8 +910,8 @@ const onMonthChange = (date: HijriDateObject) => {
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { formatHijriDate, isEqual } from 'taqwim-core-utils'
-import type { HijriDateObject } from 'taqwim-core-utils'
+import { formatHijriDate, isEqual } from '@taqwim/core'
+import type { HijriDateObject } from '@taqwim/core'
 
 const selectedDate = ref<HijriDateObject>()
 const hoveredDate = ref<HijriDateObject>()

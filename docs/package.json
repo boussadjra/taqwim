@@ -1,15 +1,15 @@
 {
   "name": "taqwim-docs",
   "version": "0.0.1-beta.1",
-  "private": false,
+  "private": true,
   "scripts": {
-    "docs:dev": "vitepress dev --port 1444",
-    "docs:build": "vitepress build",
-    "docs:preview": "vitepress preview"
+    "docs:dev": "vp exec vitepress dev --port 1444",
+    "docs:build": "vp exec vitepress build",
+    "docs:preview": "vp exec vitepress preview"
   },
   "dependencies": {
-    "taqwim-core-utils": "^0.1.0",
-    "taqwim-vue": "^0.0.5",
+    "@taqwim/core": "workspace:*",
+    "taqwim-vue": "workspace:*",
     "vitepress": "^1.1.4"
   }
 }

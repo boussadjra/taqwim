@@ -3,12 +3,12 @@
   "version": "0.0.5",
   "private": false,
   "keywords": [
+    "@taqwim/core",
     "calendar",
     "date",
     "hijri",
     "islamic",
     "taqwim",
-    "taqwim-core-utils",
     "taqwim-docs",
     "taqwim-vue",
     "typescript",
@@ -58,7 +58,7 @@
     "publish": "pnpm publish --access public"
   },
   "dependencies": {
-    "taqwim-core-utils": "workspace:*"
+    "@taqwim/core": "workspace:*"
   },
   "devDependencies": {
     "@playwright/test": "^1.54.2",

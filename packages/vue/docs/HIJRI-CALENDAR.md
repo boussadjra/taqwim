@@ -17,7 +17,7 @@ A comprehensive set of headless Vue 3 components for building accessible Hijri (
 ## Installation
 
 ```bash
-npm install taqwim-vue taqwim-core-utils
+npm install taqwim-vue @taqwim/core
 ```
 
 ## Basic Usage
@@ -74,7 +74,7 @@ import {
   HijriCalendarCell,
   HijriCalendarCellTrigger,
 } from 'taqwim-vue'
-import type { HijriDateObject } from 'taqwim-core-utils'
+import type { HijriDateObject } from '@taqwim/core'
 
 const selectedDate = ref<HijriDateObject>()
 </script>
@@ -322,7 +322,7 @@ You can create completely custom styles using the data attributes:
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { HijriDateObject } from 'taqwim-core-utils'
+import type { HijriDateObject } from '@taqwim/core'
 
 const selectedDates = ref<HijriDateObject[]>([])
 </script>
@@ -339,8 +339,8 @@ const selectedDates = ref<HijriDateObject[]>([])
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { HijriDateObject } from 'taqwim-core-utils'
-import { getDayInWeek } from 'taqwim-core-utils'
+import type { HijriDateObject } from '@taqwim/core'
+import { getDayInWeek } from '@taqwim/core'
 
 const selectedDate = ref<HijriDateObject>()
 
@@ -367,8 +367,8 @@ const isHoliday = (date: HijriDateObject) => {
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { HijriDateObject } from 'taqwim-core-utils'
-import { isEqual } from 'taqwim-core-utils'
+import type { HijriDateObject } from '@taqwim/core'
+import { isEqual } from '@taqwim/core'
 
 const selectedRange = ref<HijriDateObject[]>([])
 
@@ -410,8 +410,8 @@ const handleRangeSelection = (dates: HijriDateObject[]) => {
 </template>
 
 <script setup lang="ts">
-import { addHijriYears, subHijriYears } from 'taqwim-core-utils'
-import type { HijriDateObject } from 'taqwim-core-utils'
+import { addHijriYears, subHijriYears } from '@taqwim/core'
+import type { HijriDateObject } from '@taqwim/core'
 
 const goBackOneYear = (date: HijriDateObject) => subHijriYears(date, 1) || date
 

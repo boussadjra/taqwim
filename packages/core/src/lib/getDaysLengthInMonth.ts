@@ -1,5 +1,5 @@
-import { hDatesTable } from '.'
-import type { HijriDateObject } from '.'
+import { daysInHijriMonth, recordForHijriYear } from './hDatesIndex'
+import type { HijriDateObject } from './types'
 
 /**
  * Returns the length of a month in the Hijri calendar.
@@ -25,9 +25,9 @@ export function getDaysLengthInMonth(hyOrHijriDate: number | HijriDateObject, hm
   if (hmActual < 1 || hmActual > 12) {
     return -1
   }
-  const hijriYearRecord = hDatesTable.find(record => record.hy === hy)
+  const hijriYearRecord = recordForHijriYear(hy)
   if (hijriYearRecord) {
-    return (hijriYearRecord.dpm >> (hmActual - 1)) & 1 ? 30 : 29
+    return daysInHijriMonth(hijriYearRecord.dpm, hmActual)
   }
 
   return -1

@@ -52,15 +52,18 @@ export function formatHijriDate(
     throw new Error(`The locale "${locale}" is not supported.`)
   }
 
+  // A Gregorian Date carrying the *Hijri* y/m/d, so date-fns `format` can be
+  // reused for tokens that are purely numeric (day-of-month, month number).
+  // Hoisted: this used to be rebuilt on every token match.
+  const simulatedGregDate = set(new Date(), {
+    year: hijriDate.hy,
+    month: hijriDate.hm - 1,
+    date: hijriDate.hd,
+  })
+
   return formatStr.replace(
     /\biYYYY\b|\biYY\b|\biMM\b|\biM\b|\biMMM\b|\biMMMM\b|\biDD\b|\biD\b|\biE\b|\biEEE\b|\biEEEE\b|\byyyy\b|\byy\b|\bMM\b|\bM\b|\bMo\b|\bMMM\b|\bMMMM\b|\bdd\b|\bd\b|\bE\b|\bEEE\b|\bEEEE\b|\bG\b|\bGG\b|\bGGG\b|\bGGGG\b|\bGGGGG\b|\by\b|\byo\b|\byyy\b|\byyyyy\b|\bY\b|\bYo\b|\bYY\b|\bYYY\b|\bYYYY\b|\bYYYYY\b|\bR\b|\bRR\b|\bRRR\b|\bRRRR\b|\bRRRRR\b|\bu\b|\buu\b|\buuu\b|\buuuu\b|\buuuuu\b|\bQ\b|\bQo\b|\bQQ\b|\bQQQ\b|\bQQQQ\b|\bQQQQQ\b|\bq\b|\bqo\b|\bqq\b|\bqqq\b|\bqqqq\b|\bqqqqq\b|\bL\b|\bLo\b|\bLL\b|\bLLL\b|\bLLLL\b|\bLLLLL\b|\bw\b|\bwo\b|\bww\b|\bI\b|\bIo\b|\bII\b|\bD\b|\bDo\b|\bDD\b|\bDDD\b|\bDDDD\b|\be\b|\beo\b|\bee\b|\beee\b|\beeee\b|\beeeee\b|\beeeeee\b|\bc\b|\bco\b|\bcc\b|\bccc\b|\bcccc\b|\b[HHhmsaiozZ]+\b/g,
     match => {
-      const simulatedGregDate = set(new Date(), {
-        year: hijriDate.hy,
-        month: hijriDate.hm - 1,
-        date: hijriDate.hd,
-      })
-
       switch (match) {
         case 'iYYYY':
           return String(hijriDate.hy).padStart(4, '0')

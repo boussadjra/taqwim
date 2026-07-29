@@ -1,28 +1,34 @@
-[**taqwim-core-utils**](../README.md) • **Docs**
+[**@taqwim/core**](../README.md)
 
 ---
 
-[taqwim-core-utils](../globals.md) / addHijriQuarters
+[@taqwim/core](../globals.md) / addHijriQuarters
 
 # Function: addHijriQuarters()
 
-> **addHijriQuarters**(`date`, `amount`): `HijriDateObject` \| `null`
+> **addHijriQuarters**(`date`, `amount`): `HijriDateObject`
+
+Defined in: [packages/core/src/lib/addHijriQuarters.ts:23](https://github.com/boussadjra/taqwim/blob/967b462e7dccdb8cffe50f13ba37d6f2e3f2a4a2/packages/core/src/lib/addHijriQuarters.ts#L23)
 
 Adds a specified number of Hijri quarters to a given Hijri date.
 
 ## Parameters
 
-• **date**: `HijriDateObject`
+### date
+
+`HijriDateObject`
 
 The Hijri date object to which the quarters will be added.
 
-• **amount**: `number`
+### amount
+
+`number`
 
 The number of quarters to add. Positive values will add quarters in the future, while negative values will subtract quarters from the date.
 
 ## Returns
 
-`HijriDateObject` \| `null`
+`HijriDateObject`
 
 A new Hijri date object that is the result of adding the specified number of quarters to the given date. Returns null if the input date is invalid.
 
@@ -39,7 +45,3 @@ const result = addHijriQuarters({ hy: 1445, hm: 9, hd: 1 }, 2)
 const result = addHijriQuarters({ hy: 1445, hm: 9, hd: 30 }, 1)
 //=> { hy: 1446, hm: 1, hd: 29 }
 ```
-
-## Source
-
-[addHijriQuarters.ts:23](https://github.com/boussadjra/taqwim/blob/a16e0483140d22a326ae33586f5bfb208d318d3e/packages/core-utils/src/lib/addHijriQuarters.ts#L23)

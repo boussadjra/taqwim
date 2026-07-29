@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { HijriDateObject } from 'taqwim-core-utils'
+import type { HijriDateObject } from '@taqwim/core'
 
 export interface HijriCalendarCellProps {
   /** The date value for the cell */

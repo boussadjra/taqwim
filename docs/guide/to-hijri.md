@@ -1,5 +1,5 @@
 <script setup>
-import { toHijri } from 'taqwim-core-utils';
+import { toHijri } from '@taqwim/core';
 const gregorianDate = new Date('2024-03-11');
 
 const hijriDate = toHijri(gregorianDate); 
@@ -9,7 +9,7 @@ const hijriDate = toHijri(gregorianDate);
 ## Convert Gregorian date to Hijri date
 
 ```js
-import { toHijri } from 'taqwim-core-utils'
+import { toHijri } from '@taqwim/core'
 const gregorianDate = new Date('2024-03-11')
 
 const hijriDate = toHijri(gregorianDate)

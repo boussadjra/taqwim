@@ -16,7 +16,7 @@ body:
       label: Package
       description: Which package would this feature affect?
       options:
-        - taqwim-core-utils
+        - '@taqwim/core'
         - taqwim-vue
         - Documentation
         - Build/Development
@@ -50,7 +50,7 @@ body:
       render: typescript
       placeholder: |
         // Example:
-        import { newFunction } from 'taqwim-core-utils'
+        import { newFunction } from '@taqwim/core'
 
         const result = newFunction(input)
 

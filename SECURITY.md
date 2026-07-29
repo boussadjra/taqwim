@@ -2,10 +2,10 @@
 
 ## Supported Versions
 
-| Package           | Version | Supported          |
-| ----------------- | ------- | ------------------ |
-| taqwim-core-utils | 0.1.x   | :white_check_mark: |
-| taqwim-vue        | 0.0.x   | :white_check_mark: |
+| Package      | Version | Supported          |
+| ------------ | ------- | ------------------ |
+| @taqwim/core | 0.1.x   | :white_check_mark: |
+| taqwim-vue   | 0.0.x   | :white_check_mark: |
 
 ## Reporting a Vulnerability
 
@@ -32,5 +32,5 @@ Instead, please email the maintainer directly at the email listed on the [GitHub
 
 This policy covers the following packages published to npm:
 
-- `taqwim-core-utils`
+- `@taqwim/core`
 - `taqwim-vue`

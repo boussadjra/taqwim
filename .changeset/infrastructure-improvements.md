@@ -1,5 +1,5 @@
 ---
-'taqwim-core-utils': minor
+'@taqwim/core': minor
 'taqwim-vue': minor
 ---
 

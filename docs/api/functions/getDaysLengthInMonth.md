@@ -1,21 +1,25 @@
-[**taqwim-core-utils**](../README.md) • **Docs**
+[**@taqwim/core**](../README.md)
 
 ---
 
-[taqwim-core-utils](../globals.md) / getDaysLengthInMonth
+[@taqwim/core](../globals.md) / getDaysLengthInMonth
 
 # Function: getDaysLengthInMonth()
 
-## getDaysLengthInMonth(hyOrHijriDate)
+## Call Signature
 
 > **getDaysLengthInMonth**(`hyOrHijriDate`): `number`
+
+Defined in: [packages/core/src/lib/getDaysLengthInMonth.ts:10](https://github.com/boussadjra/taqwim/blob/967b462e7dccdb8cffe50f13ba37d6f2e3f2a4a2/packages/core/src/lib/getDaysLengthInMonth.ts#L10)
 
 Returns the length of a month in the Hijri calendar.
 Overload to support HijriDateObject as a single parameter.
 
 ### Parameters
 
-• **hyOrHijriDate**: `HijriDateObject`
+#### hyOrHijriDate
+
+`HijriDateObject`
 
 ### Returns
 
@@ -23,24 +27,27 @@ Overload to support HijriDateObject as a single parameter.
 
 The length of the month in days. Returns -1 if the month is invalid.
 
-### Source
+## Call Signature
 
-[getDaysLengthInMonth.ts:10](https://github.com/boussadjra/taqwim/blob/a16e0483140d22a326ae33586f5bfb208d318d3e/packages/core-utils/src/lib/getDaysLengthInMonth.ts#L10)
+> **getDaysLengthInMonth**(`hyOrHijriDate`, `hm?`): `number`
 
-## getDaysLengthInMonth(hyOrHijriDate, hm)
+Defined in: [packages/core/src/lib/getDaysLengthInMonth.ts:11](https://github.com/boussadjra/taqwim/blob/967b462e7dccdb8cffe50f13ba37d6f2e3f2a4a2/packages/core/src/lib/getDaysLengthInMonth.ts#L11)
 
-> **getDaysLengthInMonth**(`hyOrHijriDate`, `hm`?): `number`
+Returns the length of a month in the Hijri calendar.
+Overload to support HijriDateObject as a single parameter.
 
 ### Parameters
 
-• **hyOrHijriDate**: `number` \| `HijriDateObject`
+#### hyOrHijriDate
 
-• **hm?**: `number`
+`number` | `HijriDateObject`
+
+#### hm?
+
+`number`
 
 ### Returns
 
 `number`
 
-### Source
-
-[getDaysLengthInMonth.ts:11](https://github.com/boussadjra/taqwim/blob/a16e0483140d22a326ae33586f5bfb208d318d3e/packages/core-utils/src/lib/getDaysLengthInMonth.ts#L11)
+The length of the month in days. Returns -1 if the month is invalid.

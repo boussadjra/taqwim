@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { HijriCalendar, type HijriCalendarTheme, type HijriCalendarSize } from 'taqwim-vue'
-import type { HijriDateObject } from 'taqwim-core-utils'
+import type { HijriDateObject } from '@taqwim/core'
 
 // Reactive state
 const selectedDate = ref<HijriDateObject>({ hy: 1446, hm: 2, hd: 15 })
