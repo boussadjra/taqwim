@@ -315,17 +315,10 @@ const prevPage = (prevPageFunc?: (date: HijriDateObject) => HijriDateObject) => 
 }
 
 const nextPage = (nextPageFunc?: (date: HijriDateObject) => HijriDateObject) => {
-  console.log('HijriCalendarRoot nextPage called with nextPageFunc:', nextPageFunc)
-  console.log('Current placeholder:', placeholder.value)
-  console.log('Number of months to navigate:', numberOfMonths.value)
   if (nextPageFunc) {
-    const newDate = nextPageFunc(placeholder.value)
-    console.log('New date from nextPageFunc:', newDate)
-    onPlaceholderChange(newDate)
+    onPlaceholderChange(nextPageFunc(placeholder.value))
   } else {
-    console.log('No nextPageFunc provided, using default navigation')
     const newDate = addHijriMonths(placeholder.value, numberOfMonths.value)
-    console.log('New date from default navigation:', newDate)
     if (newDate) {
       onPlaceholderChange(newDate)
     }

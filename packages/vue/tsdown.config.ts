@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsdown'
 import Vue from 'unplugin-vue/rolldown'
-import { copyFileSync, mkdirSync, existsSync } from 'fs'
-import { join } from 'path'
+import { copyFileSync, mkdirSync, existsSync } from 'node:fs'
+import { join } from 'node:path'
 
 export default defineConfig([
   {
@@ -9,7 +9,9 @@ export default defineConfig([
     platform: 'neutral',
 
     plugins: [Vue({ isProduction: true })],
-    dts: { vue: true },
+    // Declarations are emitted by `vue-tsc -p tsconfig.build.json` instead:
+    // tsdown's SFC dts pipeline crashes the TS compiler on this source tree.
+    dts: false,
     format: ['esm', 'commonjs'],
     target: 'esnext',
     onSuccess: () => {

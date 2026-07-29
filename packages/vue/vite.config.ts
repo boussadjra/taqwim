@@ -1,63 +1,46 @@
 import { fileURLToPath, URL } from 'node:url'
-import * as path from 'path'
-
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vite-plus'
 import vue from '@vitejs/plugin-vue'
-import VueDevTools from 'vite-plugin-vue-devtools'
-import dts from 'vite-plugin-dts'
-import { visualizer } from 'rollup-plugin-visualizer'
 
-// https://vitejs.dev/config/
+// The library itself is bundled by tsdown (tsdown.config.ts). This file
+// provides the Vue plugin for Vitest, plus the `vp run` task graph.
+const afterDeps = [{ task: 'build', from: 'dependencies' as const }]
+
 export default defineConfig({
-  plugins: [
-    vue(),
-    VueDevTools(),
-    // dts({
-    //   insertTypesEntry: true,
-    //   include: ['src/**/*'],
-    //   exclude: ['src/**/__tests__/*', 'src/**/test*'],
-    //   copyDtsFiles: true,
-    //   entryRoot: './src',
-    // }),
-    visualizer({
-      filename: 'dist/stats.html',
-      open: false,
-      gzipSize: true,
-      brotliSize: true,
-    }),
-  ],
-  build: {
-    lib: {
-      entry: path.resolve(__dirname, 'src/index.ts'),
-      name: 'TaqwimVue',
-      fileName: 'taqwim-vue',
-    },
-    rollupOptions: {
-      external: ['vue', 'taqwim-core-utils'],
-      output: {
-        globals: {
-          vue: 'Vue',
-          'taqwim-core-utils': 'TaqwimCoreUtils',
-        },
-        // Extract CSS to separate file
-        assetFileNames: assetInfo => {
-          if (assetInfo.name === 'style.css') return 'style.css'
-          return assetInfo.name || 'unknown'
-        },
-      },
-    },
-    cssCodeSplit: false,
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
-      },
-    },
-  },
+  plugins: [vue()],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+  },
+  test: {
+    environment: 'jsdom',
+    include: ['tests/**/*.test.ts'],
+    exclude: ['tests/e2e/**'],
+  },
+  run: {
+    tasks: {
+      build: {
+        // tsdown first (it cleans dist/), then vue-tsc emits .d.ts into dist/types.
+        command: ['tsdown', 'vue-tsc -p tsconfig.build.json'],
+        dependsOn: afterDeps,
+        input: ['src/**', 'env.d.ts', 'tsdown.config.ts', 'tsconfig*.json', 'package.json'],
+        output: ['dist/**'],
+      },
+      test: {
+        command: 'vitest run',
+        dependsOn: afterDeps,
+        input: ['src/**', 'tests/**', 'vite.config.ts', 'package.json'],
+      },
+      'type-check': {
+        command: 'vue-tsc --build --force',
+        dependsOn: afterDeps,
+      },
+      'test:e2e': {
+        command: 'playwright test',
+        dependsOn: afterDeps,
+        cache: false,
+      },
     },
   },
 })

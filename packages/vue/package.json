@@ -2,17 +2,37 @@
   "name": "taqwim-vue",
   "version": "0.0.5",
   "private": false,
+  "keywords": [
+    "calendar",
+    "date",
+    "hijri",
+    "islamic",
+    "taqwim",
+    "taqwim-core-utils",
+    "taqwim-docs",
+    "taqwim-vue",
+    "typescript",
+    "vite",
+    "vue"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/boussadjra/taqwim.git"
+  },
+  "files": [
+    "dist"
+  ],
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
-  "types": "./src/index.d.ts",
+  "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
-    "./style.css": "./dist/index.css",
+    "./style.css": "./dist/style.css",
     "./hijri-calendar-variables.css": "./dist/style/hijri-calendar-variables.css",
     "./hijri-calendar.css": "./dist/style/hijri-calendar.css",
     "./hijri-calendar-dark.css": "./dist/style/hijri-calendar-dark.css",
@@ -30,61 +50,34 @@
     "./minimal.css": "./dist/style/minimal.css"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "tsdown",
-    "test:unit": "vitest",
-    "test:e2e": "playwright test",
-    "test:e2e:dev": "playwright test --ui",
-    "test:e2e:headed": "playwright test --headed",
-    "build-only": "tsdown",
-    "type-check": "vue-tsc --build --force",
-    "prepublishOnly": "tsdown",
+    "_comment": "build / test / type-check / test:e2e are declared as vp tasks in vite.config.ts",
+    "test:watch": "vp exec vitest",
+    "test:e2e:dev": "vp exec playwright test --ui",
+    "test:e2e:headed": "vp exec playwright test --headed",
+    "prepublishOnly": "vp run build",
     "publish": "pnpm publish --access public"
   },
   "dependencies": {
-    "taqwim-core-utils": "workspace:*",
-    "vue": "^3.5.18"
-  },
-  "peerDependencies": {
-    "vue": ">=3.3.0 <4.0.0"
+    "taqwim-core-utils": "workspace:*"
   },
   "devDependencies": {
     "@playwright/test": "^1.54.2",
     "@tsconfig/node20": "^20.1.6",
+    "@tsdown/css": "^0.22.14",
     "@types/jsdom": "^21.1.7",
     "@types/node": "^24.1.0",
-    "@vitejs/plugin-vue": "^6.0.1",
+    "@vitejs/plugin-vue": "^6.0.8",
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.7.0",
     "jsdom": "^26.1.0",
-    "npm-run-all2": "^8.0.4",
-    "rollup-plugin-visualizer": "^6.0.3",
-    "terser": "^5.43.1",
-    "vite-plugin-dts": "^4.5.4",
-    "vite-plugin-vue-devtools": "^8.0.0",
-    "vitest": "^3.2.4",
-    "vue-tsc": "^3.0.5",
-    "unplugin-vue": "^7.0.0"
+    "tsdown": "^0.22.14",
+    "typescript": "~5.9.3",
+    "unplugin-vue": "^7.0.0",
+    "vitest": "^4.1.10",
+    "vue": "^3.5.18",
+    "vue-tsc": "^3.0.5"
   },
-  "keywords": [
-    "taqwim",
-    "taqwim-core-utils",
-    "taqwim-vue",
-    "taqwim-docs",
-    "date",
-    "hijri",
-    "islamic",
-    "calendar",
-    "vue",
-    "vite",
-    "typescript"
-  ],
-  "files": [
-    "dist",
-    "src/index.d.ts"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/boussadjra/taqwim.git"
+  "peerDependencies": {
+    "vue": ">=3.3.0 <4.0.0"
   }
 }

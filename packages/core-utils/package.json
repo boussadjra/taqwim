@@ -3,13 +3,36 @@
   "version": "0.1.1",
   "private": false,
   "description": "Hijri Date utils",
+  "keywords": [
+    "backend",
+    "calendar",
+    "date",
+    "hijri",
+    "islamic",
+    "nestjs",
+    "nodejs",
+    "server-side",
+    "taqwim",
+    "taqwim-core-utils",
+    "taqwim-docs",
+    "taqwim-vue",
+    "typescript",
+    "vite",
+    "vue"
+  ],
+  "license": "MIT",
   "author": "Brahim Boussadjra",
   "repository": "https://github.com/boussadjra/taqwim",
-  "license": "MIT",
+  "files": [
+    "dist/**/*",
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md"
+  ],
   "sideEffects": false,
   "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
   "module": "dist/index.mjs",
+  "typings": "dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -18,53 +41,26 @@
     }
   },
   "scripts": {
-    "build": "tsdown",
-    "test": "vitest",
-    "test:coverage": "vitest --coverage",
-    "test:ui": "vitest --ui",
-    "dev": "vite",
-    "preview": "vite preview",
-    "build:api": "jsdoc2md example.js > API.md",
-    "prepublishOnly": "tsdown",
-    "publish": "pnpm publish --access public",
-    "analyse": "vite-bundle-visualizer dist --port 3000"
-  },
-  "engines": {
-    "node": ">=16"
+    "_comment": "build / test / test:coverage are declared as vp tasks in vite.config.ts",
+    "test:watch": "vp exec vitest",
+    "prepublishOnly": "vp run build",
+    "publish": "pnpm publish --access public"
   },
   "dependencies": {
     "date-fns": "^4.1.0"
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "^1.6.0",
-    "rollup-plugin-visualizer": "^5.12.0"
+    "@vitest/coverage-v8": "^4.1.10",
+    "tsdown": "^0.22.14",
+    "typescript": "~5.9.3",
+    "vitest": "^4.1.10"
   },
-  "files": [
-    "dist/**/*",
-    "CHANGELOG.md",
-    "LICENSE",
-    "README.md"
-  ],
   "config": {
     "commitizen": {
       "path": "cz-conventional-changelog"
     }
   },
-  "keywords": [
-    "taqwim",
-    "taqwim-core-utils",
-    "taqwim-vue",
-    "taqwim-docs",
-    "date",
-    "hijri",
-    "islamic",
-    "calendar",
-    "vue",
-    "vite",
-    "typescript",
-    "nodejs",
-    "nestjs",
-    "backend",
-    "server-side"
-  ]
+  "engines": {
+    "node": ">=20"
+  }
 }

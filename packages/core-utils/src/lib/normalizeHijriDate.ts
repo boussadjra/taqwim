@@ -1,4 +1,4 @@
-import { HijriDateObject, ValidHijriDate } from './types'
+import type { HijriDateObject, ValidHijriDate } from './types'
 import { parseDateString } from './parseDateString'
 
 /**

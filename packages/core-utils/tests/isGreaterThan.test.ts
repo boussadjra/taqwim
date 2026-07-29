@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest'
-import { toHijri } from '../src/lib/toHijri'
 import { isGreaterThan } from '../src/lib/isGreaterThan'
 
 describe('isGreaterThan', () => {

@@ -1,5 +1,6 @@
 import { set, startOfDay, toDate } from 'date-fns'
-import { hDates, hDatesTable } from '.'
+import type { hDates } from '.'
+import { hDatesTable } from '.'
 
 export function getHijriYear(closestDate: Date): hDates | undefined {
   return hDatesTable.find((date: hDates) => {

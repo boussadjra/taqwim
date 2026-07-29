@@ -1,8 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { ref } from 'vue'
-import { toHijri } from 'taqwim-core-utils'
-import { HijriCalendarRoot } from '../src/HijriCalendar'
+import { h, ref } from 'vue'
+import { HijriCalendarRoot, injectHijriCalendarRootContext } from '../src/HijriCalendar'
 
 // Mock taqwim-core-utils
 vi.mock('taqwim-core-utils', () => ({
@@ -51,12 +50,11 @@ describe('HijriCalendarRoot', () => {
     const wrapper = mount(HijriCalendarRoot, {
       props: defaultProps,
       slots: {
-        default: ({ grid, weekDays }) => `
-          <div data-testid="calendar-content">
-            <div data-testid="weekdays">${weekDays.join(',')}</div>
-            <div data-testid="grid">${grid.length}</div>
-          </div>
-        `,
+        default: ({ grid, weekDays }) =>
+          h('div', { 'data-testid': 'calendar-content' }, [
+            h('div', { 'data-testid': 'weekdays' }, weekDays.join(',')),
+            h('div', { 'data-testid': 'grid' }, String(grid.length)),
+          ]),
       },
     })
 
@@ -255,15 +253,15 @@ describe('HijriCalendarRoot', () => {
 
     const ChildComponent = {
       setup() {
-        receivedContext = require('../src/HijriCalendar/HijriCalendarRoot.vue').injectHijriCalendarRootContext()
-        return () => '<div>Child</div>'
+        receivedContext = injectHijriCalendarRootContext()
+        return () => h('div', 'Child')
       },
     }
 
     mount(HijriCalendarRoot, {
       props: defaultProps,
       slots: {
-        default: () => ChildComponent,
+        default: () => h(ChildComponent),
       },
     })
 

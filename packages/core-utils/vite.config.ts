@@ -1,49 +1,24 @@
-// vite.config.js
-import { resolve } from 'node:path'
-import { defineConfig } from 'vite'
-import dts from 'vite-plugin-dts'
-import { visualizer } from 'rollup-plugin-visualizer'
+import { defineConfig } from 'vite-plus'
 
+// No bundler config here: the library is built by tsdown (tsdown.config.ts).
+// This file declares the `vp run` task graph for the package.
 export default defineConfig({
-  build: {
-    lib: {
-      // Could also be a dictionary or array of multiple entry points
-      entry: resolve(__dirname, 'src/lib/index.ts'),
-      name: 'TaqwimCoreUtils',
-      // the proper extensions will be added
-      fileName: 'taqwim-core-utils',
-    },
-    rollupOptions: {
-      // make sure to externalize deps that shouldn't be bundled
-      // into your library
-      external: ['date-fns'],
-      output: {
-        // Provide global variables to use in the UMD build
-        // for externalized deps
-        globals: {
-          'date-fns': 'dateFns',
-        },
-        manualChunks: undefined, // Disable manual chunks for library builds
+  run: {
+    tasks: {
+      build: {
+        command: 'tsdown',
+        input: ['src/**', 'tsdown.config.ts', 'tsconfig.json', 'package.json'],
+        output: ['dist/**'],
       },
-    },
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
+      test: {
+        command: 'vitest run',
+        input: ['src/**', 'tests/**', 'vitest.config.ts', 'package.json'],
+      },
+      'test:coverage': {
+        command: 'vitest run --coverage',
+        input: ['src/**', 'tests/**', 'vitest.config.ts', 'package.json'],
+        output: ['coverage/**'],
       },
     },
   },
-  plugins: [
-    dts({
-      insertTypesEntry: true,
-      include: ['src/lib/**/*'],
-    }),
-    visualizer({
-      filename: 'dist/stats.html',
-      open: false,
-      gzipSize: true,
-      brotliSize: true,
-    }),
-  ],
 })

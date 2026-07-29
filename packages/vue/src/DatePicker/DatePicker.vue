@@ -74,7 +74,9 @@ const selectYear = (year: number) => {
       </slot>
 
       <slot name="header">
-        <div class="tq-date-picker__header">{{ formatHijriDate(normalizedHijriDate, 'iDD iMMMM iYYYY', locale) }}</div>
+        <div class="tq-date-picker__header">
+          {{ formatHijriDate(normalizedHijriDate, 'iDD iMMMM iYYYY', locale) }}
+        </div>
       </slot>
 
       <slot

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "oxc", "unicorn", "import", "jsx-a11y", "vue"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "perf": "warn"
+  },
+  "env": {
+    "browser": true,
+    "es2024": true,
+    "node": true
+  },
+  "rules": {
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "no-debugger": "error",
+    "eqeqeq": ["error", "always"],
+    "typescript/no-explicit-any": "warn",
+    "typescript/consistent-type-imports": "error",
+    "unicorn/prefer-node-protocol": "error",
+    "import/no-unassigned-import": "off",
+    "oxc/no-map-spread": "off"
+  },
+  "ignorePatterns": [
+    "**/dist/**",
+    "**/node_modules/**",
+    "**/.vitepress/cache/**",
+    "**/.astro/**",
+    "**/test-results/**",
+    "**/playwright-report/**",
+    "docs/api/**"
+  ],
+  "overrides": [
+    {
+      "files": ["**/tests/**", "**/*.test.ts", "**/*.spec.ts"],
+      "rules": {
+        "typescript/no-explicit-any": "off",
+        "no-console": "off"
+      }
+    },
+    {
+      "files": ["playground/**", "**/*.config.*", "scripts/**"],
+      "rules": {
+        "no-console": "off"
+      }
+    }
+  ]
+}

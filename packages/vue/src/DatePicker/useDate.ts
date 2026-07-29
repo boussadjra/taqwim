@@ -31,7 +31,12 @@ export function useDate(options: {
     for (let i = 1; i <= daysInMonth.value; i++) {
       days.push({
         dayInMonth: i,
-        dayInWeek: getDayInWeek({ hy: normalizedHijriDate.value.hy, hm: normalizedHijriDate.value.hm, hd: i }) ?? 0,
+        dayInWeek:
+          getDayInWeek({
+            hy: normalizedHijriDate.value.hy,
+            hm: normalizedHijriDate.value.hm,
+            hd: i,
+          }) ?? 0,
         date: {
           hy: normalizedHijriDate.value.hy,
           hm: normalizedHijriDate.value.hm,
@@ -61,7 +66,6 @@ export function useDate(options: {
         isAdjacent: true,
       })),
     ]
-    return days
   })
 
   const months = computed(() => {
@@ -91,5 +95,15 @@ export function useDate(options: {
     return normalizedHijriDate.value.hy
   })
 
-  return { monthDays, prevMonth, nextMonth, today, years, months, currentMonth, currentYear, normalizedHijriDate }
+  return {
+    monthDays,
+    prevMonth,
+    nextMonth,
+    today,
+    years,
+    months,
+    currentMonth,
+    currentYear,
+    normalizedHijriDate,
+  }
 }

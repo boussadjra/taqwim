@@ -28,10 +28,6 @@ const rootContext = injectHijriCalendarRootContext()
 const disabled = computed(() => rootContext.disabled.value || rootContext.isNextButtonDisabled(props.nextPage))
 
 function handleClick() {
-  console.log('HijriCalendarNext clicked')
-  console.log('HijriCalendarNext props:', props)
-  console.log('HijriCalendarNext disabled:', disabled.value)
-  console.log('HijriCalendarNext rootContext:', rootContext)
   if (disabled.value) return
   rootContext.nextPage()
 }

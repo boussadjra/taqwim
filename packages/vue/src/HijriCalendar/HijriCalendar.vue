@@ -148,8 +148,8 @@ export interface HijriCalendarSlots {
 
 <script setup lang="ts">
 import { computed, ref, inject } from 'vue'
+import type { HijriCalendarRoot } from './index'
 import {
-  HijriCalendarRoot,
   HijriCalendarHeader,
   HijriCalendarHeading,
   HijriCalendarPrev,

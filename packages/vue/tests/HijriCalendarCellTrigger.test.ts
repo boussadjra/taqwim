@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { mount, VueWrapper } from '@vue/test-utils'
-import { ref } from 'vue'
+import { mount } from '@vue/test-utils'
+import { h, ref } from 'vue'
+import { toHijri } from 'taqwim-core-utils'
 import { HijriCalendarCellTrigger } from '../src/HijriCalendar'
 
 // Mock the context injection
@@ -66,7 +67,7 @@ describe('HijriCalendarCellTrigger', () => {
 
     const button = wrapper.find('button')
     expect(button.attributes('data-value')).toBe('1446-01-20')
-    expect(button.attributes('data-reka-calendar-cell-trigger')).toBe('')
+    expect(button.attributes('data-taqwim-calendar-cell-trigger')).toBe('')
   })
 
   it('shows selected state correctly', () => {
@@ -107,9 +108,8 @@ describe('HijriCalendarCellTrigger', () => {
   })
 
   it('shows today state correctly', () => {
-    // Mock toHijri to return the same date as props.day
-    const { toHijri } = require('taqwim-core-utils')
-    toHijri.mockReturnValue({ hy: 1446, hm: 1, hd: 20 })
+    // Make "today" resolve to the same date as props.day
+    vi.mocked(toHijri).mockReturnValue({ hy: 1446, hm: 1, hd: 20 })
 
     const wrapper = mount(HijriCalendarCellTrigger, {
       props: defaultProps,
@@ -181,7 +181,7 @@ describe('HijriCalendarCellTrigger', () => {
       props: defaultProps,
       slots: {
         default: ({ dayValue, selected, disabled }) =>
-          `<span class="custom">${dayValue} ${selected ? 'selected' : ''} ${disabled ? 'disabled' : ''}</span>`,
+          h('span', { class: 'custom' }, `${dayValue} ${selected ? 'selected' : ''} ${disabled ? 'disabled' : ''}`),
       },
     })
 

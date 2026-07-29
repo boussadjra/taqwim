@@ -1,4 +1,5 @@
-import { toGregorian, ValidHijriDate, normalizeHijriDate } from '.'
+import type { ValidHijriDate } from '.'
+import { toGregorian, normalizeHijriDate } from '.'
 
 /**
  * Returns the day of the week for a given Hijri date.

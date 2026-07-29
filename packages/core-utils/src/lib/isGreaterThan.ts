@@ -4,7 +4,7 @@
  * @param b - The second HijriDateObject to compare.
  * @returns True if the first HijriDateObject is greater than the second HijriDateObject, false otherwise.
  */
-import { HijriDateObject } from '.'
+import type { HijriDateObject } from '.'
 
 export function isGreaterThan(a: HijriDateObject, b: HijriDateObject): boolean {
   if (a.hy > b.hy) return true
