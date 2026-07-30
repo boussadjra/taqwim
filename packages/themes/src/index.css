@@ -1,0 +1,23 @@
+/**
+ * @taqwim/themes — everything.
+ *
+ * ```js
+ * import '@taqwim/themes'
+ * ```
+ *
+ * Order matters: `variables.css` must define the tokens before `core.css`
+ * consumes them, and themes come last so their `[data-taqwim-theme]` overrides
+ * win over the `:root` defaults at equal specificity.
+ *
+ * For a smaller bundle, compose it yourself:
+ *
+ * ```js
+ * import '@taqwim/themes/variables.css'
+ * import '@taqwim/themes/core.css'
+ * import '@taqwim/themes/themes/islamic.css'
+ * ```
+ */
+
+@import './variables.css';
+@import './core.css';
+@import './themes/all.css';

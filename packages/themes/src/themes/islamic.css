@@ -1,0 +1,37 @@
+/*
+ * Islamic — emerald and gold.
+ *
+ * The pre-1.0 stylesheets disagreed about this theme: variables.css defined it
+ * as a green gradient while hijri-calendar-islamic.css defined it as gold on
+ * white, so whichever loaded last won. Resolved here as green with gold accents.
+ */
+[data-taqwim-theme='islamic'] {
+  --hijri-calendar-background: linear-gradient(135deg, #065f46 0%, #047857 100%);
+  --hijri-calendar-foreground: #ecfdf5;
+  --hijri-calendar-border: 2px solid #34d399;
+  --hijri-calendar-border-radius: 0.75rem;
+  --hijri-calendar-shadow: 0 10px 25px rgb(6 95 70 / 0.3);
+
+  --hijri-calendar-primary: linear-gradient(135deg, #d4af37 0%, #f0c75e 100%);
+  --hijri-calendar-primary-foreground: #065f46;
+  --hijri-calendar-primary-hover: linear-gradient(135deg, #b8941f 0%, #d4af37 100%);
+
+  --hijri-calendar-secondary: rgb(52 211 153 / 0.2);
+  --hijri-calendar-secondary-foreground: #ecfdf5;
+  --hijri-calendar-secondary-hover: rgb(52 211 153 / 0.32);
+
+  --hijri-calendar-accent: rgb(212 175 55 / 0.25);
+  --hijri-calendar-accent-foreground: #fde68a;
+
+  --hijri-calendar-muted: rgb(6 95 70 / 0.8);
+  --hijri-calendar-muted-foreground: rgb(236 253 245 / 0.75);
+
+  --hijri-calendar-header-border: 1px solid rgb(52 211 153 / 0.35);
+  --hijri-calendar-hover: rgb(52 211 153 / 0.28);
+  --hijri-calendar-focus-ring-color: #fde68a;
+
+  --hijri-calendar-cell-size: 2.25rem;
+  --hijri-calendar-nav-button-size: 2.5rem;
+  --hijri-calendar-header-padding: var(--hijri-calendar-spacing-lg);
+  --hijri-calendar-grid-gap: 0.375rem;
+}

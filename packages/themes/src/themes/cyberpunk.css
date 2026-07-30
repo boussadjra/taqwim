@@ -1,0 +1,27 @@
+/* Cyberpunk — GitHub-dark surface with electric blue and green. */
+[data-taqwim-theme='cyberpunk'] {
+  --hijri-calendar-background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #21262d 100%);
+  --hijri-calendar-foreground: #e6edf3;
+  --hijri-calendar-border: 1px solid #58a6ff;
+  --hijri-calendar-border-radius: 0.5rem;
+  --hijri-calendar-shadow: 0 0 20px rgb(88 166 255 / 0.2), 0 4px 15px rgb(0 0 0 / 0.5);
+
+  --hijri-calendar-primary: linear-gradient(135deg, #58a6ff, #238636);
+  --hijri-calendar-primary-foreground: #ffffff;
+  --hijri-calendar-primary-hover: linear-gradient(135deg, #79c0ff, #2ea043);
+
+  --hijri-calendar-secondary: rgb(88 166 255 / 0.15);
+  --hijri-calendar-secondary-foreground: #79c0ff;
+  --hijri-calendar-secondary-hover: rgb(88 166 255 / 0.28);
+
+  --hijri-calendar-accent: rgb(248 81 73 / 0.2);
+  --hijri-calendar-accent-foreground: #f85149;
+
+  --hijri-calendar-muted: rgb(13 17 23 / 0.9);
+  --hijri-calendar-muted-foreground: #8b949e;
+
+  --hijri-calendar-header-border: 1px solid rgb(88 166 255 / 0.35);
+  --hijri-calendar-hover: rgb(88 166 255 / 0.15);
+  --hijri-calendar-focus-ring-color: #58a6ff;
+  --hijri-calendar-unavailable: #f85149;
+}

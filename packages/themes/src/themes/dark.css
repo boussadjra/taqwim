@@ -1,0 +1,24 @@
+/* Dark — neutral slate, matching the default's blue accent. */
+[data-taqwim-theme='dark'] {
+  --hijri-calendar-background: #1f2937;
+  --hijri-calendar-foreground: #f9fafb;
+  --hijri-calendar-border: 1px solid #374151;
+  --hijri-calendar-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.25);
+
+  --hijri-calendar-primary: #2563eb;
+  --hijri-calendar-primary-foreground: #ffffff;
+  --hijri-calendar-primary-hover: #1d4ed8;
+
+  --hijri-calendar-secondary: #374151;
+  --hijri-calendar-secondary-foreground: #9ca3af;
+  --hijri-calendar-secondary-hover: #4b5563;
+
+  --hijri-calendar-accent: #1e3a8a;
+  --hijri-calendar-accent-foreground: #60a5fa;
+
+  --hijri-calendar-muted: #111827;
+  --hijri-calendar-muted-foreground: #6b7280;
+
+  --hijri-calendar-header-border: 1px solid #374151;
+  --hijri-calendar-unavailable: #f87171;
+}

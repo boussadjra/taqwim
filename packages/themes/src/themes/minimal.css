@@ -1,0 +1,36 @@
+/**
+ * Minimal — chromeless. Inherits the host page's surface and type entirely,
+ * keeping only enough colour to distinguish selected / today / disabled.
+ *
+ * Use this as the starting point for a bespoke theme: set nothing else and the
+ * calendar disappears into the surrounding design.
+ */
+
+[data-taqwim-theme='minimal'] {
+  --hijri-calendar-background: transparent;
+  --hijri-calendar-foreground: inherit;
+  --hijri-calendar-border: none;
+  --hijri-calendar-border-radius: 0;
+  --hijri-calendar-shadow: none;
+  --hijri-calendar-font-family: inherit;
+
+  --hijri-calendar-primary: currentcolor;
+  --hijri-calendar-primary-foreground: var(--hijri-calendar-background, #ffffff);
+  --hijri-calendar-primary-hover: currentcolor;
+
+  --hijri-calendar-secondary: transparent;
+  --hijri-calendar-secondary-foreground: inherit;
+  --hijri-calendar-secondary-hover: rgb(128 128 128 / 0.12);
+
+  --hijri-calendar-accent: rgb(128 128 128 / 0.16);
+  --hijri-calendar-accent-foreground: inherit;
+
+  --hijri-calendar-muted: transparent;
+  --hijri-calendar-muted-foreground: rgb(128 128 128 / 0.9);
+
+  --hijri-calendar-hover: rgb(128 128 128 / 0.12);
+  --hijri-calendar-focus-ring-color: currentcolor;
+
+  --hijri-calendar-header-border: none;
+  --hijri-calendar-header-padding: var(--hijri-calendar-spacing-sm);
+}

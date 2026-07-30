@@ -1,0 +1,66 @@
+{
+  "name": "@taqwim/themes",
+  "version": "0.1.1",
+  "private": false,
+  "description": "Framework-free CSS themes for Taqwim Hijri calendars, plus a Tailwind v4 preset",
+  "keywords": [
+    "calendar",
+    "css",
+    "hijri",
+    "islamic",
+    "tailwind",
+    "taqwim",
+    "themes"
+  ],
+  "license": "MIT",
+  "author": "Brahim Boussadjra",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/boussadjra/taqwim.git",
+    "directory": "packages/themes"
+  },
+  "files": [
+    "dist/**/*",
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md"
+  ],
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": "./dist/index.css",
+    "./index.css": "./dist/index.css",
+    "./variables.css": "./dist/variables.css",
+    "./core.css": "./dist/core.css",
+    "./themes/all.css": "./dist/themes/all.css",
+    "./themes/*.css": "./dist/themes/*.css",
+    "./tailwind": {
+      "types": "./dist/tailwind/preset.d.ts",
+      "import": "./dist/tailwind/preset.js",
+      "default": "./dist/tailwind/preset.js"
+    },
+    "./tailwind/theme.css": "./dist/tailwind/theme.css",
+    "./tokens": {
+      "types": "./dist/tailwind/tokens.d.ts",
+      "import": "./dist/tailwind/tokens.js",
+      "default": "./dist/tailwind/tokens.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "_comment": "build / test are declared as vp tasks in vite.config.ts",
+    "prepublishOnly": "vp run build",
+    "publish": "pnpm publish"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.10"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

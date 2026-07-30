@@ -1,0 +1,184 @@
+/**
+ * Taqwim calendar structure.
+ *
+ * Every value here comes from a token in `variables.css` — there are no
+ * literal colours. That is what lets a theme be ~40 lines of custom-property
+ * overrides instead of a duplicated copy of this file.
+ *
+ * Selectors key off the `data-*` attributes emitted by
+ * `@taqwim/calendar-core`'s prop getters, so this stylesheet is identical for
+ * Vue, React, Svelte, Solid and Angular. Layout wrappers that the store does
+ * not own use `.taqwim-calendar-*` classes.
+ */
+
+[data-taqwim-calendar] {
+  background: var(--hijri-calendar-background);
+  border: var(--hijri-calendar-border);
+  border-radius: var(--hijri-calendar-border-radius);
+  box-shadow: var(--hijri-calendar-shadow);
+  color: var(--hijri-calendar-foreground);
+  font-family: var(--hijri-calendar-font-family);
+  font-size: var(--hijri-calendar-font-size-base);
+  position: relative;
+  overflow: hidden;
+}
+
+[data-taqwim-calendar][data-disabled] {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* === Header === */
+
+.taqwim-calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--hijri-calendar-spacing-sm);
+  padding: var(--hijri-calendar-header-padding);
+  border-bottom: var(--hijri-calendar-header-border);
+  background: var(--hijri-calendar-muted);
+}
+
+.taqwim-calendar-heading {
+  flex: 1;
+  margin: 0;
+  text-align: center;
+  font-size: var(--hijri-calendar-font-size-lg);
+  font-weight: var(--hijri-calendar-font-weight-semibold);
+  color: var(--hijri-calendar-foreground);
+}
+
+/* === Navigation === */
+
+.taqwim-calendar-nav-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: var(--hijri-calendar-nav-button-size);
+  height: var(--hijri-calendar-nav-button-size);
+  border: none;
+  border-radius: var(--hijri-calendar-nav-button-border-radius);
+  background: var(--hijri-calendar-secondary);
+  color: var(--hijri-calendar-secondary-foreground);
+  cursor: pointer;
+  transition: var(--hijri-calendar-transition);
+}
+
+.taqwim-calendar-nav-button:hover:not([data-disabled]) {
+  background: var(--hijri-calendar-secondary-hover);
+  color: var(--hijri-calendar-foreground);
+}
+
+.taqwim-calendar-nav-button[data-disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Direction-aware chevrons: the icon must point outward in both directions. */
+[dir='rtl'] .taqwim-calendar-nav-button svg {
+  transform: scaleX(-1);
+}
+
+/* === Grid === */
+
+[data-taqwim-calendar-grid] {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: var(--hijri-calendar-grid-gap);
+  padding: var(--hijri-calendar-grid-padding);
+}
+
+.taqwim-calendar-weekday {
+  padding-bottom: var(--hijri-calendar-spacing-xs);
+  font-size: var(--hijri-calendar-font-size-sm);
+  font-weight: var(--hijri-calendar-font-weight-medium);
+  color: var(--hijri-calendar-muted-foreground);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* === Day cells === */
+
+[data-taqwim-calendar-cell-trigger] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--hijri-calendar-cell-size);
+  height: var(--hijri-calendar-cell-size);
+  border: none;
+  border-radius: var(--hijri-calendar-cell-border-radius);
+  background: transparent;
+  color: var(--hijri-calendar-foreground);
+  font-size: var(--hijri-calendar-font-size-base);
+  font-weight: var(--hijri-calendar-font-weight-normal);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  cursor: pointer;
+  transition: var(--hijri-calendar-transition);
+  /* Keep the tap target accessible even when the visual cell is small. */
+  min-width: 1.75rem;
+  min-height: 1.75rem;
+}
+
+[data-taqwim-calendar-cell-trigger]:hover:not([data-disabled]):not([data-unavailable]) {
+  background: var(--hijri-calendar-hover);
+}
+
+/*
+ * Focus is driven by the store's roving tabindex, so style `:focus-visible`
+ * rather than `:focus` — a mouse click should not leave a ring behind.
+ */
+[data-taqwim-calendar-cell-trigger]:focus-visible {
+  outline: var(--hijri-calendar-focus-ring-width) solid var(--hijri-calendar-focus-ring-color);
+  outline-offset: var(--hijri-calendar-focus-ring-offset);
+}
+
+[data-taqwim-calendar-cell-trigger][data-today] {
+  background: var(--hijri-calendar-today);
+  color: var(--hijri-calendar-today-foreground);
+  font-weight: var(--hijri-calendar-font-weight-semibold);
+}
+
+/* Selected wins over today, so it comes later. */
+[data-taqwim-calendar-cell-trigger][data-selected] {
+  background: var(--hijri-calendar-selected);
+  color: var(--hijri-calendar-selected-foreground);
+  font-weight: var(--hijri-calendar-font-weight-semibold);
+}
+
+[data-taqwim-calendar-cell-trigger][data-selected]:hover {
+  background: var(--hijri-calendar-selected-hover);
+}
+
+[data-taqwim-calendar-cell-trigger][data-outside-month] {
+  color: var(--hijri-calendar-outside-month);
+  opacity: 0.6;
+}
+
+[data-taqwim-calendar-cell-trigger][data-disabled] {
+  color: var(--hijri-calendar-disabled);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+[data-taqwim-calendar-cell-trigger][data-unavailable] {
+  color: var(--hijri-calendar-unavailable);
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+/* Screen-reader-only helper for the calendar's live heading. */
+.taqwim-calendar-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

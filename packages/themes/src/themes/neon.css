@@ -1,0 +1,27 @@
+/* Neon — magenta/cyan on near-black. */
+[data-taqwim-theme='neon'] {
+  --hijri-calendar-background: linear-gradient(135deg, #0a0a0f 0%, #1a0a2e 100%);
+  --hijri-calendar-foreground: #f0f0ff;
+  --hijri-calendar-border: 1px solid #ff0081;
+  --hijri-calendar-border-radius: 0.75rem;
+  --hijri-calendar-shadow: 0 0 20px rgb(255 0 129 / 0.3), 0 4px 15px rgb(0 0 0 / 0.4);
+
+  --hijri-calendar-primary: linear-gradient(45deg, #ff0081, #00ffff);
+  --hijri-calendar-primary-foreground: #000000;
+  --hijri-calendar-primary-hover: linear-gradient(45deg, #ff3399, #33ffff);
+
+  --hijri-calendar-secondary: rgb(255 0 129 / 0.15);
+  --hijri-calendar-secondary-foreground: #ff66b3;
+  --hijri-calendar-secondary-hover: rgb(255 0 129 / 0.3);
+
+  --hijri-calendar-accent: rgb(0 255 255 / 0.2);
+  --hijri-calendar-accent-foreground: #00ffff;
+
+  --hijri-calendar-muted: rgb(26 10 46 / 0.9);
+  --hijri-calendar-muted-foreground: #9a8cb8;
+
+  --hijri-calendar-header-border: 1px solid rgb(255 0 129 / 0.4);
+  --hijri-calendar-hover: rgb(0 255 255 / 0.15);
+  --hijri-calendar-focus-ring-color: #00ffff;
+  --hijri-calendar-unavailable: #ff4d6d;
+}

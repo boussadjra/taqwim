@@ -1,0 +1,32 @@
+/**
+ * Material — elevation instead of borders, circular day cells.
+ */
+
+[data-taqwim-theme='material'] {
+  --hijri-calendar-background: #ffffff;
+  --hijri-calendar-foreground: #212121;
+  --hijri-calendar-border: none;
+  --hijri-calendar-border-radius: 0.75rem;
+  --hijri-calendar-shadow: 0 2px 4px rgb(0 0 0 / 0.1), 0 8px 16px rgb(0 0 0 / 0.1);
+  --hijri-calendar-font-family: Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  --hijri-calendar-primary: #1976d2;
+  --hijri-calendar-primary-foreground: #ffffff;
+  --hijri-calendar-primary-hover: #1565c0;
+
+  --hijri-calendar-secondary: #f5f5f5;
+  --hijri-calendar-secondary-foreground: #616161;
+  --hijri-calendar-secondary-hover: #eeeeee;
+
+  --hijri-calendar-accent: #e3f2fd;
+  --hijri-calendar-accent-foreground: #1976d2;
+
+  --hijri-calendar-muted: #fafafa;
+  --hijri-calendar-muted-foreground: #757575;
+
+  --hijri-calendar-header-border: none;
+
+  /* Material day cells are circular, and nav buttons follow. */
+  --hijri-calendar-cell-border-radius: 50%;
+  --hijri-calendar-nav-button-border-radius: 50%;
+}

@@ -1,0 +1,119 @@
+/**
+ * Taqwim design tokens.
+ *
+ * This file is the single source of truth for the theme contract: `core.css`
+ * consumes only these custom properties, every theme in `themes/` sets only
+ * these custom properties, and the Tailwind preset is generated from this file
+ * so the two can never drift.
+ *
+ * Property names are kept as `--hijri-calendar-*` for continuity with the
+ * pre-1.0 stylesheets, so existing overrides keep working.
+ */
+
+:root {
+  /* === Surface === */
+  --hijri-calendar-background: #ffffff;
+  --hijri-calendar-foreground: #111827;
+  --hijri-calendar-border: 1px solid #e5e7eb;
+  --hijri-calendar-border-radius: 0.5rem;
+  --hijri-calendar-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --hijri-calendar-font-family: inherit;
+
+  /* === Primary / selected === */
+  --hijri-calendar-primary: #2563eb;
+  --hijri-calendar-primary-foreground: #ffffff;
+  --hijri-calendar-primary-hover: #1d4ed8;
+
+  /* === Secondary / navigation === */
+  --hijri-calendar-secondary: #f3f4f6;
+  --hijri-calendar-secondary-foreground: #6b7280;
+  --hijri-calendar-secondary-hover: #e5e7eb;
+
+  /* === Accent / today === */
+  --hijri-calendar-accent: #dbeafe;
+  --hijri-calendar-accent-foreground: #1e40af;
+
+  /* === Muted / headers === */
+  --hijri-calendar-muted: #f9fafb;
+  --hijri-calendar-muted-foreground: #9ca3af;
+
+  /* === Derived state colours === */
+  --hijri-calendar-selected: var(--hijri-calendar-primary);
+  --hijri-calendar-selected-foreground: var(--hijri-calendar-primary-foreground);
+  --hijri-calendar-selected-hover: var(--hijri-calendar-primary-hover);
+  --hijri-calendar-today: var(--hijri-calendar-accent);
+  --hijri-calendar-today-foreground: var(--hijri-calendar-accent-foreground);
+  --hijri-calendar-hover: var(--hijri-calendar-secondary);
+  --hijri-calendar-outside-month: var(--hijri-calendar-muted-foreground);
+  --hijri-calendar-disabled: var(--hijri-calendar-muted-foreground);
+  --hijri-calendar-unavailable: #ef4444;
+
+  /* === Focus === */
+  --hijri-calendar-focus-ring-color: var(--hijri-calendar-primary);
+  --hijri-calendar-focus-ring-width: 2px;
+  --hijri-calendar-focus-ring-offset: 2px;
+
+  /* === Typography === */
+  --hijri-calendar-font-size-sm: 0.75rem;
+  --hijri-calendar-font-size-base: 0.875rem;
+  --hijri-calendar-font-size-lg: 1.125rem;
+  --hijri-calendar-font-size-xl: 1.25rem;
+  --hijri-calendar-font-weight-normal: 400;
+  --hijri-calendar-font-weight-medium: 500;
+  --hijri-calendar-font-weight-semibold: 600;
+  --hijri-calendar-font-weight-bold: 700;
+
+  /* === Spacing === */
+  --hijri-calendar-spacing-xs: 0.25rem;
+  --hijri-calendar-spacing-sm: 0.5rem;
+  --hijri-calendar-spacing-md: 1rem;
+  --hijri-calendar-spacing-lg: 1.5rem;
+  --hijri-calendar-spacing-xl: 2rem;
+
+  /* === Layout === */
+  --hijri-calendar-header-padding: var(--hijri-calendar-spacing-md);
+  --hijri-calendar-header-border: 1px solid #e5e7eb;
+  --hijri-calendar-cell-size: 2rem;
+  --hijri-calendar-cell-border-radius: 0.375rem;
+  --hijri-calendar-cell-gap: var(--hijri-calendar-spacing-xs);
+  --hijri-calendar-nav-button-size: 2rem;
+  --hijri-calendar-nav-button-border-radius: var(--hijri-calendar-cell-border-radius);
+  --hijri-calendar-grid-gap: var(--hijri-calendar-cell-gap);
+  --hijri-calendar-grid-padding: var(--hijri-calendar-spacing-sm);
+
+  /* === Motion === */
+  --hijri-calendar-transition: all 0.15s ease-in-out;
+  --hijri-calendar-transition-fast: all 0.1s ease-in-out;
+  --hijri-calendar-transition-slow: all 0.3s ease-in-out;
+
+  /* === Stacking === */
+  --hijri-calendar-z-index: 50;
+}
+
+/* Smaller touch targets are wrong on phones; grow the cells instead. */
+@media (max-width: 640px) {
+  :root {
+    --hijri-calendar-cell-size: 2.25rem;
+    --hijri-calendar-nav-button-size: 2.25rem;
+    --hijri-calendar-header-padding: 0.75rem;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --hijri-calendar-border: 1px solid #000000;
+    --hijri-calendar-foreground: #000000;
+    --hijri-calendar-background: #ffffff;
+    --hijri-calendar-primary: #0000ee;
+    --hijri-calendar-muted-foreground: #454545;
+    --hijri-calendar-focus-ring-width: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --hijri-calendar-transition: none;
+    --hijri-calendar-transition-fast: none;
+    --hijri-calendar-transition-slow: none;
+  }
+}
