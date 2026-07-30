@@ -1,16 +1,9 @@
-<script lang="ts">
-export interface HijriCalendarHeadCellProps {
-  /** Additional HTML attributes */
-  [key: string]: any
-}
-</script>
-
 <script setup lang="ts">
-defineProps<HijriCalendarHeadCellProps>()
+defineOptions({ name: 'HijriCalendarHeadCell' })
 </script>
 
 <template>
-  <div v-bind="$attrs">
+  <div :data-taqwim-calendar-head-cell="''">
     <slot />
   </div>
 </template>

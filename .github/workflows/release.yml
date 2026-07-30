@@ -5,7 +5,10 @@ on:
     tags:
       - 'v*'
       - '@taqwim/core@*'
-      - 'taqwim-vue@*'
+      - '@taqwim/calendar-core@*'
+      - '@taqwim/themes@*'
+      - '@taqwim/vue@*'
+      - '@taqwim/vue-styled@*'
 
 jobs:
   release:

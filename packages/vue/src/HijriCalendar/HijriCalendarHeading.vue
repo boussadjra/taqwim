@@ -1,22 +1,23 @@
 <script lang="ts">
-export interface HijriCalendarHeadingProps {
-  /** Additional HTML attributes */
-  [key: string]: any
+export interface HijriCalendarHeadingSlot {
+  default?: (props: { headingValue: string }) => unknown
 }
 </script>
 
 <script setup lang="ts">
-import { injectHijriCalendarRootContext } from './HijriCalendarRoot.vue'
+import { injectHijriCalendarRootContext } from './context'
 
-defineProps<HijriCalendarHeadingProps>()
+defineSlots<HijriCalendarHeadingSlot>()
 
-const rootContext = injectHijriCalendarRootContext()
+defineOptions({ name: 'HijriCalendarHeading' })
+
+const { state } = injectHijriCalendarRootContext()
 </script>
 
 <template>
-  <div :data-disabled="rootContext.disabled.value ? '' : undefined" v-bind="$attrs">
-    <slot>
-      {{ rootContext.headingValue.value }}
+  <div :data-taqwim-calendar-heading="''" :data-disabled="state.disabled ? '' : undefined">
+    <slot :heading-value="state.headingValue">
+      {{ state.headingValue }}
     </slot>
   </div>
 </template>

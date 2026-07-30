@@ -1,16 +1,15 @@
 {
-  "name": "@taqwim/vue",
+  "name": "@taqwim/vue-styled",
   "version": "0.1.1",
   "private": false,
-  "description": "Headless Vue 3 components for Hijri calendars, built on @taqwim/calendar-core",
+  "description": "Ready-to-use themed Vue 3 Hijri calendar and date picker",
   "keywords": [
-    "accessibility",
     "calendar",
     "datepicker",
-    "headless",
     "hijri",
     "islamic",
     "taqwim",
+    "themes",
     "typescript",
     "vue"
   ],
@@ -19,7 +18,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/boussadjra/taqwim.git",
-    "directory": "packages/vue"
+    "directory": "packages/vue-styled"
   },
   "files": [
     "dist/**/*",
@@ -28,7 +27,11 @@
     "README.md"
   ],
   "type": "module",
-  "sideEffects": false,
+  "sideEffects": [
+    "**/*.css",
+    "./dist/index.js",
+    "./dist/index.cjs"
+  ],
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/types/index.d.ts",
@@ -44,22 +47,18 @@
     "access": "public"
   },
   "scripts": {
-    "_comment": "build / test / type-check / test:e2e are declared as vp tasks in vite.config.ts",
+    "_comment": "build / test are declared as vp tasks in vite.config.ts",
     "test:watch": "vp exec vitest",
-    "test:e2e:dev": "vp exec playwright test --ui",
-    "test:e2e:headed": "vp exec playwright test --headed",
     "prepublishOnly": "vp run build",
     "publish": "pnpm publish --access public"
   },
   "dependencies": {
-    "@taqwim/calendar-core": "workspace:*",
-    "@taqwim/core": "workspace:*"
+    "@taqwim/core": "workspace:*",
+    "@taqwim/themes": "workspace:*",
+    "@taqwim/vue": "workspace:*"
   },
   "devDependencies": {
-    "@playwright/test": "^1.54.2",
-    "@tsconfig/node20": "^20.1.6",
     "@tsdown/css": "^0.22.14",
-    "@types/jsdom": "^21.1.7",
     "@types/node": "^24.1.0",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vue/test-utils": "^2.4.6",

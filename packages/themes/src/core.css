@@ -81,6 +81,74 @@
   transform: scaleX(-1);
 }
 
+/* === Month layout === */
+
+/* Several months sit side by side, wrapping on narrow viewports. */
+.taqwim-calendar-months {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+/* === Month / year picker === */
+
+.taqwim-calendar-picker {
+  padding: var(--hijri-calendar-grid-padding);
+}
+
+.taqwim-calendar-picker-tabs {
+  display: flex;
+  gap: var(--hijri-calendar-spacing-xs);
+  margin-bottom: var(--hijri-calendar-spacing-sm);
+}
+
+.taqwim-calendar-picker-tabs button {
+  flex: 1;
+  padding: var(--hijri-calendar-spacing-xs) var(--hijri-calendar-spacing-sm);
+  border: none;
+  border-radius: var(--hijri-calendar-cell-border-radius);
+  background: var(--hijri-calendar-secondary);
+  color: var(--hijri-calendar-secondary-foreground);
+  font: inherit;
+  cursor: pointer;
+  transition: var(--hijri-calendar-transition);
+}
+
+.taqwim-calendar-picker-tabs button[data-active] {
+  background: var(--hijri-calendar-selected);
+  color: var(--hijri-calendar-selected-foreground);
+}
+
+.taqwim-calendar-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--hijri-calendar-spacing-xs);
+  /* The year list spans the whole supported range, so it scrolls. */
+  max-height: 15rem;
+  overflow-y: auto;
+}
+
+.taqwim-calendar-picker-grid button {
+  padding: var(--hijri-calendar-spacing-sm) var(--hijri-calendar-spacing-xs);
+  border: none;
+  border-radius: var(--hijri-calendar-cell-border-radius);
+  background: transparent;
+  color: var(--hijri-calendar-foreground);
+  font: inherit;
+  font-size: var(--hijri-calendar-font-size-sm);
+  cursor: pointer;
+  transition: var(--hijri-calendar-transition);
+}
+
+.taqwim-calendar-picker-grid button:hover {
+  background: var(--hijri-calendar-hover);
+}
+
+.taqwim-calendar-picker-grid button[data-selected] {
+  background: var(--hijri-calendar-selected);
+  color: var(--hijri-calendar-selected-foreground);
+}
+
 /* === Grid === */
 
 [data-taqwim-calendar-grid] {
@@ -168,6 +236,42 @@
   color: var(--hijri-calendar-unavailable);
   cursor: not-allowed;
   text-decoration: line-through;
+}
+
+/* === Date picker === */
+
+.taqwim-datepicker {
+  position: relative;
+  display: inline-block;
+  font-family: var(--hijri-calendar-font-family);
+}
+
+.taqwim-datepicker-input {
+  width: 100%;
+  padding: var(--hijri-calendar-spacing-sm) var(--hijri-calendar-spacing-md);
+  border: var(--hijri-calendar-border);
+  border-radius: var(--hijri-calendar-border-radius);
+  background: var(--hijri-calendar-background);
+  color: var(--hijri-calendar-foreground);
+  font: inherit;
+  font-size: var(--hijri-calendar-font-size-base);
+}
+
+.taqwim-datepicker-input:focus-visible {
+  outline: var(--hijri-calendar-focus-ring-width) solid var(--hijri-calendar-focus-ring-color);
+  outline-offset: var(--hijri-calendar-focus-ring-offset);
+}
+
+.taqwim-datepicker-input:disabled {
+  color: var(--hijri-calendar-disabled);
+  cursor: not-allowed;
+}
+
+.taqwim-datepicker-popover {
+  position: absolute;
+  z-index: var(--hijri-calendar-z-index);
+  margin-top: var(--hijri-calendar-spacing-xs);
+  inset-inline-start: 0;
 }
 
 /* Screen-reader-only helper for the calendar's live heading. */

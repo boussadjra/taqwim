@@ -1,20 +1,13 @@
-<script lang="ts">
-export interface HijriCalendarHeaderProps {
-  /** Additional HTML attributes */
-  [key: string]: any
-}
-</script>
-
 <script setup lang="ts">
-import { injectHijriCalendarRootContext } from './HijriCalendarRoot.vue'
+import { injectHijriCalendarRootContext } from './context'
 
-defineProps<HijriCalendarHeaderProps>()
+defineOptions({ name: 'HijriCalendarHeader' })
 
-const rootContext = injectHijriCalendarRootContext()
+const { state } = injectHijriCalendarRootContext()
 </script>
 
 <template>
-  <div role="group" :aria-label="rootContext.fullCalendarLabel.value" v-bind="$attrs">
+  <div role="group" :aria-label="state.fullCalendarLabel" :data-taqwim-calendar-header="''">
     <slot />
   </div>
 </template>

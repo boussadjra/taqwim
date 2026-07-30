@@ -38,6 +38,14 @@ export interface CalendarDay {
   isDisabled: boolean
   isUnavailable: boolean
   isFocused: boolean
+  /**
+   * Whether this is the one cell reachable with Tab.
+   *
+   * Distinct from `isFocused`: before the calendar has ever been focused
+   * nothing is focused, but exactly one cell must still be tabbable or a
+   * keyboard user cannot enter the grid at all.
+   */
+  isTabbable: boolean
 }
 
 export interface CalendarMonth {

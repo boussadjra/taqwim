@@ -1,16 +1,9 @@
-<script lang="ts">
-export interface HijriCalendarGridRowProps {
-  /** Additional HTML attributes */
-  [key: string]: any
-}
-</script>
-
 <script setup lang="ts">
-defineProps<HijriCalendarGridRowProps>()
+defineOptions({ name: 'HijriCalendarGridRow' })
 </script>
 
 <template>
-  <div role="row" v-bind="$attrs">
+  <div role="row" :data-taqwim-calendar-grid-row="''">
     <slot />
   </div>
 </template>

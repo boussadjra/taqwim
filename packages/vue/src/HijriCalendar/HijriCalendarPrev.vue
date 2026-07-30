@@ -1,48 +1,32 @@
 <script lang="ts">
-import type { HijriDateObject } from '@taqwim/core'
-
-export interface HijriCalendarPrevProps {
-  /** The function to be used for the previous page. Overwrites the `prevPage` function set on the `HijriCalendarRoot`. */
-  prevPage?: (placeholder: HijriDateObject) => HijriDateObject
-  /** Additional HTML attributes */
-  [key: string]: any
-}
-
 export interface HijriCalendarPrevSlot {
-  default?: (props: {
-    /** Current disable state */
-    disabled: boolean
-  }) => any
+  default?: (props: { disabled: boolean }) => unknown
 }
 </script>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { injectHijriCalendarRootContext } from './HijriCalendarRoot.vue'
+import { injectHijriCalendarRootContext } from './context'
 
-const props = defineProps<HijriCalendarPrevProps>()
 defineSlots<HijriCalendarPrevSlot>()
 
-const rootContext = injectHijriCalendarRootContext()
+defineOptions({
+  name: 'HijriCalendarPrev',
+  inheritAttrs: false,
+})
 
-const disabled = computed(() => rootContext.disabled.value || rootContext.isPrevButtonDisabled(props.prevPage))
+const { store, state } = injectHijriCalendarRootContext()
 
-function handleClick() {
-  if (disabled.value) return
-  rootContext.prevPage(props.prevPage)
-}
+const buttonProps = computed(() => {
+  void state.value
+  return store.getPrevButtonProps()
+})
+
+const disabled = computed(() => state.value.isPrevDisabled)
 </script>
 
 <template>
-  <button
-    type="button"
-    :aria-label="`Go to previous page`"
-    :aria-disabled="disabled"
-    :data-disabled="disabled ? '' : undefined"
-    :disabled="disabled"
-    @click="handleClick"
-    v-bind="$attrs"
-  >
+  <button v-bind="{ ...buttonProps, ...$attrs }" :disabled="disabled" @click="store.prevPage()">
     <slot :disabled="disabled" />
   </button>
 </template>

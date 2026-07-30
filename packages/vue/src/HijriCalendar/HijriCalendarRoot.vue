@@ -1,65 +1,35 @@
 <script lang="ts">
-import type { HijriDateObject, ValidHijriDate, MonthDay } from '@taqwim/core'
-import type { Ref } from 'vue'
-import type { WeekDayFormat, MonthFormat } from '../DatePicker/types'
-import { createContext } from '../shared'
+import type {
+  CalendarMonth,
+  CalendarState,
+  CalendarStore,
+  Direction,
+  Matcher,
+  WeekDayFormat,
+  WeekStartsOn,
+} from '@taqwim/calendar-core'
+import type { HijriDateObject } from '@taqwim/core'
 
-export type Direction = 'ltr' | 'rtl'
-export type Matcher = (date: HijriDateObject) => boolean
-
-type HijriCalendarRootContext = {
-  locale: Ref<string>
-  modelValue: Ref<HijriDateObject | HijriDateObject[] | undefined>
-  placeholder: Ref<HijriDateObject>
-  pagedNavigation: Ref<boolean>
-  preventDeselect: Ref<boolean>
-  grid: Ref<MonthDay[][]>
-  weekDays: Ref<string[]>
-  weekStartsOn: Ref<0 | 1 | 2 | 3 | 4 | 5 | 6>
-  weekdayFormat: Ref<WeekDayFormat>
-  fixedWeeks: Ref<boolean>
-  multiple: Ref<boolean>
-  numberOfMonths: Ref<number>
-  disabled: Ref<boolean>
-  readonly: Ref<boolean>
-  initialFocus: Ref<boolean>
-  onDateChange: (date: HijriDateObject) => void
-  onPlaceholderChange: (date: HijriDateObject) => void
-  fullCalendarLabel: Ref<string>
-  parentElement: Ref<HTMLElement | undefined>
-  headingValue: Ref<string>
-  isInvalid: Ref<boolean>
-  isDateDisabled: Matcher
-  isDateSelected: Matcher
-  isDateUnavailable?: Matcher
-  isOutsideVisibleView: (date: HijriDateObject) => boolean
-  prevPage: (prevPageFunc?: (date: HijriDateObject) => HijriDateObject) => void
-  nextPage: (nextPageFunc?: (date: HijriDateObject) => HijriDateObject) => void
-  isNextButtonDisabled: (nextPageFunc?: (date: HijriDateObject) => HijriDateObject) => boolean
-  isPrevButtonDisabled: (prevPageFunc?: (date: HijriDateObject) => HijriDateObject) => boolean
-  formatter: any // TODO: Define proper Hijri formatter type
-  dir: Ref<Direction>
-  disableDaysOutsideCurrentView: Ref<boolean>
-}
+export type { Direction, Matcher, WeekDayFormat, WeekStartsOn }
 
 export interface HijriCalendarRootProps {
-  /** The default value for the calendar */
-  defaultValue?: HijriDateObject
-  /** The default placeholder date */
+  /** The default selection, for uncontrolled use */
+  defaultValue?: HijriDateObject | HijriDateObject[]
+  /** The default placeholder date, for uncontrolled use */
   defaultPlaceholder?: HijriDateObject
-  /** The placeholder date, which is used to determine what month to display when no date is selected */
+  /** The placeholder date, which determines which month is displayed when no date is selected */
   placeholder?: HijriDateObject
-  /** This property causes the previous and next buttons to navigate by the number of months displayed at once, rather than one month */
+  /** Navigate by the number of months displayed at once, rather than one month */
   pagedNavigation?: boolean
-  /** Whether or not to prevent the user from deselecting a date without selecting another date first */
+  /** Prevent the user from deselecting a date without selecting another first */
   preventDeselect?: boolean
   /** The day of the week to start the calendar on */
-  weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6
-  /** The format to use for the weekday strings provided via the weekdays slot prop */
+  weekStartsOn?: WeekStartsOn
+  /** The format to use for the weekday labels */
   weekdayFormat?: WeekDayFormat
   /** The accessible label for the calendar */
   calendarLabel?: string
-  /** Whether or not to always display 6 weeks in the calendar */
+  /** Always display six week rows, so the calendar's height never shifts */
   fixedWeeks?: boolean
   /** The maximum date that can be selected */
   maxValue?: HijriDateObject
@@ -73,66 +43,59 @@ export interface HijriCalendarRootProps {
   disabled?: boolean
   /** Whether the calendar is readonly */
   readonly?: boolean
-  /** If true, the calendar will focus the selected day, today, or the first day of the month depending on what is visible when the calendar is mounted */
+  /** Focus the selected day, today, or the first day of the month when the calendar mounts */
   initialFocus?: boolean
   /** A function that returns whether or not a date is disabled */
   isDateDisabled?: Matcher
   /** A function that returns whether or not a date is unavailable */
   isDateUnavailable?: Matcher
-  /** The reading direction of the calendar when applicable. <br> If omitted, inherits globally from `ConfigProvider` or assumes LTR (left-to-right) reading mode. */
+  /** The reading direction of the calendar. Defaults to LTR */
   dir?: Direction
-  /** A function that returns the next page of the calendar. It receives the current placeholder as an argument inside the component. */
+  /** Returns the next page of the calendar, given the current placeholder */
   nextPage?: (placeholder: HijriDateObject) => HijriDateObject
-  /** A function that returns the previous page of the calendar. It receives the current placeholder as an argument inside the component. */
+  /** Returns the previous page of the calendar, given the current placeholder */
   prevPage?: (placeholder: HijriDateObject) => HijriDateObject
-  /** The controlled checked state of the calendar */
+  /** The controlled selection */
   modelValue?: HijriDateObject | HijriDateObject[] | undefined
   /** Whether multiple dates can be selected */
   multiple?: boolean
-  /** Whether or not to disable days outside the current view. */
+  /** Disable days belonging to the adjacent months */
   disableDaysOutsideCurrentView?: boolean
 }
 
-export type HijriCalendarRootEmits = {
-  /** Event handler called whenever the model value changes */
-  'update:modelValue': [date: HijriDateObject | HijriDateObject[] | undefined]
-  /** Event handler called whenever the placeholder value changes */
-  'update:placeholder': [date: HijriDateObject]
+export interface HijriCalendarRootSlot {
+  default?: (props: {
+    /** The visible months, one entry per `numberOfMonths` */
+    months: CalendarMonth[]
+    /** The current placeholder date */
+    date: HijriDateObject
+    /** The weekday labels, already rotated to match `weekStartsOn` */
+    weekDays: string[]
+    /** The day of the week the grid starts on */
+    weekStartsOn: WeekStartsOn
+    /** The calendar locale */
+    locale: string
+    /** Whether six week rows are always rendered */
+    fixedWeeks: boolean
+    /** The current selection */
+    modelValue: HijriDateObject | HijriDateObject[] | undefined
+    /** The full snapshot, for anything the props above do not cover */
+    state: CalendarState
+    /** The store itself, for custom headers and other markup the primitives do not cover */
+    store: CalendarStore
+  }) => unknown
 }
 
-export const [injectHijriCalendarRootContext, provideHijriCalendarRootContext] =
-  createContext<HijriCalendarRootContext>('HijriCalendarRoot')
+export { injectHijriCalendarRootContext, provideHijriCalendarRootContext } from './context'
 </script>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, toRefs, watch, watchEffect } from 'vue'
-import { useDirection, useLocale } from '../shared'
-import {
-  getLocaleData,
-  getDaysLengthInMonth,
-  getDayInWeek,
-  getMonthAdjacentDays,
-  addHijriMonths,
-  subHijriMonths,
-  formatHijriDate,
-  toHijri,
-  isEqual,
-} from '@taqwim/core'
-
-// Simple useVModel implementation
-function useVModel<T>(props: any, key: string, emit: any, options: { defaultValue?: T; passive?: boolean } = {}) {
-  return computed({
-    get() {
-      return props[key] ?? options.defaultValue
-    },
-    set(value) {
-      emit(`update:${key}`, value)
-    },
-  })
-}
+import type { CalendarOptions } from '@taqwim/calendar-core'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { provideHijriCalendarRootContext } from './context'
+import { useCalendar } from './useCalendar'
 
 const props = withDefaults(defineProps<HijriCalendarRootProps>(), {
-  defaultValue: undefined,
   pagedNavigation: false,
   preventDeselect: false,
   weekStartsOn: 0,
@@ -143,334 +106,145 @@ const props = withDefaults(defineProps<HijriCalendarRootProps>(), {
   disabled: false,
   readonly: false,
   initialFocus: false,
-  placeholder: undefined,
-  isDateDisabled: undefined,
-  isDateUnavailable: undefined,
   disableDaysOutsideCurrentView: false,
+  dir: 'ltr',
+  locale: 'en',
 })
 
-const emits = defineEmits<HijriCalendarRootEmits>()
-
-defineSlots<{
-  default?: (props: {
-    /** The current date of the placeholder */
-    date: HijriDateObject
-    /** The grid of dates */
-    grid: MonthDay[][]
-    /** The days of the week */
-    weekDays: string[]
-    /** The start of the week */
-    weekStartsOn: 0 | 1 | 2 | 3 | 4 | 5 | 6
-    /** The calendar locale */
-    locale: string
-    /** Whether or not to always display 6 weeks in the calendar */
-    fixedWeeks: boolean
-    /** The current date of the calendar */
-    modelValue: HijriDateObject | HijriDateObject[] | undefined
-  }) => any
-}>()
+defineSlots<HijriCalendarRootSlot>()
 
 defineOptions({
   name: 'HijriCalendarRoot',
+  inheritAttrs: false,
 })
 
-const {
-  disabled,
-  readonly,
-  initialFocus,
-  pagedNavigation,
-  weekStartsOn,
-  weekdayFormat,
-  fixedWeeks,
-  multiple,
-  minValue,
-  maxValue,
-  numberOfMonths,
-  preventDeselect,
-  isDateDisabled: propsIsDateDisabled,
-  isDateUnavailable: propsIsDateUnavailable,
-  calendarLabel,
-  defaultValue,
-  nextPage: propsNextPage,
-  prevPage: propsPrevPage,
-  dir: propDir,
-  locale: propLocale,
-  disableDaysOutsideCurrentView,
-} = toRefs(props)
-
-const parentElement = ref<HTMLElement>()
-const locale = useLocale(propLocale)
-const dir = useDirection(propDir)
-
-const modelValue = useVModel(props, 'modelValue', emits, {
-  defaultValue: defaultValue.value,
-  passive: false,
-}) as Ref<HijriDateObject | HijriDateObject[] | undefined>
-
-const placeholder = defineModel('placeholder', {
-  type: Object as () => HijriDateObject,
-  default: () => {
-    return toHijri(new Date())!
-  },
+/*
+ * `defineModel` gives controlled and uncontrolled use in one binding: with a
+ * `v-model` the parent owns the value, without one the ref is local state.
+ * Either way the store is fed the current value as a controlled option and
+ * writes back through its callbacks, so there is exactly one source of truth.
+ */
+const modelValue = defineModel<HijriDateObject | HijriDateObject[] | undefined>({
+  default: undefined,
+})
+const placeholder = defineModel<HijriDateObject | undefined>('placeholder', {
+  default: undefined,
 })
 
-function onPlaceholderChange(value: HijriDateObject) {
-  placeholder.value = { ...value }
-}
+const rootElement = ref<HTMLElement>()
 
-// Calendar state computations
-const weekdays = computed(() => {
-  return getLocaleData(locale.value, weekdayFormat.value) as string[]
+// Set by the store when the roving focus moves; consumed after the DOM updates.
+let pendingFocus: string | undefined
+
+const { store, state } = useCalendar(
+  (): CalendarOptions => ({
+    value: modelValue.value,
+    defaultValue: props.defaultValue,
+    placeholder: placeholder.value,
+    defaultPlaceholder: props.defaultPlaceholder,
+    weekStartsOn: props.weekStartsOn,
+    weekdayFormat: props.weekdayFormat,
+    fixedWeeks: props.fixedWeeks,
+    numberOfMonths: props.numberOfMonths,
+    pagedNavigation: props.pagedNavigation,
+    multiple: props.multiple,
+    preventDeselect: props.preventDeselect,
+    disableDaysOutsideCurrentView: props.disableDaysOutsideCurrentView,
+    disabled: props.disabled,
+    readonly: props.readonly,
+    minValue: props.minValue,
+    maxValue: props.maxValue,
+    locale: props.locale,
+    dir: props.dir,
+    calendarLabel: props.calendarLabel,
+    isDateDisabled: props.isDateDisabled,
+    isDateUnavailable: props.isDateUnavailable,
+    nextPage: props.nextPage,
+    prevPage: props.prevPage,
+    onValueChange: value => {
+      modelValue.value = value
+    },
+    onPlaceholderChange: value => {
+      placeholder.value = value
+    },
+    onFocusedDateChange: date => {
+      pendingFocus = date ? store.formatter.isoDate(date) : undefined
+    },
+  }),
+)
+
+provideHijriCalendarRootContext({ store, state })
+
+/*
+ * The store decides *which* date holds focus; the adapter owns the DOM. Moving
+ * focus after the render keeps the two in step even when the move paged the
+ * calendar and the target cell did not exist a tick earlier.
+ */
+watch(state, async () => {
+  if (!pendingFocus) return
+  await nextTick()
+
+  /*
+   * Read the target *after* the await, not before. Two focus moves in the same
+   * tick otherwise resolve in scheduling order, and the older one wins by
+   * calling `.focus()` last — which drags the store back to the stale date
+   * through the cell's own focus handler.
+   */
+  const value = pendingFocus
+  pendingFocus = undefined
+  if (!value) return
+
+  const cell = rootElement.value?.querySelector<HTMLElement>(
+    `[data-taqwim-calendar-cell-trigger][data-value="${value}"]`,
+  )
+  cell?.focus()
 })
-
-const fullCalendarLabel = computed(() => {
-  return calendarLabel?.value || `Calendar for ${formatHijriDate(placeholder.value, 'iMMM iYYYY', locale.value)}`
-})
-
-const headingValue = computed(() => {
-  return formatHijriDate(placeholder.value, 'iMMM iYYYY', locale.value)
-})
-
-const daysInMonth = computed(() => {
-  return getDaysLengthInMonth(placeholder.value.hy, placeholder.value.hm)
-})
-
-const currentMonthDays = computed(() => {
-  const days: MonthDay[] = []
-  for (let i = 1; i <= daysInMonth.value; i++) {
-    days.push({
-      dayInMonth: i,
-      dayInWeek: getDayInWeek({ hy: placeholder.value.hy, hm: placeholder.value.hm, hd: i }) ?? 0,
-      date: {
-        hy: placeholder.value.hy,
-        hm: placeholder.value.hm,
-        hd: i,
-      },
-    })
-  }
-  return days
-})
-
-const grid = computed(() => {
-  const days = currentMonthDays.value
-  const { prevMonthDays, nextMonthDays } = getMonthAdjacentDays(placeholder.value)
-
-  const allDays = [
-    ...prevMonthDays.map(day => ({ ...day, isAdjacent: true })),
-    ...days.map(day => ({ ...day, isAdjacent: false })),
-    ...nextMonthDays.map(day => ({ ...day, isAdjacent: true })),
-  ]
-
-  // Group days into weeks
-  const weeks: MonthDay[][] = []
-  for (let i = 0; i < allDays.length; i += 7) {
-    weeks.push(allDays.slice(i, i + 7))
-  }
-
-  return weeks
-})
-
-const isInvalid = computed(() => {
-  return false // TODO: Implement validation logic
-})
-
-const isDateDisabled = (date: HijriDateObject): boolean => {
-  if (propsIsDateDisabled?.value) {
-    return propsIsDateDisabled.value(date)
-  }
-  return false
-}
-
-const isDateSelected = (date: HijriDateObject): boolean => {
-  if (!modelValue.value) return false
-
-  if (Array.isArray(modelValue.value)) {
-    return modelValue.value.some(selectedDate => isEqual(selectedDate, date))
-  }
-
-  return isEqual(modelValue.value, date)
-}
-
-const isDateUnavailable = (date: HijriDateObject): boolean => {
-  if (propsIsDateUnavailable?.value) {
-    return propsIsDateUnavailable.value(date)
-  }
-  return false
-}
-
-const isOutsideVisibleView = (date: HijriDateObject): boolean => {
-  return date.hm !== placeholder.value.hm || date.hy !== placeholder.value.hy
-}
-
-const prevPage = (prevPageFunc?: (date: HijriDateObject) => HijriDateObject) => {
-  if (prevPageFunc) {
-    const newDate = prevPageFunc(placeholder.value)
-    onPlaceholderChange(newDate)
-  } else {
-    const newDate = subHijriMonths(placeholder.value, numberOfMonths.value)
-    if (newDate) {
-      onPlaceholderChange(newDate)
-    }
-  }
-}
-
-const nextPage = (nextPageFunc?: (date: HijriDateObject) => HijriDateObject) => {
-  if (nextPageFunc) {
-    onPlaceholderChange(nextPageFunc(placeholder.value))
-  } else {
-    const newDate = addHijriMonths(placeholder.value, numberOfMonths.value)
-    if (newDate) {
-      onPlaceholderChange(newDate)
-    }
-  }
-}
-
-const isNextButtonDisabled = (nextPageFunc?: (date: HijriDateObject) => HijriDateObject): boolean => {
-  if (maxValue?.value) {
-    const nextDate = nextPageFunc
-      ? nextPageFunc(placeholder.value)
-      : addHijriMonths(placeholder.value, numberOfMonths.value)
-    if (nextDate) {
-      return nextDate.hy > maxValue.value.hy || (nextDate.hy === maxValue.value.hy && nextDate.hm > maxValue.value.hm)
-    }
-  }
-  return false
-}
-
-const isPrevButtonDisabled = (prevPageFunc?: (date: HijriDateObject) => HijriDateObject): boolean => {
-  if (minValue?.value) {
-    const prevDate = prevPageFunc
-      ? prevPageFunc(placeholder.value)
-      : subHijriMonths(placeholder.value, numberOfMonths.value)
-    if (prevDate) {
-      return prevDate.hy < minValue.value.hy || (prevDate.hy === minValue.value.hy && prevDate.hm < minValue.value.hm)
-    }
-  }
-  return false
-}
-
-const formatter = {
-  // TODO: Implement proper Hijri formatter
-  format: (date: HijriDateObject, format: string) => formatHijriDate(date, format, locale.value),
-}
-
-watch(modelValue, _modelValue => {
-  if (Array.isArray(_modelValue) && _modelValue.length) {
-    const lastValue = _modelValue[_modelValue.length - 1]
-    if (lastValue && !isEqual(placeholder.value, lastValue)) onPlaceholderChange(lastValue)
-  } else if (!Array.isArray(_modelValue) && _modelValue && !isEqual(placeholder.value, _modelValue)) {
-    onPlaceholderChange(_modelValue)
-  }
-})
-
-function onDateChange(value: HijriDateObject) {
-  if (!multiple.value) {
-    if (!modelValue.value) {
-      modelValue.value = { ...value }
-      return
-    }
-
-    if (!preventDeselect.value && isEqual(modelValue.value as HijriDateObject, value)) {
-      placeholder.value = { ...value }
-      modelValue.value = undefined
-    } else {
-      modelValue.value = { ...value }
-    }
-  } else if (!modelValue.value) {
-    modelValue.value = [{ ...value }]
-  } else if (Array.isArray(modelValue.value)) {
-    const index = modelValue.value.findIndex(date => isEqual(date, value))
-    if (index === -1) {
-      modelValue.value = [...modelValue.value, value]
-    } else if (!preventDeselect.value) {
-      const next = modelValue.value.filter(date => !isEqual(date, value))
-      if (!next.length) {
-        placeholder.value = { ...value }
-        modelValue.value = undefined
-        return
-      }
-      modelValue.value = next.map(date => ({ ...date }))
-    }
-  }
-}
 
 onMounted(() => {
-  if (initialFocus.value && parentElement.value) {
-    // TODO: Implement focus logic for Hijri calendar
-  }
+  if (props.initialFocus) store.focusInitial()
 })
 
-provideHijriCalendarRootContext({
-  isDateUnavailable,
-  dir,
-  isDateDisabled,
-  locale,
-  formatter,
-  modelValue,
-  placeholder,
-  disabled,
-  initialFocus,
-  pagedNavigation,
-  grid,
-  weekDays: weekdays,
-  weekStartsOn,
-  weekdayFormat,
-  fixedWeeks,
-  multiple,
-  numberOfMonths,
-  readonly,
-  preventDeselect,
-  fullCalendarLabel,
-  headingValue,
-  isInvalid,
-  isDateSelected,
-  isNextButtonDisabled,
-  isPrevButtonDisabled,
-  isOutsideVisibleView,
-  nextPage,
-  prevPage,
-  parentElement,
-  onPlaceholderChange,
-  onDateChange,
-  disableDaysOutsideCurrentView,
+// Recomputed on every snapshot: the store folds disabled/readonly/invalid into
+// these, so they cannot be derived from props alone.
+const rootProps = computed(() => {
+  void state.value
+  return store.getRootProps()
 })
+
+function onKeydown(event: KeyboardEvent) {
+  if (store.handleKeydown(event)) event.preventDefault()
+}
 </script>
 
 <template>
-  <div
-    ref="parentElement"
-    role="application"
-    :aria-label="fullCalendarLabel"
-    :data-readonly="readonly ? '' : undefined"
-    :data-disabled="disabled ? '' : undefined"
-    :data-invalid="isInvalid ? '' : undefined"
-    :dir="dir"
-  >
+  <div ref="rootElement" v-bind="{ ...rootProps, ...$attrs }" @keydown="onKeydown">
     <slot
-      :date="placeholder"
-      :grid="grid"
-      :week-days="weekdays"
-      :week-starts-on="weekStartsOn"
-      :locale="locale"
-      :fixed-weeks="fixedWeeks"
-      :model-value="modelValue"
+      :months="state.months"
+      :date="state.placeholder"
+      :week-days="state.weekDays"
+      :week-starts-on="state.weekStartsOn"
+      :locale="state.locale"
+      :fixed-weeks="state.fixedWeeks"
+      :model-value="state.value"
+      :state="state"
+      :store="store"
     />
+    <!-- Inlined rather than classed: the headless package must not require a stylesheet. -->
     <div
       style="
-        border: 0px;
-        clip: rect(0px, 0px, 0px, 0px);
-        clip-path: inset(50%);
+        position: absolute;
+        width: 1px;
         height: 1px;
+        padding: 0;
         margin: -1px;
         overflow: hidden;
-        padding: 0px;
-        position: absolute;
+        clip-path: inset(50%);
         white-space: nowrap;
-        width: 1px;
+        border: 0;
       "
     >
       <div role="heading" aria-level="2">
-        {{ fullCalendarLabel }}
+        {{ state.fullCalendarLabel }}
       </div>
     </div>
   </div>

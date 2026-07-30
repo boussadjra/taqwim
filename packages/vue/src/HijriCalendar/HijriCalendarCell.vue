@@ -1,34 +1,26 @@
 <script lang="ts">
-import type { HijriDateObject } from '@taqwim/core'
+import type { CalendarDay } from '@taqwim/calendar-core'
 
 export interface HijriCalendarCellProps {
-  /** The date value for the cell */
-  date: HijriDateObject
-  /** Additional HTML attributes */
-  [key: string]: any
+  /** The day this grid cell holds */
+  day: CalendarDay
 }
 </script>
 
 <script setup lang="ts">
-import { injectHijriCalendarRootContext } from './HijriCalendarRoot.vue'
+defineProps<HijriCalendarCellProps>()
 
-const props = defineProps<HijriCalendarCellProps>()
-const rootContext = injectHijriCalendarRootContext()
+defineOptions({ name: 'HijriCalendarCell' })
 </script>
 
 <template>
   <div
     role="gridcell"
-    :aria-selected="rootContext.isDateSelected(props.date) ? true : undefined"
-    :aria-disabled="
-      rootContext.isDateDisabled(props.date) ||
-      rootContext.isDateUnavailable?.(props.date) ||
-      rootContext.disableDaysOutsideCurrentView.value
-    "
-    :data-disabled="
-      rootContext.isDateDisabled(props.date) || rootContext.disableDaysOutsideCurrentView.value ? '' : undefined
-    "
-    v-bind="$attrs"
+    :aria-selected="day.isSelected || undefined"
+    :aria-disabled="day.isDisabled || day.isUnavailable || undefined"
+    :data-taqwim-calendar-cell="''"
+    :data-disabled="day.isDisabled ? '' : undefined"
+    :data-outside-month="day.isOutsideMonth ? '' : undefined"
   >
     <slot />
   </div>

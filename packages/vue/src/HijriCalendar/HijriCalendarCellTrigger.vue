@@ -1,101 +1,81 @@
 <script lang="ts">
-import type { HijriDateObject } from '@taqwim/core'
-import type { Ref } from 'vue'
+import type { CalendarDay } from '@taqwim/calendar-core'
 
 export interface HijriCalendarCellTriggerProps {
-  /** The date value provided to the cell trigger */
-  day: HijriDateObject
-  /** The month in which the cell is rendered */
-  month: HijriDateObject
-  /** Additional HTML attributes */
-  [key: string]: any
+  /** The day to render, as produced by the calendar grid */
+  day: CalendarDay
 }
 
 export interface HijriCalendarCellTriggerSlot {
   default?: (props: {
-    /** Current day */
+    /** The localised day number */
     dayValue: string
-    /** Current disable state */
+    /** The day, with all of its state flags */
+    day: CalendarDay
     disabled: boolean
-    /** Current selected state */
     selected: boolean
-    /** Current today state */
     today: boolean
-    /** Current outside view state */
-    outsideView: boolean
-    /** Current outside visible view state */
-    outsideVisibleView: boolean
-    /** Current unavailable state */
+    outsideMonth: boolean
     unavailable: boolean
-  }) => any
+    focused: boolean
+  }) => unknown
 }
 </script>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { toHijri, isEqual, formatHijriDate } from '@taqwim/core'
-import { injectHijriCalendarRootContext } from './HijriCalendarRoot.vue'
+import { injectHijriCalendarRootContext } from './context'
 
 const props = defineProps<HijriCalendarCellTriggerProps>()
 defineSlots<HijriCalendarCellTriggerSlot>()
 
-const rootContext = injectHijriCalendarRootContext()
-
-const today = computed(() => {
-  const todayHijri = toHijri(new Date())
-  return todayHijri ? isEqual(props.day, todayHijri) : false
+defineOptions({
+  name: 'HijriCalendarCellTrigger',
+  inheritAttrs: false,
 })
 
-const disabled = computed(
-  () =>
-    rootContext.disabled.value ||
-    rootContext.isDateDisabled(props.day) ||
-    (rootContext.disableDaysOutsideCurrentView.value && outsideView.value),
-)
+const { store, state } = injectHijriCalendarRootContext()
 
-const selected = computed(() => rootContext.isDateSelected(props.day))
+/*
+ * Every `data-*` and `aria-*` attribute comes from the store, so the markup
+ * this emits is identical across all five framework adapters — which is what
+ * lets `@taqwim/themes` and the shared e2e suite target a single contract.
+ */
+const triggerProps = computed(() => {
+  void state.value
+  return store.getCellTriggerProps(props.day)
+})
 
-const outsideView = computed(() => rootContext.isOutsideVisibleView(props.day))
+const dayValue = computed(() => store.formatter.dayOfMonth(props.day.date))
 
-const outsideVisibleView = computed(() => props.day.hm !== props.month.hm || props.day.hy !== props.month.hy)
+function onClick() {
+  // `select` re-checks disabled/unavailable/readonly itself; this only avoids
+  // the pointless call.
+  if (props.day.isDisabled || props.day.isUnavailable) return
+  store.select(props.day.date)
+}
 
-const unavailable = computed(() => rootContext.isDateUnavailable?.(props.day) ?? false)
-
-const dayValue = computed(() => formatHijriDate(props.day, 'iD', rootContext.locale.value))
-
-function handleClick() {
-  if (disabled.value || unavailable.value) return
-  rootContext.onDateChange(props.day)
+function onFocus() {
+  // Tabbing or clicking into a cell makes it the roving-focus target, so the
+  // keyboard picks up where the pointer left off. Re-reporting a date the
+  // store already holds would echo the store's own programmatic `.focus()`
+  // back at it, so that case is skipped.
+  if (props.day.isDisabled || props.day.isFocused) return
+  store.focusDate(props.day.date)
 }
 </script>
 
 <template>
-  <button
-    type="button"
-    role="button"
-    :tabindex="disabled ? -1 : 0"
-    :data-value="formatHijriDate(props.day, 'iYYYY-iMM-iDD', rootContext.locale.value)"
-    :data-disabled="disabled ? '' : undefined"
-    :data-selected="selected ? '' : undefined"
-    :data-today="today ? '' : undefined"
-    :data-outside-view="outsideView ? '' : undefined"
-    :data-outside-visible-view="outsideVisibleView ? '' : undefined"
-    :data-unavailable="unavailable ? '' : undefined"
-    :data-taqwim-calendar-cell-trigger="''"
-    :aria-label="formatHijriDate(props.day, 'iEEEE, iDD iMMMM iYYYY', rootContext.locale.value)"
-    :aria-selected="selected"
-    :aria-disabled="disabled || unavailable"
-    @click="handleClick"
-    v-bind="$attrs"
-  >
+  <button v-bind="{ ...triggerProps, ...$attrs }" @click="onClick" @focus="onFocus">
     <slot
       :day-value="dayValue"
-      :disabled="disabled"
-      :selected="selected"
-      :today="today"
-      :outside-view="outsideView"
-      :outside-visible-view="outsideVisibleView"
-      :unavailable="unavailable"
+      :day="day"
+      :disabled="day.isDisabled"
+      :selected="day.isSelected"
+      :today="day.isToday"
+      :outside-month="day.isOutsideMonth"
+      :unavailable="day.isUnavailable"
+      :focused="day.isFocused"
     >
       {{ dayValue }}
     </slot>

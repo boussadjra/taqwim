@@ -14,7 +14,9 @@
   },
   "dependencies": {
     "@taqwim/core": "workspace:*",
-    "taqwim-vue": "workspace:*",
+    "@taqwim/themes": "workspace:*",
+    "@taqwim/vue": "workspace:*",
+    "@taqwim/vue-styled": "workspace:*",
     "vue": "^3.5.18",
     "vue-router": "^4.5.0"
   },

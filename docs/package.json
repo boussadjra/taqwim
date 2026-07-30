@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "@taqwim/core": "workspace:*",
-    "taqwim-vue": "workspace:*",
+    "@taqwim/vue": "workspace:*",
+    "@taqwim/vue-styled": "workspace:*",
     "vitepress": "^1.1.4"
   }
 }

@@ -6,11 +6,11 @@ export default defineConfig([
     entry: ['./src/index.ts'],
     platform: 'neutral',
     plugins: [Vue({ isProduction: true })],
-    // Declarations are emitted by `vue-tsc -p tsconfig.build.json` instead:
-    // tsdown's SFC dts pipeline crashes the TS compiler on this source tree.
+    // Same reason as @taqwim/vue: tsdown's SFC dts pipeline crashes the TS
+    // compiler here, so vue-tsc emits declarations into dist/types instead.
     dts: false,
     format: ['esm', 'commonjs'],
     target: 'esnext',
-    external: ['vue', '@taqwim/core', '@taqwim/calendar-core'],
+    external: ['vue', '@taqwim/core', '@taqwim/calendar-core', '@taqwim/vue', '@taqwim/themes'],
   },
 ])

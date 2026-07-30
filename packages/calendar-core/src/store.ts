@@ -322,7 +322,11 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
 
   // ---------------------------------------------------------------- snapshot
 
-  function decorate(raw: RawDay, today: HijriDateObject | undefined): CalendarDay {
+  function decorate(
+    raw: RawDay,
+    today: HijriDateObject | undefined,
+    tabbable: HijriDateObject | undefined,
+  ): CalendarDay {
     return {
       date: raw.date,
       dayInMonth: raw.dayInMonth,
@@ -333,7 +337,40 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
       isDisabled: isDateDisabled(raw.date, raw.isOutsideMonth),
       isUnavailable: isDateUnavailable(raw.date),
       isFocused: isSameDate(focusedDate, raw.date),
+      // Adjacent days are never the tab stop, so a single tabbable date cannot
+      // land on two cells when the same day is borrowed by two months.
+      isTabbable: !raw.isOutsideMonth && isSameDate(tabbable, raw.date),
     }
+  }
+
+  /**
+   * The single Tab stop of the roving tabindex.
+   *
+   * Mirrors `focusInitial`'s preference order so that tabbing in and then
+   * pressing an arrow key continues from where the eye already was. Disabled
+   * days are skipped: making the tab stop unreachable would strand keyboard
+   * users outside the grid, which is exactly what a roving tabindex is for.
+   */
+  function tabbableDate(): HijriDateObject | undefined {
+    if (focusedDate) return focusedDate
+
+    const candidates = [toArray(currentValue())[0], todayHijri() ?? undefined].filter(
+      (date): date is HijriDateObject => Boolean(date) && isVisible(date as HijriDateObject),
+    )
+
+    for (const candidate of candidates) {
+      if (!isDateDisabled(candidate)) return candidate
+    }
+
+    const start = startOfMonth(currentPlaceholder())
+    if (!isDateDisabled(start)) return start
+
+    // A bounded month (minValue mid-month, say) has no selectable first day.
+    for (let day = 2; day <= 30; day++) {
+      const candidate = { ...start, hd: day }
+      if (!isDateDisabled(candidate)) return candidate
+    }
+    return start
   }
 
   function build(): CalendarState {
@@ -344,11 +381,14 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
     const fixedWeeks = opt('fixedWeeks')
     // Resolved once per build rather than once per cell.
     const today = todayHijri() ?? undefined
+    const tabbable = tabbableDate()
 
     const months: CalendarMonth[] = visibleMonths(placeholder, opt('numberOfMonths')).map(month => ({
       value: month,
       label: formatter.monthYear(month),
-      weeks: buildMonthWeeks(month, weekStartsOn, fixedWeeks).map(week => week.map(day => decorate(day, today))),
+      weeks: buildMonthWeeks(month, weekStartsOn, fixedWeeks).map(week =>
+        week.map(day => decorate(day, today, tabbable)),
+      ),
     }))
 
     const value = currentValue()
@@ -416,7 +456,7 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
       role: 'button',
       type: 'button',
       // Roving tabindex: exactly one cell is tabbable at a time.
-      tabindex: day.isFocused && !blocked ? 0 : -1,
+      tabindex: day.isTabbable && !blocked ? 0 : -1,
       'aria-label': formatter.fullDate(day.date),
       'aria-selected': day.isSelected,
       'aria-disabled': blocked,

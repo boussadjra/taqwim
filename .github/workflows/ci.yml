@@ -55,7 +55,7 @@ jobs:
         run: pnpm exec vp run -F @taqwim/core test:coverage
 
       - name: Install Playwright browsers
-        run: pnpm --filter taqwim-vue exec playwright install --with-deps
+        run: pnpm --filter @taqwim/vue exec playwright install --with-deps
 
       - name: Run E2E tests with Playwright
         run: pnpm exec vp run -r test:e2e

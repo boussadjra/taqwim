@@ -90,6 +90,28 @@
   --hijri-calendar-z-index: 50;
 }
 
+/*
+ * Size variants. Orthogonal to themes — a theme sets colours, a size sets
+ * metrics — so `data-taqwim-theme` and `data-taqwim-size` compose freely.
+ */
+[data-taqwim-size='compact'] {
+  --hijri-calendar-cell-size: 1.75rem;
+  --hijri-calendar-nav-button-size: 1.75rem;
+  --hijri-calendar-font-size-base: 0.8125rem;
+  --hijri-calendar-font-size-lg: 1rem;
+  --hijri-calendar-header-padding: var(--hijri-calendar-spacing-sm);
+  --hijri-calendar-grid-padding: var(--hijri-calendar-spacing-xs);
+}
+
+[data-taqwim-size='large'] {
+  --hijri-calendar-cell-size: 2.75rem;
+  --hijri-calendar-nav-button-size: 2.75rem;
+  --hijri-calendar-font-size-base: 1rem;
+  --hijri-calendar-font-size-lg: 1.375rem;
+  --hijri-calendar-header-padding: var(--hijri-calendar-spacing-lg);
+  --hijri-calendar-grid-padding: var(--hijri-calendar-spacing-md);
+}
+
 /* Smaller touch targets are wrong on phones; grow the cells instead. */
 @media (max-width: 640px) {
   :root {

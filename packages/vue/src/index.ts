@@ -1,2 +1,2 @@
-export * from './DatePicker'
 export * from './HijriCalendar/index'
+export { createContext } from './shared'
