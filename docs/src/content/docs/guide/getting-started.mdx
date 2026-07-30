@@ -1,0 +1,133 @@
+---
+title: Getting started
+description: Install Taqwim and render your first Hijri calendar.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components'
+
+Taqwim is a set of packages, not one. Pick the pair that matches your framework:
+a **headless** package for behaviour and accessibility, and a **styled** package
+if you want it to look like a calendar out of the box.
+
+## Install
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">```sh pnpm add @taqwim/vue-styled ```</TabItem>
+  <TabItem label="React">```sh pnpm add @taqwim/react-styled ```</TabItem>
+  <TabItem label="Svelte">```sh pnpm add @taqwim/svelte-styled ```</TabItem>
+  <TabItem label="Solid">```sh pnpm add @taqwim/solid-styled ```</TabItem>
+  <TabItem label="Angular">```sh pnpm add @taqwim/angular-styled ```</TabItem>
+</Tabs>
+
+Each styled package pulls in its headless sibling and `@taqwim/themes`, so that
+is the only dependency you need to add.
+
+## Render a calendar
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue
+<script setup lang="ts">
+import { HijriCalendar } from '@taqwim/vue-styled'
+import { ref } from 'vue'
+
+const date = ref()
+</script>
+
+<template>
+  <HijriCalendar v-model="date" theme="islamic" locale="ar" dir="rtl" />
+</template>
+```
+
+  </TabItem>
+  <TabItem label="React">
+
+```tsx
+import { HijriCalendar } from '@taqwim/react-styled'
+import { useState } from 'react'
+
+export function Example() {
+  const [date, setDate] = useState()
+
+  return <HijriCalendar value={date} onValueChange={setDate} theme="islamic" locale="ar" dir="rtl" />
+}
+```
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+```svelte
+<script lang="ts">
+  import { HijriCalendar } from '@taqwim/svelte-styled'
+
+  let date = $state()
+</script>
+
+<HijriCalendar value={date} onValueChange={next => (date = next)} theme="islamic" locale="ar" dir="rtl" />
+```
+
+  </TabItem>
+  <TabItem label="Solid">
+
+```tsx
+import { HijriCalendar } from '@taqwim/solid-styled'
+import { createSignal } from 'solid-js'
+
+export function Example() {
+  const [date, setDate] = createSignal()
+
+  return <HijriCalendar value={date()} onValueChange={setDate} theme="islamic" locale="ar" dir="rtl" />
+}
+```
+
+  </TabItem>
+  <TabItem label="Angular">
+
+```ts
+import { HijriCalendar } from '@taqwim/angular-styled'
+import { Component, signal } from '@angular/core'
+
+@Component({
+  standalone: true,
+  imports: [HijriCalendar],
+  template: `
+    <taqwim-hijri-calendar [value]="date()" (valueChange)="date.set($event)" theme="islamic" locale="ar" dir="rtl" />
+  `,
+})
+export class Example {
+  readonly date = signal(undefined)
+}
+```
+
+  </TabItem>
+</Tabs>
+
+## Just the date maths
+
+If you only need conversion and arithmetic — on a server, say — `@taqwim/core`
+has no framework dependency and no DOM.
+
+```sh
+pnpm add @taqwim/core
+```
+
+```ts
+import { toHijri, toGregorian, addHijriMonths, formatHijriDate } from '@taqwim/core'
+
+const today = toHijri(new Date()) // { hy: 1447, hm: 2, hd: 14 }
+const later = addHijriMonths(today, 3)
+
+formatHijriDate(later, 'iD iMMMM iYYYY', 'ar')
+toGregorian(later) // a Date at local midnight
+```
+
+Conversion covers **1343–1500 AH** (1924–2076 CE), the range the Umm al-Qura
+table defines. Outside it, Taqwim throws `HijriRangeError` rather than returning
+a quietly wrong date.
+
+## Build your own markup
+
+The styled packages are composed entirely from public headless parts. When you
+need different markup, drop to those — see your framework's page under
+**Frameworks** for the full compound surface.

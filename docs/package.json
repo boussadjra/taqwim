@@ -2,15 +2,16 @@
   "name": "taqwim-docs",
   "version": "0.0.1-beta.1",
   "private": true,
+  "type": "module",
   "scripts": {
-    "docs:dev": "vp exec vitepress dev --port 1444",
-    "docs:build": "vp exec vitepress build",
-    "docs:preview": "vp exec vitepress preview"
+    "_comment": "build is declared as a vp task in vite.config.ts",
+    "docs:dev": "node scripts/generate-tokens-page.js && node scripts/prepare-api-docs.js && astro dev",
+    "docs:build": "node scripts/generate-tokens-page.js && node scripts/prepare-api-docs.js && astro build",
+    "docs:preview": "astro preview"
   },
   "dependencies": {
-    "@taqwim/core": "workspace:*",
-    "@taqwim/vue": "workspace:*",
-    "@taqwim/vue-styled": "workspace:*",
-    "vitepress": "^1.1.4"
+    "@astrojs/starlight": "^0.41.5",
+    "astro": "^7.1.6",
+    "sharp": "^0.34.2"
   }
 }

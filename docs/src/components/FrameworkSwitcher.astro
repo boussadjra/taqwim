@@ -1,0 +1,91 @@
+---
+/**
+ * Picks which framework's examples the reader sees, and remembers it.
+ *
+ * Every page writes its examples once per framework inside
+ * `<div data-framework="…">`; this toggles which one is visible. The choice is
+ * kept in localStorage and applied before paint, so moving between pages does
+ * not flash the wrong language.
+ */
+const FRAMEWORKS = ['vue', 'react', 'svelte', 'solid', 'angular'] as const
+---
+
+<div class="framework-switcher" role="group" aria-label="Show examples for">
+  {
+    FRAMEWORKS.map(name => (
+      <button type="button" data-framework-button={name}>
+        {name[0].toUpperCase() + name.slice(1)}
+      </button>
+    ))
+  }
+</div>
+
+<script>
+  const KEY = 'taqwim-framework'
+  const FALLBACK = 'vue'
+
+  function apply(framework: string) {
+    document.documentElement.dataset.framework = framework
+
+    for (const button of document.querySelectorAll<HTMLElement>('[data-framework-button]')) {
+      const active = button.dataset.frameworkButton === framework
+      button.setAttribute('aria-pressed', String(active))
+    }
+  }
+
+  function choose(framework: string) {
+    localStorage.setItem(KEY, framework)
+    apply(framework)
+  }
+
+  // Applied on every navigation too: Starlight uses view transitions, so the
+  // document element survives but the buttons are re-rendered.
+  document.addEventListener('astro:page-load', () => {
+    apply(localStorage.getItem(KEY) ?? FALLBACK)
+
+    for (const button of document.querySelectorAll<HTMLElement>('[data-framework-button]')) {
+      button.addEventListener('click', () => choose(button.dataset.frameworkButton!))
+    }
+  })
+</script>
+
+<style is:global>
+  .framework-switcher {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-block: 0.5rem 1.5rem;
+  }
+
+  .framework-switcher button {
+    padding: 0.25rem 0.75rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--sl-color-gray-2);
+    font-size: var(--sl-text-xs);
+    cursor: pointer;
+  }
+
+  .framework-switcher button[aria-pressed='true'] {
+    background: var(--sl-color-accent);
+    border-color: var(--sl-color-accent);
+    color: var(--sl-color-white);
+  }
+
+  /*
+   * Hidden by default so a reader with JavaScript disabled sees every
+   * framework rather than none.
+   */
+  [data-framework] [data-framework-example] {
+    display: none;
+  }
+
+  [data-framework='vue'] [data-framework-example='vue'],
+  [data-framework='react'] [data-framework-example='react'],
+  [data-framework='svelte'] [data-framework-example='svelte'],
+  [data-framework='solid'] [data-framework-example='solid'],
+  [data-framework='angular'] [data-framework-example='angular'] {
+    display: block;
+  }
+</style>

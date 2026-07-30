@@ -1,0 +1,42 @@
+---
+title: Taqwim
+description: Hijri date utilities and accessible calendar components for Vue, React, Svelte, Solid and Angular.
+template: splash
+hero:
+  tagline: Hijri dates that behave the same in every framework.
+  image:
+    file: ../../../public/logo.svg
+  actions:
+    - text: Get started
+      link: /taqwim/guide/getting-started/
+      icon: right-arrow
+    - text: View on GitHub
+      link: https://github.com/boussadjra/taqwim
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components'
+
+<CardGrid stagger>
+  <Card title="One implementation" icon="seti:config">
+    Grid layout, selection, paging and keyboard navigation live in
+    `@taqwim/calendar-core`, a framework-free state machine. Every adapter is a
+    thin binding, so the five frameworks cannot drift apart.
+  </Card>
+
+<Card title="Accessible by construction" icon="approve-check">
+  A roving tabindex, full arrow-key navigation mirrored for right-to-left reading, and `aria-*` attributes the store
+  computes. Checked by axe against every adapter on every run.
+</Card>
+
+<Card title="Themed, or not at all" icon="puzzle">
+  The headless packages ship no CSS. `@taqwim/themes` adds thirteen themes over a custom-property contract, switchable
+  at runtime with one attribute.
+</Card>
+
+  <Card title="Umm al-Qura, correctly" icon="star">
+    Table-driven conversion over 1343–1500 AH, with an explicit error outside
+    that range rather than a quietly wrong answer.
+  </Card>
+</CardGrid>

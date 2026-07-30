@@ -1,0 +1,68 @@
+---
+title: Accessibility and keyboard
+description: The keyboard model, the roving tabindex, and what is checked automatically.
+---
+
+None of this existed before 1.0. The old Vue component resolved `initialFocus`
+to a `// TODO` and handled no keys at all, which made the calendar unusable
+without a mouse. It is now implemented once in `@taqwim/calendar-core` and is
+therefore identical in every framework.
+
+## Keyboard
+
+| Key                                                      |                              |
+| -------------------------------------------------------- | ---------------------------- |
+| <kbd>←</kbd> <kbd>→</kbd>                                | Previous / next day          |
+| <kbd>↑</kbd> <kbd>↓</kbd>                                | Previous / next week         |
+| <kbd>Home</kbd> <kbd>End</kbd>                           | First / last day of the week |
+| <kbd>PageUp</kbd> <kbd>PageDown</kbd>                    | Previous / next month        |
+| <kbd>Shift</kbd> + <kbd>PageUp</kbd>/<kbd>PageDown</kbd> | Previous / next year         |
+| <kbd>Enter</kbd> <kbd>Space</kbd>                        | Select the focused day       |
+
+Under `dir="rtl"` the horizontal keys mirror: <kbd>→</kbd> moves to the previous
+day, because that is the direction the eye travels. This matters for the Arabic
+locale the library primarily exists for.
+
+Moving focus past the edge of the visible month pages the calendar, so the
+focused date is always on screen.
+
+## The roving tabindex
+
+Exactly one cell is in the tab order at a time, so <kbd>Tab</kbd> enters and
+leaves the grid rather than walking forty-two buttons.
+
+Before anything has been focused, that one cell is resolved in the same order
+`initialFocus` uses: the selected date, else today, else the first selectable day
+of the visible month. Disabled days are skipped — a `minValue` in the middle of a
+month must not strand keyboard users outside the grid.
+
+## What the store emits
+
+The adapters do not compute accessibility attributes; the store does, and they
+spread what it returns.
+
+- Root: `role="application"` and an `aria-label` naming the visible month.
+- Grid: `role="grid"`, with `aria-readonly` / `aria-disabled` when applicable.
+- Cell: `role="gridcell"`, carrying `aria-selected`.
+- Cell trigger: `role="button"`, `aria-label` with the full localised date, and
+  `aria-disabled` when the day is blocked. It deliberately does **not** carry
+  `aria-selected` — that attribute is invalid on `role="button"`, and the
+  enclosing gridcell already has it.
+- A visually hidden `role="heading"` announces the visible month.
+
+## What is checked
+
+`@axe-core/playwright` runs against every adapter on every CI run, in English
+left-to-right and Arabic right-to-left. It is not advisory: a violation fails the
+build.
+
+That check earned its place immediately. It found the invalid `aria-selected`
+above, and two colour-contrast failures in the default theme — the muted
+foreground at 2.53:1 and adjacent days at 1.67:1, the latter caused by fading
+them with `opacity`.
+
+:::note
+See `e2e/KNOWN-GAPS.md` in the repository for adapters not yet covered by the
+shared suite. Angular is currently verified by the Angular compiler rather than
+at the DOM level.
+:::

@@ -12,6 +12,9 @@ allowBuilds:
   # build is a one-shot `ngc` invocation that never touches it.
   lmdb: false
   msgpackr-extract: false
+  # Astro's image pipeline. Native, and the docs build needs it.
+  sharp: true
+  sharp: set this to true or false
 minimumReleaseAgeExclude:
   # Angular 21 is newer than the workspace's minimum-release-age policy allows.
   # Listed explicitly so the exception is reviewable rather than silent.

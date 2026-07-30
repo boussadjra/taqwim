@@ -72,8 +72,8 @@ jobs:
           path: playwright-report/
           retention-days: 7
 
-      - name: Build Documentation
-        run: pnpm exec vp run -F taqwim-docs docs:build
+      - name: Build the documentation site
+        run: pnpm exec vp run -F taqwim-docs build
 
       - name: Upload coverage to Codecov
         if: matrix.node-version == 22

@@ -47,3 +47,10 @@ NODE_NESTJS_COMPATIBILITY.md
 playwright-report/
 test-results/
 .last-run.json
+
+# Generated API reference (TypeDoc)
+docs/src/content/docs/api/
+# Generated token reference
+docs/src/content/docs/reference/tokens.md
+docs/dist/
+docs/.astro/

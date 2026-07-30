@@ -31,7 +31,7 @@
     "format": "vp fmt",
     "docs:dev": "vp run -F taqwim-docs docs:dev",
     "docs:build": "vp run -F taqwim-docs docs:build",
-    "api:build": "typedoc --excludeNotDocumented",
+    "api:build": "typedoc --excludeNotDocumented && node docs/scripts/prepare-api-docs.js",
     "changeset": "changeset",
     "changeset:version": "changeset version",
     "changeset:publish": "changeset publish",
