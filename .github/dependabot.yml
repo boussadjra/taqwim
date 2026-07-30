@@ -1,59 +1,40 @@
 version: 2
+
+# One entry per workspace package would be thirteen near-identical blocks, and
+# they would drift as packages are added. `directories` with a glob covers the
+# whole workspace, and grouping keeps a framework bump to a single PR rather
+# than one per package.
 updates:
-  # Enable version updates for npm packages in root
   - package-ecosystem: 'npm'
-    directory: '/'
+    directories:
+      - '/'
+      - '/packages/*'
+      - '/playground/*'
+      - '/legacy/*'
+      - '/docs'
     schedule:
       interval: 'weekly'
     commit-message:
-      prefix: 'chore'
+      prefix: 'chore(deps)'
       include: 'scope'
     reviewers:
       - 'boussadjra'
-    assignees:
-      - 'boussadjra'
+    groups:
+      vue:
+        patterns: ['vue', 'vue-*', '@vue/*', '@vitejs/plugin-vue', 'unplugin-vue']
+      react:
+        patterns: ['react', 'react-dom', '@types/react*', '@vitejs/plugin-react']
+      svelte:
+        patterns: ['svelte', 'svelte-*', '@sveltejs/*']
+      solid:
+        patterns: ['solid-js', 'vite-plugin-solid', '@solidjs/*']
+      angular:
+        patterns: ['@angular/*', '@angular-devkit/*', '@analogjs/*']
+      testing:
+        patterns: ['vitest', '@vitest/*', '@playwright/*', '@axe-core/*', '@testing-library/*', 'jsdom']
+      build:
+        patterns: ['vite', 'vite-plus', 'tsdown', 'typescript', 'publint', '@arethetypeswrong/*']
 
-  # Enable version updates for npm packages in core-utils
-  - package-ecosystem: 'npm'
-    directory: '/packages/core'
-    schedule:
-      interval: 'weekly'
-    commit-message:
-      prefix: 'chore(core-utils)'
-      include: 'scope'
-    reviewers:
-      - 'boussadjra'
-
-  # Enable version updates for npm packages in vue
-  - package-ecosystem: 'npm'
-    directory: '/packages/vue'
-    schedule:
-      interval: 'weekly'
-    commit-message:
-      prefix: 'chore(vue)'
-      include: 'scope'
-    reviewers:
-      - 'boussadjra'
-
-  # Enable version updates for npm packages in docs
-  - package-ecosystem: 'npm'
-    directory: '/docs'
-    schedule:
-      interval: 'weekly'
-    commit-message:
-      prefix: 'chore(docs)'
-      include: 'scope'
-
-  # Enable version updates for npm packages in playground
-  - package-ecosystem: 'npm'
-    directory: '/playground/vue3'
-    schedule:
-      interval: 'weekly'
-    commit-message:
-      prefix: 'chore(playground)'
-      include: 'scope'
-
-  # Enable version updates for GitHub Actions
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:

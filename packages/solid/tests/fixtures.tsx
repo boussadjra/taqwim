@@ -1,4 +1,4 @@
-import { For, type JSX } from 'solid-js'
+import { For, Index, type JSX } from 'solid-js'
 import {
   HijriCalendarCell,
   HijriCalendarCellTrigger,
@@ -40,19 +40,21 @@ export function TestCalendar(props: HijriCalendarRootOptions): JSX.Element {
                 </HijriCalendarGridHead>
 
                 <HijriCalendarGridBody>
-                  <For each={month.weeks}>
+                  {/*  keys by position;  keys by reference and
+                      would re-create every button on each snapshot. */}
+                  <Index each={month.weeks}>
                     {week => (
                       <HijriCalendarGridRow>
-                        <For each={week}>
+                        <Index each={week()}>
                           {day => (
-                            <HijriCalendarCell day={day}>
-                              <HijriCalendarCellTrigger day={day} />
+                            <HijriCalendarCell day={day()}>
+                              <HijriCalendarCellTrigger day={day()} />
                             </HijriCalendarCell>
                           )}
-                        </For>
+                        </Index>
                       </HijriCalendarGridRow>
                     )}
-                  </For>
+                  </Index>
                 </HijriCalendarGridBody>
               </HijriCalendarGrid>
             )}

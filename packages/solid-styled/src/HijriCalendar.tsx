@@ -14,7 +14,7 @@ import {
   HijriCalendarPrev,
   HijriCalendarRoot,
 } from '@taqwim/solid'
-import { createSignal, For, Show, splitProps, type Component, type JSX } from 'solid-js'
+import { createSignal, For, Index, Show, splitProps, type Component, type JSX } from 'solid-js'
 import { Dynamic } from 'solid-js/web'
 import { ArrowLeft, ArrowRight } from './icons'
 
@@ -96,10 +96,16 @@ export function HijriCalendar(props: HijriCalendarProps): JSX.Element {
       data-taqwim-theme={theme()}
       data-taqwim-size={size() === 'default' ? undefined : size()}
     >
-      {({ months: visibleMonths, weekDays, state, store }) => {
+      {/*
+        Never destructured. The root hands these over as getters so they stay
+        live; pulling them out of the object reads each one once and freezes the
+        grid at its first render — which looks fine on load and then silently
+        stops updating.
+      */}
+      {rendered => {
         // Day 1 keeps the jump inside the target month regardless of its length.
         const jumpTo = (part: Partial<HijriDateObject>) => {
-          store.setPlaceholder({ ...state.placeholder, ...part, hd: 1 })
+          rendered.store.setPlaceholder({ ...rendered.state.placeholder, ...part, hd: 1 })
           setPicker(null)
         }
 
@@ -138,44 +144,62 @@ export function HijriCalendar(props: HijriCalendarProps): JSX.Element {
             <Show
               when={picker()}
               fallback={
+                /*
+                 * `Index` throughout, never `For`.
+                 *
+                 * The store rebuilds its whole object graph on each snapshot,
+                 * and `For` keys by reference — so any state change threw away
+                 * every cell and built new ones. Solid delegates click to the
+                 * document, so a button replaced between `mousedown` and
+                 * `click` never fired its handler. Since a real browser focuses
+                 * a button before clicking it, and the focus handler is itself
+                 * a state change, selection was dead in the browser while
+                 * passing in jsdom, where `fireEvent.click` sends no focus.
+                 *
+                 * `Index` keys by position instead and hands each item over as
+                 * an accessor. The grid is a fixed shape whose contents change,
+                 * which is exactly what it is for.
+                 */
                 <div class="taqwim-calendar-months">
-                  <For each={visibleMonths}>
+                  <Index each={rendered.months}>
                     {month => (
-                      <HijriCalendarGrid month={month}>
+                      <HijriCalendarGrid month={month()}>
                         <Show when={showWeekdays()}>
                           <HijriCalendarGridHead>
                             <HijriCalendarGridRow>
-                              <For each={weekDays}>
+                              <Index each={rendered.weekDays}>
                                 {(weekday, index) => (
                                   <HijriCalendarHeadCell class="taqwim-calendar-weekday">
-                                    {local.renderWeekday ? local.renderWeekday({ weekday, index: index() }) : weekday}
+                                    {local.renderWeekday
+                                      ? local.renderWeekday({ weekday: weekday(), index })
+                                      : weekday()}
                                   </HijriCalendarHeadCell>
                                 )}
-                              </For>
+                              </Index>
                             </HijriCalendarGridRow>
                           </HijriCalendarGridHead>
                         </Show>
 
                         <HijriCalendarGridBody>
-                          <For each={month.weeks}>
+                          <Index each={month().weeks}>
                             {week => (
                               <HijriCalendarGridRow>
-                                <For each={week}>
+                                <Index each={week()}>
                                   {day => (
-                                    <HijriCalendarCell day={day}>
-                                      <HijriCalendarCellTrigger day={day}>
+                                    <HijriCalendarCell day={day()}>
+                                      <HijriCalendarCellTrigger day={day()}>
                                         {local.renderCell ?? undefined}
                                       </HijriCalendarCellTrigger>
                                     </HijriCalendarCell>
                                   )}
-                                </For>
+                                </Index>
                               </HijriCalendarGridRow>
                             )}
-                          </For>
+                          </Index>
                         </HijriCalendarGridBody>
                       </HijriCalendarGrid>
                     )}
-                  </For>
+                  </Index>
                 </div>
               }
             >
@@ -186,14 +210,14 @@ export function HijriCalendar(props: HijriCalendarProps): JSX.Element {
                     data-active={picker() === 'month' ? '' : undefined}
                     onClick={() => setPicker('month')}
                   >
-                    {state.headingValue.split(' ')[0]}
+                    {rendered.state.headingValue.split(' ')[0]}
                   </button>
                   <button
                     type="button"
                     data-active={picker() === 'year' ? '' : undefined}
                     onClick={() => setPicker('year')}
                   >
-                    {state.placeholder.hy}
+                    {rendered.state.placeholder.hy}
                   </button>
                 </div>
 
@@ -205,7 +229,7 @@ export function HijriCalendar(props: HijriCalendarProps): JSX.Element {
                         {year => (
                           <button
                             type="button"
-                            data-selected={state.placeholder.hy === year ? '' : undefined}
+                            data-selected={rendered.state.placeholder.hy === year ? '' : undefined}
                             onClick={() => jumpTo({ hy: year })}
                           >
                             {year}
@@ -218,7 +242,7 @@ export function HijriCalendar(props: HijriCalendarProps): JSX.Element {
                       {(month, index) => (
                         <button
                           type="button"
-                          data-selected={state.placeholder.hm === index() + 1 ? '' : undefined}
+                          data-selected={rendered.state.placeholder.hm === index() + 1 ? '' : undefined}
                           onClick={() => jumpTo({ hm: index() + 1 })}
                         >
                           {month}

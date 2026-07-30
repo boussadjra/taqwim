@@ -178,6 +178,14 @@ export function HijriCalendarGrid(
 
   return (
     <div tabindex={-1} {...gridProps()} {...rest}>
+      {/*
+        The child function is handed the accessor, not the month.
+        Passing the value would make this expression read `state()`, and Solid
+        would then discard and rebuild the entire grid on every change — which
+        breaks clicks outright, because a real browser focuses a button before
+        clicking it and Solid delegates click to the document, so the click
+        lands on a node that no longer exists.
+      */}
       {renderChildren(local.children, month())}
     </div>
   )
