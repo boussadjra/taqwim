@@ -1,0 +1,77 @@
+{
+  "name": "@taqwim/svelte-styled",
+  "version": "0.1.1",
+  "private": false,
+  "description": "Ready-to-use themed Svelte 5 Hijri calendar and date picker",
+  "keywords": [
+    "calendar",
+    "datepicker",
+    "hijri",
+    "islamic",
+    "runes",
+    "svelte",
+    "taqwim",
+    "themes",
+    "typescript"
+  ],
+  "license": "MIT",
+  "author": "Brahim Boussadjra",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/boussadjra/taqwim.git",
+    "directory": "packages/svelte-styled"
+  },
+  "files": [
+    "dist/**/*",
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md"
+  ],
+  "type": "module",
+  "sideEffects": [
+    "**/*.css",
+    "./dist/index.js"
+  ],
+  "types": "./dist/index.d.ts",
+  "svelte": "./dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "_comment": "build / test are declared as vp tasks in vite.config.ts",
+    "test:watch": "vp exec vitest",
+    "prepublishOnly": "vp run build",
+    "publish": "pnpm publish --access public"
+  },
+  "dependencies": {
+    "@taqwim/core": "workspace:*",
+    "@taqwim/svelte": "workspace:*",
+    "@taqwim/themes": "workspace:*"
+  },
+  "devDependencies": {
+    "@sveltejs/package": "^2.5.8",
+    "@sveltejs/vite-plugin-svelte": "^7.2.0",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/svelte": "^5.4.2",
+    "jsdom": "^26.1.0",
+    "svelte": "^5.56.8",
+    "svelte-check": "^4.7.4",
+    "typescript": "~5.9.3",
+    "vite": "^8.1.5",
+    "vitest": "^4.1.10"
+  },
+  "peerDependencies": {
+    "svelte": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

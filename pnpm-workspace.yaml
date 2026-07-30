@@ -3,4 +3,23 @@ packages:
   - playground/*
   - docs
 allowBuilds:
+  # ng-packagr's file watcher. Native build, and only used in watch mode —
+  # the library build is a one-shot `ngc` invocation.
+  '@parcel/watcher': false
   esbuild: true
+  # @angular/build's on-disk compilation cache. Native builds, and the library
+  # build is a one-shot `ngc` invocation that never touches it.
+  lmdb: false
+  msgpackr-extract: false
+minimumReleaseAgeExclude:
+  # Angular 21 is newer than the workspace's minimum-release-age policy allows.
+  # Listed explicitly so the exception is reviewable rather than silent.
+  - '@angular/build'
+  - '@angular/common'
+  - '@angular/compiler'
+  - '@angular/compiler-cli'
+  - '@angular/core'
+  - '@angular/platform-browser'
+  - '@angular-devkit/architect'
+  - '@angular-devkit/core'
+  - 'ng-packagr'

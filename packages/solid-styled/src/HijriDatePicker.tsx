@@ -1,5 +1,5 @@
 import { formatHijriDate, isValidHijriDate, type HijriDateObject } from '@taqwim/core'
-import { useEffect, useId, useRef, useState, type FocusEvent, type ReactNode } from 'react'
+import { createEffect, createSignal, createUniqueId, Show, splitProps, type JSX } from 'solid-js'
 import { HijriCalendar, type HijriCalendarProps } from './HijriCalendar'
 
 export interface HijriDatePickerProps extends Omit<HijriCalendarProps, 'value' | 'onValueChange' | 'multiple'> {
@@ -39,92 +39,96 @@ function parseDraft(text: string): HijriDateObject | null {
   return isValidHijriDate(candidate) ? candidate : null
 }
 
-export function HijriDatePicker({
-  value,
-  defaultValue,
-  onValueChange,
-  format = 'iYYYY-iMM-iDD',
-  inputPlaceholder,
-  label = 'Hijri date',
-  editable = true,
-  ...calendarProps
-}: HijriDatePickerProps): ReactNode {
-  const { theme = 'default', disabled, readonly, locale = 'en' } = calendarProps
+export function HijriDatePicker(props: HijriDatePickerProps): JSX.Element {
+  const [local, calendarProps] = splitProps(props, [
+    'value',
+    'defaultValue',
+    'onValueChange',
+    'format',
+    'inputPlaceholder',
+    'label',
+    'editable',
+  ])
 
-  const [uncontrolled, setUncontrolled] = useState<HijriDateObject | undefined>(
-    Array.isArray(defaultValue) ? defaultValue[0] : defaultValue,
+  const format = () => local.format ?? 'iYYYY-iMM-iDD'
+  const label = () => local.label ?? 'Hijri date'
+  const editable = () => local.editable ?? true
+
+  const [uncontrolled, setUncontrolled] = createSignal<HijriDateObject | undefined>(
+    Array.isArray(local.defaultValue) ? local.defaultValue[0] : local.defaultValue,
   )
-  const selected = value !== undefined ? value : uncontrolled
+  const selected = () => (local.value !== undefined ? local.value : uncontrolled())
 
-  const [isOpen, setIsOpen] = useState(false)
-  const containerRef = useRef<HTMLDivElement>(null)
+  const [isOpen, setIsOpen] = createSignal(false)
   // `role="combobox"` is only complete when it points at the popup it controls.
-  const popoverId = useId()
+  const popoverId = createUniqueId()
+  const formatted = () => {
+    const value = selected()
+    return value ? formatHijriDate(value, format(), calendarProps.locale ?? 'en') : ''
+  }
 
-  const formatted = selected ? formatHijriDate(selected, format, locale) : ''
-  const [draft, setDraft] = useState(formatted)
-
+  const [draft, setDraft] = createSignal(formatted())
   // The draft only diverges from the selection while the user is mid-edit.
-  useEffect(() => setDraft(formatted), [formatted])
+  createEffect(() => setDraft(formatted()))
+
+  let container: HTMLDivElement | undefined
 
   function commit(next: HijriDateObject | undefined) {
-    if (value === undefined) setUncontrolled(next)
-    onValueChange?.(next)
+    if (local.value === undefined) setUncontrolled(next)
+    local.onValueChange?.(next)
   }
 
   function open() {
-    if (disabled) return
+    if (calendarProps.disabled) return
     setIsOpen(true)
   }
 
   function commitDraft() {
-    if (draft.trim() === '') {
+    if (draft().trim() === '') {
       commit(undefined)
       return
     }
 
-    const parsed = parseDraft(draft)
+    const parsed = parseDraft(draft())
     if (parsed) {
       commit(parsed)
     } else {
       // Unparseable input reverts rather than silently clearing the selection.
-      setDraft(formatted)
+      setDraft(formatted())
     }
-  }
-
-  function onBlurCapture(event: FocusEvent<HTMLDivElement>) {
-    const next = event.relatedTarget as Node | null
-    if (next && containerRef.current?.contains(next)) return
-    setIsOpen(false)
   }
 
   return (
     <div
-      ref={containerRef}
-      className="taqwim-datepicker"
-      data-taqwim-theme={theme}
-      data-open={isOpen ? '' : undefined}
-      onBlur={onBlurCapture}
+      ref={container}
+      class="taqwim-datepicker"
+      data-taqwim-theme={calendarProps.theme ?? 'default'}
+      data-open={isOpen() ? '' : undefined}
+      onFocusOut={event => {
+        const next = event.relatedTarget as Node | null
+        if (next && container?.contains(next)) return
+        setIsOpen(false)
+      }}
       onKeyDown={event => {
         if (event.key === 'Escape') setIsOpen(false)
       }}
     >
       <input
-        className="taqwim-datepicker-input"
+        class="taqwim-datepicker-input"
         type="text"
         role="combobox"
         aria-haspopup="dialog"
-        aria-expanded={isOpen}
+        aria-expanded={isOpen()}
         aria-controls={popoverId}
-        aria-label={label}
-        placeholder={inputPlaceholder ?? format}
-        readOnly={!editable || readonly}
-        disabled={disabled}
-        value={draft}
-        onChange={event => setDraft(event.target.value)}
+        aria-label={label()}
+        placeholder={local.inputPlaceholder ?? format()}
+        readOnly={!editable() || calendarProps.readonly}
+        disabled={calendarProps.disabled}
+        value={draft()}
+        onInput={event => setDraft(event.currentTarget.value)}
         onFocus={open}
         onClick={open}
-        onBlur={commitDraft}
+        onChange={commitDraft}
         onKeyDown={event => {
           if (event.key === 'Enter') {
             event.preventDefault()
@@ -136,11 +140,11 @@ export function HijriDatePicker({
         }}
       />
 
-      {isOpen && (
-        <div id={popoverId} className="taqwim-datepicker-popover" role="dialog" tabIndex={-1} aria-label={label}>
+      <Show when={isOpen()}>
+        <div id={popoverId} class="taqwim-datepicker-popover" role="dialog" tabindex={-1} aria-label={label()}>
           <HijriCalendar
             {...calendarProps}
-            value={selected}
+            value={selected()}
             initialFocus
             onValueChange={next => {
               commit(Array.isArray(next) ? next[0] : next)
@@ -148,7 +152,7 @@ export function HijriDatePicker({
             }}
           />
         </div>
-      )}
+      </Show>
     </div>
   )
 }

@@ -1,0 +1,76 @@
+{
+  "name": "@taqwim/angular",
+  "version": "0.1.1",
+  "private": false,
+  "description": "Headless Angular components for Hijri calendars, built on @taqwim/calendar-core",
+  "keywords": [
+    "accessibility",
+    "angular",
+    "calendar",
+    "datepicker",
+    "headless",
+    "hijri",
+    "islamic",
+    "signals",
+    "taqwim",
+    "typescript"
+  ],
+  "license": "MIT",
+  "author": "Brahim Boussadjra",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/boussadjra/taqwim.git",
+    "directory": "packages/angular"
+  },
+  "files": [
+    "dist/**/*",
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "_comment": "build / test are declared as vp tasks in vite.config.ts",
+    "test:watch": "vp exec vitest",
+    "prepublishOnly": "vp run build",
+    "publish": "pnpm publish --access public"
+  },
+  "dependencies": {
+    "@taqwim/calendar-core": "workspace:*",
+    "@taqwim/core": "workspace:*",
+    "tslib": "^2.8.1"
+  },
+  "devDependencies": {
+    "@angular/build": "^21.2.19",
+    "@angular/common": "^21.2.19",
+    "@angular/compiler": "^21.2.19",
+    "@angular/core": "^21.2.19",
+    "@angular/platform-browser": "^21.2.19",
+    "jsdom": "^26.1.0",
+    "rxjs": "^7.8.1",
+    "typescript": "~5.9.3",
+    "vite": "^8.1.5",
+    "vitest": "^4.1.10",
+    "zone.js": "^0.15.0"
+  },
+  "peerDependencies": {
+    "@angular/common": ">=20.0.0",
+    "@angular/core": ">=20.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

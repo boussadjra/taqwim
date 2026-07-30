@@ -24,6 +24,8 @@ import { formatHijriDate, isValidHijriDate, type HijriDateObject as HijriDate } 
 import { computed, ref, watch } from 'vue'
 import HijriCalendar from './HijriCalendar.vue'
 
+let instances = 0
+
 const props = withDefaults(defineProps<HijriDatePickerProps>(), {
   format: 'iYYYY-iMM-iDD',
   label: 'Hijri date',
@@ -39,6 +41,13 @@ defineOptions({
 })
 
 const modelValue = defineModel<HijriDateObject | undefined>({ default: undefined })
+
+/*
+ * `role="combobox"` is only complete when it points at the popup it controls,
+ * so the popover needs a stable id. A module counter rather than `useId()`
+ * keeps the Vue 3.3 peer range honest.
+ */
+const popoverId = `taqwim-datepicker-${++instances}`
 
 // The picker owns the input's props; the rest belong to the calendar it opens.
 const calendarProps = computed(() => {
@@ -142,6 +151,7 @@ function onFocusOut(event: FocusEvent) {
         role="combobox"
         aria-haspopup="dialog"
         :aria-expanded="isOpen"
+        :aria-controls="popoverId"
         :aria-label="label"
         :placeholder="inputPlaceholder ?? format"
         :readonly="!editable || readonly"
@@ -154,7 +164,14 @@ function onFocusOut(event: FocusEvent) {
       />
     </slot>
 
-    <div v-if="isOpen" class="taqwim-datepicker-popover" role="dialog" :aria-label="label">
+    <div
+      v-if="isOpen"
+      :id="popoverId"
+      class="taqwim-datepicker-popover"
+      role="dialog"
+      tabindex="-1"
+      :aria-label="label"
+    >
       <HijriCalendar v-bind="calendarProps" :model-value="modelValue" initial-focus @update:model-value="onSelect" />
     </div>
   </div>
