@@ -2,6 +2,7 @@ packages:
   - packages/*
   - playground/*
   - docs
+  - legacy/*
 
 allowBuilds:
   # ng-packagr's file watcher. Native build, and only used in watch mode —
@@ -14,7 +15,6 @@ allowBuilds:
   msgpackr-extract: false
   # Astro's image pipeline. Native, and the docs build needs it.
   sharp: true
-  sharp: set this to true or false
 minimumReleaseAgeExclude:
   # Angular 21 is newer than the workspace's minimum-release-age policy allows.
   # Listed explicitly so the exception is reviewable rather than silent.

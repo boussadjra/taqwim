@@ -9,7 +9,9 @@ export default defineConfig([
     // Same reason as @taqwim/vue: tsdown's SFC dts pipeline crashes the TS
     // compiler here, so vue-tsc emits declarations into dist/types instead.
     dts: false,
-    format: ['esm', 'commonjs'],
+    // ESM only: a CJS bundle would need its own declarations, and every Vue 3
+    // toolchain consumes ESM.
+    format: ['esm'],
     target: 'esnext',
     external: ['vue', '@taqwim/core', '@taqwim/calendar-core', '@taqwim/vue', '@taqwim/themes'],
   },

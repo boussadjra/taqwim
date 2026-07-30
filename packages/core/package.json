@@ -17,7 +17,11 @@
   ],
   "license": "MIT",
   "author": "Brahim Boussadjra",
-  "repository": "https://github.com/boussadjra/taqwim",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/boussadjra/taqwim.git",
+    "directory": "packages/core"
+  },
   "files": [
     "dist/**/*",
     "CHANGELOG.md",
@@ -25,15 +29,19 @@
     "README.md"
   ],
   "sideEffects": false,
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "typings": "dist/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": {
+        "import": "./dist/index.d.mts",
+        "require": "./dist/index.d.cts"
+      },
       "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
-    }
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
   },
   "publishConfig": {
     "access": "public"
@@ -48,7 +56,9 @@
     "date-fns": "^4.1.0"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.2",
     "@vitest/coverage-v8": "^4.1.10",
+    "publint": "^0.3.14",
     "tsdown": "^0.22.14",
     "typescript": "~5.9.3",
     "vitest": "^4.1.10"

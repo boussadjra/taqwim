@@ -2,19 +2,18 @@ name: Release
 
 on:
   push:
-    tags:
-      - 'v*'
-      - '@taqwim/core@*'
-      - '@taqwim/calendar-core@*'
-      - '@taqwim/themes@*'
-      - '@taqwim/vue@*'
-      - '@taqwim/vue-styled@*'
+    branches:
+      - main
+
+concurrency: release
 
 jobs:
   release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
+      # npm provenance is signed with this token, not with a long-lived secret.
       id-token: write
 
     steps:
@@ -24,27 +23,47 @@ jobs:
           fetch-depth: 0
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
+        uses: pnpm/action-setup@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install Vite+
+        run: curl -fsSL https://vite.plus/install | bash
+
       - name: Build packages
-        run: pnpm build
+        run: pnpm exec vp run -r build
 
-      - name: Run tests
-        run: pnpm test
+      - name: Test
+        run: pnpm exec vp run -r test
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+      - name: Verify what is about to be published
+        # Thirteen packages with dual ESM/CJS output: an export-map mistake is
+        # the likeliest shipping bug, and neither the build nor the tests catch
+        # one.
+        run: pnpm exec vp run -r verify-package
+
+      # Opens (or updates) a version PR while there are changesets, and
+      # publishes once that PR is merged. Lockstep is configured in
+      # .changeset/config.json, so every @taqwim/* package moves together.
+      - name: Create version PR or publish
+        uses: changesets/action@v1
         with:
-          generate_release_notes: true
+          version: pnpm exec changeset version
+          publish: pnpm exec changeset publish
+          commit: 'chore(release): version packages'
+          title: 'chore(release): version packages'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # Signs each tarball with a link back to the workflow run that built
+          # it — a meaningful trust signal for a library handling religious
+          # dates.
+          NPM_CONFIG_PROVENANCE: true

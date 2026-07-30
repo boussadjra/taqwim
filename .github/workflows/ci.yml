@@ -56,6 +56,11 @@ jobs:
         # machine. Both gate at 80% in their own vite.config.ts.
         run: pnpm exec vp run -F @taqwim/core -F @taqwim/calendar-core test:coverage
 
+      - name: Verify what would be published
+        # publint and attw across all thirteen packages. An export-map mistake is
+        # the likeliest shipping bug and nothing else catches one.
+        run: pnpm exec vp run -r verify-package
+
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium
 

@@ -29,14 +29,12 @@
   ],
   "type": "module",
   "sideEffects": false,
-  "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
@@ -54,6 +52,7 @@
     "@taqwim/core": "workspace:*"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.2",
     "@tsconfig/node20": "^20.1.6",
     "@tsdown/css": "^0.22.14",
     "@types/jsdom": "^21.1.7",
@@ -62,6 +61,7 @@
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.7.0",
     "jsdom": "^26.1.0",
+    "publint": "^0.3.14",
     "tsdown": "^0.22.14",
     "typescript": "~5.9.3",
     "unplugin-vue": "^7.0.0",

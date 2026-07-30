@@ -34,7 +34,10 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": {
+        "import": "./dist/index.d.ts",
+        "require": "./dist/index.d.cts"
+      },
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
@@ -54,6 +57,7 @@
     "@taqwim/core": "workspace:*"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.2",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
@@ -61,6 +65,7 @@
     "@types/react-dom": "^19.1.7",
     "@vitejs/plugin-react": "^5.0.0",
     "jsdom": "^26.1.0",
+    "publint": "^0.3.14",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "tsdown": "^0.22.14",

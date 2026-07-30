@@ -58,6 +58,8 @@
     "publish": "pnpm publish"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.2",
+    "publint": "^0.3.14",
     "vitest": "^4.1.10"
   },
   "engines": {

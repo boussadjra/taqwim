@@ -1,0 +1,44 @@
+{
+  "name": "taqwim-vue",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Deprecated — split into @taqwim/vue (headless) and @taqwim/vue-styled (themed)",
+  "keywords": [
+    "deprecated",
+    "hijri",
+    "taqwim"
+  ],
+  "license": "MIT",
+  "author": "Brahim Boussadjra",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/boussadjra/taqwim.git",
+    "directory": "legacy/taqwim-vue"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "README.md"
+  ],
+  "type": "module",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@taqwim/vue-styled": "workspace:^"
+  },
+  "peerDependencies": {
+    "vue": ">=3.3.0 <4.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

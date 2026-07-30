@@ -1,0 +1,41 @@
+{
+  "name": "taqwim-core-utils",
+  "version": "0.2.0",
+  "private": false,
+  "description": "Deprecated — renamed to @taqwim/core",
+  "keywords": [
+    "deprecated",
+    "hijri",
+    "taqwim"
+  ],
+  "license": "MIT",
+  "author": "Brahim Boussadjra",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/boussadjra/taqwim.git",
+    "directory": "legacy/taqwim-core-utils"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "README.md"
+  ],
+  "type": "module",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@taqwim/core": "workspace:^"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -13,6 +13,22 @@ export default defineConfig({
   },
   run: {
     tasks: {
+      /*
+       * publint checks the export map and the files list; attw checks that the
+       * types resolve under every module resolution a consumer might use.
+       * With thirteen packages this is the likeliest shipping bug, and neither
+       * the build nor the tests would notice one.
+       *
+       * The two ignored rules are artefacts of packing a workspace package
+       * whose @taqwim/* siblings are not on npm yet, so their types cannot
+       * resolve from inside the tarball. Remove them after the first publish —
+       * at that point they would be reporting something real.
+       */
+      'verify-package': {
+        command: ['publint --strict', 'attw --pack . --ignore-rules internal-resolution-error no-resolution'],
+        dependsOn: ['build'],
+        input: ['dist/**', 'package.json'],
+      },
       build: {
         command: 'tsdown',
         dependsOn: afterDeps,

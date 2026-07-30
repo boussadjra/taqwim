@@ -32,14 +32,12 @@
     "./dist/index.js",
     "./dist/index.cjs"
   ],
-  "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
@@ -58,12 +56,14 @@
     "@taqwim/vue": "workspace:*"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.2",
     "@tsdown/css": "^0.22.14",
     "@types/node": "^24.1.0",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.7.0",
     "jsdom": "^26.1.0",
+    "publint": "^0.3.14",
     "tsdown": "^0.22.14",
     "typescript": "~5.9.3",
     "unplugin-vue": "^7.0.0",
