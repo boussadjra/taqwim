@@ -221,9 +221,13 @@
   background: var(--hijri-calendar-selected-hover);
 }
 
+/*
+ * Adjacent days are distinguished by colour alone — no `opacity`. Fading text
+ * to 0.6 dropped the contrast to 1.67:1 against the surface, which axe fails
+ * and which is genuinely hard to read.
+ */
 [data-taqwim-calendar-cell-trigger][data-outside-month] {
   color: var(--hijri-calendar-outside-month);
-  opacity: 0.6;
 }
 
 [data-taqwim-calendar-cell-trigger][data-disabled] {

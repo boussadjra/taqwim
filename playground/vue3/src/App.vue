@@ -7,7 +7,8 @@ import { RouterLink, RouterView } from 'vue-router'
     <header>
       <h1>Taqwim — Vue playground</h1>
       <nav>
-        <RouterLink to="/">Calendar</RouterLink>
+        <RouterLink to="/">Harness</RouterLink>
+        <RouterLink to="/explore">Calendar</RouterLink>
         <RouterLink to="/datepicker">Date picker</RouterLink>
         <RouterLink to="/headless">Headless</RouterLink>
       </nav>

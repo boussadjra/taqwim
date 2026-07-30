@@ -1,0 +1,29 @@
+{
+  "name": "taqwim-playground-react",
+  "version": "0.0.0",
+  "private": true,
+  "keywords": [
+    "playground",
+    "taqwim"
+  ],
+  "type": "module",
+  "scripts": {
+    "_comment": "build is declared as a vp task in vite.config.ts",
+    "dev": "vp dev",
+    "preview": "vp preview"
+  },
+  "dependencies": {
+    "@taqwim/core": "workspace:*",
+    "@taqwim/react": "workspace:*",
+    "@taqwim/react-styled": "workspace:*",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.9",
+    "@types/react-dom": "^19.1.7",
+    "@vitejs/plugin-react": "^5.0.0",
+    "typescript": "~5.9.3",
+    "vite": "^8.1.5"
+  }
+}

@@ -2,6 +2,7 @@ packages:
   - packages/*
   - playground/*
   - docs
+
 allowBuilds:
   # ng-packagr's file watcher. Native build, and only used in watch mode —
   # the library build is a one-shot `ngc` invocation.

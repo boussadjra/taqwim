@@ -35,7 +35,12 @@
 
   /* === Muted / headers === */
   --hijri-calendar-muted: #f9fafb;
-  --hijri-calendar-muted-foreground: #9ca3af;
+  /*
+   * 4.83:1 on the default surface. The lighter #9ca3af this replaced measured
+   * 2.53:1 on the 12px weekday labels — an axe failure in the shared suite,
+   * and the reason those colours are now a tested contract rather than taste.
+   */
+  --hijri-calendar-muted-foreground: #6b7280;
 
   /* === Derived state colours === */
   --hijri-calendar-selected: var(--hijri-calendar-primary);

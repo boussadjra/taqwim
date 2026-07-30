@@ -162,7 +162,11 @@ export interface CellTriggerProps {
   type: 'button'
   tabindex: 0 | -1
   'aria-label': string
-  'aria-selected': boolean
+  /*
+   * No `aria-selected` here: it is not a valid attribute on `role="button"`,
+   * and in a date grid the selected state belongs on the enclosing
+   * `role="gridcell"` — which every adapter's Cell part already sets.
+   */
   'aria-disabled': boolean
   'data-value': string
   'data-taqwim-calendar-cell-trigger': ''

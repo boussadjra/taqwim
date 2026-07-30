@@ -59,9 +59,14 @@ export function HijriCalendarRoot(props: HijriCalendarRootProps): JSX.Element {
     if (store.handleKeydown(event)) event.preventDefault()
   }
 
+  const rootProps = () => {
+    void state()
+    return store.getRootProps()
+  }
+
   return (
     <HijriCalendarContext.Provider value={{ store, state }}>
-      <div ref={rootElement} {...store.getRootProps()} {...domProps} onKeyDown={onKeyDown}>
+      <div ref={rootElement} {...rootProps()} {...domProps} onKeyDown={onKeyDown}>
         {renderChildren(local.children, {
           get months() {
             return state().months
@@ -127,14 +132,13 @@ export function HijriCalendarPrev(
 ): JSX.Element {
   const { store, state } = useHijriCalendarContext()
   const [local, rest] = splitProps(props, ['children'])
+  const prevProps = () => {
+    void state()
+    return store.getPrevButtonProps()
+  }
 
   return (
-    <button
-      {...store.getPrevButtonProps()}
-      {...rest}
-      disabled={state().isPrevDisabled}
-      onClick={() => store.prevPage()}
-    >
+    <button {...prevProps()} {...rest} disabled={state().isPrevDisabled} onClick={() => store.prevPage()}>
       {renderChildren(local.children, state().isPrevDisabled)}
     </button>
   )
@@ -145,14 +149,13 @@ export function HijriCalendarNext(
 ): JSX.Element {
   const { store, state } = useHijriCalendarContext()
   const [local, rest] = splitProps(props, ['children'])
+  const nextProps = () => {
+    void state()
+    return store.getNextButtonProps()
+  }
 
   return (
-    <button
-      {...store.getNextButtonProps()}
-      {...rest}
-      disabled={state().isNextDisabled}
-      onClick={() => store.nextPage()}
-    >
+    <button {...nextProps()} {...rest} disabled={state().isNextDisabled} onClick={() => store.nextPage()}>
       {renderChildren(local.children, state().isNextDisabled)}
     </button>
   )
@@ -168,9 +171,13 @@ export function HijriCalendarGrid(
   const { store, state } = useHijriCalendarContext()
   const [local, rest] = splitProps(props, ['month', 'children'])
   const month = () => local.month ?? state().months[0]
+  const gridProps = () => {
+    void state()
+    return store.getGridProps(month())
+  }
 
   return (
-    <div tabindex={-1} {...store.getGridProps(month())} {...rest}>
+    <div tabindex={-1} {...gridProps()} {...rest}>
       {renderChildren(local.children, month())}
     </div>
   )
@@ -245,9 +252,20 @@ export function HijriCalendarCellTrigger(
     children?: JSX.Element | ((props: { dayValue: string; day: CalendarDay }) => JSX.Element)
   },
 ): JSX.Element {
-  const { store } = useHijriCalendarContext()
+  const { store, state } = useHijriCalendarContext()
   const [local, rest] = splitProps(props, ['day', 'children'])
   const dayValue = () => store.formatter.dayOfMonth(local.day.date)
+
+  /*
+   * The prop getters read the store's snapshot directly, which is not a signal.
+   * Touching `state()` here is what makes this a tracked dependency — without
+   * it the attributes only refresh when the day object happens to change
+   * identity, which leaves the rendered selection one interaction behind.
+   */
+  const triggerProps = () => {
+    void state()
+    return store.getCellTriggerProps(local.day)
+  }
 
   function onClick() {
     // `select` re-checks these itself; this only avoids the pointless call.
@@ -264,7 +282,7 @@ export function HijriCalendarCellTrigger(
   }
 
   return (
-    <button {...store.getCellTriggerProps(local.day)} {...rest} onClick={onClick} onFocus={onFocus}>
+    <button {...triggerProps()} {...rest} onClick={onClick} onFocus={onFocus}>
       {local.children === undefined
         ? dayValue()
         : renderChildren(local.children, { dayValue: dayValue(), day: local.day })}

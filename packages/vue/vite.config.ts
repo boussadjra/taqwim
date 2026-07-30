@@ -36,11 +36,6 @@ export default defineConfig({
         command: 'vue-tsc --build --force',
         dependsOn: afterDeps,
       },
-      'test:e2e': {
-        command: 'playwright test',
-        dependsOn: afterDeps,
-        cache: false,
-      },
     },
   },
 })

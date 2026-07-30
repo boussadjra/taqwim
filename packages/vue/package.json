@@ -44,10 +44,8 @@
     "access": "public"
   },
   "scripts": {
-    "_comment": "build / test / type-check / test:e2e are declared as vp tasks in vite.config.ts",
+    "_comment": "build / test / type-check are declared as vp tasks in vite.config.ts",
     "test:watch": "vp exec vitest",
-    "test:e2e:dev": "vp exec playwright test --ui",
-    "test:e2e:headed": "vp exec playwright test --headed",
     "prepublishOnly": "vp run build",
     "publish": "pnpm publish --access public"
   },
@@ -56,7 +54,6 @@
     "@taqwim/core": "workspace:*"
   },
   "devDependencies": {
-    "@playwright/test": "^1.54.2",
     "@tsconfig/node20": "^20.1.6",
     "@tsdown/css": "^0.22.14",
     "@types/jsdom": "^21.1.7",

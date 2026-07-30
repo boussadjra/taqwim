@@ -52,20 +52,24 @@ jobs:
 
       - name: Coverage
         if: matrix.node-version == 22
-        run: pnpm exec vp run -F @taqwim/core test:coverage
+        # The two packages where a bug is silent: the date math and the state
+        # machine. Both gate at 80% in their own vite.config.ts.
+        run: pnpm exec vp run -F @taqwim/core -F @taqwim/calendar-core test:coverage
 
       - name: Install Playwright browsers
-        run: pnpm --filter @taqwim/vue exec playwright install --with-deps
+        run: pnpm exec playwright install --with-deps chromium
 
-      - name: Run E2E tests with Playwright
-        run: pnpm exec vp run -r test:e2e
+      - name: Run the shared cross-framework E2E suite
+        # One spec directory, run against every framework playground. See
+        # e2e/KNOWN-GAPS.md for adapters that are not yet in the default run.
+        run: pnpm exec playwright test
 
       - name: Upload Playwright test results
         uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: playwright-report-node-${{ matrix.node-version }}
-          path: packages/vue/playwright-report/
+          path: playwright-report/
           retention-days: 7
 
       - name: Build Documentation

@@ -478,7 +478,6 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
       // Roving tabindex: exactly one cell is tabbable at a time.
       tabindex: day.isTabbable && !blocked ? 0 : -1,
       'aria-label': formatter.fullDate(day.date),
-      'aria-selected': day.isSelected,
       'aria-disabled': blocked,
       'data-value': formatter.isoDate(day.date),
       'data-taqwim-calendar-cell-trigger': '',

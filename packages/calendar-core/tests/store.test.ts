@@ -156,8 +156,10 @@ describe('accessibility props', () => {
       expect(props['data-taqwim-calendar-cell-trigger']).toBe('')
       expect(props['data-value']).toBe('1446-03-10')
       expect(props['data-selected']).toBe('')
-      expect(props['aria-selected']).toBe(true)
       expect(props['aria-label']).toContain('1446')
+      // `aria-selected` is invalid on `role="button"`; the enclosing gridcell
+      // carries it instead.
+      expect(props).not.toHaveProperty('aria-selected')
     })
 
     it('marks disabled and unavailable days', () => {

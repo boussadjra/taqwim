@@ -300,7 +300,6 @@ export class HijriCalendarCell {
     role: 'button',
     '[attr.tabindex]': 'props().tabindex',
     '[attr.aria-label]': "props()['aria-label']",
-    '[attr.aria-selected]': "props()['aria-selected']",
     '[attr.aria-disabled]': "props()['aria-disabled']",
     '[attr.data-value]': "props()['data-value']",
     '[attr.data-taqwim-calendar-cell-trigger]': '""',

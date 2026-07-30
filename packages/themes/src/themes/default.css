@@ -26,7 +26,8 @@
   --hijri-calendar-accent-foreground: #1e40af;
 
   --hijri-calendar-muted: #f9fafb;
-  --hijri-calendar-muted-foreground: #9ca3af;
+  /* 4.83:1 on this theme's white surface; the #9ca3af it replaced measured 2.53:1. */
+  --hijri-calendar-muted-foreground: #6b7280;
 
   --hijri-calendar-unavailable: #ef4444;
   --hijri-calendar-header-border: 1px solid #e5e7eb;

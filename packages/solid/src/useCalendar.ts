@@ -1,6 +1,6 @@
 import type { CalendarOptions, CalendarState, CalendarStore } from '@taqwim/calendar-core'
 import { createCalendar } from '@taqwim/calendar-core'
-import { createEffect, createSignal, onCleanup, type Accessor } from 'solid-js'
+import { createRenderEffect, createSignal, onCleanup, type Accessor } from 'solid-js'
 
 export interface UseCalendarReturn {
   store: CalendarStore
@@ -24,10 +24,17 @@ export function createCalendarStore(options: Accessor<CalendarOptions>): UseCale
     }),
   )
 
-  // Safe to run on every dependency change: the store compares the state it
-  // builds and stays quiet when nothing observable moved, so this cannot feed
-  // back into itself.
-  createEffect(() => {
+  /*
+   * A render effect, not a plain effect: options have to reach the store
+   * before the components read the snapshot for this render. With
+   * `createEffect` the push lands after the DOM is written, so a controlled
+   * `value` handed back through `onValueChange` shows up one interaction late.
+   *
+   * Safe to run on every dependency change — the store compares the state it
+   * builds and stays quiet when nothing observable moved, so this cannot feed
+   * back into itself.
+   */
+  createRenderEffect(() => {
     store.setOptions(options())
   })
 

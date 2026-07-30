@@ -43,3 +43,7 @@ TROUBLESHOOTING.md
 .specify/extensions/**/.*-config.local.yml
 TAQWIM-PROJECT-ANALYSIS-AND-IMPROVEMENTS.md
 NODE_NESTJS_COMPATIBILITY.md
+# Playwright
+playwright-report/
+test-results/
+.last-run.json
