@@ -1,5 +1,6 @@
 import { getDayInWeek, type HijriDateObject } from '@taqwim/core'
 import { compareDates, isSameDate, isSameMonth, shiftDays, shiftMonths, startOfMonth, todayHijri } from './dateUtils'
+import { sameState } from './equality'
 import { createFormatter } from './formatter'
 import { buildMonthWeeks, buildWeekDays, visibleMonths, type RawDay } from './grid'
 import type {
@@ -92,8 +93,27 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
   const currentValue = () => (options.value !== undefined ? options.value : internalValue)
   const currentPlaceholder = () => options.placeholder ?? internalPlaceholder
 
+  /**
+   * Invalidate the snapshot and tell subscribers — but only if the new
+   * snapshot actually differs from the old one.
+   *
+   * The reference stability this preserves is load-bearing. React's
+   * `useSyncExternalStore` re-renders whenever `getSnapshot()` returns a new
+   * reference, and adapters push their props in on every render; without this
+   * guard, "push options → notify → re-render → push options" never
+   * terminates. Comparing the built state rather than the incoming options is
+   * what makes it safe: a consumer's inline `isDateDisabled` gets a new
+   * identity every render, but only a change in what it *returns* counts.
+   */
   function notify() {
+    const previous = snapshot
     snapshot = null
+
+    if (previous && sameState(previous, getSnapshot())) {
+      snapshot = previous
+      return
+    }
+
     for (const listener of listeners) listener()
   }
 

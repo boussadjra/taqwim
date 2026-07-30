@@ -1,56 +1,124 @@
-# taqwim-vue
+# @taqwim/vue
 
-## Installation
+Headless Vue 3 components for Hijri calendars. No styles, no markup opinions — just behaviour, accessibility and the `data-*` attributes to hang a design on.
 
-```bash
-npm install taqwim-vue
+Want something that already looks like a calendar? Use [`@taqwim/vue-styled`](../vue-styled).
+
+## Install
+
+```sh
+pnpm add @taqwim/vue
 ```
 
-## Usage
+## Use
 
 ```vue
-<script setup>
-import { DatePicker } from 'taqwim-vue'
+<script setup lang="ts">
+import {
+  HijriCalendarCell,
+  HijriCalendarCellTrigger,
+  HijriCalendarGrid,
+  HijriCalendarGridBody,
+  HijriCalendarGridHead,
+  HijriCalendarGridRow,
+  HijriCalendarHeadCell,
+  HijriCalendarHeader,
+  HijriCalendarHeading,
+  HijriCalendarNext,
+  HijriCalendarPrev,
+  HijriCalendarRoot,
+} from '@taqwim/vue'
+import { ref } from 'vue'
 
-const date = ref({ hy: 1446, hm: 1, hd: 1 })
+const value = ref()
 </script>
 
 <template>
-  <DatePicker v-model="date" />
+  <HijriCalendarRoot v-model="value" initial-focus v-slot="{ months, weekDays }">
+    <HijriCalendarHeader>
+      <HijriCalendarPrev>←</HijriCalendarPrev>
+      <HijriCalendarHeading />
+      <HijriCalendarNext>→</HijriCalendarNext>
+    </HijriCalendarHeader>
+
+    <HijriCalendarGrid v-for="month in months" :key="month.label" :month="month">
+      <HijriCalendarGridHead>
+        <HijriCalendarGridRow>
+          <HijriCalendarHeadCell v-for="day in weekDays" :key="day">{{ day }}</HijriCalendarHeadCell>
+        </HijriCalendarGridRow>
+      </HijriCalendarGridHead>
+
+      <HijriCalendarGridBody>
+        <HijriCalendarGridRow v-for="(week, i) in month.weeks" :key="i">
+          <HijriCalendarCell v-for="day in week" :key="day.date.hd" :day="day">
+            <HijriCalendarCellTrigger :day="day" />
+          </HijriCalendarCell>
+        </HijriCalendarGridRow>
+      </HijriCalendarGridBody>
+    </HijriCalendarGrid>
+  </HijriCalendarRoot>
 </template>
 ```
 
-### Props
+## How it works
 
-| Name               | Description                                     | Type                                                                      | Default                      |
-| ------------------ | ----------------------------------------------- | ------------------------------------------------------------------------- | ---------------------------- |
-| `viewMode`         | The initial view mode of the date picker.       | `ViewMode` (`'month'`, `'months'`, `'years'`)                             | `'month'`                    |
-| `locale`           | Locale to use for formatting and parsing.       | `string`                                                                  | `'en'`                       |
-| `modelValue`       | The current date value in Hijri format.         | `ValidHijriDate`                                                          | current Hijri date           |
-| `formattedValue`   | The formatted date value as a string.           | `string`                                                                  | current Hijri date formatted |
-| `format`           | The format string used for the date.            | `string`                                                                  | `'iYYYY/iMM/iD'`             |
-| `title`            | Title of the date picker, displayed at the top. | `string`                                                                  | `''`                         |
-| `weekDayFormat`    | Format for displaying weekdays.                 | `WeekDayFormat` (`'weekDaysMedium'`, `'weekDaysLong'`, `'weekDaysShort'`) | `'weekDaysMedium'`           |
-| `monthFormat`      | Format for displaying months.                   | `MonthFormat` (`'monthsMedium'`, `'monthsLong'`, `'monthsShort'`)         | `'monthsMedium'`             |
-| `showAdjacentDays` | Whether to show dates from adjacent months.     | `boolean`                                                                 | `true`                       |
+All behaviour lives in [`@taqwim/calendar-core`](../calendar-core), a framework-free state machine. `HijriCalendarRoot` creates a store, mirrors its snapshot into a `shallowRef`, and provides both through `provide`/`inject`. Every part spreads attributes the store computed.
 
-### Events
+That is why the React, Svelte, Solid and Angular adapters behave identically: there is one implementation of grid layout, selection, paging and keyboard navigation, and one set of emitted attributes.
 
-| Name | Description | Payload |
-| ---- | ----------- | ------- |
+Drop to the store directly with `useCalendar`:
 
-### Slots
+```ts
+import { useCalendar } from '@taqwim/vue'
 
-| Name       | Description                                                                | Slot Props                                                                                                              |
-| ---------- | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `title`    | Custom content for the title area.                                         |                                                                                                                         |
-| `header`   | Custom content for the header area, typically showing the selected date.   |                                                                                                                         |
-| `controls` | Custom content for the date picker controls, including navigation buttons. |                                                                                                                         |
-| `month`    | Custom content for the month navigation control.                           | `{ date: HijriDateObject, locale: string, changeMode: Function }`                                                       |
-| `mode`     | Custom content for the mode toggle button (month/year view).               | `{ date: HijriDateObject, locale: string, changeMode: Function, viewMode: ViewMode }`                                   |
-| `prev`     | Custom content for the previous month navigation button.                   | `{ prevMonth: Function }`                                                                                               |
-| `next`     | Custom content for the next month navigation button.                       | `{ nextMonth: Function }`                                                                                               |
-| `weekdays` | Custom content for displaying weekdays.                                    | `{ weekdays: string[] }`                                                                                                |
-| `days`     | Custom content for displaying days in the month view.                      | `{ days: { date: HijriDateObject, dayInMonth: number, isAdjacent: boolean, isToday: boolean, isSelected: boolean }[] }` |
-| `months`   | Custom content for displaying months in the year view.                     | `{ months: string[] }`                                                                                                  |
-| `years`    | Custom content for displaying years in the decade view.                    | `{ years: number[] }`                                                                                                   |
+const { store, state } = useCalendar(() => ({ locale: 'ar', dir: 'rtl' }))
+```
+
+## Props
+
+`HijriCalendarRoot` accepts:
+
+|                                       |                                                              |
+| ------------------------------------- | ------------------------------------------------------------ |
+| `v-model`                             | Selected date, or dates when `multiple`                      |
+| `v-model:placeholder`                 | Which month is shown                                         |
+| `defaultValue`, `defaultPlaceholder`  | Uncontrolled starting points                                 |
+| `weekStartsOn`                        | `0` (Sunday) … `6`                                           |
+| `weekdayFormat`                       | `'weekDaysShort' \| 'weekDaysMedium' \| 'weekDaysLong'`      |
+| `numberOfMonths`, `pagedNavigation`   | Multi-month display and paging                               |
+| `fixedWeeks`                          | Always six rows, so height never shifts                      |
+| `multiple`, `preventDeselect`         | Selection behaviour                                          |
+| `minValue`, `maxValue`                | Disables out-of-range days, not just the paging buttons      |
+| `isDateDisabled`, `isDateUnavailable` | Custom matchers, enforced for keyboard and pointer alike     |
+| `disableDaysOutsideCurrentView`       | Block days borrowed from adjacent months                     |
+| `disabled`, `readonly`                |                                                              |
+| `locale`, `dir`                       | `'en' \| 'ar' \| 'fr'`, `'ltr' \| 'rtl'`                     |
+| `initialFocus`                        | Focus the selection, else today, else the first of the month |
+| `nextPage`, `prevPage`                | Custom paging, e.g. a year at a time                         |
+| `calendarLabel`                       | Accessible name                                              |
+
+The default slot gives `{ months, weekDays, date, locale, fixedWeeks, modelValue, state, store }`.
+
+## Keyboard
+
+| Key                           |                                                  |
+| ----------------------------- | ------------------------------------------------ |
+| `←` `→`                       | Previous / next day — mirrored under `dir="rtl"` |
+| `↑` `↓`                       | Previous / next week                             |
+| `Home` `End`                  | First / last day of the week                     |
+| `PageUp` `PageDown`           | Previous / next month                            |
+| `Shift` + `PageUp`/`PageDown` | Previous / next year                             |
+| `Enter` `Space`               | Select the focused day                           |
+
+A roving tabindex keeps exactly one cell in the tab order, so `Tab` enters and leaves the grid rather than walking 42 buttons.
+
+## Attributes to style against
+
+Root `[data-taqwim-calendar]`, with `data-disabled`, `data-readonly`, `data-invalid`.
+Cell trigger `[data-taqwim-calendar-cell-trigger]`, with `data-selected`, `data-today`, `data-outside-month`, `data-disabled`, `data-unavailable`, `data-focused`, `data-value` (`iYYYY-iMM-iDD`).
+
+[`@taqwim/themes`](../themes) is a ready-made stylesheet over exactly these.
+
+## License
+
+MIT
