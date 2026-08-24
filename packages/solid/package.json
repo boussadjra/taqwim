@@ -1,6 +1,6 @@
 {
   "name": "@taqwim/solid",
-  "version": "0.1.1",
+  "version": "0.1.0-alpha.1",
   "private": false,
   "description": "Headless Solid components for Hijri calendars, built on @taqwim/calendar-core",
   "keywords": [

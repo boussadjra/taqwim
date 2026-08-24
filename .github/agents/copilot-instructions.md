@@ -1,109 +1,81 @@
-# Taqwim — Copilot Instructions
+# Taqwim — agent instructions
 
-## Project Overview
+## What this is
 
-Taqwim is a Hijri (Islamic) date library for JavaScript/TypeScript. It provides accurate Hijri-to-Gregorian conversion using the Umm al-Qura calendar, date arithmetic, formatting, and Vue 3 components (calendar, datepicker).
+Umm al-Qura Hijri date utilities, and an accessible calendar for Vue, React, Svelte 5, Solid and Angular. Thirteen published packages, versioned in lockstep.
 
-## Repository Structure
+## Structure
 
 ```
 taqwim/
 ├── packages/
-│   ├── core-utils/          # Pure TS Hijri date utilities (npm: @taqwim/core)
-│   │   ├── src/lib/         # All exported functions (one per file)
-│   │   ├── src/lib/types.ts # HijriDateObject, HijriDuration, MonthDay
-│   │   ├── src/lib/hDates.ts # Umm al-Qura calendar data
-│   │   ├── src/lib/locales/ # i18n locale data (ar, en, fr)
-│   │   └── tests/           # Vitest unit tests (one per function)
-│   └── vue/                 # Vue 3 components (npm: taqwim-vue)
-│       ├── src/HijriCalendar/
-│       ├── src/DatePicker/
-│       ├── src/composables/
-│       ├── src/style/       # Theme CSS files
-│       └── tests/           # Vitest + Playwright E2E
-├── playground/vue3/         # Dev playground
-├── docs/                    # VitePress documentation
-└── .specify/                # Spec-kit artifacts
+│   ├── core/              # Hijri date utilities (date-fns for Gregorian math only)
+│   │   ├── src/lib/       # One exported function per file, re-exported from index.ts
+│   │   ├── src/lib/hDates.ts   # Umm al-Qura table
+│   │   ├── src/lib/locales/    # ar, en, fr
+│   │   └── tests/         # One test file per function
+│   ├── calendar-core/     # The calendar state machine — no framework
+│   ├── themes/            # core.css + variables.css + themes/*.css, Tailwind preset
+│   ├── vue/       vue-styled/
+│   ├── react/     react-styled/
+│   ├── svelte/    svelte-styled/
+│   ├── solid/     solid-styled/
+│   └── angular/   angular-styled/
+├── playground/            # One app per framework, all serving the same harness at /
+├── e2e/                   # One Playwright spec run against every playground
+├── docs/                  # Astro Starlight
+└── legacy/                # Published taqwim-vue / taqwim-core-utils, frozen
 ```
 
-## Key Conventions
+## The rule that matters
 
-### Canonical Date Type
+**Behaviour belongs in `calendar-core`, not in an adapter.** Grid building, selection, paging, keyboard navigation and the emitted `data-*` attributes are one implementation. An adapter is a binding: it mirrors the store's snapshot into that framework's reactivity and spreads the attributes the store computed. If you are writing calendar logic inside an adapter, it belongs in the store instead.
 
-The `HijriDateObject` interface is the core type across all packages:
+The five adapters advertise the same prop names on purpose, and their test suites are near-identical files. Port a change across all five.
+
+## Types
 
 ```typescript
 interface HijriDateObject {
-  hy: number
-  hm: number
-  hd: number
+  hy: number // Hijri year
+  hm: number // month, 1-12
+  hd: number // day
 }
 ```
 
-- `hy` = Hijri year, `hm` = Hijri month (1-12), `hd` = Hijri day
+Conversion covers 1343–1500 AH and throws `HijriRangeError` outside it. Business days default to a Friday/Saturday weekend.
 
-### Module Pattern
+## Naming
 
-Each core function lives in its own file under `packages/core/src/lib/` and is re-exported through `packages/core/src/lib/index.ts`. Follow this pattern when adding new utilities.
-
-### Naming
-
-- Core functions follow `verbHijriNoun` naming: `toHijri`, `addHijriDays`, `formatHijriDate`, `isValidHijriDate`
+- Core functions: `verbHijriNoun` — `toHijri`, `addHijriDays`, `formatHijriDate`, `isValidHijriDate`
 - Subtraction mirrors addition: `addHijriMonths` ↔ `subHijriMonths`
-- Vue components use PascalCase: `HijriCalendar`, `TaqwimDatePicker`
+- Components are PascalCase and prefixed: `HijriCalendarRoot`, `HijriCalendarCellTrigger`
 
-### Testing
+## Tooling
 
-- Each core utility has a matching `tests/{functionName}.test.ts` file
-- Tests use Vitest; run with `pnpm core:test`
-- Vue unit tests use `@vue/test-utils` + Vitest; run with `pnpm vue:test`
-- Vue E2E tests use Playwright; run with `pnpm vue:test:e2e`
+The workspace runs on [Vite+](https://vite.plus) (`vp`). **Tasks are declared per package in `vite.config.ts` under `run.tasks`** — with `input`, `output` and `dependsOn` for caching — not in `package.json` scripts.
 
-### Building
+| Command                       |                                                      |
+| ----------------------------- | ---------------------------------------------------- |
+| `vp run -r build`             | Build every package                                  |
+| `vp run -F @taqwim/vue test`  | One package                                          |
+| `vp check` / `vp check --fix` | Lint, format, type-check (no separate ESLint config) |
+| `vp run -r verify-package`    | `publint` + `attw` on the packable output            |
+| `playwright test`             | Shared e2e suite                                     |
 
-- Both packages use `tsdown` for bundling
-- Core outputs: CJS (`dist/index.js`), ESM (`dist/index.mjs`), types (`dist/index.d.ts`)
-- Vue outputs: CJS, ESM, CSS, types
+Node >= 20. Builds use `tsdown`, except Angular (`ngc`, partial compilation) and Svelte (`svelte-package`). Vue emits declarations with `vue-tsc` because tsdown's SFC dts pipeline crashes on this source tree.
 
-## Commands
+## Versioning
 
-| Command                 | Description                         |
-| ----------------------- | ----------------------------------- |
-| `pnpm core:test`        | Run core-utils unit tests           |
-| `pnpm core:build`       | Build core-utils                    |
-| `pnpm vue:test`         | Run Vue component unit tests        |
-| `pnpm vue:build`        | Build Vue package                   |
-| `pnpm vue:test:e2e`     | Run Playwright E2E tests            |
-| `pnpm vue:play:dev`     | Start Vue playground                |
-| `pnpm lint`             | ESLint with auto-fix                |
-| `pnpm format`           | Prettier format all files           |
-| `pnpm test`             | Run all tests (core + vue)          |
-| `pnpm build`            | Build all packages                  |
-| `pnpm release`          | Build + test + changeset publish    |
-| `pnpm version-packages` | Apply changesets, update CHANGELOGs |
-| `pnpm changeset`        | Create a new changeset              |
+`scripts/version.js` is the only thing that writes a version during the pre-1.0 alpha — `pnpm version:alpha`, `pnpm version:beta`, `pnpm version:set <version>`. **Do not run `changeset version`**: pending changesets describe the eventual 1.0.0 and would jump straight there. Add a changeset with any PR that changes published code; they are the changelog.
 
-## Technology Stack
+## Style
 
-- **Language**: TypeScript (strict)
-- **Package Manager**: pnpm (workspaces)
-- **Core dependency**: date-fns (Gregorian date operations only)
-- **Vue**: Vue 3.x with Composition API
-- **Build**: tsdown (both packages)
-- **Test**: Vitest (unit), Playwright (E2E)
-- **Lint**: ESLint 9 flat config + Prettier
-- **CI**: GitHub Actions (Node 18/20 matrix)
-- **Release**: Changesets + bumpp
-- **CI/CD**: GitHub Actions — Changesets auto-publishes on merge to main
+- Strict TypeScript, no `any`, explicit return types on public APIs
+- Conventional Commits, enforced by commitlint; `vp check` runs on staged files via husky
+- Core utilities are pure functions
+- Comments explain _why_, especially where something looks odd — match the density of the surrounding file
 
-## Code Style
+## Known gaps
 
-- Strict TypeScript — no `any`, explicit return types on public APIs
-- Conventional Commits enforced via commitlint
-- ESLint + Prettier enforced via husky pre-commit hooks
-- Prefer functional style for core utilities (pure functions, no side effects)
-- Vue components use `<script setup>` with TypeScript
-
-## Spec-Driven Development
-
-This project uses [GitHub Spec Kit](https://github.com/github/spec-kit) for spec-driven development. Use the `/speckit.*` commands to create specifications, plans, and tasks before implementing new features. The project constitution is at `.specify/memory/constitution.md`.
+Recorded in `e2e/KNOWN-GAPS.md` rather than worked around: Solid drops clicks (focusing a cell rebuilds the grid), and Angular has no DOM-level coverage (the Analog Vite plugin cannot compile it under Vite 8). Do not "fix" the shared spec to hide either.

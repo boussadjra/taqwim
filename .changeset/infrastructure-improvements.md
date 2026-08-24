@@ -1,6 +1,5 @@
 ---
 '@taqwim/core': minor
-'taqwim-vue': minor
 ---
 
 Add comprehensive CI/CD pipeline and development infrastructure

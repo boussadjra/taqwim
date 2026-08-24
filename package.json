@@ -1,6 +1,6 @@
 {
   "name": "taqwim",
-  "version": "0.0.1-beta.1",
+  "version": "0.1.0-alpha.1",
   "private": true,
   "description": "Hijri date library for JavaScript with components for Vue, React, Svelte, Solid and Angular",
   "keywords": [
@@ -24,6 +24,8 @@
     "build": "vp run -r build",
     "test": "vp run -r test",
     "test:coverage": "vp run -r test:coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
     "dev": "vp run -r dev",
     "check": "vp check",
     "check:fix": "vp check --fix",
@@ -32,16 +34,17 @@
     "docs:dev": "vp run -F taqwim-docs docs:dev",
     "docs:build": "vp run -F taqwim-docs docs:build",
     "api:build": "typedoc --excludeNotDocumented && node docs/scripts/prepare-api-docs.js",
+    "verify-package": "vp run -r verify-package",
+    "_versioning": "Lockstep version for the thirteen @taqwim/* packages. See CONTRIBUTING.md.",
+    "version:set": "node scripts/version.js",
+    "version:alpha": "node scripts/version.js prerelease --preid alpha",
+    "version:beta": "node scripts/version.js prerelease --preid beta",
+    "_release": "Changesets drives 1.0.0 and everything after it; prereleases use version:* above.",
     "changeset": "changeset",
+    "changeset:status": "changeset status",
     "changeset:version": "changeset version",
     "changeset:publish": "changeset publish",
-    "changeset:status": "changeset status",
-    "release": "vp run -r build && vp run -r test && changeset publish",
-    "version-packages": "changeset version",
-    "prepare": "husky",
-    "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui",
-    "verify-package": "vp run -r verify-package"
+    "prepare": "husky"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.2",

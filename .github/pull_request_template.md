@@ -1,55 +1,41 @@
-## Description
+## What this changes
 
-Please include a summary of the changes and the related issue. Please also include relevant motivation and context.
+<!-- What changed, and why. Link the issue if there is one. -->
 
-Fixes # (issue)
+Fixes #
 
-## Type of Change
+## Type
 
-Please delete options that are not relevant.
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Breaking change
+- [ ] Documentation
+- [ ] Build / CI / tooling
 
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] Documentation update
-- [ ] Performance improvement
-- [ ] Code refactoring
-- [ ] Test improvements
-- [ ] CI/CD improvements
+## Scope
 
-## Changes Made
+- [ ] `@taqwim/core` — date utilities
+- [ ] `@taqwim/calendar-core` — the state machine (**affects every adapter**)
+- [ ] `@taqwim/themes`
+- [ ] Adapters: <!-- vue / react / svelte / solid / angular, headless and/or styled -->
+- [ ] Docs, playgrounds, or tooling
 
-- [ ] Core utilities changes
-- [ ] Vue components changes
-- [ ] Documentation changes
-- [ ] Test additions/modifications
-- [ ] Configuration changes
+## Parity
 
-## Testing
+The five adapters are meant to behave identically, and one Playwright spec runs against all of them.
 
-Please describe the tests that you ran to verify your changes.
+- [ ] Behaviour changes went into `calendar-core`, not into a single adapter
+- [ ] Adapter-level changes were ported to all five, tests included
+- [ ] Not applicable
 
-- [ ] Unit tests pass (`pnpm core:test`)
-- [ ] Vue component tests pass (`pnpm --filter taqwim-vue test:unit`)
-- [ ] E2E tests pass (if applicable)
-- [ ] Manual testing completed
-- [ ] All builds succeed
+## Checks
 
-## Checklist
+- [ ] `vp check` passes
+- [ ] `vp run -r test` passes
+- [ ] `playwright test` passes, or the failure is recorded in `e2e/KNOWN-GAPS.md` with a diagnosis
+- [ ] `vp run -r verify-package` passes, if packaging changed
+- [ ] A changeset is included, if published code changed (`pnpm changeset`)
 
-- [ ] My code follows the style guidelines of this project
-- [ ] I have performed a self-review of my code
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] I have made corresponding changes to the documentation
-- [ ] My changes generate no new warnings
-- [ ] I have added tests that prove my fix is effective or that my feature works
-- [ ] New and existing unit tests pass locally with my changes
-- [ ] Any dependent changes have been merged and published
+## Notes
 
-## Screenshots (if applicable)
-
-Please add screenshots to help explain your changes.
-
-## Additional Notes
-
-Add any other notes about the PR here.
+<!-- Screenshots for visual changes; anything a reviewer should know. -->

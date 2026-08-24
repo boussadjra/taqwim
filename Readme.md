@@ -1,388 +1,135 @@
 # Taqwim
 
-[![npm version](https://img.shields.io/npm/v/@taqwim/core.svg)](https://www.npmjs.com/package/@taqwim/core)
-[![CI Status](https://github.com/boussadjra/taqwim/workflows/CI/badge.svg)](https://github.com/boussadjra/taqwim/actions)
-[![Vue Version](https://img.shields.io/badge/vue-3.x-brightgreen.svg)](https://vuejs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![CI](https://github.com/boussadjra/taqwim/workflows/CI/badge.svg)](https://github.com/boussadjra/taqwim/actions)
+[![npm](https://img.shields.io/npm/v/@taqwim/core/alpha.svg)](https://www.npmjs.com/package/@taqwim/core)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue.svg)](https://www.typescriptlang.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-A comprehensive Hijri (Islamic) date library for JavaScript applications, providing accurate Umm al-Qura calendar conversion, date arithmetic, formatting, and Vue 3 components.
+Umm al-Qura Hijri date utilities, and an accessible calendar for **Vue, React, Svelte, Solid and Angular**.
 
-## Features
+Calendar behaviour — grid building, selection, paging, keyboard navigation, accessibility attributes — is implemented once in a framework-free state machine. Every adapter is a thin binding to it, so the five behave identically and emit the same markup.
 
-- 🗓️ **Accurate Conversion**: Hijri ↔ Gregorian using the Umm al-Qura calendar
-- 📦 **Tree-shakeable**: Import only what you need — each function is independently importable
-- 🧮 **Full Date Arithmetic**: Add/subtract days, weeks, months, quarters, years, and business days
-- 📐 **Comparison & Validation**: Equality, ordering, and date validation utilities
-- 🎨 **14 Themes**: Dark, modern, Islamic, neon, ocean, cyberpunk, and more
-- 🧩 **Headless Calendar**: Compound component API for full layout control
-- 📚 **TypeScript**: Strict types with full declaration files
-- 🌍 **i18n**: Arabic, English, French — with RTL support
-- ⚡ **Lightweight**: Optimized bundle size, zero framework deps in core
-- 🧪 **Well Tested**: Vitest unit tests + Playwright E2E
+> **Alpha.** The current release line is `0.1.0-alpha.1`, published under the `alpha` dist-tag. The API is settling and can still change between alphas.
+
+📖 **[Documentation](https://boussadjra.github.io/taqwim/)**
 
 ## Packages
 
-| Package                           | Version                                                                                             | Description                            |
-| --------------------------------- | --------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| [`@taqwim/core`](./packages/core) | [![npm](https://img.shields.io/npm/v/@taqwim/core.svg)](https://www.npmjs.com/package/@taqwim/core) | Core Hijri date utilities              |
-| [`taqwim-vue`](./packages/vue)    | [![npm](https://img.shields.io/npm/v/taqwim-vue.svg)](https://www.npmjs.com/package/taqwim-vue)     | Vue 3 calendar & datepicker components |
+Thirteen packages, versioned in lockstep — an adapter and the store it binds to must never be a version apart.
 
-## Quick Start
+| Package                                             | What it is                                                                     |
+| --------------------------------------------------- | ------------------------------------------------------------------------------ |
+| [`@taqwim/core`](./packages/core)                   | Hijri ↔ Gregorian conversion, arithmetic, formatting. Framework-free           |
+| [`@taqwim/calendar-core`](./packages/calendar-core) | The calendar state machine every adapter binds to                              |
+| [`@taqwim/themes`](./packages/themes)               | Framework-free CSS: 13 themes over `data-*` attributes, plus a Tailwind preset |
 
-### Core Utils
+Per framework, a headless package and a themed one built on it:
 
-```bash
-npm install @taqwim/core
-# or
-pnpm add @taqwim/core
+| Framework | Headless                                | Themed                                                |
+| --------- | --------------------------------------- | ----------------------------------------------------- |
+| Vue 3     | [`@taqwim/vue`](./packages/vue)         | [`@taqwim/vue-styled`](./packages/vue-styled)         |
+| React     | [`@taqwim/react`](./packages/react)     | [`@taqwim/react-styled`](./packages/react-styled)     |
+| Svelte 5  | [`@taqwim/svelte`](./packages/svelte)   | [`@taqwim/svelte-styled`](./packages/svelte-styled)   |
+| Solid     | [`@taqwim/solid`](./packages/solid)     | [`@taqwim/solid-styled`](./packages/solid-styled)     |
+| Angular   | [`@taqwim/angular`](./packages/angular) | [`@taqwim/angular-styled`](./packages/angular-styled) |
+
+Reach for **headless** when you are building your own markup, and **styled** when you want a calendar that already looks like one. The styled packages re-export their headless siblings, so you can drop down without adding a dependency.
+
+## Quick start
+
+### Dates only
+
+```sh
+pnpm add @taqwim/core@alpha
 ```
 
 ```typescript
 import { toHijri, toGregorian, formatHijriDate } from '@taqwim/core'
 
-// Convert Gregorian to Hijri
-const hijriDate = toHijri(new Date('2024-03-11'))
+toHijri(new Date('2024-03-11'))
 // => { hy: 1445, hm: 9, hd: 1 }
 
-// Convert Hijri to Gregorian (local midnight)
-const gregorian = toGregorian({ hy: 1445, hm: 9, hd: 1 })
+toGregorian({ hy: 1445, hm: 9, hd: 1 })
 // => Mon Mar 11 2024 00:00:00
 
-// Format with locale
-const formatted = formatHijriDate(hijriDate, 'iYYYY/iMM/iDD', 'ar')
+formatHijriDate({ hy: 1445, hm: 9, hd: 1 }, 'iYYYY/iMM/iDD', 'ar')
 // => ١٤٤٥/٠٩/٠١
 ```
 
-### Vue Components
+Conversion is table-driven and covers **1343–1500 AH** (1924–2076 CE). Outside that range it throws `HijriRangeError` rather than returning a silently wrong date. Business-day arithmetic defaults to a Friday/Saturday weekend, overridable per call.
 
-```bash
-npm install taqwim-vue
-# or
-pnpm add taqwim-vue
+Full API: **[reference](https://boussadjra.github.io/taqwim/api/)**.
+
+### A calendar
+
+```sh
+pnpm add @taqwim/vue-styled@alpha    # or react-styled, svelte-styled, solid-styled, angular-styled
 ```
 
 ```vue
-<template>
-  <HijriCalendar v-model="selectedDate" theme="islamic" locale="ar" />
-</template>
-
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
-import { HijriCalendar } from 'taqwim-vue'
-import 'taqwim-vue/style.css'
+import { HijriCalendar } from '@taqwim/vue-styled'
 
-const selectedDate = ref({ hy: 1446, hm: 1, hd: 1 })
+const date = ref()
 </script>
+
+<template>
+  <HijriCalendar v-model="date" theme="islamic" locale="ar" dir="rtl" />
+</template>
 ```
 
-## Core API Reference
+The stylesheet comes with it. The equivalent for every other framework is in that package's README, linked in the table above.
 
-### Types
+## Theming
 
-```typescript
-interface HijriDateObject {
-  hy: number
-  hm: number
-  hd: number
-}
-interface HijriDuration {
-  years: number
-  months: number
-  days: number
-  weeks: number
-}
-type ValidHijriDate = HijriDateObject | `${number}/${'/' | '-'}${number}/${'/' | '-'}${number}`
+Themes are selected with an attribute, not by importing a different stylesheet — so one page can host several, and switching at runtime is a state change:
+
+```html
+<div data-taqwim-theme="islamic">…</div>
 ```
 
-### Date Conversion
+`default` · `dark` · `modern` · `islamic` · `minimal` · `minimalist` · `neon` · `ocean` · `sunset` · `cyberpunk` · `nature` · `luxurious` · `material`
 
-| Function                 | Description                                            |
-| ------------------------ | ------------------------------------------------------ |
-| `toHijri(date)`          | Convert `Date`, string, or number to `HijriDateObject` |
-| `toGregorian(hijriDate)` | Convert `HijriDateObject` to `Date`                    |
+Each theme is ~30 token overrides; structure is written once against the `data-*` attributes the state machine emits. To restyle rather than re-theme, override the tokens under your own attribute value — see [`@taqwim/themes`](./packages/themes).
 
-### Date Arithmetic — Addition
+## Accessibility
 
-| Function                               | Description                                         |
-| -------------------------------------- | --------------------------------------------------- |
-| `addHijri(date, duration)`             | Add years, months, weeks, and days in one call      |
-| `addHijriDays(date, n)`                | Add `n` days                                        |
-| `addHijriWeeks(date, n)`               | Add `n` weeks                                       |
-| `addHijriMonths(date, n)`              | Add `n` months (adjusts day-of-month)               |
-| `addHijriQuarters(date, n)`            | Add `n` quarters (3-month periods)                  |
-| `addHijriYears(date, n)`               | Add `n` years                                       |
-| `addHijriBusinessDays(date, n, opts?)` | Add `n` business days (weekend defaults to Fri–Sat) |
+The grid is a real `role="grid"` with the roving tabindex a date picker is supposed to have: `Tab` enters and leaves it rather than walking 42 buttons, and arrows move within it, mirrored under `dir="rtl"`. Colour contrast and axe rules are asserted by the shared end-to-end suite on every run, not left to taste.
 
-### Date Arithmetic — Subtraction
-
-| Function                               | Description                                              |
-| -------------------------------------- | -------------------------------------------------------- |
-| `subHijri(date, duration)`             | Subtract years, months, weeks, and days in one call      |
-| `subHijriDays(date, n)`                | Subtract `n` days                                        |
-| `subHijriWeeks(date, n)`               | Subtract `n` weeks                                       |
-| `subHijriMonths(date, n)`              | Subtract `n` months                                      |
-| `subHijriQuarters(date, n)`            | Subtract `n` quarters                                    |
-| `subHijriYears(date, n)`               | Subtract `n` years                                       |
-| `subHijriBusinessDays(date, n, opts?)` | Subtract `n` business days (weekend defaults to Fri–Sat) |
-
-Business days skip the weekend, which defaults to **Friday and Saturday** — the
-working week across most of the Arab world. Pass a different one where needed:
-
-```typescript
-import { addHijriBusinessDays } from '@taqwim/core'
-
-// Default: Friday/Saturday weekend
-addHijriBusinessDays({ hy: 1445, hm: 9, hd: 1 }, 20)
-
-// Western Saturday/Sunday weekend
-addHijriBusinessDays({ hy: 1445, hm: 9, hd: 1 }, 20, { weekend: [6, 0] })
-
-// Single-day weekend
-addHijriBusinessDays({ hy: 1445, hm: 9, hd: 1 }, 20, { weekend: [5] })
-```
-
-### Supported range
-
-Conversion is table-driven (Umm al-Qura), covering **1343–1500 AH**
-(1924–2076 CE). Dates outside that range throw a `HijriRangeError` rather than
-returning a silently incorrect result:
-
-```typescript
-import { HijriRangeError, MIN_HIJRI_YEAR, MAX_HIJRI_YEAR, toGregorian } from '@taqwim/core'
-
-try {
-  toGregorian({ hy: 1200, hm: 1, hd: 1 })
-} catch (error) {
-  if (error instanceof HijriRangeError) {
-    console.warn(`Supported range is ${MIN_HIJRI_YEAR}-${MAX_HIJRI_YEAR} AH`)
-  }
-}
-```
-
-### Comparison
-
-| Function                     | Description                  |
-| ---------------------------- | ---------------------------- |
-| `isEqual(a, b)`              | Check if two dates are equal |
-| `isGreaterThan(a, b)`        | Check if `a > b`             |
-| `isGreaterThanOrEqual(a, b)` | Check if `a >= b`            |
-| `isLessThan(a, b)`           | Check if `a < b`             |
-| `isLessThanOrEqual(a, b)`    | Check if `a <= b`            |
-
-### Validation & Info
-
-| Function                     | Description                                             |
-| ---------------------------- | ------------------------------------------------------- |
-| `isValidHijriDate(date)`     | Validate a Hijri date (object or string)                |
-| `getDaysLengthInMonth(date)` | Get number of days in a Hijri month (29 or 30)          |
-| `getDayInWeek(date)`         | Get day of week (0=Sun … 6=Sat)                         |
-| `getMonthAdjacentDays(date)` | Get previous/next month padding days for calendar grids |
-
-### Formatting & Parsing
-
-| Function                                 | Description                                                        |
-| ---------------------------------------- | ------------------------------------------------------------------ |
-| `formatHijriDate(date, format, locale?)` | Format using tokens: `iYYYY`, `iMM`, `iDD`, `iMMMM`, etc.          |
-| `parseDateString(str)`                   | Parse `"yyyy-MM-dd"` or `"dd/MM/yyyy"` string to `HijriDateObject` |
-| `normalizeHijriDate(date)`               | Normalize `ValidHijriDate` to `HijriDateObject`                    |
-| `getLocaleData(locale, key)`             | Get locale-specific month names, weekday names, etc.               |
-
-### Locales
-
-Built-in locales: `en` (English), `ar` (Arabic), `fr` (French)
-
-Each locale provides: month names (long/medium/short), weekday names (long/medium/short), and time unit labels.
-
-## Vue Components
-
-### HijriCalendar
-
-A themed, feature-rich calendar component with headless compound sub-components.
-
-```vue
-<HijriCalendar
-  v-model="date"
-  theme="modern"
-  size="default"
-  locale="ar"
-  :min-value="{ hy: 1445, hm: 1, hd: 1 }"
-  :max-value="{ hy: 1446, hm: 12, hd: 30 }"
-  :week-starts-on="6"
-  :fixed-weeks="true"
-  :multiple="false"
-  :disabled="false"
-  :readonly="false"
-  dir="rtl"
-/>
-```
-
-**Key Props:**
-
-- `theme` — `'default'` | `'dark'` | `'modern'` | `'islamic'` | `'minimal'` | `'neon'` | `'ocean'` | `'sunset'` | `'cyberpunk'` | `'nature'` | `'minimalist'` | `'luxurious'` | `'material'` | `'custom'`
-- `size` — `'compact'` | `'default'` | `'large'`
-- `locale` — `'en'` | `'ar'` | `'fr'`
-- `multiple` — Enable multi-date selection
-- `minValue` / `maxValue` — Date range constraints
-- `weekStartsOn` — `0` (Sun) to `6` (Sat)
-- `fixedWeeks` — Always render 6 weeks
-- `isDateDisabled` / `isDateUnavailable` — Callback to disable/mark dates
-- `dir` — `'ltr'` | `'rtl'`
-
-**Slots:** `header`, `prev-button`, `next-button`, `weekday`, `cell`, `default`
-
-### Headless Compound Components
-
-For full layout control, use the sub-components directly:
-
-```vue
-<HijriCalendarRoot v-model="date" locale="en">
-  <HijriCalendarHeader>
-    <HijriCalendarPrev />
-    <HijriCalendarHeading />
-    <HijriCalendarNext />
-  </HijriCalendarHeader>
-  <HijriCalendarGrid>
-    <HijriCalendarGridHead>
-      <HijriCalendarGridRow>
-        <HijriCalendarHeadCell />
-      </HijriCalendarGridRow>
-    </HijriCalendarGridHead>
-    <HijriCalendarGridBody>
-      <HijriCalendarGridRow>
-        <HijriCalendarCell>
-          <HijriCalendarCellTrigger />
-        </HijriCalendarCell>
-      </HijriCalendarGridRow>
-    </HijriCalendarGridBody>
-  </HijriCalendarGrid>
-</HijriCalendarRoot>
-```
-
-### DatePicker
-
-A compact date picker with month/year navigation and view mode switching.
-
-```vue
-<DatePicker
-  v-model="date"
-  v-model:formatted-value="formatted"
-  locale="en"
-  format="iYYYY/iMM/iD"
-  :show-adjacent-days="true"
-  view-mode="month"
-/>
-```
-
-**Props:** `modelValue`, `formattedValue`, `locale`, `format`, `title`, `viewMode` (`'month'` | `'months'` | `'years'`), `weekDayFormat`, `monthFormat`, `showAdjacentDays`
-
-**Slots:** `title`, `header`, `controls`, `month`, `mode`, `prev`, `next`, `weekdays`, `days`, `months`, `years`
-
-### Composables
-
-| Composable                | Description                                                                            |
-| ------------------------- | -------------------------------------------------------------------------------------- |
-| `useHijriLocale(locale?)` | Reactive locale management — exposes `localeData`, `isRtl`, `direction`, `setLocale()` |
-
-### CSS Themes
-
-Import a single theme or the base styles:
-
-```typescript
-// Base styles (required)
-import 'taqwim-vue/style.css'
-
-// Individual themes (optional, pick one)
-import 'taqwim-vue/hijri-calendar-dark.css'
-import 'taqwim-vue/hijri-calendar-modern.css'
-import 'taqwim-vue/hijri-calendar-islamic.css'
-import 'taqwim-vue/hijri-calendar-neon.css'
-import 'taqwim-vue/hijri-calendar-ocean.css'
-import 'taqwim-vue/hijri-calendar-sunset.css'
-import 'taqwim-vue/hijri-calendar-cyberpunk.css'
-import 'taqwim-vue/hijri-calendar-nature.css'
-import 'taqwim-vue/hijri-calendar-minimalist.css'
-import 'taqwim-vue/hijri-calendar-luxurious.css'
-import 'taqwim-vue/hijri-calendar-material.css'
-
-// Or use minimal.css for a bare-bones base
-import 'taqwim-vue/minimal.css'
-```
+Details: **[Accessibility and keyboard](https://boussadjra.github.io/taqwim/guide/accessibility/)**.
 
 ## Development
 
-### Prerequisites
+Requires Node >= 20, pnpm, and [Vite+](https://vite.plus) (`curl -fsSL https://vite.plus/install | bash`).
 
-- Node.js >= 18
-- pnpm >= 8
-
-### Setup
-
-```bash
+```sh
 git clone https://github.com/boussadjra/taqwim.git
 cd taqwim
 pnpm install
-pnpm test
+vp run -r build
+vp run -r test
 ```
 
-### Scripts
+| Command                         |                                                |
+| ------------------------------- | ---------------------------------------------- |
+| `pnpm build`                    | Build every package                            |
+| `pnpm test`                     | Unit tests, all packages                       |
+| `pnpm test:e2e`                 | Shared Playwright suite across the playgrounds |
+| `pnpm check` / `pnpm check:fix` | Lint, format and type-check                    |
+| `pnpm verify-package`           | `publint` + `attw` on what would be published  |
+| `pnpm docs:dev`                 | Documentation site                             |
 
-| Command              | Description                |
-| -------------------- | -------------------------- |
-| `pnpm test`          | Run all tests (core + Vue) |
-| `pnpm build`         | Build all packages         |
-| `pnpm core:test`     | Core utils unit tests      |
-| `pnpm core:build`    | Build core utils           |
-| `pnpm vue:test`      | Vue component unit tests   |
-| `pnpm vue:build`     | Build Vue package          |
-| `pnpm vue:test:e2e`  | Playwright E2E tests       |
-| `pnpm vue:play:dev`  | Vue development playground |
-| `pnpm lint`          | ESLint with auto-fix       |
-| `pnpm format`        | Prettier format            |
-| `pnpm docs:dev`      | Documentation dev server   |
-| `pnpm docs:build`    | Build documentation        |
-| `pnpm test:coverage` | Run with coverage          |
+Task graph, caching and cross-package dependencies are declared per package in `vite.config.ts` under `run.tasks`, not in `package.json`.
 
-### Releasing
+### Known gaps
 
-This project uses [Changesets](https://github.com/changesets/changesets) for versioning and publishing.
-
-```bash
-# 1. Create a changeset describing your changes
-pnpm changeset
-
-# 2. Version packages (updates package.json + CHANGELOG)
-pnpm version-packages
-
-# 3. Publish to npm (builds, tests, then publishes)
-pnpm release
-```
-
-On push to `main`, the CI automatically creates a release PR or publishes if changesets are consumed.
+Two are tracked openly in [`e2e/KNOWN-GAPS.md`](./e2e/KNOWN-GAPS.md): Solid drops some clicks because focusing a cell rebuilds the grid, and Angular is not yet covered by the end-to-end suite because the Analog Vite plugin cannot compile it under Vite 8.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for development workflow, code standards, and PR guidelines.
-
-## Browser Support
-
-- Chrome >= 90
-- Firefox >= 88
-- Safari >= 14
-- Edge >= 90
-
-## Changelog
-
-See [CHANGELOG.md](CHANGELOG.md) for release history.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow, project layout, and how versions and releases work.
 
 ## License
 
-[MIT](LICENSE)
-
-## Support
-
-- 📖 [Documentation](https://taqwim.netlify.app/)
-- 💬 [GitHub Discussions](https://github.com/boussadjra/taqwim/discussions)
-- 🐛 [Issue Tracker](https://github.com/boussadjra/taqwim/issues)
-
-Made with ❤️ by [Brahim Boussadjra](https://github.com/boussadjra)
+[MIT](LICENSE) © [Brahim Boussadjra](https://github.com/boussadjra)

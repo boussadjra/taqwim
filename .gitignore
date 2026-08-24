@@ -28,10 +28,6 @@ coverage
 
 format.vue
 
-# lock files
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
 
 # Development guide files (internal documentation)
 COMPLETE-MODERNIZATION-GUIDE.md
@@ -54,3 +50,6 @@ docs/src/content/docs/api/
 docs/src/content/docs/reference/tokens.md
 docs/dist/
 docs/.astro/
+
+# SvelteKit package output
+.svelte-kit/

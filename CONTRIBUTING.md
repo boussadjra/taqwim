@@ -1,262 +1,122 @@
 # Contributing to Taqwim
 
-We love your input! We want to make contributing to Taqwim as easy and transparent as possible, whether it's:
+Bug reports, fixes, features and questions are all welcome.
 
-- Reporting a bug
-- Discussing the current state of the code
-- Submitting a fix
-- Proposing new features
-- Becoming a maintainer
+## Setup
 
-## Development Setup
+Node >= 20, pnpm, and [Vite+](https://vite.plus) — the workspace uses `vp` for tasks, linting, formatting and type-checking.
 
-### Prerequisites
+```bash
+git clone https://github.com/boussadjra/taqwim.git
+cd taqwim
+curl -fsSL https://vite.plus/install | bash
+pnpm install
+vp run -r build
+vp run -r test
+```
 
-- Node.js (>= 18)
-- pnpm (>= 8)
-
-### Getting Started
-
-1. **Fork and Clone the repository**
-
-   ```bash
-   git clone https://github.com/your-username/taqwim.git
-   cd taqwim
-   ```
-
-2. **Install dependencies**
-
-   ```bash
-   pnpm install
-   ```
-
-3. **Run tests to ensure everything works**
-
-   ```bash
-   pnpm core:test
-   ```
-
-4. **Start the development playground**
-   ```bash
-   pnpm vue:play:dev
-   ```
-
-### Project Structure
+## Layout
 
 ```
 taqwim/
 ├── packages/
-│   ├── core-utils/     # Core Hijri date utilities
-│   └── vue/            # Vue.js components
-├── playground/
-│   └── vue3/           # Development playground
-├── docs/               # Documentation (VitePress)
-└── .github/            # GitHub workflows and templates
+│   ├── core/              # Hijri date utilities — no framework, no deps
+│   ├── calendar-core/     # The calendar state machine every adapter binds to
+│   ├── themes/            # Framework-free CSS + generated Tailwind preset
+│   ├── vue/       vue-styled/
+│   ├── react/     react-styled/
+│   ├── svelte/    svelte-styled/
+│   ├── solid/     solid-styled/
+│   └── angular/   angular-styled/
+├── playground/            # One app per framework; all serve the same harness at /
+├── e2e/                   # One Playwright spec, run against every playground
+├── docs/                  # Astro Starlight site
+└── legacy/                # The published taqwim-vue and taqwim-core-utils, frozen
 ```
 
-## Development Workflow
+The shape that matters: **behaviour lives in `calendar-core`, not in the adapters.** A calendar bug is almost always fixed there once rather than five times. An adapter should be a binding — if you find yourself implementing logic in one, that logic probably belongs in the store.
 
-### Making Changes
+## Tasks
 
-1. **Create a feature branch**
-
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-
-2. **Make your changes**
-   - Write code following our style guide
-   - Add tests for new functionality
-   - Update documentation if needed
-
-3. **Test your changes**
-
-   ```bash
-   # Run linting
-   pnpm lint
-
-   # Run tests
-   pnpm core:test
-   pnpm --filter taqwim-vue test:unit
-
-   # Build packages
-   pnpm core:build
-   pnpm vue:build
-   ```
-
-4. **Commit your changes**
-   ```bash
-   # We use conventional commits
-   git add .
-   git commit -m "feat: add new date formatting function"
-   ```
-
-### Code Standards
-
-#### TypeScript
-
-- Use TypeScript strict mode
-- Provide proper type definitions
-- Avoid `any` types unless absolutely necessary
-
-#### Testing
-
-- Write unit tests for all new functions
-- Maintain test coverage above 90%
-- Use descriptive test names
-
-#### Documentation
-
-- Add JSDoc comments for all public APIs
-- Update relevant markdown documentation
-- Include usage examples
-
-#### Commit Messages
-
-We use [Conventional Commits](https://conventionalcommits.org/):
-
-```
-<type>[optional scope]: <description>
-
-[optional body]
-
-[optional footer(s)]
-```
-
-Types:
-
-- `feat`: A new feature
-- `fix`: A bug fix
-- `docs`: Documentation only changes
-- `style`: Changes that do not affect the meaning of the code
-- `refactor`: A code change that neither fixes a bug nor adds a feature
-- `test`: Adding missing tests or correcting existing tests
-- `chore`: Changes to the build process or auxiliary tools
-
-Examples:
-
-```
-feat(core): add new date comparison functions
-fix(vue): resolve datepicker timezone issue
-docs: update API documentation
-test(core): add edge case tests for leap years
-```
-
-## Package-Specific Guidelines
-
-### Core Utils (`packages/core`)
-
-- Pure functions only, no side effects
-- Comprehensive unit tests required
-- Performance considerations for date calculations
-- Support for multiple locales
-
-### Vue Components (`packages/vue`)
-
-- Follow Vue 3 Composition API patterns
-- Provide TypeScript definitions
-- Include comprehensive prop validation
-- Add accessibility attributes
-- Write component tests with Vue Test Utils
-
-## Pull Request Process
-
-1. **Ensure CI passes**
-   - All tests pass
-   - Linting passes
-   - Builds succeed
-
-2. **Update documentation**
-   - API documentation (auto-generated)
-   - User guides if needed
-   - CHANGELOG.md entry
-
-3. **Request review**
-   - Assign to maintainers
-   - Respond to feedback promptly
-   - Make requested changes
-
-4. **Merge requirements**
-   - Approved by at least one maintainer
-   - All CI checks pass
-   - Up-to-date with main branch
-
-## Release Process
-
-We use [Changesets](https://github.com/changesets/changesets) for versioning and publishing. Each PR that changes published code should include a changeset.
-
-### Adding a changeset
+Tasks are declared per package in `vite.config.ts` under `run.tasks`, with their inputs, outputs and dependencies, so `vp` can cache and order them. They are **not** in `package.json` scripts.
 
 ```bash
-# Run the changeset wizard — it will ask which packages changed and the semver bump type
+vp run -r build            # every package
+vp run -F @taqwim/vue test # one package
+vp check                   # lint + format + types
+vp check --fix
+playwright test            # shared e2e suite
+```
+
+Adding a task means editing that package's `vite.config.ts`. Declare `input`/`output` honestly — a task that under-declares its inputs will be cached when it should have re-run.
+
+## Making a change
+
+1. Branch off `main`.
+2. Make the change, with tests. Every adapter's test suite is deliberately a near-identical file to the others — that symmetry is what keeps parity honest, so port a new test across all five.
+3. `vp check --fix` and `vp run -r test`.
+4. If you touched anything published, add a changeset (below).
+5. Commit using [Conventional Commits](https://conventionalcommits.org/) — commitlint enforces this.
+
+```
+feat(calendar-core): honour weekStartsOn in the weekday labels
+fix(react): stop the store looping when props are pushed every render
+docs: correct the Solid known-issue diagnosis
+```
+
+### Parity is the contract
+
+The five adapters advertise the same prop names and emit the same `data-*` attributes. One Playwright spec runs against all of them. If an adapter cannot pass it, that goes in [`e2e/KNOWN-GAPS.md`](./e2e/KNOWN-GAPS.md) with a real diagnosis — not worked around in the spec, and not quietly skipped.
+
+## Versions and releases
+
+The thirteen `@taqwim/*` packages are versioned in **lockstep**: one version across all of them, because an adapter and the store it binds to must never be a version apart. Two mechanisms exist, for two different phases.
+
+### Now: the prerelease line
+
+While the project is pre-1.0, `scripts/version.js` is the only thing that writes a version number:
+
+```bash
+pnpm version:set 0.1.0-alpha.1     # an exact version
+pnpm version:alpha                 # 0.1.0-alpha.1 -> 0.1.0-alpha.2
+pnpm version:beta                  # 0.1.0-alpha.2 -> 0.1.0-beta.0
+pnpm version:set preminor --preid beta
+pnpm version:set minor             # graduate: 0.1.0-beta.0 -> 0.1.0
+pnpm version:set patch --dry-run   # preview, write nothing
+```
+
+It accepts an exact version or any semver release type (`major`, `minor`, `patch`, `premajor`, `preminor`, `prepatch`, `prerelease`), with `--preid alpha|beta|rc`. Continuing a prerelease keeps its identifier unless you ask for another, so `pnpm version:alpha` twice gives `alpha.2` then `alpha.3`. It writes only the `version` field — internal dependencies are `workspace:*`, which pnpm resolves at publish time — and it never touches `legacy/*`, which is frozen at the versions npm already has.
+
+Publish a prerelease under its own dist-tag, so `pnpm add @taqwim/vue` does not resolve to it:
+
+```bash
+pnpm -r --filter "@taqwim/*" publish --access public --tag alpha --no-git-checks
+```
+
+### Later: 1.0.0 and after
+
+[Changesets](https://github.com/changesets/changesets) is the release mechanism from 1.0.0 onward, and `.changeset/config.json` declares the same thirteen packages as `fixed` so lockstep holds there too.
+
+**Add a changeset with any PR that changes published code**, now included:
+
+```bash
 pnpm changeset
 ```
 
-This creates a markdown file in `.changeset/` describing the change. Commit it with your PR.
+Changesets are the changelog. Write them for someone upgrading — what changed, and what they have to do about it — not as a commit summary.
 
-### Publishing (maintainers)
+> **Do not run `changeset version` during the alpha.** Pending changesets already describe the 1.0.0 release, including major bumps; applying them now would jump straight to 1.0.0 and overwrite whatever `scripts/version.js` set. They are consumed deliberately, when the project graduates.
 
-On merge to `main`, the CI creates a **Release PR** that batches pending changesets. When that PR is merged:
+On merge to `main`, `.github/workflows/release.yml` builds, tests, verifies the packable output, and then opens or publishes a changesets version PR. Tarballs are published with npm provenance.
 
-1. `package.json` versions and `CHANGELOG.md` are updated automatically
-2. Packages are built, tested, and published to npm
-3. GitHub releases are created for each tag
+## Reporting issues
 
-For manual releases:
+Use the [issue templates](https://github.com/boussadjra/taqwim/issues/new/choose). For a bug, the thing that helps most is a minimal reproduction and which adapter it is on — parity means a bug in one is often a bug in the store, and therefore in all five.
 
-```bash
-# Version packages (applies changesets, updates CHANGELOG)
-pnpm version-packages
+## Code of Conduct
 
-# Build, test, and publish
-pnpm release
-```
-
-## Reporting Issues
-
-### Bug Reports
-
-Use the [Bug Report](https://github.com/boussadjra/taqwim/issues/new?template=bug_report.md) template and include:
-
-- Clear description of the issue
-- Steps to reproduce
-- Expected vs actual behavior
-- Environment details (Node.js version, browser, etc.)
-- Minimal code example
-
-### Feature Requests
-
-Use the [Feature Request](https://github.com/boussadjra/taqwim/issues/new?template=feature_request.md) template and include:
-
-- Clear description of the feature
-- Use case and motivation
-- Proposed API (if applicable)
-- Alternative solutions considered
-
-## Community Guidelines
-
-### Code of Conduct
-
-This project and everyone participating in it is governed by our [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
-
-### Getting Help
-
-- **Documentation**: Check our [docs](https://taqwim.netlify.app/)
-- **Discussions**: Use [GitHub Discussions](https://github.com/boussadjra/taqwim/discussions)
-- **Issues**: For bugs and feature requests only
-
-## Recognition
-
-Contributors are recognized in:
-
-- GitHub contributors list
-- CHANGELOG.md for significant contributions
-- Package.json contributors field
+This project is governed by its [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under the MIT License.
-
----
-
-Thank you for contributing to Taqwim! 🎉
+By contributing, you agree that your contributions are licensed under the MIT License.
