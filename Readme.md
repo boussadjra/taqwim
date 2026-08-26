@@ -130,6 +130,15 @@ Task graph, caching and cross-package dependencies are declared per package in `
 
 One is tracked openly in [`e2e/KNOWN-GAPS.md`](./e2e/KNOWN-GAPS.md): Angular is not yet covered by the end-to-end suite, because the Analog Vite plugin cannot compile it under Vite 8.
 
+## Credits
+
+Taqwim was inspired by [luxon-hijri](https://github.com/acamarata/luxon-hijri) by
+[Aric Camarata](https://github.com/acamarata) — a table-based Umm al-Qura
+implementation for Luxon, and the project that made the case that a Hijri
+calendar should be tabulated and bounded rather than approximated. Taqwim takes
+that premise somewhere else: no Luxon dependency, and an accessible calendar
+component for five frameworks on top of the date maths. Both are MIT.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the workflow, project layout, and how versions and releases work.
