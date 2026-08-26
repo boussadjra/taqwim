@@ -62,6 +62,29 @@ export default defineConfig({
        */
       dedupe: ['vue', 'react', 'react-dom', 'svelte', 'solid-js'],
     },
+    /*
+     * `date-fns` is reached only from inside the workspace packages —
+     * `packages/core/dist/index.mjs` imports it, and Vite serves that file
+     * over `/@fs/` because it is a linked dependency living outside the docs
+     * root. Vite's startup scan never walks it, so the bare specifier is first
+     * seen when a browser asks for the module. The rewrite Vite emits points
+     * at `/node_modules/.vite/deps/date-fns.js?v=<hash>`, a file the
+     * optimizer has not produced, and the request comes back 504.
+     *
+     * A 504 there is not a warning in a corner. It rejects the dynamic import
+     * of the island's component, so every calendar on the site rendered its
+     * server HTML and then never hydrated: clicking a date did nothing, on
+     * every page, in every framework, with a clean console — Astro swallows
+     * the failure inside its hydration path.
+     *
+     * Naming it here pre-bundles it at server start, with the same hash
+     * everything else gets. The `a > b` form is Vite's syntax for "resolve b
+     * from a", which is what a pnpm workspace needs: `date-fns` is not a
+     * dependency of the docs and does not resolve from this directory.
+     */
+    optimizeDeps: {
+      include: ['@taqwim/core > date-fns'],
+    },
   },
   integrations: [
     /*
