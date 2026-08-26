@@ -17,8 +17,29 @@ type ButtonProps = Omit<JSX.ButtonHTMLAttributes<HTMLButtonElement>, 'children' 
  * would read them once and lose reactivity.
  */
 
-function renderChildren<T>(children: JSX.Element | ((props: T) => JSX.Element) | undefined, props: T): JSX.Element {
-  return typeof children === 'function' ? (children as (props: T) => JSX.Element)(props) : children
+/*
+ * `props` is an accessor, not a value, and that is the whole point.
+ *
+ * Every call site sits inside a JSX expression, which Solid compiles into a
+ * tracked computation. Passing `month()` or `state().weekDays` evaluates the
+ * signal *to build the argument*, which subscribes the computation to it — so
+ * every store change threw the subtree away and built a new one, even for the
+ * common case where `children` is plain JSX and the argument is never used.
+ *
+ * For the grid that was not a performance detail. A browser focuses a button
+ * before it clicks it, the focus handler calls `store.focusDate`, and Solid
+ * delegates `click` to the document: the click was dispatched at a button that
+ * had already been replaced, and selection by mouse did not work at all.
+ *
+ * Read lazily, the argument is only built when a caller actually passed a
+ * function, and the JSX subtree is created once and then updated in place by
+ * the fine-grained bindings inside it.
+ */
+function renderChildren<T>(
+  children: JSX.Element | ((props: T) => JSX.Element) | undefined,
+  props: () => T,
+): JSX.Element {
+  return typeof children === 'function' ? (children as (props: T) => JSX.Element)(props()) : children
 }
 
 export function HijriCalendarRoot(props: HijriCalendarRootProps): JSX.Element {
@@ -67,7 +88,7 @@ export function HijriCalendarRoot(props: HijriCalendarRootProps): JSX.Element {
   return (
     <HijriCalendarContext.Provider value={{ store, state }}>
       <div ref={rootElement} {...rootProps()} {...domProps} onKeyDown={onKeyDown}>
-        {renderChildren(local.children, {
+        {renderChildren(local.children, () => ({
           get months() {
             return state().months
           },
@@ -78,7 +99,7 @@ export function HijriCalendarRoot(props: HijriCalendarRootProps): JSX.Element {
             return state()
           },
           store,
-        })}
+        }))}
 
         {/* Inlined rather than classed: the headless package must not require a stylesheet. */}
         <div
@@ -122,7 +143,7 @@ export function HijriCalendarHeading(
 
   return (
     <div data-taqwim-calendar-heading="" data-disabled={state().disabled ? '' : undefined} {...rest}>
-      {local.children === undefined ? state().headingValue : renderChildren(local.children, state().headingValue)}
+      {local.children === undefined ? state().headingValue : renderChildren(local.children, () => state().headingValue)}
     </div>
   )
 }
@@ -139,7 +160,7 @@ export function HijriCalendarPrev(
 
   return (
     <button {...prevProps()} {...rest} disabled={state().isPrevDisabled} onClick={() => store.prevPage()}>
-      {renderChildren(local.children, state().isPrevDisabled)}
+      {renderChildren(local.children, () => state().isPrevDisabled)}
     </button>
   )
 }
@@ -156,7 +177,7 @@ export function HijriCalendarNext(
 
   return (
     <button {...nextProps()} {...rest} disabled={state().isNextDisabled} onClick={() => store.nextPage()}>
-      {renderChildren(local.children, state().isNextDisabled)}
+      {renderChildren(local.children, () => state().isNextDisabled)}
     </button>
   )
 }
@@ -179,14 +200,12 @@ export function HijriCalendarGrid(
   return (
     <div tabindex={-1} {...gridProps()} {...rest}>
       {/*
-        The child function is handed the accessor, not the month.
-        Passing the value would make this expression read `state()`, and Solid
-        would then discard and rebuild the entire grid on every change — which
-        breaks clicks outright, because a real browser focuses a button before
-        clicking it and Solid delegates click to the document, so the click
-        lands on a node that no longer exists.
+        `month`, not `month()`. Handing over the accessor keeps this expression
+        from reading the store, so the grid is built once and then updated in
+        place; passing the value rebuilt every cell on every state change and
+        broke selection by mouse outright. See `renderChildren` above.
       */}
-      {renderChildren(local.children, month())}
+      {renderChildren(local.children, month)}
     </div>
   )
 }
@@ -201,7 +220,7 @@ export function HijriCalendarGridHead(
   // from assistive technology rather than read out twice.
   return (
     <div aria-hidden="true" data-taqwim-calendar-grid-head="" {...rest}>
-      {renderChildren(local.children, state().weekDays)}
+      {renderChildren(local.children, () => state().weekDays)}
     </div>
   )
 }
@@ -293,7 +312,7 @@ export function HijriCalendarCellTrigger(
     <button {...triggerProps()} {...rest} onClick={onClick} onFocus={onFocus}>
       {local.children === undefined
         ? dayValue()
-        : renderChildren(local.children, { dayValue: dayValue(), day: local.day })}
+        : renderChildren(local.children, () => ({ dayValue: dayValue(), day: local.day }))}
     </button>
   )
 }

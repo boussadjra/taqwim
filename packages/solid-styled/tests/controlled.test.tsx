@@ -46,26 +46,16 @@ describe('selection with a controlled value', () => {
   })
 
   /*
-   * A known defect, asserted rather than hidden. `it.fails` keeps the suite
-   * green today and turns it red the moment this starts working — at which
-   * point drop the `.fails` and the entry in e2e/KNOWN-GAPS.md.
+   * The regression test for the defect that made Solid the odd adapter out:
+   * clicking a date did nothing in a real browser while every jsdom test
+   * passed, because `fireEvent.click` sends no focus.
    *
-   * `HijriCalendarGrid` renders `renderChildren(local.children, month())`,
-   * which reads the store snapshot, so Solid discards and rebuilds the whole
-   * grid on every change. A real browser focuses a button before it clicks it,
-   * that focus is itself a state change, and Solid delegates click to the
-   * document — so the click is dispatched at a node that has already been
-   * replaced and the handler never runs. The test above passes only because it
-   * looks the cell up again; this one holds the original reference, the way a
-   * real pointer does. jsdom's `fireEvent.click` sends no focus at all, which
-   * is why every other unit test misses this.
-   *
-   * The fix is to hand the child function an accessor instead of a value. That
-   * cannot be done while the render prop is `children`: Solid resolves children
-   * by calling them with no arguments. It needs the render props to move to
-   * named props, which is an API change rather than a patch.
+   * The test above looks the cell up again after focusing it, so it passes
+   * either way. This one holds the original reference, which is what a pointer
+   * does — and it fails the moment `HijriCalendarGrid` starts rebuilding its
+   * subtree on a state change again.
    */
-  it.fails('keeps a click working on a cell reference held across a focus', () => {
+  it('keeps a click working on a cell reference held across a focus', () => {
     const value = renderControlled()
 
     const cell = dayTrigger(12)

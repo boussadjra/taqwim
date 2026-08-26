@@ -126,13 +126,6 @@ Cell trigger `[data-taqwim-calendar-cell-trigger]`, with `data-selected`, `data-
 
 [`@taqwim/themes`](../themes) is a ready-made stylesheet over exactly these.
 
-## Known issue
-
-Clicking a day can fail to register: focusing a cell is a state change, that
-rebuilds the grid, and Solid delegates `click` to the document — so the click
-lands on a node that has already been replaced. See
-[`e2e/KNOWN-GAPS.md`](../../e2e/KNOWN-GAPS.md) for the analysis and the fix.
-
 ## License
 
 MIT

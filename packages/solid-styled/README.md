@@ -62,11 +62,6 @@ Everything [`@taqwim/solid`](../solid)'s root accepts, plus:
 
 `HijriDatePicker` adds `format` (default `'iYYYY-iMM-iDD'`), `inputPlaceholder`, `label` and `editable`. It accepts typed dates in `iYYYY-MM-DD` or `DD-MM-iYYYY`, with `/` or `-`; unparseable text reverts rather than clearing the selection.
 
-## Known issue
-
-Clicking a day can fail to register. See
-[`e2e/KNOWN-GAPS.md`](../../e2e/KNOWN-GAPS.md).
-
 ## License
 
 MIT

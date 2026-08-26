@@ -78,4 +78,4 @@ Node >= 20. Builds use `tsdown`, except Angular (`ngc`, partial compilation) and
 
 ## Known gaps
 
-Recorded in `e2e/KNOWN-GAPS.md` rather than worked around: Solid drops clicks (focusing a cell rebuilds the grid), and Angular has no DOM-level coverage (the Analog Vite plugin cannot compile it under Vite 8). Do not "fix" the shared spec to hide either.
+Recorded in `e2e/KNOWN-GAPS.md` rather than worked around: Angular has no DOM-level coverage (the Analog Vite plugin cannot compile it under Vite 8). Do not "fix" the shared spec to hide it.

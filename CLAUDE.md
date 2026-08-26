@@ -93,7 +93,7 @@ The five adapters deliberately advertise the same prop names, and `e2e/specs/cal
 
 The unit suites are near-identical files across adapters for the same reason. **Port a change across all five, tests included.**
 
-Where an adapter cannot pass, it goes in `e2e/KNOWN-GAPS.md` with a real diagnosis — never worked around in the spec or quietly skipped. Two gaps are open now: Solid drops clicks (focusing a cell rebuilds the grid, and Solid delegates click to the document), and Angular has no DOM-level coverage (`@analogjs/vite-plugin-angular` cannot compile it under Vite 8).
+Where an adapter cannot pass, it goes in `e2e/KNOWN-GAPS.md` with a real diagnosis — never worked around in the spec or quietly skipped. One gap is open now: Angular has no DOM-level coverage (`@analogjs/vite-plugin-angular` cannot compile it under Vite 8). Solid used to drop clicks and no longer does; all twenty-eight specs pass on all four of the projects in the default run.
 
 ### `@taqwim/core`
 

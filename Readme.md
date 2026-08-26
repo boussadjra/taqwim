@@ -128,7 +128,7 @@ Task graph, caching and cross-package dependencies are declared per package in `
 
 ### Known gaps
 
-Two are tracked openly in [`e2e/KNOWN-GAPS.md`](./e2e/KNOWN-GAPS.md): Solid drops some clicks because focusing a cell rebuilds the grid, and Angular is not yet covered by the end-to-end suite because the Analog Vite plugin cannot compile it under Vite 8.
+One is tracked openly in [`e2e/KNOWN-GAPS.md`](./e2e/KNOWN-GAPS.md): Angular is not yet covered by the end-to-end suite, because the Analog Vite plugin cannot compile it under Vite 8.
 
 ## Contributing
 
