@@ -349,6 +349,62 @@ header.header {
 
 /* === Hero === */
 
+/*
+ * The header's inset matches the content column, but only where there is no
+ * sidebar.
+ *
+ * Starlight insets the header by the panel padding, which on a documentation
+ * page is right: it puts the mark directly above the sidebar. The splash page
+ * has no sidebar, so the same 1.5rem left the mark and the section links about
+ * 70px to the left of the hero title underneath them, and the header read as a
+ * separate band bolted to the top of the page.
+ *
+ * The two rules track what `.content-panel` and `.sl-container` actually do,
+ * in Starlight's own tokens: the container is flush with the panel padding
+ * until 72rem, and only centres itself above that. Hardcoding a number instead
+ * drifts the moment either token changes — and it was already wrong at 985px,
+ * where `--sl-content-pad-x` is 1rem rather than 1.5rem.
+ *
+ * `50%` is the panel's centre only because the splash page has no sidebar, so
+ * the header and the panel are the same width. That is the same reason this is
+ * scoped to `:has(.hero)` and not applied everywhere.
+ */
+.page:has(.hero) > header.header {
+  padding-inline: var(--sl-content-pad-x);
+}
+
+@media (min-width: 72rem) {
+  .page:has(.hero) > header.header {
+    padding-inline: max(var(--sl-content-pad-x), calc(50% - var(--sl-content-width) / 2));
+  }
+}
+
+/*
+ * Search belongs with the actions, not stranded in the middle.
+ *
+ * Starlight caps the search button at 22rem and starts it at the left of its
+ * grid column. With four section links added to the title column that column
+ * grew, and the button ended up floating in open space with ~190px of nothing
+ * between it and the theme toggle. Pushing it to the end of the column groups
+ * the header into the two things it actually is: identity and navigation on
+ * one side, tools on the other.
+ *
+ * The width has to be restated. Starlight sets `width: 100%; max-width: 22rem`
+ * on the button, and `justify-content` alone leaves that resolving against a
+ * column the button no longer fills — it collapsed to its 142px content width.
+ * Same breakpoint as Starlight's own rule, because below it the button is an
+ * icon and has no business being 22rem wide.
+ */
+@media (min-width: 50rem) {
+  header .header > div:has(> site-search) {
+    justify-content: end;
+  }
+
+  header .header button[data-open-modal] {
+    width: min(22rem, 100%);
+  }
+}
+
 .hero {
   position: relative;
 }
