@@ -34,6 +34,16 @@ const FRAMEWORKS = [
 
 const DEFAULT_FRAMEWORKS = FRAMEWORKS.filter(framework => !('default' in framework) || framework.default)
 
+/*
+ * Playwright has no notion of a project that is declared but off by default, so
+ * the config reads its own command line and only declares Angular when it has
+ * been asked for by name. Filtering `webServer` alone was not enough: the
+ * Angular project still ran, against a port nothing was listening on, and plain
+ * `playwright test` reported 28 failures that said nothing about the adapter.
+ */
+const ARGV = process.argv.join(' ')
+const PROJECTS = /--project[= ]angular\b/.test(ARGV) ? FRAMEWORKS : DEFAULT_FRAMEWORKS
+
 export default defineConfig({
   testDir: './e2e/specs',
   fullyParallel: true,
@@ -47,12 +57,12 @@ export default defineConfig({
   },
 
   // Angular stays declared so it can be run on demand; only the defaults run in CI.
-  projects: FRAMEWORKS.map(({ name, port }) => ({
+  projects: PROJECTS.map(({ name, port }) => ({
     name,
     use: { baseURL: `http://localhost:${port}` },
   })),
 
-  webServer: DEFAULT_FRAMEWORKS.map(({ port, filter }) => ({
+  webServer: PROJECTS.map(({ port, filter }) => ({
     command: `pnpm --filter ${filter} exec vite --port ${port} --strictPort`,
     url: `http://localhost:${port}`,
     reuseExistingServer: !process.env.CI,
