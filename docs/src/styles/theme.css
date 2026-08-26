@@ -168,7 +168,7 @@
  * load-bearing, and it is decoration — never the only signal that a heading is
  * a heading.
  */
-.sl-markdown-content h2::after {
+.sl-markdown-content .sl-heading-wrapper.level-h2::after {
   content: '';
   display: block;
   width: 2.5rem;
