@@ -24,7 +24,7 @@ import '@taqwim/themes'
 
 Themes are selected by attribute, not by import. A page can host several at once, and switching one at runtime is a single `setAttribute` — no stylesheet swapping.
 
-Importing everything costs thirteen themes you probably do not use. To ship one:
+Importing everything costs thirty-three themes you probably do not use. To ship one:
 
 ```js
 import '@taqwim/themes/variables.css'
@@ -36,7 +36,11 @@ import '@taqwim/themes/themes/islamic.css'
 
 ### Bundled themes
 
-`cyberpunk` · `dark` · `default` · `islamic` · `luxurious` · `material` · `minimal` · `minimalist` · `modern` · `nature` · `neon` · `ocean` · `sunset`
+**Neutral** `default` · `dark` · `slate` · `stone` · `zinc` · `minimal` · `minimalist` · `material`
+
+**Brand** `rose` · `violet` · `emerald` · `amber` · `indigo` · `teal` · `crimson` · `modern` · `ocean` · `sunset` · `nature` · `neon` · `cyberpunk` · `luxurious`
+
+**Hijri & regional** `islamic` · `ramadan` · `eid` · `masjid` · `madinah` · `andalus` · `sahara` · `mihrab` · `zellige` · `qamar` · `najd`
 
 `default` restates the `:root` tokens under an explicit attribute — you only need it to opt a subtree _out_ of an ancestor's theme. `minimal` is chromeless and is the right starting point for a bespoke look.
 
@@ -57,15 +61,17 @@ Set the tokens you care about under your own attribute value:
 
 ```css
 [data-taqwim-theme='brand'] {
-  --hijri-calendar-primary: #6d28d9;
-  --hijri-calendar-primary-hover: #5b21b6;
-  --hijri-calendar-accent: #ede9fe;
-  --hijri-calendar-accent-foreground: #5b21b6;
-  --hijri-calendar-border-radius: 1rem;
+  --hc-primary: #6d28d9;
+  --hc-primary-hover: #5b21b6;
+  --hc-accent: #ede9fe;
+  --hc-accent-foreground: #5b21b6;
+  --hc-border-radius: 1rem;
 }
 ```
 
-Anything you leave out falls back to `:root`. Token names keep the `--hijri-calendar-` prefix from the pre-1.0 stylesheets, so existing overrides keep working.
+Anything you leave out falls back to `:root`.
+
+Every token is namespaced `--hc-*`. Pre-1.0 stylesheets used `--hijri-calendar-*`; if you wrote overrides against those, rename the prefix.
 
 `variables.css` also responds to `prefers-contrast: more` and `prefers-reduced-motion: reduce`, and grows the tap targets under 640px.
 

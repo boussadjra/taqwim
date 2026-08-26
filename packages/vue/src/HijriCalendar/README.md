@@ -63,8 +63,8 @@ Use themes but customize with CSS variables:
 
 ```css
 .my-tweaks {
-  --hijri-calendar-primary: #your-brand-color;
-  --hijri-calendar-border-radius: 1rem;
+  --hc-primary: #your-brand-color;
+  --hc-border-radius: 1rem;
 }
 ```
 
@@ -134,18 +134,18 @@ Use themes but customize with CSS variables:
 ```css
 :root {
   /* Core colors */
-  --hijri-calendar-background: #ffffff;
-  --hijri-calendar-foreground: #111827;
-  --hijri-calendar-border: #e5e7eb;
-  --hijri-calendar-primary: #2563eb;
+  --hc-background: #ffffff;
+  --hc-foreground: #111827;
+  --hc-border: #e5e7eb;
+  --hc-primary: #2563eb;
 
   /* Sizes */
-  --hijri-calendar-cell-size: 2rem;
-  --hijri-calendar-border-radius: 0.5rem;
+  --hc-cell-size: 2rem;
+  --hc-border-radius: 0.5rem;
 
   /* Spacing */
-  --hijri-calendar-spacing-sm: 0.5rem;
-  --hijri-calendar-spacing-md: 1rem;
+  --hc-spacing-sm: 0.5rem;
+  --hc-spacing-md: 1rem;
 
   /* And 50+ more variables for complete control */
 }

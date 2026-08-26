@@ -36,7 +36,11 @@ The stylesheet is imported for you.
 
 `theme` sets `data-taqwim-theme` on the calendar, so switching is an attribute change — no stylesheet swapping, and several themes can coexist on one page.
 
-`default` · `dark` · `modern` · `islamic` · `minimal` · `minimalist` · `neon` · `ocean` · `sunset` · `cyberpunk` · `nature` · `luxurious` · `material`
+**Neutral** `default` · `dark` · `slate` · `stone` · `zinc` · `minimal` · `minimalist` · `material`
+
+**Brand** `rose` · `violet` · `emerald` · `amber` · `indigo` · `teal` · `crimson` · `modern` · `ocean` · `sunset` · `nature` · `neon` · `cyberpunk` · `luxurious`
+
+**Hijri & regional** `islamic` · `ramadan` · `eid` · `masjid` · `madinah` · `andalus` · `sahara` · `mihrab` · `zellige` · `qamar` · `najd`
 
 `size` is orthogonal: `compact`, `default`, `large`.
 

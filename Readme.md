@@ -21,7 +21,7 @@ Thirteen packages, versioned in lockstep — an adapter and the store it binds t
 | --------------------------------------------------- | ------------------------------------------------------------------------------ |
 | [`@taqwim/core`](./packages/core)                   | Hijri ↔ Gregorian conversion, arithmetic, formatting. Framework-free           |
 | [`@taqwim/calendar-core`](./packages/calendar-core) | The calendar state machine every adapter binds to                              |
-| [`@taqwim/themes`](./packages/themes)               | Framework-free CSS: 13 themes over `data-*` attributes, plus a Tailwind preset |
+| [`@taqwim/themes`](./packages/themes)               | Framework-free CSS: 33 themes over `data-*` attributes, plus a Tailwind preset |
 
 Per framework, a headless package and a themed one built on it:
 
@@ -89,13 +89,17 @@ Themes are selected with an attribute, not by importing a different stylesheet �
 <div data-taqwim-theme="islamic">…</div>
 ```
 
-`default` · `dark` · `modern` · `islamic` · `minimal` · `minimalist` · `neon` · `ocean` · `sunset` · `cyberpunk` · `nature` · `luxurious` · `material`
+**Neutral** `default` · `dark` · `slate` · `stone` · `zinc` · `minimal` · `minimalist` · `material`
+
+**Brand** `rose` · `violet` · `emerald` · `amber` · `indigo` · `teal` · `crimson` · `modern` · `ocean` · `sunset` · `nature` · `neon` · `cyberpunk` · `luxurious`
+
+**Hijri & regional** `islamic` · `ramadan` · `eid` · `masjid` · `madinah` · `andalus` · `sahara` · `mihrab` · `zellige` · `qamar` · `najd`
 
 Each theme is ~30 token overrides; structure is written once against the `data-*` attributes the state machine emits. To restyle rather than re-theme, override the tokens under your own attribute value — see [`@taqwim/themes`](./packages/themes).
 
 ## Accessibility
 
-The grid is a real `role="grid"` with the roving tabindex a date picker is supposed to have: `Tab` enters and leaves it rather than walking 42 buttons, and arrows move within it, mirrored under `dir="rtl"`. Colour contrast and axe rules are asserted by the shared end-to-end suite on every run, not left to taste.
+The grid is a real `role="grid"` with the roving tabindex a date picker is supposed to have: `Tab` enters and leaves it rather than walking 42 buttons, and arrows move within it, mirrored under `dir="rtl"`. Every bundled theme is measured against WCAG AA by a unit test on every run, and axe checks the rendered calendar end to end — neither is left to taste.
 
 Details: **[Accessibility and keyboard](https://boussadjra.github.io/taqwim/guide/accessibility/)**.
 
