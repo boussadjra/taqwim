@@ -17,7 +17,7 @@
     "@taqwim/themes": "workspace:*",
     "@taqwim/vue": "workspace:*",
     "@taqwim/vue-styled": "workspace:*",
-    "vue": "^3.5.18",
+    "vue": "^3.5.24",
     "vue-router": "^4.5.0"
   },
   "devDependencies": {
@@ -25,9 +25,6 @@
     "@types/node": "^24.1.0",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vue/tsconfig": "^0.7.0",
-    "autoprefixer": "^10.4.19",
-    "postcss": "^8.4.38",
-    "tailwindcss": "^3.4.3",
     "typescript": "~5.9.3",
     "vite": "^8.1.5",
     "vue-tsc": "^3.0.5"

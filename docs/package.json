@@ -10,8 +10,28 @@
     "docs:preview": "astro preview"
   },
   "dependencies": {
+    "@astrojs/react": "^6.0.4",
+    "@astrojs/solid-js": "^7.0.2",
     "@astrojs/starlight": "^0.41.5",
+    "@astrojs/svelte": "^9.0.1",
+    "@astrojs/vue": "^7.0.2",
+    "@taqwim/core": "workspace:*",
+    "@taqwim/react-styled": "workspace:*",
+    "@taqwim/solid-styled": "workspace:*",
+    "@taqwim/svelte-styled": "workspace:*",
+    "@taqwim/themes": "workspace:*",
+    "@taqwim/vue-styled": "workspace:*",
     "astro": "^7.1.6",
-    "sharp": "^0.34.2"
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "sharp": "^0.34.2",
+    "solid-js": "^1.9.14",
+    "svelte": "^5.56.8",
+    "vue": "^3.5.24"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.9",
+    "@types/react-dom": "^19.1.7",
+    "typescript": "~5.9.3"
   }
 }

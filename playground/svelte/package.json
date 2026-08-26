@@ -16,10 +16,12 @@
     "@taqwim/core": "workspace:*",
     "@taqwim/svelte": "workspace:*",
     "@taqwim/svelte-styled": "workspace:*",
+    "@taqwim/themes": "workspace:*",
     "svelte": "^5.56.8"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^7.2.0",
+    "svelte-check": "^4.7.4",
     "typescript": "~5.9.3",
     "vite": "^8.1.5"
   }

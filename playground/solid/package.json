@@ -16,6 +16,7 @@
     "@taqwim/core": "workspace:*",
     "@taqwim/solid": "workspace:*",
     "@taqwim/solid-styled": "workspace:*",
+    "@taqwim/themes": "workspace:*",
     "solid-js": "^1.9.14"
   },
   "devDependencies": {
