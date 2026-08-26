@@ -1,0 +1,26 @@
+/* Ramadan — night sky and lantern gold. */
+[data-taqwim-theme='ramadan'] {
+  --hc-background: linear-gradient(135deg, #1b1035 0%, #241546 100%);
+  --hc-foreground: #f6f2ff;
+  --hc-border: 1px solid #4c3a7a;
+  --hc-border-radius: 0.75rem;
+  --hc-shadow: 0 10px 30px rgb(27 16 53 / 0.45);
+
+  --hc-primary: #f0c75e;
+  --hc-primary-foreground: #2a1a05;
+  --hc-primary-hover: #f7d98a;
+
+  --hc-secondary: rgb(240 199 94 / 0.16);
+  --hc-secondary-foreground: #f7d98a;
+  --hc-secondary-hover: rgb(240 199 94 / 0.28);
+
+  --hc-accent: rgb(240 199 94 / 0.22);
+  --hc-accent-foreground: #f7d98a;
+
+  --hc-muted: rgb(20 11 40 / 0.85);
+  --hc-muted-foreground: rgb(246 242 255 / 0.88);
+
+  --hc-header-border: 1px solid rgb(240 199 94 / 0.3);
+  --hc-focus-ring-color: #f0c75e;
+  --hc-unavailable: #fca5a5;
+}

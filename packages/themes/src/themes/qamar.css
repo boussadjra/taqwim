@@ -1,0 +1,26 @@
+/* Qamar — moonlight on a night sky. */
+[data-taqwim-theme='qamar'] {
+  --hc-background: linear-gradient(135deg, #0e1626 0%, #16203a 100%);
+  --hc-foreground: #eaf0fb;
+  --hc-border: 1px solid #35486e;
+  --hc-border-radius: 0.75rem;
+  --hc-shadow: 0 10px 30px rgb(14 22 38 / 0.5);
+
+  --hc-primary: #a5c0e8;
+  --hc-primary-foreground: #0b1220;
+  --hc-primary-hover: #c3d6f2;
+
+  --hc-secondary: rgb(165 192 232 / 0.16);
+  --hc-secondary-foreground: #c3d6f2;
+  --hc-secondary-hover: rgb(165 192 232 / 0.28);
+
+  --hc-accent: rgb(165 192 232 / 0.22);
+  --hc-accent-foreground: #c3d6f2;
+
+  --hc-muted: rgb(10 16 30 / 0.85);
+  --hc-muted-foreground: rgb(234 240 251 / 0.88);
+
+  --hc-header-border: 1px solid rgb(165 192 232 / 0.3);
+  --hc-focus-ring-color: #a5c0e8;
+  --hc-unavailable: #fca5a5;
+}

@@ -1,0 +1,24 @@
+/* Andalus — Cordoba terracotta on ivory. */
+[data-taqwim-theme='andalus'] {
+  --hc-background: #ffffff;
+  --hc-foreground: #33190e;
+  --hc-border: 1px solid #f3d0bc;
+  --hc-border-radius: 0.5rem;
+  --hc-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+  --hc-primary: #8f3717;
+  --hc-primary-foreground: #ffffff;
+  --hc-primary-hover: #722c12;
+
+  --hc-secondary: #fbe4d8;
+  --hc-secondary-foreground: #722c12;
+  --hc-secondary-hover: #f3d0bc;
+
+  --hc-accent: #fbe4d8;
+  --hc-accent-foreground: #57210e;
+
+  --hc-muted: #fffaf2;
+  --hc-muted-foreground: #8f3717;
+
+  --hc-header-border: 1px solid #f3d0bc;
+}

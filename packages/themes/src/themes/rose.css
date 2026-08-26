@@ -1,0 +1,24 @@
+/* Rose — soft red. */
+[data-taqwim-theme='rose'] {
+  --hc-background: #ffffff;
+  --hc-foreground: #1f1114;
+  --hc-border: 1px solid #fecdd3;
+  --hc-border-radius: 0.5rem;
+  --hc-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+  --hc-primary: #be123c;
+  --hc-primary-foreground: #ffffff;
+  --hc-primary-hover: #9f1239;
+
+  --hc-secondary: #ffe4e6;
+  --hc-secondary-foreground: #9f1239;
+  --hc-secondary-hover: #fecdd3;
+
+  --hc-accent: #ffe4e6;
+  --hc-accent-foreground: #881337;
+
+  --hc-muted: #fff1f2;
+  --hc-muted-foreground: #9f1239;
+
+  --hc-header-border: 1px solid #fecdd3;
+}

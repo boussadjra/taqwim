@@ -1,0 +1,24 @@
+/* Zellige — cobalt tilework on white. */
+[data-taqwim-theme='zellige'] {
+  --hc-background: #ffffff;
+  --hc-foreground: #10203a;
+  --hc-border: 1px solid #bcd8f2;
+  --hc-border-radius: 0.5rem;
+  --hc-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+  --hc-primary: #0d4a8c;
+  --hc-primary-foreground: #ffffff;
+  --hc-primary-hover: #0a3a6e;
+
+  --hc-secondary: #dbeafe;
+  --hc-secondary-foreground: #0a3a6e;
+  --hc-secondary-hover: #bcd8f2;
+
+  --hc-accent: #dbeafe;
+  --hc-accent-foreground: #082c53;
+
+  --hc-muted: #f2f7fd;
+  --hc-muted-foreground: #0d4a8c;
+
+  --hc-header-border: 1px solid #bcd8f2;
+}

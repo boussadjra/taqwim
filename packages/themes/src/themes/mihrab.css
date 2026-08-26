@@ -1,0 +1,26 @@
+/* Mihrab — prayer-niche indigo and brass. */
+[data-taqwim-theme='mihrab'] {
+  --hc-background: linear-gradient(135deg, #141a33 0%, #1d2547 100%);
+  --hc-foreground: #eef1ff;
+  --hc-border: 1px solid #3d4878;
+  --hc-border-radius: 0.75rem;
+  --hc-shadow: 0 10px 30px rgb(20 26 51 / 0.45);
+
+  --hc-primary: #c9a227;
+  --hc-primary-foreground: #150f02;
+  --hc-primary-hover: #ddb949;
+
+  --hc-secondary: rgb(201 162 39 / 0.16);
+  --hc-secondary-foreground: #ddb949;
+  --hc-secondary-hover: rgb(201 162 39 / 0.28);
+
+  --hc-accent: rgb(201 162 39 / 0.22);
+  --hc-accent-foreground: #ddb949;
+
+  --hc-muted: rgb(15 20 40 / 0.85);
+  --hc-muted-foreground: rgb(238 241 255 / 0.88);
+
+  --hc-header-border: 1px solid rgb(201 162 39 / 0.3);
+  --hc-focus-ring-color: #c9a227;
+  --hc-unavailable: #fca5a5;
+}

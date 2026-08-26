@@ -1,0 +1,24 @@
+/* Eid — festive green on white. */
+[data-taqwim-theme='eid'] {
+  --hc-background: #ffffff;
+  --hc-foreground: #10241a;
+  --hc-border: 1px solid #bbf7d0;
+  --hc-border-radius: 0.5rem;
+  --hc-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+  --hc-primary: #15803d;
+  --hc-primary-foreground: #ffffff;
+  --hc-primary-hover: #166534;
+
+  --hc-secondary: #dcfce7;
+  --hc-secondary-foreground: #166534;
+  --hc-secondary-hover: #bbf7d0;
+
+  --hc-accent: #dcfce7;
+  --hc-accent-foreground: #14532d;
+
+  --hc-muted: #f0fdf4;
+  --hc-muted-foreground: #15803d;
+
+  --hc-header-border: 1px solid #bbf7d0;
+}

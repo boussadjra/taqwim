@@ -1,0 +1,24 @@
+/* Sahara — dune beige and sun amber. */
+[data-taqwim-theme='sahara'] {
+  --hc-background: #ffffff;
+  --hc-foreground: #2b2113;
+  --hc-border: 1px solid #ecd9ac;
+  --hc-border-radius: 0.5rem;
+  --hc-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+  --hc-primary: #8a4d05;
+  --hc-primary-foreground: #ffffff;
+  --hc-primary-hover: #6d3d04;
+
+  --hc-secondary: #f7ecd2;
+  --hc-secondary-foreground: #6d3d04;
+  --hc-secondary-hover: #ecd9ac;
+
+  --hc-accent: #f7ecd2;
+  --hc-accent-foreground: #512d03;
+
+  --hc-muted: #fdf6e9;
+  --hc-muted-foreground: #8a4d05;
+
+  --hc-header-border: 1px solid #ecd9ac;
+}

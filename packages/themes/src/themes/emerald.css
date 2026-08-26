@@ -1,0 +1,24 @@
+/* Emerald — fresh green. */
+[data-taqwim-theme='emerald'] {
+  --hc-background: #ffffff;
+  --hc-foreground: #0b1f18;
+  --hc-border: 1px solid #a7f3d0;
+  --hc-border-radius: 0.5rem;
+  --hc-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+  --hc-primary: #047857;
+  --hc-primary-foreground: #ffffff;
+  --hc-primary-hover: #065f46;
+
+  --hc-secondary: #d1fae5;
+  --hc-secondary-foreground: #065f46;
+  --hc-secondary-hover: #a7f3d0;
+
+  --hc-accent: #d1fae5;
+  --hc-accent-foreground: #064e3b;
+
+  --hc-muted: #ecfdf5;
+  --hc-muted-foreground: #047857;
+
+  --hc-header-border: 1px solid #a7f3d0;
+}

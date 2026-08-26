@@ -1,0 +1,24 @@
+/* Crimson — deep red. */
+[data-taqwim-theme='crimson'] {
+  --hc-background: #ffffff;
+  --hc-foreground: #20090f;
+  --hc-border: 1px solid #ffc9d4;
+  --hc-border-radius: 0.5rem;
+  --hc-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+  --hc-primary: #a4133c;
+  --hc-primary-foreground: #ffffff;
+  --hc-primary-hover: #800f30;
+
+  --hc-secondary: #ffe0e6;
+  --hc-secondary-foreground: #800f30;
+  --hc-secondary-hover: #ffc9d4;
+
+  --hc-accent: #ffe0e6;
+  --hc-accent-foreground: #6b0c28;
+
+  --hc-muted: #fff5f7;
+  --hc-muted-foreground: #8a1538;
+
+  --hc-header-border: 1px solid #ffc9d4;
+}

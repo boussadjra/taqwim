@@ -1,0 +1,24 @@
+/* Violet — purple, for a bolder brand. */
+[data-taqwim-theme='violet'] {
+  --hc-background: #ffffff;
+  --hc-foreground: #1b1230;
+  --hc-border: 1px solid #ddd6fe;
+  --hc-border-radius: 0.5rem;
+  --hc-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+  --hc-primary: #6d28d9;
+  --hc-primary-foreground: #ffffff;
+  --hc-primary-hover: #5b21b6;
+
+  --hc-secondary: #ede9fe;
+  --hc-secondary-foreground: #5b21b6;
+  --hc-secondary-hover: #ddd6fe;
+
+  --hc-accent: #ede9fe;
+  --hc-accent-foreground: #4c1d95;
+
+  --hc-muted: #f5f3ff;
+  --hc-muted-foreground: #6d28d9;
+
+  --hc-header-border: 1px solid #ddd6fe;
+}

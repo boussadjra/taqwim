@@ -1,0 +1,24 @@
+/* Slate — neutral grey-blue, for product UI. */
+[data-taqwim-theme='slate'] {
+  --hc-background: #ffffff;
+  --hc-foreground: #0f172a;
+  --hc-border: 1px solid #e2e8f0;
+  --hc-border-radius: 0.5rem;
+  --hc-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+  --hc-primary: #334155;
+  --hc-primary-foreground: #ffffff;
+  --hc-primary-hover: #1e293b;
+
+  --hc-secondary: #f1f5f9;
+  --hc-secondary-foreground: #1e293b;
+  --hc-secondary-hover: #e2e8f0;
+
+  --hc-accent: #f1f5f9;
+  --hc-accent-foreground: #0f172a;
+
+  --hc-muted: #f8fafc;
+  --hc-muted-foreground: #475569;
+
+  --hc-header-border: 1px solid #e2e8f0;
+}

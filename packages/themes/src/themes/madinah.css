@@ -1,0 +1,24 @@
+/* Madinah — the green dome, on white. */
+[data-taqwim-theme='madinah'] {
+  --hc-background: #ffffff;
+  --hc-foreground: #0f2019;
+  --hc-border: 1px solid #b7e4cb;
+  --hc-border-radius: 0.5rem;
+  --hc-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+  --hc-primary: #14663f;
+  --hc-primary-foreground: #ffffff;
+  --hc-primary-hover: #0f4f31;
+
+  --hc-secondary: #d8f3e4;
+  --hc-secondary-foreground: #0f4f31;
+  --hc-secondary-hover: #b7e4cb;
+
+  --hc-accent: #d8f3e4;
+  --hc-accent-foreground: #0b3b25;
+
+  --hc-muted: #f2fbf6;
+  --hc-muted-foreground: #146c43;
+
+  --hc-header-border: 1px solid #b7e4cb;
+}

@@ -1,0 +1,24 @@
+/* Amber — warm yellow. Starts a step darker than the other ramps: amber at 600 is not AA on white. */
+[data-taqwim-theme='amber'] {
+  --hc-background: #ffffff;
+  --hc-foreground: #231a09;
+  --hc-border: 1px solid #fde68a;
+  --hc-border-radius: 0.5rem;
+  --hc-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+  --hc-primary: #b45309;
+  --hc-primary-foreground: #ffffff;
+  --hc-primary-hover: #92400e;
+
+  --hc-secondary: #fef3c7;
+  --hc-secondary-foreground: #92400e;
+  --hc-secondary-hover: #fde68a;
+
+  --hc-accent: #fef3c7;
+  --hc-accent-foreground: #78350f;
+
+  --hc-muted: #fffbeb;
+  --hc-muted-foreground: #92400e;
+
+  --hc-header-border: 1px solid #fde68a;
+}

@@ -1,0 +1,24 @@
+/* Masjid — sandstone and dome teal. */
+[data-taqwim-theme='masjid'] {
+  --hc-background: #ffffff;
+  --hc-foreground: #241b0f;
+  --hc-border: 1px solid #cfe6e6;
+  --hc-border-radius: 0.5rem;
+  --hc-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+  --hc-primary: #0e5f5f;
+  --hc-primary-foreground: #ffffff;
+  --hc-primary-hover: #0a4a4a;
+
+  --hc-secondary: #d9f0f0;
+  --hc-secondary-foreground: #0a4a4a;
+  --hc-secondary-hover: #cfe6e6;
+
+  --hc-accent: #d9f0f0;
+  --hc-accent-foreground: #073737;
+
+  --hc-muted: #fdfbf5;
+  --hc-muted-foreground: #0e5f5f;
+
+  --hc-header-border: 1px solid #cfe6e6;
+}

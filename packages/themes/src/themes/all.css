@@ -3,19 +3,39 @@
  *
  * Convenient for docs, playgrounds and runtime theme switchers. Applications
  * that ship a single theme should import just that one file instead — each
- * theme is only ~30 declarations, but there is no reason to send thirteen.
+ * theme is only ~30 declarations, but there is no reason to send 33.
  */
 
+@import './amber.css';
+@import './andalus.css';
+@import './crimson.css';
 @import './cyberpunk.css';
 @import './dark.css';
 @import './default.css';
+@import './eid.css';
+@import './emerald.css';
+@import './indigo.css';
 @import './islamic.css';
 @import './luxurious.css';
+@import './madinah.css';
+@import './masjid.css';
 @import './material.css';
+@import './mihrab.css';
 @import './minimal.css';
 @import './minimalist.css';
 @import './modern.css';
+@import './najd.css';
 @import './nature.css';
 @import './neon.css';
 @import './ocean.css';
+@import './qamar.css';
+@import './ramadan.css';
+@import './rose.css';
+@import './sahara.css';
+@import './slate.css';
+@import './stone.css';
 @import './sunset.css';
+@import './teal.css';
+@import './violet.css';
+@import './zellige.css';
+@import './zinc.css';

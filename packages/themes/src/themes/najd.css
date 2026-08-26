@@ -1,0 +1,24 @@
+/* Najd — Najdi clay on parchment. */
+[data-taqwim-theme='najd'] {
+  --hc-background: #ffffff;
+  --hc-foreground: #2a1c10;
+  --hc-border: 1px solid #e8cdb4;
+  --hc-border-radius: 0.5rem;
+  --hc-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+  --hc-primary: #8a4b1f;
+  --hc-primary-foreground: #ffffff;
+  --hc-primary-hover: #6e3b18;
+
+  --hc-secondary: #f6e5d5;
+  --hc-secondary-foreground: #6e3b18;
+  --hc-secondary-hover: #e8cdb4;
+
+  --hc-accent: #f6e5d5;
+  --hc-accent-foreground: #522c12;
+
+  --hc-muted: #fffdf9;
+  --hc-muted-foreground: #8a4b1f;
+
+  --hc-header-border: 1px solid #e8cdb4;
+}

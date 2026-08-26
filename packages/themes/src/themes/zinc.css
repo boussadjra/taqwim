@@ -1,0 +1,24 @@
+/* Zinc — cool neutral. */
+[data-taqwim-theme='zinc'] {
+  --hc-background: #ffffff;
+  --hc-foreground: #18181b;
+  --hc-border: 1px solid #e4e4e7;
+  --hc-border-radius: 0.5rem;
+  --hc-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+  --hc-primary: #3f3f46;
+  --hc-primary-foreground: #ffffff;
+  --hc-primary-hover: #27272a;
+
+  --hc-secondary: #f4f4f5;
+  --hc-secondary-foreground: #27272a;
+  --hc-secondary-hover: #e4e4e7;
+
+  --hc-accent: #f4f4f5;
+  --hc-accent-foreground: #18181b;
+
+  --hc-muted: #fafafa;
+  --hc-muted-foreground: #52525b;
+
+  --hc-header-border: 1px solid #e4e4e7;
+}
