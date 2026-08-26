@@ -14,6 +14,7 @@ The workspace runs on [Vite+](https://vite.plus) (`vp`), not on npm scripts.
 vp run -r build                  # every package, in dependency order
 vp run -F @taqwim/vue build      # one package (-F is a filter)
 vp run -r test
+vp run -r type-check             # tsc / vue-tsc / svelte-check against every app and package
 vp check                         # lint + format + type-check, all in one
 vp check --fix
 vp run -r verify-package         # publint + attw against the packable output
@@ -22,6 +23,11 @@ playwright test --project=angular   # Angular is declared but not in the default
 ```
 
 Root `package.json` scripts (`pnpm build`, `pnpm test`, `pnpm check`, `pnpm docs:dev`, …) are thin wrappers over these.
+
+`vp check` and `vp run -r type-check` are not the same thing. The first is oxc's
+linter and formatter over the whole tree; the second is the real compiler, per
+package, and it is the only one that reads `.vue` and `.svelte` templates or
+resolves a `@taqwim/*` import against what that package actually exports.
 
 ### Running a single test
 
@@ -119,3 +125,11 @@ Changesets are still the changelog — **add one with any PR that changes publis
 - Conventional Commits (commitlint enforces); `vp check --fix` runs on staged files via husky
 - Comments explain _why_, especially where something looks odd — match the density of the surrounding file
 - `e2e/KNOWN-GAPS.md` is load-bearing documentation, not a scratchpad: keep its diagnoses accurate
+
+## Working agreement
+
+**Do not commit, and do not create branches.** Leave changes in the working
+tree for the user to review and commit themselves. This holds even when a task
+looks finished and even in autonomous/auto mode — staging or committing on
+their behalf takes the review step away from them. Run `git status`/`git diff`
+freely; stop before `git add`, `git commit`, `git checkout -b` and `git push`.
