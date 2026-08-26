@@ -75,8 +75,9 @@ attribute, so a page can host several themes at once and switch at runtime.
 + <HijriCalendar theme="islamic" />
 ```
 
-Custom-property names keep the `--hijri-calendar-` prefix, so overrides you
-already wrote still work. See [Theming](/taqwim/guide/theming/).
+Custom properties were renamed from `--hijri-calendar-*` to `--hc-*`. If you
+overrode any, rename the prefix — the token names after it are unchanged.
+See [Theming](/taqwim/guide/theming/).
 
 ## Props that used to do nothing now work
 

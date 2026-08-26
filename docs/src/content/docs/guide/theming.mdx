@@ -3,9 +3,15 @@ title: Theming
 description: Switch themes with an attribute, or build your own from the token contract.
 ---
 
+import ThemeGallery from '../../../components/demos/vue/ThemeGallery.vue'
+
 `@taqwim/themes` is a plain CSS package. It knows nothing about any framework —
 every selector keys off the `data-*` attributes `@taqwim/calendar-core` emits, so
 one stylesheet serves all five adapters.
+
+## All thirty-three, live
+
+<ThemeGallery client:visible />
 
 ## Switching themes
 
@@ -19,15 +25,20 @@ switching costs a single `setAttribute`.
 </div>
 ```
 
-Bundled: `default` · `dark` · `modern` · `islamic` · `minimal` · `minimalist` ·
-`neon` · `ocean` · `sunset` · `cyberpunk` · `nature` · `luxurious` · `material`.
+Thirty-three are bundled:
+
+**Neutral** `default` · `dark` · `slate` · `stone` · `zinc` · `minimal` · `minimalist` · `material`
+
+**Brand** `rose` · `violet` · `emerald` · `amber` · `indigo` · `teal` · `crimson` · `modern` · `ocean` · `sunset` · `nature` · `neon` · `cyberpunk` · `luxurious`
+
+**Hijri & regional** `islamic` · `ramadan` · `eid` · `masjid` · `madinah` · `andalus` · `sahara` · `mihrab` · `zellige` · `qamar` · `najd`
 
 `size` is orthogonal — `compact`, `default`, `large` — and sets
 `data-taqwim-size`. A theme sets colours; a size sets metrics; they compose.
 
 ## Loading less
 
-Importing `@taqwim/themes` brings in all thirteen. To ship one:
+Importing `@taqwim/themes` brings in all thirty-three. To ship one:
 
 ```js
 import '@taqwim/themes/variables.css'
@@ -44,11 +55,11 @@ out falls back to `:root`.
 
 ```css
 [data-taqwim-theme='brand'] {
-  --hijri-calendar-primary: #6d28d9;
-  --hijri-calendar-primary-hover: #5b21b6;
-  --hijri-calendar-accent: #ede9fe;
-  --hijri-calendar-accent-foreground: #5b21b6;
-  --hijri-calendar-border-radius: 1rem;
+  --hc-primary: #6d28d9;
+  --hc-primary-hover: #5b21b6;
+  --hc-accent: #ede9fe;
+  --hc-accent-foreground: #5b21b6;
+  --hc-border-radius: 1rem;
 }
 ```
 
@@ -57,10 +68,15 @@ once in `core.css`, which contains no literal colour — a test fails the build 
 one appears.
 
 :::caution[Check your contrast]
-The bundled themes meet WCAG AA, and axe verifies it on every run. If you write
-your own, check `muted-foreground` and `outside-month` against your surface —
-those are the two that fail most easily, and the two that failed here before the
-end-to-end suite caught them.
+Every bundled theme except `minimal` is measured against WCAG AA on every run.
+`packages/themes/tests/contrast.test.ts` resolves each text-on-surface pair
+`core.css` produces — following `var()` chains, compositing translucent layers
+and sampling along gradients — and fails below 4.5:1, or 3:1 for the focus ring.
+`minimal` is exempt on purpose: it inherits the host page, so its contrast is
+yours to check. axe additionally checks the rendered `default` theme.
+
+If you write your own, `muted-foreground` and `outside-month` against your
+surface are the two that fail most easily.
 :::
 
 See the full list under [Design tokens](/taqwim/reference/tokens/).

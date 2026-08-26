@@ -17,6 +17,13 @@ hero:
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components'
+import FrameworkSwitcher from '../../components/FrameworkSwitcher.astro'
+import LiveCalendar from '../../components/LiveCalendar.astro'
+
+<div class="home-demo not-content">
+  <FrameworkSwitcher />
+  <LiveCalendar theme="islamic" />
+</div>
 
 <CardGrid stagger>
   <Card title="One implementation" icon="seti:config">
@@ -31,8 +38,8 @@ import { Card, CardGrid } from '@astrojs/starlight/components'
 </Card>
 
 <Card title="Themed, or not at all" icon="puzzle">
-  The headless packages ship no CSS. `@taqwim/themes` adds thirteen themes over a custom-property contract, switchable
-  at runtime with one attribute.
+  The headless packages ship no CSS. `@taqwim/themes` adds thirty-three themes over a custom-property contract,
+  switchable at runtime with one attribute.
 </Card>
 
   <Card title="Umm al-Qura, correctly" icon="star">

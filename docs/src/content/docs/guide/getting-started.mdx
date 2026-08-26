@@ -4,19 +4,57 @@ description: Install Taqwim and render your first Hijri calendar.
 ---
 
 import { Tabs, TabItem } from '@astrojs/starlight/components'
+import LiveCalendar from '../../../components/LiveCalendar.astro'
+import LiveDatePicker from '../../../components/LiveDatePicker.astro'
 
 Taqwim is a set of packages, not one. Pick the pair that matches your framework:
 a **headless** package for behaviour and accessibility, and a **styled** package
 if you want it to look like a calendar out of the box.
 
+This is the real component from the real package — the same one the code below
+installs. The buttons above the page switch every example on it, this one
+included.
+
+<LiveCalendar />
+
 ## Install
 
 <Tabs syncKey="framework">
-  <TabItem label="Vue">```sh pnpm add @taqwim/vue-styled@alpha ```</TabItem>
-  <TabItem label="React">```sh pnpm add @taqwim/react-styled@alpha ```</TabItem>
-  <TabItem label="Svelte">```sh pnpm add @taqwim/svelte-styled@alpha ```</TabItem>
-  <TabItem label="Solid">```sh pnpm add @taqwim/solid-styled@alpha ```</TabItem>
-  <TabItem label="Angular">```sh pnpm add @taqwim/angular-styled@alpha ```</TabItem>
+  <TabItem label="Vue">
+
+```sh
+pnpm add @taqwim/vue-styled@alpha
+```
+
+  </TabItem>
+  <TabItem label="React">
+
+```sh
+pnpm add @taqwim/react-styled@alpha
+```
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+```sh
+pnpm add @taqwim/svelte-styled@alpha
+```
+
+  </TabItem>
+  <TabItem label="Solid">
+
+```sh
+pnpm add @taqwim/solid-styled@alpha
+```
+
+  </TabItem>
+  <TabItem label="Angular">
+
+```sh
+pnpm add @taqwim/angular-styled@alpha
+```
+
+  </TabItem>
 </Tabs>
 
 Each styled package pulls in its headless sibling and `@taqwim/themes`, so that
@@ -102,6 +140,13 @@ export class Example {
 
   </TabItem>
 </Tabs>
+
+## The date picker
+
+`HijriDatePicker` is the same calendar behind a text input. It is single-select
+by design: the input holds one formatted date.
+
+<LiveDatePicker />
 
 ## Just the date maths
 

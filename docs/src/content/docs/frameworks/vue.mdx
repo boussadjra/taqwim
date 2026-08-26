@@ -3,11 +3,23 @@ title: Vue
 description: The Vue adapter — headless primitives, the styled components, and the store hook.
 ---
 
+import CalendarDemo from '../../../components/demos/vue/CalendarDemo.vue'
+import DatePickerDemo from '../../../components/demos/vue/DatePickerDemo.vue'
+
 Two packages: `@taqwim/vue` for behaviour and accessibility with no styles, and
 `@taqwim/vue-styled` for a calendar that already looks like one.
 
 Both are thin bindings to [`@taqwim/calendar-core`](/taqwim/reference/options/).
 The state machine does the work; this package translates it into Vue.
+
+## Live
+
+Rendered by `@taqwim/vue-styled` on this page — not a recording, and not a
+different framework wearing this one's name.
+
+<CalendarDemo client:visible />
+
+<DatePickerDemo client:visible />
 
 ## Full reference
 

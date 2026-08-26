@@ -3,11 +3,23 @@ title: Svelte
 description: The Svelte adapter — headless primitives, the styled components, and the store hook.
 ---
 
+import CalendarDemo from '../../../components/demos/svelte/CalendarDemo.svelte'
+import DatePickerDemo from '../../../components/demos/svelte/DatePickerDemo.svelte'
+
 Two packages: `@taqwim/svelte` for behaviour and accessibility with no styles, and
 `@taqwim/svelte-styled` for a calendar that already looks like one.
 
 Both are thin bindings to [`@taqwim/calendar-core`](/taqwim/reference/options/).
 The state machine does the work; this package translates it into Svelte.
+
+## Live
+
+Rendered by `@taqwim/svelte-styled` on this page — not a recording, and not a
+different framework wearing this one's name.
+
+<CalendarDemo client:visible />
+
+<DatePickerDemo client:visible />
 
 ## Full reference
 

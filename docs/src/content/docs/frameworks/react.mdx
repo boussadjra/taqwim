@@ -3,11 +3,23 @@ title: React
 description: The React adapter — headless primitives, the styled components, and the store hook.
 ---
 
+import { CalendarDemo } from '../../../components/demos/react/CalendarDemo'
+import { DatePickerDemo } from '../../../components/demos/react/DatePickerDemo'
+
 Two packages: `@taqwim/react` for behaviour and accessibility with no styles, and
 `@taqwim/react-styled` for a calendar that already looks like one.
 
 Both are thin bindings to [`@taqwim/calendar-core`](/taqwim/reference/options/).
 The state machine does the work; this package translates it into React.
+
+## Live
+
+Rendered by `@taqwim/react-styled` on this page — not a recording, and not a
+different framework wearing this one's name.
+
+<CalendarDemo client:visible />
+
+<DatePickerDemo client:visible />
 
 ## Full reference
 

@@ -3,10 +3,20 @@ title: Accessibility and keyboard
 description: The keyboard model, the roving tabindex, and what is checked automatically.
 ---
 
+import KeyboardDemo from '../../../components/demos/vue/KeyboardDemo.vue'
+
 None of this existed before 1.0. The old Vue component resolved `initialFocus`
 to a `// TODO` and handled no keys at all, which made the calendar unusable
 without a mouse. It is now implemented once in `@taqwim/calendar-core` and is
 therefore identical in every framework.
+
+## Try it
+
+Every key you press is logged below. A key shown in teal is one
+`store.handleKeydown` claimed — the adapter called `preventDefault()` on it.
+Anything else fell through to the browser.
+
+<KeyboardDemo client:visible />
 
 ## Keyboard
 

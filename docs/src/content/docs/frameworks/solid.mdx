@@ -3,11 +3,23 @@ title: Solid
 description: The Solid adapter — headless primitives, the styled components, and the store hook.
 ---
 
+import { CalendarDemo } from '../../../components/demos/solid/CalendarDemo'
+import { DatePickerDemo } from '../../../components/demos/solid/DatePickerDemo'
+
 Two packages: `@taqwim/solid` for behaviour and accessibility with no styles, and
 `@taqwim/solid-styled` for a calendar that already looks like one.
 
 Both are thin bindings to [`@taqwim/calendar-core`](/taqwim/reference/options/).
 The state machine does the work; this package translates it into Solid.
+
+## Live
+
+Rendered by `@taqwim/solid-styled` on this page — not a recording, and not a
+different framework wearing this one's name.
+
+<CalendarDemo client:visible />
+
+<DatePickerDemo client:visible />
 
 ## Full reference
 
@@ -28,10 +40,17 @@ The option names are the same too — see
 frameworks is a matter of syntax, not of behaviour.
 
 :::caution[Known gap]
-Four of the twenty-eight shared end-to-end specs fail for Solid: when `value` is
-controlled and changes are handed back through `onValueChange`, the round trip
-lands one interaction late. The uncontrolled path — `defaultValue` plus
-`onValueChange` — is unaffected, as are all thirty-one of the adapter's unit
-tests. See
+Four of the twenty-eight shared end-to-end specs fail for Solid, and they fail
+in a real browser rather than only in the suite: clicking a day cell can be
+dropped. `HijriCalendarGrid` renders its children from an expression that reads
+the store snapshot, so any state change rebuilds the whole grid subtree — and a
+browser focuses a button before it clicks it, which is a state change. Solid
+delegates `click` to the document, so by the time the click is dispatched the
+button it was aimed at no longer exists.
+
+The demo above is subject to it. It is not about controlled values; an earlier
+version of this note said so and was wrong. The fix is to hand the child
+function an accessor instead of a value, which means moving the render props off
+`children` — an API change with its own pass. See
 [`e2e/KNOWN-GAPS.md`](https://github.com/boussadjra/taqwim/blob/main/e2e/KNOWN-GAPS.md).
 :::
