@@ -45,33 +45,61 @@ export function CalendarDemo(props: { theme?: HijriCalendarTheme; multiple?: boo
 
   return (
     <div class="demo not-content">
+      {/*
+        `selected` on each option, not `value` on the select alone: Solid assigns
+        the select's value before <For> has inserted the options, so the browser
+        finds no match and falls back to the first one. The controls then showed
+        "amber"/"compact" while the calendar rendered islamic/default.
+      */}
       <div class="demo-bar">
         <label class="demo-control">
           Theme
           <select value={theme()} onChange={e => setTheme(e.currentTarget.value as HijriCalendarTheme)}>
-            <For each={themeNames}>{name => <option value={name}>{name}</option>}</For>
+            <For each={themeNames}>
+              {name => (
+                <option value={name} selected={name === theme()}>
+                  {name}
+                </option>
+              )}
+            </For>
           </select>
         </label>
 
         <label class="demo-control">
           Size
           <select value={size()} onChange={e => setSize(e.currentTarget.value as HijriCalendarSize)}>
-            <For each={['compact', 'default', 'large']}>{name => <option value={name}>{name}</option>}</For>
+            <For each={['compact', 'default', 'large']}>
+              {name => (
+                <option value={name} selected={name === size()}>
+                  {name}
+                </option>
+              )}
+            </For>
           </select>
         </label>
 
         <label class="demo-control">
           Locale
           <select value={locale()} onChange={e => pickLocale(e.currentTarget.value)}>
-            <For each={['en', 'ar', 'fr']}>{name => <option value={name}>{name}</option>}</For>
+            <For each={['en', 'ar', 'fr']}>
+              {name => (
+                <option value={name} selected={name === locale()}>
+                  {name}
+                </option>
+              )}
+            </For>
           </select>
         </label>
 
         <label class="demo-control">
           Direction
           <select value={dir()} onChange={e => setDir(e.currentTarget.value as 'ltr' | 'rtl')}>
-            <option value="ltr">ltr</option>
-            <option value="rtl">rtl</option>
+            <option value="ltr" selected={dir() === 'ltr'}>
+              ltr
+            </option>
+            <option value="rtl" selected={dir() === 'rtl'}>
+              rtl
+            </option>
           </select>
         </label>
 

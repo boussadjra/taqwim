@@ -27,18 +27,36 @@ export function DatePickerDemo(props: { theme?: HijriCalendarTheme }): JSX.Eleme
 
   return (
     <div class="demo not-content">
+      {/*
+        `selected` on each option, not `value` on the select alone: Solid assigns
+        the select's value before <For> has inserted the options, so the browser
+        finds no match and falls back to the first one. The controls then showed
+        "amber"/"compact" while the calendar rendered islamic/default.
+      */}
       <div class="demo-bar">
         <label class="demo-control">
           Format
           <select value={format()} onChange={e => setFormat(e.currentTarget.value)}>
-            <For each={FORMATS}>{pattern => <option value={pattern}>{pattern}</option>}</For>
+            <For each={FORMATS}>
+              {pattern => (
+                <option value={pattern} selected={pattern === format()}>
+                  {pattern}
+                </option>
+              )}
+            </For>
           </select>
         </label>
 
         <label class="demo-control">
           Locale
           <select value={locale()} onChange={e => pickLocale(e.currentTarget.value)}>
-            <For each={['en', 'ar', 'fr']}>{name => <option value={name}>{name}</option>}</For>
+            <For each={['en', 'ar', 'fr']}>
+              {name => (
+                <option value={name} selected={name === locale()}>
+                  {name}
+                </option>
+              )}
+            </For>
           </select>
         </label>
 
