@@ -24,10 +24,15 @@ export default defineConfig({
       'docs/api/**',
       'pnpm-lock.yaml',
       /*
-       * MDX is formatted as Markdown, which rewrites `{/* … *\/}` — an MDX
-       * expression comment — into `{/_ … _/}` as if the asterisks were
-       * emphasis. That is not a style change, it is a syntax error, and it
-       * breaks the docs build rather than showing up in review.
+       * MDX is formatted as Markdown, which rewrites a *multi-line* `{/* … *\/}`
+       * expression comment into `{/_ … _/}` as if the asterisks were emphasis.
+       * That is a syntax error, not a style change, and it fails the docs build.
+       *
+       * This entry does not currently prevent it — `vp check --fix` formats
+       * `.mdx` regardless of what is ignored here, and `docs/**` and
+       * `docs/src/**` fare no better. It is kept for the day that is fixed.
+       * Until then the rule lives with the author: **keep MDX comments on one
+       * line**, which the formatter leaves alone.
        */
       '**/*.mdx',
     ],
