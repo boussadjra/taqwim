@@ -38,10 +38,17 @@
   font-size: 0.8125rem;
 }
 
+/*
+ * `min-height` is the WCAG 2.2 target-size floor (2.5.8 wants 24x24). Each
+ * control is a <label>, so the label is the target rather than the input
+ * inside it — but the label was only as tall as its 13px text, which put the
+ * whole bar under the minimum.
+ */
 .demo-control {
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  min-height: 1.5rem;
   color: var(--sl-color-gray-2);
   white-space: nowrap;
 }
@@ -57,8 +64,8 @@
 }
 
 .demo-control input[type='checkbox'] {
-  width: 0.9rem;
-  height: 0.9rem;
+  width: 1.125rem;
+  height: 1.125rem;
   accent-color: var(--brand-teal);
   cursor: pointer;
 }
@@ -119,8 +126,13 @@
   font-size: 0.8125rem;
 }
 
+/*
+ * gray-3, not gray-4: the lighter token measured 3.00:1 in dark and 2.97:1 in
+ * light against `--brand-surface-2`. "Nothing selected yet" is still text a
+ * reader has to be able to read.
+ */
 .demo-readout code[data-empty] {
-  color: var(--sl-color-gray-4);
+  color: var(--sl-color-gray-3);
 }
 
 /* === Caption === */
@@ -232,7 +244,8 @@
   color: var(--sl-color-accent-high);
 }
 
+/* Same pairing, same reason, as `code[data-empty]` above. */
 .demo-keys .demo-keys-empty {
-  color: var(--sl-color-gray-4);
+  color: var(--sl-color-gray-3);
   font-size: 0.8125rem;
 }
