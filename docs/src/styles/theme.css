@@ -20,6 +20,14 @@
   --brand-gold: #e7be0b;
   --brand-gold-deep: #8a6f00;
 
+  /*
+   * Deliberately not redefined for the light theme. It is the text colour for
+   * anything painted on a full-strength brand fill, and those fills are the
+   * same in both themes — so the pairing has one contrast ratio to verify
+   * (6.64:1 on `--brand-teal`) rather than two.
+   */
+  --brand-ink: #0d1719;
+
   --brand-radius: 0.75rem;
   --brand-radius-sm: 0.5rem;
 
@@ -74,9 +82,54 @@
 
 /* === Type === */
 
+/*
+ * Amiri sits ahead of the Latin faces in every stack rather than in one of its
+ * own. It carries no Latin glyphs worth using here, so the browser falls
+ * through to the next family for Latin text and reaches for Amiri only where
+ * Arabic actually appears — which is what makes a single stack work for a
+ * bilingual page.
+ */
 :root {
+  --sl-font:
+    'Public Sans', 'Amiri', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', 'Noto Sans', Arial,
+    sans-serif;
+  --brand-font-display: 'Literata', 'Amiri', Georgia, 'Times New Roman', serif;
+
+  /*
+   * Literata is a reading face. It holds a heading, but at the hero's 4.5rem
+   * its even stroke weight is body text scaled up — the largest word on the
+   * site had the least character. Instrument Serif is drawn for display sizes
+   * and nothing else: high stroke contrast, tight sidebearings, a single
+   * weight. It is used for the hero title alone, so the reading face still
+   * sets every heading a reader actually reads.
+   */
+  --brand-font-hero: 'Instrument Serif', 'Literata', 'Amiri', Georgia, 'Times New Roman', serif;
+
+  /*
+   * Amiri belongs in the mono stack too. Most of the Arabic on this site is
+   * inside code samples — `formatHijriDate(..., 'ar')` and its output — and a
+   * monospace stack has no Arabic, so those strings were being rendered by
+   * whatever the OS happened to substitute. Arabic is not monospaced in any
+   * meaningful sense, so nothing is lost by letting a naskh face take it while
+   * the Latin and the digits stay in the mono face.
+   */
+  --sl-font-mono:
+    ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', 'Amiri', monospace;
+
   --sl-text-h1: clamp(2.2rem, 1.4rem + 2.6vw, 3.25rem);
   --sl-text-h2: clamp(1.6rem, 1.25rem + 1.1vw, 2rem);
+}
+
+/*
+ * Serif headings against a sans body: the pairing is on a contrast axis, so
+ * the two families read as a decision rather than as two sans-serifs that
+ * failed to match. Weight 600 — Literata's bold is heavy enough to shout.
+ */
+.sl-markdown-content :is(h1, h2, h3, h4),
+.home-prose h2,
+.site-title {
+  font-family: var(--brand-font-display);
+  font-weight: 600;
 }
 
 .sl-markdown-content h1,
@@ -85,7 +138,28 @@
   letter-spacing: -0.02em;
 }
 
-.sl-markdown-content h2 {
+/*
+ * Arabic needs the line to breathe: naskh has deep descenders and the marks
+ * sit above the baseline, so the Latin body leading crowds it.
+ */
+:where([dir='rtl'], [lang='ar']) {
+  line-height: 1.9;
+}
+
+/*
+ * Both of these hang off `.sl-heading-wrapper`, not off the `h2`.
+ *
+ * Starlight wraps every markdown heading in that div and sets the heading
+ * itself to `display: inline`, so the anchor link can share the last line of
+ * text instead of wrapping alone. Two things follow, and this file got both
+ * wrong: a `display: block` pseudo-element inside an inline box forces a line
+ * break, and vertical padding on an inline box paints without moving anything.
+ *
+ * So the gold rule rendered on a line of its own and stranded the anchor icon
+ * below it — on every h2 on the site — while the padding meant to give the
+ * heading room above it did nothing at all.
+ */
+.sl-markdown-content .sl-heading-wrapper.level-h2 {
   padding-top: 0.4em;
 }
 
@@ -143,6 +217,19 @@ header.header {
   border-radius: var(--brand-radius-sm);
 }
 
+/*
+ * Starlight's heading anchors render 21px wide, just under the WCAG 2.2
+ * target-size floor of 24 (2.5.8). Widening the box leaves the glyph where it
+ * is and only grows the hit area.
+ */
+.sl-markdown-content .sl-anchor-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+}
+
 /* === Focus === */
 
 :where(a, button, input, select, summary, [tabindex]):focus-visible {
@@ -170,6 +257,12 @@ header.header {
 /* === Tables === */
 
 .sl-markdown-content table:not(:where(.not-content *)) {
+  /*
+   * `display: block` so a wide table scrolls inside itself instead of widening
+   * the page. Do not add `width: max-content` to make the header fill reach the
+   * container edge on narrow tables — it makes the element itself content-width,
+   * and every table page then scrolls horizontally at 390px.
+   */
   display: block;
   overflow-x: auto;
   border: 1px solid var(--sl-color-gray-6);

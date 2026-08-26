@@ -96,9 +96,15 @@ const FRAMEWORKS = ['vue', 'react', 'svelte', 'solid', 'angular'] as const
     color: var(--sl-color-white);
   }
 
+  /*
+   * Dark ink on the teal, not white. White on `--brand-teal` measures 2.74:1,
+   * which failed AA on every page of the site; the ink pairing is 6.64:1 and
+   * keeps the fill at full brand strength instead of dimming it to carry
+   * white text.
+   */
   .framework-switcher button[aria-pressed='true'] {
     background: var(--brand-teal);
-    color: #ffffff;
+    color: var(--brand-ink);
     font-weight: 600;
   }
 

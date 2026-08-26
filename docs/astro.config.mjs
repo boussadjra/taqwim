@@ -85,11 +85,44 @@ export default defineConfig({
     starlight({
       title: 'Taqwim',
       logo: { src: './public/logo.svg', alt: 'Taqwim' },
+      // Starlight otherwise points at /favicon.svg, which this project has never had:
+      // a 404 on every page of the site. The mark it already ships does the job.
+      favicon: '/logo.svg',
       description: 'Hijri date utilities and accessible calendar components for Vue, React, Svelte, Solid and Angular.',
       social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/boussadjra/taqwim' }],
       editLink: { baseUrl: 'https://github.com/boussadjra/taqwim/edit/main/docs/' },
       customCss: ['./src/styles/theme.css', './src/styles/demo.css'],
       head: [
+        { tag: 'link', attrs: { rel: 'preconnect', href: 'https://fonts.googleapis.com' } },
+        { tag: 'link', attrs: { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: true } },
+        {
+          /*
+           * Four faces, each doing a job the others cannot.
+           *
+           * Literata is an ebook face, drawn for long reading rather than for
+           * magazine covers, which is the register a reference work wants.
+           * Public Sans is the plainest legible sans available at 16px and
+           * carries the body without competing with the headings. Instrument
+           * Serif is the display cut, one weight, used for the hero title and
+           * nothing else — a reading face at 4.5rem is just large body text.
+           *
+           * Amiri is the one that matters: a revival of the Bulaq Press naskh
+           * cut in Cairo in 1905. The docs render Arabic month names on nearly
+           * every page, and leaving those to a system fallback while choosing
+           * carefully for the Latin would say exactly the wrong thing about
+           * whose calendar this is. Its `unicode-range` means it is only
+           * fetched when Arabic is actually on the page.
+           */
+          tag: 'link',
+          attrs: {
+            rel: 'stylesheet',
+            href:
+              'https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,600' +
+              '&family=Instrument+Serif:ital@0;1' +
+              '&family=Public+Sans:wght@400;500;600' +
+              '&family=Amiri:wght@400;700&display=swap',
+          },
+        },
         {
           /*
            * The framework choice has to land on <html> before first paint, or
@@ -137,8 +170,17 @@ export default defineConfig({
         },
         {
           label: 'API',
-          // Generated from @taqwim/core by TypeDoc; see typedoc.json.
-          items: [{ autogenerate: { directory: 'api' } }],
+          /*
+           * Generated from @taqwim/core by TypeDoc; see typedoc.json.
+           *
+           * Collapsed, because it is forty-nine pages. Expanded, it pushed the
+           * five guides and five framework pages off the top of the sidebar on
+           * every interior page — the generated reference visually outranked
+           * the written documentation. Anyone who wants a signature is
+           * searching for it, not scrolling to it.
+           */
+          collapsed: true,
+          items: [{ autogenerate: { directory: 'api', collapsed: true } }],
         },
       ],
     }),
