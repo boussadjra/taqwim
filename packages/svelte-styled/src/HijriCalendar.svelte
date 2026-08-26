@@ -21,6 +21,7 @@
   let {
     theme = 'default',
     size = 'default',
+    layout = 'default',
     showNavigation = true,
     showWeekdays = true,
     selectableHeading = true,
@@ -54,6 +55,7 @@
   {...options}
   data-taqwim-theme={theme}
   data-taqwim-size={size === 'default' ? undefined : size}
+  data-taqwim-layout={layout === 'default' ? undefined : layout}
 >
   {#snippet children({ months: visibleMonths, weekDays, state, store })}
     {@const jumpTo = (part: Partial<HijriDateObject>) => {
@@ -127,7 +129,9 @@
           {/if}
         </div>
       </div>
-    {:else}
+    {/if}
+
+    {#if !picker || layout === 'panel'}
       <div class="taqwim-calendar-months">
         {#each visibleMonths as month (month.label)}
           <HijriCalendarGrid {month}>

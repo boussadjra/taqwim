@@ -17,20 +17,13 @@ import { getLocaleData, MAX_HIJRI_YEAR, MIN_HIJRI_YEAR, type HijriDateObject } f
 import { useState, type ComponentType, type ReactNode } from 'react'
 import { ArrowLeft, ArrowRight } from './icons'
 
-export type HijriCalendarTheme =
-  | 'default'
-  | 'dark'
-  | 'modern'
-  | 'islamic'
-  | 'minimal'
-  | 'minimalist'
-  | 'neon'
-  | 'ocean'
-  | 'sunset'
-  | 'cyberpunk'
-  | 'nature'
-  | 'luxurious'
-  | 'material'
+/*
+ * Generated from the stylesheets in @taqwim/themes, so a new preset is one
+ * CSS file rather than an identical edit in all five styled packages.
+ */
+import type { HijriCalendarLayout, HijriCalendarTheme } from '@taqwim/themes/names'
+
+export type { HijriCalendarLayout, HijriCalendarTheme }
 
 export type HijriCalendarSize = 'compact' | 'default' | 'large'
 
@@ -45,6 +38,15 @@ export interface HijriCalendarProps extends Omit<HijriCalendarRootProps, 'childr
   theme?: HijriCalendarTheme
   /** @default 'default' */
   size?: HijriCalendarSize
+  /**
+   * How the calendar is arranged.
+   *
+   * Applied as `data-taqwim-layout`, orthogonal to `theme` and `size` — a
+   * theme sets colours, a size sets metrics, a layout sets arrangement.
+   * `panel` keeps the grid visible while the month/year picker is open.
+   * @default 'default'
+   */
+  layout?: HijriCalendarLayout
   /** Show the previous/next paging buttons. @default true */
   showNavigation?: boolean
   /** Show the weekday label row. @default true */
@@ -69,6 +71,7 @@ const YEARS = Array.from({ length: MAX_HIJRI_YEAR - MIN_HIJRI_YEAR + 1 }, (_, i)
 export function HijriCalendar({
   theme = 'default',
   size = 'default',
+  layout = 'default',
   showNavigation = true,
   showWeekdays = true,
   selectableHeading = true,
@@ -84,7 +87,12 @@ export function HijriCalendar({
   const NextIcon = navigationIcons?.next ?? ArrowRight
 
   return (
-    <HijriCalendarRoot {...options} data-taqwim-theme={theme} data-taqwim-size={size === 'default' ? undefined : size}>
+    <HijriCalendarRoot
+      {...options}
+      data-taqwim-theme={theme}
+      data-taqwim-size={size === 'default' ? undefined : size}
+      data-taqwim-layout={layout === 'default' ? undefined : layout}
+    >
       {({ months: visibleMonths, weekDays, state, store }) => {
         // Day 1 keeps the jump inside the target month regardless of its length.
         const jumpTo = (part: Partial<HijriDateObject>) => {
@@ -129,7 +137,7 @@ export function HijriCalendar({
               Rendered inline rather than in a portal: the theme lives on this
               element's ancestors, so a portalled panel would lose it.
             */}
-            {picker ? (
+            {picker && (
               <div className="taqwim-calendar-picker">
                 <div className="taqwim-calendar-picker-tabs">
                   <button
@@ -172,7 +180,9 @@ export function HijriCalendar({
                       ))}
                 </div>
               </div>
-            ) : (
+            )}
+
+            {(!picker || layout === 'panel') && (
               <div className="taqwim-calendar-months">
                 {visibleMonths.map(month => (
                   <HijriCalendarGrid key={month.label} month={month}>

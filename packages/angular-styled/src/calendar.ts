@@ -2,20 +2,13 @@ import { getLocaleData, MAX_HIJRI_YEAR, MIN_HIJRI_YEAR, type HijriDateObject } f
 import { TAQWIM_CALENDAR, TaqwimCalendarService, type CalendarDay, type HijriCalendarInputs } from '@taqwim/angular'
 import { Component, EventEmitter, Input, Output, computed, signal, type OnChanges } from '@angular/core'
 
-export type HijriCalendarTheme =
-  | 'default'
-  | 'dark'
-  | 'modern'
-  | 'islamic'
-  | 'minimal'
-  | 'minimalist'
-  | 'neon'
-  | 'ocean'
-  | 'sunset'
-  | 'cyberpunk'
-  | 'nature'
-  | 'luxurious'
-  | 'material'
+/*
+ * Generated from the stylesheets in @taqwim/themes, so a new preset is one
+ * CSS file rather than an identical edit in all five styled packages.
+ */
+import type { HijriCalendarLayout, HijriCalendarTheme } from '@taqwim/themes/names'
+
+export type { HijriCalendarLayout, HijriCalendarTheme }
 
 export type HijriCalendarSize = 'compact' | 'default' | 'large'
 
@@ -35,6 +28,7 @@ const YEARS = Array.from({ length: MAX_HIJRI_YEAR - MIN_HIJRI_YEAR + 1 }, (_, i)
       #root
       [attr.data-taqwim-theme]="theme"
       [attr.data-taqwim-size]="size === 'default' ? null : size"
+      [attr.data-taqwim-layout]="layout === 'default' ? null : layout"
       [defaultValue]="defaultValue"
       [value]="value"
       [defaultPlaceholder]="defaultPlaceholder"
@@ -149,7 +143,9 @@ const YEARS = Array.from({ length: MAX_HIJRI_YEAR - MIN_HIJRI_YEAR + 1 }, (_, i)
             }
           </div>
         </div>
-      } @else {
+      }
+
+      @if (!picker() || layout === 'panel') {
         <div class="taqwim-calendar-months">
           @for (month of root.months(); track month.label) {
             <taqwim-calendar-grid [month]="month">
@@ -190,6 +186,14 @@ export class HijriCalendar implements OnChanges {
    */
   @Input() theme: HijriCalendarTheme = 'default'
   @Input() size: HijriCalendarSize = 'default'
+
+  /**
+   * How the calendar is arranged.
+   *
+   * Applied as `data-taqwim-layout`, orthogonal to `theme` and `size`.
+   * `panel` keeps the grid visible while the month/year picker is open.
+   */
+  @Input() layout: HijriCalendarLayout = 'default'
   /** Show the previous/next paging buttons. */
   @Input() showNavigation = true
   /** Show the weekday label row. */

@@ -3,20 +3,13 @@ import type { CalendarDay, HijriCalendarRootProps } from '@taqwim/vue'
 import type { HijriDateObject } from '@taqwim/core'
 import type { Component } from 'vue'
 
-export type HijriCalendarTheme =
-  | 'default'
-  | 'dark'
-  | 'modern'
-  | 'islamic'
-  | 'minimal'
-  | 'minimalist'
-  | 'neon'
-  | 'ocean'
-  | 'sunset'
-  | 'cyberpunk'
-  | 'nature'
-  | 'luxurious'
-  | 'material'
+/*
+ * Generated from the stylesheets in @taqwim/themes, so a new preset is one
+ * CSS file rather than an identical edit in all five styled packages.
+ */
+import type { HijriCalendarLayout, HijriCalendarTheme } from '@taqwim/themes/names'
+
+export type { HijriCalendarLayout, HijriCalendarTheme }
 
 export type HijriCalendarSize = 'compact' | 'default' | 'large'
 
@@ -31,6 +24,15 @@ export interface HijriCalendarProps extends HijriCalendarRootProps {
   theme?: HijriCalendarTheme
   /** @default 'default' */
   size?: HijriCalendarSize
+  /**
+   * How the calendar is arranged.
+   *
+   * Applied as `data-taqwim-layout`, orthogonal to `theme` and `size` — a
+   * theme sets colours, a size sets metrics, a layout sets arrangement.
+   * `panel` keeps the grid visible while the month/year picker is open.
+   * @default 'default'
+   */
+  layout?: HijriCalendarLayout
   /** Show the previous/next paging buttons. @default true */
   showNavigation?: boolean
   /** Show the weekday label row. @default true */
@@ -75,6 +77,7 @@ import ArrowRight from './icons/ArrowRight.vue'
 const props = withDefaults(defineProps<HijriCalendarProps>(), {
   theme: 'default',
   size: 'default',
+  layout: 'default',
   showNavigation: true,
   showWeekdays: true,
   selectableHeading: true,
@@ -108,6 +111,7 @@ const rootProps = computed(() => {
   const {
     theme: _theme,
     size: _size,
+    layout: _layout,
     showNavigation: _showNavigation,
     showWeekdays: _showWeekdays,
     selectableHeading: _selectableHeading,
@@ -133,6 +137,7 @@ function jumpTo(part: Partial<HijriDateObject>, current: HijriDateObject) {
     v-bind="rootProps"
     :data-taqwim-theme="theme"
     :data-taqwim-size="size === 'default' ? undefined : size"
+    :data-taqwim-layout="layout === 'default' ? undefined : layout"
     v-slot="{ months: visibleMonths, weekDays, state, store }"
   >
     <slot name="header" :heading="state.headingValue" :prev-page="store.prevPage" :next-page="store.nextPage">
@@ -199,7 +204,7 @@ function jumpTo(part: Partial<HijriDateObject>, current: HijriDateObject) {
       </div>
     </div>
 
-    <div v-else class="taqwim-calendar-months">
+    <div v-if="!picker || layout === 'panel'" class="taqwim-calendar-months">
       <HijriCalendarGrid v-for="month in visibleMonths" :key="month.label" :month="month">
         <HijriCalendarGridHead v-if="showWeekdays">
           <HijriCalendarGridRow>

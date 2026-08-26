@@ -1,20 +1,13 @@
 import type { CalendarDay, HijriCalendarRootOptions } from '@taqwim/svelte'
 import type { Component, Snippet } from 'svelte'
 
-export type HijriCalendarTheme =
-  | 'default'
-  | 'dark'
-  | 'modern'
-  | 'islamic'
-  | 'minimal'
-  | 'minimalist'
-  | 'neon'
-  | 'ocean'
-  | 'sunset'
-  | 'cyberpunk'
-  | 'nature'
-  | 'luxurious'
-  | 'material'
+/*
+ * Generated from the stylesheets in @taqwim/themes, so a new preset is one
+ * CSS file rather than an identical edit in all five styled packages.
+ */
+import type { HijriCalendarLayout, HijriCalendarTheme } from '@taqwim/themes/names'
+
+export type { HijriCalendarLayout, HijriCalendarTheme }
 
 export type HijriCalendarSize = 'compact' | 'default' | 'large'
 
@@ -29,6 +22,14 @@ export interface HijriCalendarProps extends HijriCalendarRootOptions {
   theme?: HijriCalendarTheme
   /** @default 'default' */
   size?: HijriCalendarSize
+  /**
+   * How the calendar is arranged.
+   *
+   * Applied as `data-taqwim-layout`, orthogonal to `theme` and `size`.
+   * `panel` keeps the grid visible while the month/year picker is open.
+   * @default 'default'
+   */
+  layout?: HijriCalendarLayout
   /** Show the previous/next paging buttons. @default true */
   showNavigation?: boolean
   /** Show the weekday label row. @default true */
