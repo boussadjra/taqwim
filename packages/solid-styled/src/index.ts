@@ -2,6 +2,7 @@ import '@taqwim/themes'
 
 export {
   HijriCalendar,
+  type HijriCalendarLayout,
   type HijriCalendarProps,
   type HijriCalendarSize,
   type HijriCalendarTheme,
