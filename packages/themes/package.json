@@ -47,6 +47,11 @@
       "import": "./dist/tailwind/tokens.js",
       "default": "./dist/tailwind/tokens.js"
     },
+    "./names": {
+      "types": "./dist/names.d.ts",
+      "import": "./dist/names.js",
+      "default": "./dist/names.js"
+    },
     "./package.json": "./package.json"
   },
   "publishConfig": {
