@@ -17,7 +17,20 @@ export default defineConfig({
     arrowParens: 'avoid',
     proseWrap: 'preserve',
     endOfLine: 'lf',
-    ignore: ['**/dist/**', '**/.vitepress/cache/**', '**/test-results/**', 'docs/api/**', 'pnpm-lock.yaml'],
+    ignore: [
+      '**/dist/**',
+      '**/.vitepress/cache/**',
+      '**/test-results/**',
+      'docs/api/**',
+      'pnpm-lock.yaml',
+      /*
+       * MDX is formatted as Markdown, which rewrites `{/* … *\/}` — an MDX
+       * expression comment — into `{/_ … _/}` as if the asterisks were
+       * emphasis. That is not a style change, it is a syntax error, and it
+       * breaks the docs build rather than showing up in review.
+       */
+      '**/*.mdx',
+    ],
   },
   run: {
     // package.json scripts that aren't declared in a `tasks` map are
