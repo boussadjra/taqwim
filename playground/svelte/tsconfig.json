@@ -1,0 +1,20 @@
+{
+  "//": "Mirrors packages/svelte-styled/tsconfig.json, so the playground is held to the same rules as the adapter it exercises. Driven by svelte-check rather than tsc, which is the only way `.svelte` templates get checked at all.",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "types": [],
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["env.d.ts", "src/**/*.ts", "src/**/*.svelte"]
+}

@@ -26,6 +26,7 @@
     "test:coverage": "vp run -r test:coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
+    "type-check": "vp run -r type-check",
     "dev": "vp run -r dev",
     "check": "vp check",
     "check:fix": "vp check --fix",

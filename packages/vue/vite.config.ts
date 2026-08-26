@@ -54,6 +54,10 @@ export default defineConfig({
       'type-check': {
         command: 'vue-tsc --build --force',
         dependsOn: afterDeps,
+        // Declared so the task caches: `--build` writes a tsbuildinfo and an
+        // outDir under node_modules/.tmp, and with no `input` vp treats that
+        // as the task rewriting its own inputs and refuses to cache it.
+        input: ['src/**', 'tests/**', 'env.d.ts', 'tsconfig*.json', 'package.json'],
       },
     },
   },

@@ -11,6 +11,10 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  // Pinned like the other four, so `pnpm dev` and the Playwright project agree
+  // on the port instead of relying on Vite's default.
+  server: { port: 5173 },
+  preview: { port: 5173 },
   run: {
     tasks: {
       build: {
@@ -21,6 +25,10 @@ export default defineConfig({
       'type-check': {
         command: 'vue-tsc --build --force',
         dependsOn: afterDeps,
+        // Declared so the task caches: `--build` writes a tsbuildinfo under
+        // node_modules/.tmp, and with no `input` vp treats that as the task
+        // rewriting its own inputs and refuses to cache it.
+        input: ['src/**', 'env.d.ts', 'tsconfig*.json', 'package.json'],
       },
     },
   },

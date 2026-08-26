@@ -1,0 +1,21 @@
+{
+  "//": "Mirrors packages/solid-styled/tsconfig.json, so the playground is held to the same rules as the adapter it exercises. Scoped to src: vite.config.ts would need @types/node, and the app source is where the bugs were.",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "types": [],
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["env.d.ts", "src"]
+}
