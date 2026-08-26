@@ -1,0 +1,90 @@
+---
+/**
+ * The site title, plus the top-level links Starlight's header does not have.
+ *
+ * Overriding `SiteTitle` rather than `Header` on purpose: the header is one of
+ * Starlight's more involved components and reimplementing it would mean
+ * owning its search, its mobile menu and its grid. This slots the nav into the
+ * title wrapper the header already lays out, so it stays next to the mark and
+ * the search box keeps its own column.
+ *
+ * The splash page has no sidebar, so without these the landing page offers no
+ * way into the docs except the single hero button.
+ */
+import Default from '@astrojs/starlight/components/SiteTitle.astro'
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '')
+
+/*
+ * `href` is the page the link opens; `match` is the prefix that counts as
+ * being inside it. They differ because a section's landing page is one of its
+ * pages rather than an index of its own.
+ */
+const LINKS = [
+  { label: 'Guide', href: `${base}/guide/getting-started/`, match: `${base}/guide/` },
+  { label: 'Frameworks', href: `${base}/frameworks/vue/`, match: `${base}/frameworks/` },
+  { label: 'Theming', href: `${base}/guide/theming/`, match: `${base}/guide/theming/` },
+  { label: 'Reference', href: `${base}/reference/options/`, match: `${base}/reference/` },
+]
+
+/*
+ * Longest match wins, so /guide/theming/ marks Theming rather than both it and
+ * Guide — the two sections overlap on purpose.
+ */
+const path = Astro.url.pathname
+const current = LINKS.filter(link => path.startsWith(link.match)).sort((a, b) => b.match.length - a.match.length)[0]
+---
+
+<Default><slot /></Default>
+
+<nav class="header-nav" aria-label="Sections">
+  {
+    LINKS.map(link => (
+      <a href={link.href} aria-current={link === current ? 'true' : undefined}>
+        {link.label}
+      </a>
+    ))
+  }
+</nav>
+
+<style>
+  /*
+   * Hidden below the breakpoint where Starlight swaps to its mobile menu.
+   * Four more links in that row would push the title off the screen, and
+   * every one of them is already in the menu.
+   */
+  .header-nav {
+    display: none;
+  }
+
+  @media (min-width: 72rem) {
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      margin-inline-start: 1.5rem;
+      padding-inline-start: 1.5rem;
+      border-inline-start: 1px solid var(--sl-color-gray-6);
+    }
+
+    .header-nav a {
+      color: var(--sl-color-gray-2);
+      font-size: var(--sl-text-sm);
+      font-weight: 500;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .header-nav a:hover,
+    .header-nav a[aria-current='true'] {
+      color: var(--sl-color-white);
+    }
+
+    .header-nav a[aria-current='true'] {
+      text-decoration: underline;
+      text-decoration-color: var(--brand-teal);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 0.4em;
+    }
+  }
+</style>

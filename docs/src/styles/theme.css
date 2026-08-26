@@ -354,45 +354,276 @@ header.header {
 }
 
 /*
- * A single wash behind the hero rather than a gradient on the text: it reads
- * at any window width and leaves the tagline at full contrast.
+ * The wash is painted on the content panel, not on `.hero`.
+ *
+ * `.hero` lives inside `.sl-container`, so it stops at the reading measure —
+ * about 1080px on a 1280px window. Anchored there the gradient was a lit
+ * rectangle with two visible vertical edges floating inside a dark page: the
+ * one element that should have no edges at all had the most obvious ones.
+ *
+ * The panel is the widest box on the page that is still exactly as wide as
+ * the scrollport, which is what makes this full-bleed without `100vw`. That
+ * unit measures the viewport *including* the scrollbar, so centring a 100vw
+ * child overshoots by ~15px and scrolls the landing page sideways — the
+ * failure this hero has already been through once, at 390px and at 768px.
+ * Absolute `inset` against the panel cannot overshoot, because there is
+ * nothing to overshoot into.
  */
-.hero::before {
+.content-panel:has(.hero) {
+  position: relative;
+}
+
+.content-panel:has(.hero)::before {
   content: '';
   position: absolute;
-  inset: -30% -10% auto -10%;
-  height: 30rem;
+  /*
+   * The negative top runs the wash up behind the header, which is 4rem tall
+   * and 85% opaque over a blur. Stopping at the panel's top edge instead put
+   * the brightest row of the gradient directly under that translucency, and
+   * the seam showed straight through it.
+   */
+  inset: -4rem 0 auto;
+  height: 38rem;
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(45rem 22rem at 20% 25%, var(--brand-glow), transparent 70%),
-    radial-gradient(35rem 18rem at 80% 10%, rgb(231 190 11 / 0.12), transparent 70%);
+    radial-gradient(62rem 26rem at 18% 0%, var(--brand-glow), transparent 68%),
+    radial-gradient(48rem 22rem at 84% 4%, rgb(231 190 11 / 0.13), transparent 70%),
+    linear-gradient(to bottom, color-mix(in srgb, var(--brand-teal) 7%, transparent), transparent 65%);
 }
 
+/*
+ * One solid colour. The heading used to be a gradient clipped to the text,
+ * which meant its `color` was `transparent` — so the largest piece of type on
+ * the site had no contrast ratio any checker could measure, on a site that
+ * documents accessibility. `--sl-color-white` inverts with the theme by
+ * design: 17.4:1 in dark, 18.2:1 in light. Emphasis comes from the size and
+ * the display face, not from the fill.
+ *
+ * Weight 400 because Instrument Serif ships one weight; asking for 600 gets a
+ * synthesised bold that smears the thin strokes the face is chosen for.
+ */
 .hero h1 {
-  background: linear-gradient(120deg, var(--sl-color-white), var(--brand-teal-bright) 70%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  font-family: var(--brand-font-hero);
+  font-weight: 400;
+  font-size: clamp(3rem, 1.9rem + 3.6vw, 4.75rem);
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+  color: var(--sl-color-white);
 }
 
-:root[data-theme='light'] .hero h1 {
-  background: linear-gradient(120deg, var(--sl-color-white), var(--brand-teal-deep) 70%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.hero .actions a[data-variant='primary'] {
+/*
+ * Starlight's link buttons carry `.primary` / `.minimal` classes; they were
+ * `[data-variant]` attributes in an earlier version, and the rules that
+ * targeted those had silently stopped matching anything.
+ *
+ * Smaller than the default: at 16px with 15px of vertical padding the pair
+ * read as the loudest thing on a page whose actual argument is the live
+ * calendar below them. The colours are left to Starlight's accent tokens on
+ * purpose — the brand teal at full strength carries white text at 2.74:1,
+ * which is the pairing the theme audit already rejected once.
+ */
+.hero .actions a.sl-link-button {
+  padding-block: 0.5rem;
   border-radius: 999px;
-  background: linear-gradient(120deg, var(--brand-teal-deep), var(--brand-teal));
-  border-color: transparent;
-  color: #ffffff;
-  box-shadow: 0 8px 24px -10px var(--brand-teal);
+  font-size: var(--sl-text-sm);
+  line-height: 1.4;
 }
 
-.hero .actions a[data-variant='minimal'] {
-  border-radius: 999px;
+.hero .actions a.sl-link-button.primary {
+  padding-inline: 1.25rem;
+  box-shadow: 0 8px 22px -12px var(--brand-teal);
+}
+
+.hero .actions a.sl-link-button.minimal {
+  padding-inline: 0.5rem;
+}
+
+/* The arrow is set to 1.5rem inline by Starlight, which oversizes it next to
+   14px text. */
+.hero .actions a.sl-link-button svg {
+  --sl-icon-size: 1.1rem !important;
+}
+
+/*
+ * The splash hero reserves a full viewport even when its content is a heading,
+ * a line and two buttons. At 1366x768 — still the most common laptop screen —
+ * that put the calendar's first row at y=873, so a reader saw a strip of
+ * controls above an empty checkerboard and nothing else. It read as broken
+ * rather than as below the fold, which is the worst way for a live demo to
+ * fail. The hero is now paid for in pixels: a smaller mark, tighter padding.
+ */
+@media (min-width: 50rem) {
+  .hero {
+    padding-block: 0.5rem 0.25rem;
+  }
+}
+
+.hero img {
+  max-width: clamp(7rem, 14vw, 11rem);
+  margin-inline: auto;
+}
+
+/*
+ * Everything below trims the run-up to the calendar. The target is the first
+ * row of dates inside 768px, because a calendar whose grid you cannot see is
+ * not a demo.
+ */
+.home-demo .framework-switcher {
+  margin-block: 0.25rem 0.75rem;
+}
+
+.home-demo .demo-stage {
+  padding-block: 1rem;
+}
+
+/* === Landing page lede === */
+
+/*
+ * Every block on this page takes its left edge from the same container.
+ *
+ * The hero sits in Starlight's `.sl-container`, but each block under it had a
+ * max-width of its own and `margin-inline: auto`, so each one centred on a
+ * different width. At 1280px the title started at 93px, the facts panel at
+ * 201px and the prose at 265px: read down the page, a staircase, with nothing
+ * on it lining up with anything else.
+ *
+ * The lede and the demo now fill the container. The prose keeps its 46rem
+ * measure — that is a reading width, not a layout width — but takes it from
+ * the left, which is what `.sl-markdown-content` does on every other page.
+ */
+.home-lede {
+  margin: 0 0 1rem;
+  text-align: start;
+}
+
+/*
+ * A definition list, because that is what this is — three labelled facts, not
+ * three headline numbers. The label stays small and the answer carries the
+ * weight, so it reads as a spec panel rather than as a metrics banner.
+ */
+.home-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0.7rem 1.75rem;
+  margin: 0 0 0.65rem;
+  padding: 0.7rem 1.1rem;
+  border: 1px solid var(--sl-color-gray-6);
+  border-radius: var(--brand-radius);
+  background: var(--brand-surface-2);
+}
+
+.home-facts dt {
+  font-size: var(--sl-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--sl-color-gray-3);
+}
+
+.home-facts dd {
+  margin: 0.15rem 0 0;
+  font-size: var(--sl-text-sm);
+  line-height: 1.5;
+  color: var(--sl-color-gray-1);
+  text-wrap: pretty;
+}
+
+/*
+ * Five commands in one box, of which the framework switcher shows one. The
+ * shell is what carries the border and the background, so the box does not
+ * change size or shift the page when the selection changes.
+ */
+.home-install {
+  display: block;
+  overflow-x: auto;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--sl-color-gray-6);
+  border-radius: var(--brand-radius-sm);
+  background: var(--brand-surface);
+  color: var(--sl-color-accent-high);
+  font-family: var(--sl-font-mono);
+  font-size: var(--sl-text-sm);
+  white-space: pre;
+}
+
+/*
+ * `::before` rather than a character in the markup: a reader copying the line
+ * should not get the prompt with it.
+ */
+.home-install code::before {
+  content: '$ ';
+  color: var(--sl-color-gray-4);
+}
+
+/* === Landing page body === */
+
+/*
+ * A <div>, not a <p>. MDX wraps block content in its own paragraph, and a <p>
+ * inside a <p> is invalid — the browser closes the outer one immediately, so
+ * the class ended up on an empty element and the visible text inherited
+ * nothing.
+ */
+.home-demo-note {
+  max-width: 46rem;
+  /* Left, like the prose it reads as a first paragraph of — centring it put
+     the one remaining stray left edge on the page. */
+  margin: 0.9rem 0 0;
+  text-align: start;
+  font-size: var(--sl-text-sm);
+  line-height: 1.6;
+  color: var(--sl-color-gray-3);
+  text-wrap: pretty;
+}
+
+.home-demo-note p {
+  margin: 0;
+}
+
+.home-prose {
+  max-width: 46rem; /* ~70ch at this size */
+  margin: 0;
+  text-align: start;
+}
+
+/*
+ * Both selectors on purpose. The wrapper is the block box, so it is the one
+ * that can carry the margins and `text-wrap`; the `h2` inside it is inline and
+ * takes the type. Listing both means the heading still looks right if it is
+ * ever rendered without Starlight's wrapper.
+ */
+.home-prose :is(h2, .sl-heading-wrapper.level-h2) {
+  margin-block: 2.75rem 0.75rem;
+  font-size: var(--sl-text-h3);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* Its own margin above; the guides' padding would stack on top of it. */
+.home-prose .sl-heading-wrapper.level-h2 {
+  padding-top: 0;
+}
+
+.home-prose p {
+  margin-block: 0.75rem;
+  line-height: 1.75;
+  color: var(--sl-color-gray-2);
+  text-wrap: pretty;
+}
+
+.home-prose :not(pre) > code {
+  border: 1px solid var(--sl-color-gray-6);
+  border-radius: 0.375rem;
+  background: var(--brand-surface-2);
+  color: var(--sl-color-accent-high);
+  font-size: 0.875em;
+  padding: 0.1em 0.35em;
+}
+
+.home-prose a {
+  color: var(--sl-color-accent);
+  text-underline-offset: 0.2em;
 }
 
 @media (prefers-reduced-motion: reduce) {

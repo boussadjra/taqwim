@@ -3,7 +3,7 @@ title: Taqwim
 description: Hijri date utilities and accessible calendar components for Vue, React, Svelte, Solid and Angular.
 template: splash
 hero:
-  tagline: Hijri dates that behave the same in every framework.
+  tagline: One Umm al-Qura calendar, bound into five frameworks. Same behaviour, same keyboard, same attributes.
   image:
     file: ../../../public/logo.svg
   actions:
@@ -16,34 +16,99 @@ hero:
       variant: minimal
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components'
+import ClickSpark from '../../components/vue-bits/ClickSpark.vue'
 import FrameworkSwitcher from '../../components/FrameworkSwitcher.astro'
 import LiveCalendar from '../../components/LiveCalendar.astro'
 
-<div class="home-demo not-content">
-  <FrameworkSwitcher />
-  <LiveCalendar theme="islamic" />
+{/* Facts a reader needs before they scroll — not a stats template. */}
+
+<div class="home-lede not-content">
+  <dl class="home-facts">
+    <div>
+      <dt>Adapters</dt>
+      <dd>Vue&nbsp;3 · React · Svelte&nbsp;5 · Solid · Angular</dd>
+    </div>
+    <div>
+      <dt>Covers</dt>
+      <dd>1343&ndash;1500&nbsp;AH, tabulated from Umm&nbsp;al-Qura</dd>
+    </div>
+    <div>
+      <dt>Ships</dt>
+      <dd>Headless behaviour, 33 optional themes, no CSS by default</dd>
+    </div>
+  </dl>
+  <div class="home-install">
+    <code data-framework-example="vue">pnpm add @taqwim/vue-styled@alpha</code>
+    <code data-framework-example="react">pnpm add @taqwim/react-styled@alpha</code>
+    <code data-framework-example="svelte">pnpm add @taqwim/svelte-styled@alpha</code>
+    <code data-framework-example="solid">pnpm add @taqwim/solid-styled@alpha</code>
+    <code data-framework-example="angular">pnpm add @taqwim/angular-styled@alpha</code>
+  </div>
 </div>
 
-<CardGrid stagger>
-  <Card title="One implementation" icon="seti:config">
-    Grid layout, selection, paging and keyboard navigation live in
-    `@taqwim/calendar-core`, a framework-free state machine. Every adapter is a
-    thin binding, so the five frameworks cannot drift apart.
-  </Card>
+{/* The claim the project makes, checkable in one click — see .home-demo in theme.css. */}
 
-<Card title="Accessible by construction" icon="approve-check">
-  A roving tabindex, full arrow-key navigation mirrored for right-to-left reading, and `aria-*` attributes the store
-  computes. Checked by axe against every adapter on every run.
-</Card>
+<div class="home-demo not-content has-click-spark">
+  <FrameworkSwitcher />
+  <ClickSpark client:load />
+  <LiveCalendar theme="islamic" />
+  <div class="home-demo-note">
+    Not a screenshot, and not a reimplementation. That is the published package for the framework selected above,
+    rendered on this page — switch frameworks and the calendar is rebuilt from a different one.
+  </div>
+</div>
 
-<Card title="Themed, or not at all" icon="puzzle">
-  The headless packages ship no CSS. `@taqwim/themes` adds thirty-three themes over a custom-property contract,
-  switchable at runtime with one attribute.
-</Card>
+<div class="home-prose not-content">
 
-  <Card title="Umm al-Qura, correctly" icon="star">
-    Table-driven conversion over 1343–1500 AH, with an explicit error outside
-    that range rather than a quietly wrong answer.
-  </Card>
-</CardGrid>
+## Two packages per framework
+
+A **headless** package with the behaviour and the ARIA, and a **styled** package
+if you want it to look like a calendar out of the box. The styled one is built
+entirely from the headless one's public parts, so dropping down a level costs
+you nothing and adds no dependency.
+
+Grid building, selection, paging, keyboard navigation and every emitted `data-*`
+and `aria-*` attribute live in one framework-free state machine. The five
+adapters are bindings to it, not five implementations of it — which is why a
+calendar bug is one fix rather than five, and why the end-to-end suite is
+written against the DOM alone and runs unchanged on all of them.
+
+## Or none of them
+
+The date maths is its own package with no framework and no DOM.
+
+```ts
+import { toHijri, addHijriBusinessDays, formatHijriDate } from '@taqwim/core'
+
+toHijri('2026-08-26') // { hy: 1448, hm: 3, hd: 13 }
+addHijriBusinessDays({ hy: 1448, hm: 9, hd: 2 }, 3) // skips Friday and Saturday
+formatHijriDate({ hy: 1448, hm: 3, hd: 13 }, 'iD iMMMM iYYYY', 'ar')
+//=> "13 ربيع الأول 1448"
+```
+
+The working week runs Sunday to Thursday across most of the Arab world, so
+business-day arithmetic defaults to a Friday/Saturday weekend — overridable per
+call, never global.
+
+## What it will not do
+
+Conversion is table-driven from the Umm al-Qura data, which makes it exact
+between **1343 and 1500 AH** (1 August 1924 to 16 November 2077) and impossible
+outside it. Ask for a date beyond the table and Taqwim throws `HijriRangeError`
+rather than returning a plausible wrong answer.
+
+Dates matter to the people reading them. A library that quietly guesses is worse
+than one that stops, so this one stops — and [says exactly where the edges are](/taqwim/guide/dates/).
+
+## Themed with one attribute
+
+Thirty-three themes over a custom-property contract, framework-free because they
+are keyed off the attributes the state machine emits. Set
+`data-taqwim-theme="islamic"` on any ancestor and everything below it changes;
+a single page can host several and switch at runtime.
+
+Every bundled theme is measured against WCAG AA on each test run — not asserted
+in a README, [measured](/taqwim/guide/theming/), with the failures that audit
+originally found written down.
+
+</div>

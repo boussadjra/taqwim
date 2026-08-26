@@ -160,6 +160,8 @@ export default defineConfig({
       components: {
         // Adds the framework switcher above every page's content.
         PageTitle: './src/components/PageTitle.astro',
+        // Adds the section links to the header, next to the mark.
+        SiteTitle: './src/components/SiteTitle.astro',
       },
       sidebar: [
         {
