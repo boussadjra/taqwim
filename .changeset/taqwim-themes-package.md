@@ -10,4 +10,4 @@ Structure is written once in `core.css` against the `data-*` attributes `@taqwim
 
 The Tailwind preset is generated from `variables.css` at build time rather than hand-maintained, and both v3-style JS presets and a v4 `@theme` block are shipped. Tests assert the contract holds: `core.css` may contain no literal colour, and no theme may declare a token `variables.css` does not define.
 
-Token names keep the `--hijri-calendar-` prefix, so existing overrides continue to work.
+Tokens are namespaced `--hc-*`, renamed from `--hijri-calendar-*`.
