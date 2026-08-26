@@ -110,10 +110,11 @@ export default defineConfig({
           label: 'Guide',
           items: [
             { label: 'Getting started', slug: 'guide/getting-started' },
-            { label: 'Migrating to 1.0', slug: 'guide/migration' },
+            { label: 'Dates without a calendar', slug: 'guide/dates' },
             { label: 'Theming', slug: 'guide/theming' },
             { label: 'Accessibility and keyboard', slug: 'guide/accessibility' },
             { label: 'Server rendering', slug: 'guide/ssr' },
+            { label: 'Migrating to 1.0', slug: 'guide/migration' },
           ],
         },
         {

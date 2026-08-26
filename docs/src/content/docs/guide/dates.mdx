@@ -1,0 +1,242 @@
+---
+title: Dates without a calendar
+description: Convert, compare, format and do arithmetic on Umm al-Qura Hijri dates with @taqwim/core — no framework, no DOM.
+---
+
+Half of Taqwim has no user interface. `@taqwim/core` is the conversion table and
+the arithmetic on top of it: no framework, no DOM, no peer dependencies beyond
+`date-fns` for the Gregorian side. It runs in a server handler, a CLI, a worker,
+or a test.
+
+If you came here for a calendar component, [Getting started](/taqwim/guide/getting-started/)
+is the page you want. This one is for the date maths underneath it.
+
+```sh
+pnpm add @taqwim/core@alpha
+```
+
+A Hijri date is a plain object throughout — `{ hy, hm, hd }`, for year, month
+and day. There is no class to construct and nothing to dispose.
+
+## Converting
+
+Conversion goes both ways. `toHijri` accepts an ISO string, a `Date`, a
+`{ year, month, day }` object, or three numbers; `toGregorian` accepts a Hijri
+object or three numbers and returns a `Date` at **local midnight**.
+
+```ts
+import { toHijri, toGregorian } from '@taqwim/core'
+
+toHijri('2026-08-26')
+//=> { hy: 1448, hm: 3, hd: 13 }
+
+toGregorian({ hy: 1448, hm: 3, hd: 13 })
+//=> Wed Aug 26 2026
+```
+
+Months in `toHijri` are **1-based**, unlike `Date`. `toHijri(2026, 8, 26)` is
+26 August, not 26 September.
+
+:::caution[Local midnight, not UTC]
+`toGregorian` returns midnight in the runtime's own time zone. If you serialise
+that with `.toISOString()` from a machine east of UTC you will get the previous
+day back. Format it with `formatHijriDate`, or read the local parts, rather than
+round-tripping through UTC.
+:::
+
+## The supported range, and what happens outside it
+
+Conversion is table-driven from the Umm al-Qura data, so it is exact inside the
+table and impossible outside it. The table covers:
+
+| Calendar  | From          | To               |
+| --------- | ------------- | ---------------- |
+| Hijri     | 1343 AH       | 1500 AH          |
+| Gregorian | 1 August 1924 | 16 November 2077 |
+
+Outside that, Taqwim throws `HijriRangeError` rather than returning a quietly
+wrong date. This is the single most important thing to know about the library:
+an arithmetic library that guesses is worse than one that stops.
+
+```ts
+import { toHijri, HijriRangeError, MIN_HIJRI_YEAR, MAX_HIJRI_YEAR } from '@taqwim/core'
+
+try {
+  toHijri('2100-01-01')
+} catch (error) {
+  if (error instanceof HijriRangeError) {
+    // "Gregorian date Fri Jan 01 2100 is outside the supported range
+    //  Fri Aug 01 1924 to Tue Nov 16 2077."
+  }
+}
+
+MIN_HIJRI_YEAR // 1343
+MAX_HIJRI_YEAR // 1500
+```
+
+`HijriRangeError` extends `RangeError`, so an existing `catch (e) { if (e instanceof RangeError) }`
+already handles it.
+
+The error distinguishes _unsupported_ from _impossible_. A year outside the
+table throws `HijriRangeError`; a date that is inside the table but is not a
+real day — 30 Ramadan in a 29-day Ramadan — is a different failure, and
+[`isValidHijriDate`](#validating-and-parsing) is how you check for it.
+
+## Arithmetic
+
+Each unit has an `add` and a matching `sub`, and they all take and return the
+same plain object.
+
+```ts
+import { addHijriDays, addHijriMonths, subHijriMonths } from '@taqwim/core'
+
+const start = { hy: 1448, hm: 3, hd: 13 }
+
+addHijriDays(start, 20) //=> { hy: 1448, hm: 4, hd: 4 }
+addHijriMonths(start, 3) //=> { hy: 1448, hm: 6, hd: 13 }
+subHijriMonths(start, 3) //=> { hy: 1447, hm: 12, hd: 13 }
+```
+
+The full set is `addHijriDays`, `addHijriWeeks`, `addHijriMonths`,
+`addHijriQuarters`, `addHijriYears`, each with a `sub` twin. For several units
+at once, `addHijri` takes a duration:
+
+```ts
+import { addHijri } from '@taqwim/core'
+
+addHijri({ hy: 1448, hm: 3, hd: 13 }, { years: 1, months: 2, weeks: 1, days: 3 })
+//=> { hy: 1449, hm: 5, hd: 23 }
+```
+
+Note that `addHijriDays(start, 20)` lands in month 4, not on day 33 of month 3 —
+because Rabiʿ al-awwal 1448 has 29 days, not 30.
+
+## Month lengths are data, not a formula
+
+There is no leap rule to apply. A Hijri month is 29 or 30 days according to the
+table, and the only way to know which is to ask:
+
+```ts
+import { getDaysLengthInMonth } from '@taqwim/core'
+
+getDaysLengthInMonth(1448, 9) //=> 29
+getDaysLengthInMonth(1448, 3) //=> 29
+```
+
+Any code that assumes 30-day months, or alternates 30/29 by parity, will drift.
+This is the most common way Hijri date handling goes wrong.
+
+## Business days default to Friday and Saturday
+
+The working week across most of the Arab world runs Sunday to Thursday, so
+`DEFAULT_WEEKEND` is `[5, 6]` — Friday and Saturday. This is deliberately
+**not** what `date-fns` does, and it is a per-call option rather than a global
+setting.
+
+```ts
+import { addHijriBusinessDays, DEFAULT_WEEKEND } from '@taqwim/core'
+
+const tuesday = { hy: 1448, hm: 9, hd: 2 } // Tue 9 February 2027
+
+addHijriBusinessDays(tuesday, 3)
+//=> { hy: 1448, hm: 9, hd: 7 }   Friday and Saturday skipped
+
+addHijriBusinessDays(tuesday, 3, { weekend: [6, 0] })
+//=> { hy: 1448, hm: 9, hd: 5 }   Saturday and Sunday skipped
+
+DEFAULT_WEEKEND //=> [5, 6]
+```
+
+Days are `0` (Sunday) to `6` (Saturday). `subHijriBusinessDays` counts
+backwards. The starting day is never counted, so a start that falls on a weekend
+simply walks forward to the next working day.
+
+## Comparing
+
+Comparison is by calendar order, not by object identity, so two separately
+constructed dates for the same day are equal.
+
+```ts
+import { isEqual, isGreaterThan, isLessThanOrEqual } from '@taqwim/core'
+
+isEqual({ hy: 1448, hm: 3, hd: 13 }, { hy: 1448, hm: 3, hd: 13 }) //=> true
+isGreaterThan({ hy: 1448, hm: 4, hd: 1 }, { hy: 1448, hm: 3, hd: 13 }) //=> true
+```
+
+`isLessThan`, `isLessThanOrEqual` and `isGreaterThanOrEqual` complete the set.
+They sort correctly, so `dates.sort((a, b) => (isGreaterThan(a, b) ? 1 : -1))`
+does what you would expect.
+
+## Validating and parsing
+
+`isValidHijriDate` answers "is this a real day", which is not the same question
+as "is this in range":
+
+```ts
+import { isValidHijriDate, parseDateString, normalizeHijriDate } from '@taqwim/core'
+
+isValidHijriDate({ hy: 1448, hm: 3, hd: 30 }) //=> false — that month has 29 days
+
+parseDateString('1448-03-13') //=> { hy: 1448, hm: 3, hd: 13 }
+normalizeHijriDate('1448/03/13') //=> { hy: 1448, hm: 3, hd: 13 }
+```
+
+`normalizeHijriDate` accepts either a `{ hy, hm, hd }` object or a
+`YYYY-MM-DD` / `YYYY/MM/DD` string, which makes it the right thing to call on
+input you did not construct yourself — a query parameter, a form field, a row
+from a database.
+
+## Formatting and locales
+
+Format tokens are `date-fns` tokens with an `i` prefix, so `iYYYY` is the Hijri
+year where `yyyy` would be the Gregorian one. Month and weekday names come from
+the bundled locale data.
+
+```ts
+import { formatHijriDate } from '@taqwim/core'
+
+const date = { hy: 1448, hm: 3, hd: 13 }
+
+formatHijriDate(date, 'iYYYY-iMM-iDD') //=> "1448-03-13"
+formatHijriDate(date, 'iD iMMMM iYYYY', 'en') //=> "13 Rabi' al-awwal 1448"
+formatHijriDate(date, 'iD iMMMM iYYYY', 'ar') //=> "13 ربيع الأول 1448"
+formatHijriDate(date, 'iEEEE، iD iMMMM iYYYY', 'ar') //=> "الأربعاء، 13 ربيع الأول 1448"
+```
+
+| Token   | Meaning            | Example          |
+| ------- | ------------------ | ---------------- |
+| `iYYYY` | Year, four digits  | `1448`           |
+| `iMM`   | Month, zero-padded | `03`             |
+| `iMMM`  | Month, abbreviated | `Rabi'1`         |
+| `iMMMM` | Month, full name   | `Rabi' al-awwal` |
+| `iDD`   | Day, zero-padded   | `03`             |
+| `iD`    | Day                | `3`              |
+| `iEEEE` | Weekday, full name | `الأربعاء`       |
+
+`en`, `ar` and `fr` ship with the package; `en` is the default. Month names on
+their own are available through `getLocaleData`, which is what you want for a
+month picker:
+
+```ts
+import { getLocaleData } from '@taqwim/core'
+
+getLocaleData('ar', 'monthsLong')[8] //=> "رمضان"
+getLocaleData('en', 'monthsLong')[8] //=> "Ramadan"
+```
+
+:::caution[Prefer `iMMMM` in a heading]
+`iMMM` is the abbreviation, sized for a narrow column, and it numbers the
+similarly-named months rather than spelling them: Rabiʿ al-awwal comes out as
+`Rabi'1` in English and `ربيع1` in Arabic. Fine in a dense table, wrong above a
+calendar.
+:::
+
+## Where this fits
+
+Everything above is what `@taqwim/calendar-core` is built from, and what the
+five calendar adapters ultimately call. If you are rendering a calendar you get
+all of it for free; if you are stamping a date onto a PDF on a server, this is
+the whole dependency.
+
+- [Calendar options](/taqwim/reference/options/) — the component-level API
+- [Full API reference](/taqwim/api/readme/) — every signature, generated from source
