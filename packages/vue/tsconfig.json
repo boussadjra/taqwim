@@ -1,9 +1,7 @@
 {
+  "//": "A solution file: `files: []` with references only, and deliberately no `include` — an `include` here would make this project compile src itself, with no outDir and no noEmit, scattering emitted `.vue.js` next to the sources. tsconfig.node.json is also deliberately unreferenced: it covers vite.config.ts, and checking `export default defineConfig(...)` against vite-plus's types crashes the compiler outright — 'Debug Failure. False expression: parameter should have errors when reporting errors' — so type-check aborted before reaching any source. Both are kept on disk for editor support.",
   "files": [],
   "references": [
-    {
-      "path": "./tsconfig.node.json"
-    },
     {
       "path": "./tsconfig.app.json"
     },
@@ -13,6 +11,5 @@
   ],
   "compilerOptions": {
     "module": "NodeNext"
-  },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
+  }
 }

@@ -1,9 +1,7 @@
 {
+  "//": "Only the app project is referenced. `tsconfig.node.json` (which covers vite.config.ts) crashes tsc outright — `Debug Failure. False expression: parameter should have errors when reporting errors` while checking `export default defineConfig(...)` against vite-plus's types — so `type-check` never got as far as the app source. It is kept on disk for editor support, and the other three playgrounds scope their type-check to src for the same reason.",
   "files": [],
   "references": [
-    {
-      "path": "./tsconfig.node.json"
-    },
     {
       "path": "./tsconfig.app.json"
     }
