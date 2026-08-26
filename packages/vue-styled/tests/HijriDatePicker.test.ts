@@ -118,15 +118,26 @@ describe('popover', () => {
     expect(wrapper.find('[data-taqwim-calendar]').exists()).toBe(false)
   })
 
-  it('stays open in multiple mode, which has no single done moment', async () => {
-    const wrapper = mountPicker({ defaultPlaceholder: RAMADAN_1445, multiple: true })
-    await wrapper.get('input').trigger('focus')
+  /*
+   * The picker used to accept `multiple` and stay open in it, keeping only
+   * `value[0]` — so a second pick silently kept the first date. React, Svelte
+   * and Solid all omit `multiple` from their picker's props; Vue now does too,
+   * and this pins the single-select contract the four share.
+   */
+  it('replaces the selection rather than accumulating one', async () => {
+    const wrapper = mountPicker({ defaultPlaceholder: RAMADAN_1445 })
 
-    const day = wrapper
-      .findAll('[data-taqwim-calendar-cell-trigger]')
-      .find(trigger => trigger.attributes('data-outside-month') === undefined && trigger.text() === '9')!
-    await day.trigger('click')
+    const pick = async (text: string) => {
+      await wrapper.get('input').trigger('focus')
+      const day = wrapper
+        .findAll('[data-taqwim-calendar-cell-trigger]')
+        .find(trigger => trigger.attributes('data-outside-month') === undefined && trigger.text() === text)!
+      await day.trigger('click')
+    }
 
-    expect(wrapper.find('[data-taqwim-calendar]').exists()).toBe(true)
+    await pick('9')
+    await pick('12')
+
+    expect(wrapper.emitted('update:modelValue')?.at(-1)?.[0]).toEqual({ hy: 1445, hm: 9, hd: 12 })
   })
 })

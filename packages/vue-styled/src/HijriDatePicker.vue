@@ -2,7 +2,14 @@
 import type { HijriDateObject } from '@taqwim/core'
 import type { HijriCalendarProps } from './HijriCalendar.vue'
 
-export interface HijriDatePickerProps extends HijriCalendarProps {
+/*
+ * `multiple` is omitted, as it is in the React, Svelte and Solid pickers: the
+ * input holds one formatted date and `v-model` is one `HijriDateObject`, so a
+ * multi-select calendar has nowhere to put the rest of the selection. Vue used
+ * to accept it and keep only `value[0]`, which meant picking a second date
+ * silently kept the first.
+ */
+export interface HijriDatePickerProps extends Omit<HijriCalendarProps, 'multiple'> {
   /** Pattern used for the input's text, e.g. `'iD iMMMM iYYYY'`. @default 'iYYYY-iMM-iDD' */
   format?: string
   /** Placeholder text for the empty input. */
@@ -84,8 +91,7 @@ function close() {
 
 function onSelect(value: HijriDateObject | HijriDateObject[] | undefined) {
   modelValue.value = Array.isArray(value) ? value[0] : value
-  // Multi-select has no single "done" moment, so only single mode closes.
-  if (!props.multiple) close()
+  close()
 }
 
 /*
