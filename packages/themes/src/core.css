@@ -12,13 +12,13 @@
  */
 
 [data-taqwim-calendar] {
-  background: var(--hijri-calendar-background);
-  border: var(--hijri-calendar-border);
-  border-radius: var(--hijri-calendar-border-radius);
-  box-shadow: var(--hijri-calendar-shadow);
-  color: var(--hijri-calendar-foreground);
-  font-family: var(--hijri-calendar-font-family);
-  font-size: var(--hijri-calendar-font-size-base);
+  background: var(--hc-background);
+  border: var(--hc-border);
+  border-radius: var(--hc-border-radius);
+  box-shadow: var(--hc-shadow);
+  color: var(--hc-foreground);
+  font-family: var(--hc-font-family);
+  font-size: var(--hc-font-size-base);
   position: relative;
   overflow: hidden;
 }
@@ -34,19 +34,19 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--hijri-calendar-spacing-sm);
-  padding: var(--hijri-calendar-header-padding);
-  border-bottom: var(--hijri-calendar-header-border);
-  background: var(--hijri-calendar-muted);
+  gap: var(--hc-spacing-sm);
+  padding: var(--hc-header-padding);
+  border-bottom: var(--hc-header-border);
+  background: var(--hc-muted);
 }
 
 .taqwim-calendar-heading {
   flex: 1;
   margin: 0;
   text-align: center;
-  font-size: var(--hijri-calendar-font-size-lg);
-  font-weight: var(--hijri-calendar-font-weight-semibold);
-  color: var(--hijri-calendar-foreground);
+  font-size: var(--hc-font-size-lg);
+  font-weight: var(--hc-font-weight-semibold);
+  color: var(--hc-foreground);
 }
 
 /* === Navigation === */
@@ -56,19 +56,19 @@
   align-items: center;
   justify-content: center;
   flex: none;
-  width: var(--hijri-calendar-nav-button-size);
-  height: var(--hijri-calendar-nav-button-size);
+  width: var(--hc-nav-button-size);
+  height: var(--hc-nav-button-size);
   border: none;
-  border-radius: var(--hijri-calendar-nav-button-border-radius);
-  background: var(--hijri-calendar-secondary);
-  color: var(--hijri-calendar-secondary-foreground);
+  border-radius: var(--hc-nav-button-border-radius);
+  background: var(--hc-secondary);
+  color: var(--hc-secondary-foreground);
   cursor: pointer;
-  transition: var(--hijri-calendar-transition);
+  transition: var(--hc-transition);
 }
 
 .taqwim-calendar-nav-button:hover:not([data-disabled]) {
-  background: var(--hijri-calendar-secondary-hover);
-  color: var(--hijri-calendar-foreground);
+  background: var(--hc-secondary-hover);
+  color: var(--hc-foreground);
 }
 
 .taqwim-calendar-nav-button[data-disabled] {
@@ -93,76 +93,94 @@
 /* === Month / year picker === */
 
 .taqwim-calendar-picker {
-  padding: var(--hijri-calendar-grid-padding);
+  padding: var(--hc-grid-padding);
 }
 
 .taqwim-calendar-picker-tabs {
   display: flex;
-  gap: var(--hijri-calendar-spacing-xs);
-  margin-bottom: var(--hijri-calendar-spacing-sm);
+  gap: var(--hc-spacing-xs);
+  margin-bottom: var(--hc-spacing-sm);
 }
 
 .taqwim-calendar-picker-tabs button {
   flex: 1;
-  padding: var(--hijri-calendar-spacing-xs) var(--hijri-calendar-spacing-sm);
+  padding: var(--hc-spacing-xs) var(--hc-spacing-sm);
   border: none;
-  border-radius: var(--hijri-calendar-cell-border-radius);
-  background: var(--hijri-calendar-secondary);
-  color: var(--hijri-calendar-secondary-foreground);
+  border-radius: var(--hc-cell-border-radius);
+  background: var(--hc-secondary);
+  color: var(--hc-secondary-foreground);
   font: inherit;
   cursor: pointer;
-  transition: var(--hijri-calendar-transition);
+  transition: var(--hc-transition);
 }
 
 .taqwim-calendar-picker-tabs button[data-active] {
-  background: var(--hijri-calendar-selected);
-  color: var(--hijri-calendar-selected-foreground);
+  background: var(--hc-selected);
+  color: var(--hc-selected-foreground);
 }
 
 .taqwim-calendar-picker-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--hijri-calendar-spacing-xs);
+  gap: var(--hc-spacing-xs);
   /* The year list spans the whole supported range, so it scrolls. */
   max-height: 15rem;
   overflow-y: auto;
 }
 
 .taqwim-calendar-picker-grid button {
-  padding: var(--hijri-calendar-spacing-sm) var(--hijri-calendar-spacing-xs);
+  padding: var(--hc-spacing-sm) var(--hc-spacing-xs);
   border: none;
-  border-radius: var(--hijri-calendar-cell-border-radius);
+  border-radius: var(--hc-cell-border-radius);
   background: transparent;
-  color: var(--hijri-calendar-foreground);
+  color: var(--hc-foreground);
   font: inherit;
-  font-size: var(--hijri-calendar-font-size-sm);
+  font-size: var(--hc-font-size-sm);
   cursor: pointer;
-  transition: var(--hijri-calendar-transition);
+  transition: var(--hc-transition);
 }
 
 .taqwim-calendar-picker-grid button:hover {
-  background: var(--hijri-calendar-hover);
+  background: var(--hc-hover);
 }
 
 .taqwim-calendar-picker-grid button[data-selected] {
-  background: var(--hijri-calendar-selected);
-  color: var(--hijri-calendar-selected-foreground);
+  background: var(--hc-selected);
+  color: var(--hc-selected-foreground);
 }
 
 /* === Grid === */
 
 [data-taqwim-calendar-grid] {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: var(--hijri-calendar-grid-gap);
-  padding: var(--hijri-calendar-grid-padding);
+  padding: var(--hc-grid-padding);
+}
+
+/*
+ * Every adapter renders this as `div`s carrying grid/row/gridcell roles, not as
+ * a `<table>` — so the columns come from CSS grid. It was styled with
+ * `border-collapse`/`border-spacing` before, which are table-only properties
+ * and silently did nothing: the weekday labels and the day cells were never
+ * actually in the same columns.
+ */
+[data-taqwim-calendar-grid] [role='row'] {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--hc-grid-gap);
+}
+
+[data-taqwim-calendar-grid] [role='gridcell'] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
 }
 
 .taqwim-calendar-weekday {
-  padding-bottom: var(--hijri-calendar-spacing-xs);
-  font-size: var(--hijri-calendar-font-size-sm);
-  font-weight: var(--hijri-calendar-font-weight-medium);
-  color: var(--hijri-calendar-muted-foreground);
+  padding-bottom: var(--hc-spacing-xs);
+  font-size: var(--hc-font-size-sm);
+  font-weight: var(--hc-font-weight-medium);
+  color: var(--hc-muted-foreground);
   text-align: center;
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -174,25 +192,25 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--hijri-calendar-cell-size);
-  height: var(--hijri-calendar-cell-size);
+  width: var(--hc-cell-size);
+  height: var(--hc-cell-size);
   border: none;
-  border-radius: var(--hijri-calendar-cell-border-radius);
+  border-radius: var(--hc-cell-border-radius);
   background: transparent;
-  color: var(--hijri-calendar-foreground);
-  font-size: var(--hijri-calendar-font-size-base);
-  font-weight: var(--hijri-calendar-font-weight-normal);
+  color: var(--hc-foreground);
+  font-size: var(--hc-font-size-base);
+  font-weight: var(--hc-font-weight-normal);
   font-variant-numeric: tabular-nums;
   line-height: 1;
   cursor: pointer;
-  transition: var(--hijri-calendar-transition);
+  transition: var(--hc-transition);
   /* Keep the tap target accessible even when the visual cell is small. */
   min-width: 1.75rem;
   min-height: 1.75rem;
 }
 
 [data-taqwim-calendar-cell-trigger]:hover:not([data-disabled]):not([data-unavailable]) {
-  background: var(--hijri-calendar-hover);
+  background: var(--hc-hover);
 }
 
 /*
@@ -200,25 +218,25 @@
  * rather than `:focus` — a mouse click should not leave a ring behind.
  */
 [data-taqwim-calendar-cell-trigger]:focus-visible {
-  outline: var(--hijri-calendar-focus-ring-width) solid var(--hijri-calendar-focus-ring-color);
-  outline-offset: var(--hijri-calendar-focus-ring-offset);
+  outline: var(--hc-focus-ring-width) solid var(--hc-focus-ring-color);
+  outline-offset: var(--hc-focus-ring-offset);
 }
 
 [data-taqwim-calendar-cell-trigger][data-today] {
-  background: var(--hijri-calendar-today);
-  color: var(--hijri-calendar-today-foreground);
-  font-weight: var(--hijri-calendar-font-weight-semibold);
+  background: var(--hc-today);
+  color: var(--hc-today-foreground);
+  font-weight: var(--hc-font-weight-semibold);
 }
 
 /* Selected wins over today, so it comes later. */
 [data-taqwim-calendar-cell-trigger][data-selected] {
-  background: var(--hijri-calendar-selected);
-  color: var(--hijri-calendar-selected-foreground);
-  font-weight: var(--hijri-calendar-font-weight-semibold);
+  background: var(--hc-selected);
+  color: var(--hc-selected-foreground);
+  font-weight: var(--hc-font-weight-semibold);
 }
 
 [data-taqwim-calendar-cell-trigger][data-selected]:hover {
-  background: var(--hijri-calendar-selected-hover);
+  background: var(--hc-selected-hover);
 }
 
 /*
@@ -227,19 +245,103 @@
  * and which is genuinely hard to read.
  */
 [data-taqwim-calendar-cell-trigger][data-outside-month] {
-  color: var(--hijri-calendar-outside-month);
+  color: var(--hc-outside-month);
 }
 
 [data-taqwim-calendar-cell-trigger][data-disabled] {
-  color: var(--hijri-calendar-disabled);
+  color: var(--hc-disabled);
   cursor: not-allowed;
   opacity: 0.5;
 }
 
 [data-taqwim-calendar-cell-trigger][data-unavailable] {
-  color: var(--hijri-calendar-unavailable);
+  color: var(--hc-unavailable);
   cursor: not-allowed;
   text-decoration: line-through;
+}
+
+/* === Layouts === */
+
+/*
+ * `data-taqwim-layout` is a third axis, orthogonal to theme and size: a theme
+ * sets colours, a size sets metrics, a layout sets arrangement. All three
+ * compose, and none of them needs to know about the others.
+ *
+ * `default` is the absence of any rule below — header above, months in a row,
+ * the picker replacing the grid.
+ */
+
+/* Stacked — months in a column. The row wraps awkwardly on a narrow screen
+   once `numberOfMonths` is above one; this is the deliberate version. */
+[data-taqwim-layout='stacked'] .taqwim-calendar-months {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* Compact — heading to the leading edge, both nav buttons paired after it. */
+[data-taqwim-layout='compact'] .taqwim-calendar-header {
+  justify-content: flex-start;
+  gap: var(--hc-spacing-xs);
+  padding: var(--hc-spacing-sm);
+}
+
+[data-taqwim-layout='compact'] .taqwim-calendar-heading {
+  text-align: start;
+  font-size: var(--hc-font-size-base);
+}
+
+/* `order` rather than DOM order, so the reading order stays prev → heading →
+   next for a screen reader while the buttons sit together visually. */
+[data-taqwim-layout='compact'] .taqwim-calendar-nav-button {
+  order: 1;
+}
+
+[data-taqwim-layout='compact'] [data-taqwim-calendar-grid] {
+  border-spacing: 0;
+  padding: var(--hc-spacing-xs);
+}
+
+/*
+ * Panel — the picker sits beside the grid instead of replacing it.
+ *
+ * The adapters keep rendering the months under this layout; every other layout
+ * unmounts them while the picker is open, so the grid is never merely hidden
+ * from sight while still reachable by Tab.
+ */
+/* Wrapping the root rather than adding a wrapper element: the header takes a
+   full row, then the picker and the grid share the next one. */
+[data-taqwim-calendar][data-taqwim-layout='panel'] {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+[data-taqwim-layout='panel'] .taqwim-calendar-header {
+  flex: 1 0 100%;
+}
+
+[data-taqwim-layout='panel'] .taqwim-calendar-picker {
+  flex: 0 0 auto;
+  max-width: 14rem;
+  border-inline-end: var(--hc-header-border);
+}
+
+[data-taqwim-layout='panel'] .taqwim-calendar-months {
+  flex: 1;
+}
+
+[data-taqwim-layout='panel'] .taqwim-calendar-picker-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 640px) {
+  /* Beside becomes below when there is no room beside. */
+  [data-taqwim-layout='panel'] .taqwim-calendar-picker {
+    flex: 1 0 100%;
+    max-width: none;
+    border-inline-end: none;
+    border-block-end: var(--hc-header-border);
+  }
 }
 
 /* === Date picker === */
@@ -247,35 +349,41 @@
 .taqwim-datepicker {
   position: relative;
   display: inline-block;
-  font-family: var(--hijri-calendar-font-family);
+  font-family: var(--hc-font-family);
 }
 
 .taqwim-datepicker-input {
   width: 100%;
-  padding: var(--hijri-calendar-spacing-sm) var(--hijri-calendar-spacing-md);
-  border: var(--hijri-calendar-border);
-  border-radius: var(--hijri-calendar-border-radius);
-  background: var(--hijri-calendar-background);
-  color: var(--hijri-calendar-foreground);
+  padding: var(--hc-spacing-sm) var(--hc-spacing-md);
+  border: var(--hc-border);
+  border-radius: var(--hc-border-radius);
+  background: var(--hc-background);
+  color: var(--hc-foreground);
   font: inherit;
-  font-size: var(--hijri-calendar-font-size-base);
+  font-size: var(--hc-font-size-base);
 }
 
 .taqwim-datepicker-input:focus-visible {
-  outline: var(--hijri-calendar-focus-ring-width) solid var(--hijri-calendar-focus-ring-color);
-  outline-offset: var(--hijri-calendar-focus-ring-offset);
+  outline: var(--hc-focus-ring-width) solid var(--hc-focus-ring-color);
+  outline-offset: var(--hc-focus-ring-offset);
 }
 
 .taqwim-datepicker-input:disabled {
-  color: var(--hijri-calendar-disabled);
+  color: var(--hc-disabled);
   cursor: not-allowed;
 }
 
 .taqwim-datepicker-popover {
   position: absolute;
-  z-index: var(--hijri-calendar-z-index);
-  margin-top: var(--hijri-calendar-spacing-xs);
+  z-index: var(--hc-z-index);
+  margin-top: var(--hc-spacing-xs);
   inset-inline-start: 0;
+  /*
+   * Without this the popover shrink-to-fits against its containing block —
+   * `.taqwim-datepicker`, which is only as wide as the input — so the calendar
+   * inside it came out squeezed and the month heading wrapped onto two lines.
+   */
+  width: max-content;
 }
 
 /* Screen-reader-only helper for the calendar's live heading. */
