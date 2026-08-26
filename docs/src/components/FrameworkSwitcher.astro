@@ -6,6 +6,10 @@
  * `<div data-framework="…">`; this toggles which one is visible. The choice is
  * kept in localStorage and applied before paint, so moving between pages does
  * not flash the wrong language.
+ *
+ * It governs the live islands too, not just the code blocks — and because the
+ * hidden ones are `display: none`, a `client:visible` island in a framework
+ * nobody selected never hydrates.
  */
 const FRAMEWORKS = ['vue', 'react', 'svelte', 'solid', 'angular'] as const
 ---
@@ -38,39 +42,85 @@ const FRAMEWORKS = ['vue', 'react', 'svelte', 'solid', 'angular'] as const
     apply(framework)
   }
 
-  // Applied on every navigation too: Starlight uses view transitions, so the
-  // document element survives but the buttons are re-rendered.
-  document.addEventListener('astro:page-load', () => {
+  function wire() {
     apply(localStorage.getItem(KEY) ?? FALLBACK)
 
     for (const button of document.querySelectorAll<HTMLElement>('[data-framework-button]')) {
       button.addEventListener('click', () => choose(button.dataset.frameworkButton!))
     }
-  })
+  }
+
+  /*
+   * Called directly, not only from `astro:page-load`. That event fires only
+   * when the ClientRouter is on the page, and Starlight does not add it here —
+   * so listening for it alone meant the switcher never ran at all, every page
+   * showed all five frameworks' examples stacked, and the buttons did nothing.
+   *
+   * The listener stays for the case where view transitions are turned on: the
+   * document element survives a navigation but the buttons are re-rendered, so
+   * the click handlers have to be re-attached.
+   */
+  wire()
+  document.addEventListener('astro:page-load', wire)
 </script>
 
 <style is:global>
+  /* A segmented control: one track, five segments, the active one filled. */
   .framework-switcher {
-    display: flex;
+    display: inline-flex;
     flex-wrap: wrap;
-    gap: 0.25rem;
+    gap: 0.125rem;
+    padding: 0.2rem;
     margin-block: 0.5rem 1.5rem;
+    border: 1px solid var(--sl-color-gray-6);
+    border-radius: 999px;
+    background: var(--brand-surface-2);
   }
 
   .framework-switcher button {
-    padding: 0.25rem 0.75rem;
-    border: 1px solid var(--sl-color-gray-5);
+    padding: 0.3rem 0.85rem;
+    border: none;
     border-radius: 999px;
     background: transparent;
-    color: var(--sl-color-gray-2);
+    color: var(--sl-color-gray-3);
     font-size: var(--sl-text-xs);
+    font-weight: 500;
+    line-height: 1.4;
     cursor: pointer;
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .framework-switcher button:hover {
+    color: var(--sl-color-white);
   }
 
   .framework-switcher button[aria-pressed='true'] {
-    background: var(--sl-color-accent);
-    border-color: var(--sl-color-accent);
-    color: var(--sl-color-white);
+    background: var(--brand-teal);
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  /* The landing page includes the switcher itself — the splash template does
+     not render `PageTitle`, so nothing else would set `data-framework`. */
+  .home-demo {
+    max-width: 54rem;
+    margin: 0 auto 3rem;
+    text-align: start;
+  }
+
+  .home-demo .framework-switcher {
+    display: flex;
+    justify-content: center;
+    width: fit-content;
+    margin-inline: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .framework-switcher button {
+      transition: none;
+    }
   }
 
   /*

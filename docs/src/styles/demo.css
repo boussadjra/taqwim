@@ -1,0 +1,238 @@
+/**
+ * The frame around a live example.
+ *
+ * Global rather than scoped per component, because the same four demos are
+ * written once per framework and they have to come out identical — a Vue
+ * `<style scoped>` block and a Svelte one would drift the moment either is
+ * edited alone. It is the same reasoning as `playground.css` in the
+ * playgrounds.
+ *
+ * Nothing here may style `[data-taqwim-*]`. That is `@taqwim/themes`'s job,
+ * and reaching into it from the docs would show readers something they cannot
+ * reproduce by installing the package.
+ */
+
+.demo {
+  --demo-border: var(--sl-color-gray-6);
+  --demo-surface: var(--brand-surface);
+  --demo-surface-2: var(--brand-surface-2);
+
+  margin-block: 1.5rem;
+  border: 1px solid var(--demo-border);
+  border-radius: var(--brand-radius);
+  background: var(--demo-surface);
+  box-shadow: var(--brand-shadow);
+  overflow: hidden;
+}
+
+/* === Control bar === */
+
+.demo-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--demo-border);
+  background: var(--demo-surface-2);
+  font-size: 0.8125rem;
+}
+
+.demo-control {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--sl-color-gray-2);
+  white-space: nowrap;
+}
+
+.demo-control select {
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--demo-border);
+  border-radius: 0.375rem;
+  background: var(--demo-surface);
+  color: var(--sl-color-white);
+  font: inherit;
+  font-size: 0.8125rem;
+}
+
+.demo-control input[type='checkbox'] {
+  width: 0.9rem;
+  height: 0.9rem;
+  accent-color: var(--brand-teal);
+  cursor: pointer;
+}
+
+.demo-control:has(input[type='checkbox']) {
+  cursor: pointer;
+}
+
+/* === Stage === */
+
+.demo-stage {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 2rem 1rem;
+  /* A quiet checkerboard, so a transparent theme like `minimal` is visibly
+     transparent rather than looking like a card. */
+  background: repeating-conic-gradient(
+      color-mix(in srgb, var(--sl-color-gray-6) 35%, transparent) 0% 25%,
+      transparent 0% 50%
+    )
+    0 0 / 20px 20px;
+}
+
+/*
+ * The date picker opens a popup, and `.demo` clips to its rounded corners, so
+ * the stage has to reserve the room the popup will need. Sized to the open
+ * state — a little empty space while it is closed is the price of not having
+ * the calendar cut off when it is not.
+ */
+.demo-stage[data-tall] {
+  min-height: 23rem;
+  padding-top: 1.5rem;
+  align-items: flex-start;
+}
+
+/* === Readout === */
+
+.demo-readout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.75rem;
+  padding: 0.7rem 1rem;
+  border-top: 1px solid var(--demo-border);
+  background: var(--demo-surface-2);
+  font-size: 0.8125rem;
+  color: var(--sl-color-gray-3);
+}
+
+.demo-readout code {
+  border: 1px solid var(--demo-border);
+  border-radius: 0.375rem;
+  padding: 0.1rem 0.4rem;
+  background: var(--demo-surface);
+  color: var(--sl-color-accent-high);
+  font-size: 0.8125rem;
+}
+
+.demo-readout code[data-empty] {
+  color: var(--sl-color-gray-4);
+}
+
+/* === Caption === */
+
+.demo-caption {
+  padding: 0.6rem 1rem;
+  border-top: 1px solid var(--demo-border);
+  color: var(--sl-color-gray-3);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+
+.demo-caption :is(code, kbd) {
+  font-size: 0.8125em;
+}
+
+.demo-caption kbd {
+  border: 1px solid var(--demo-border);
+  border-bottom-width: 2px;
+  border-radius: 0.3rem;
+  padding: 0.05rem 0.3rem;
+  background: var(--demo-surface);
+  color: var(--sl-color-gray-2);
+  font-family: var(--__sl-font-mono, ui-monospace, monospace);
+}
+
+/* Marks a demo that has not hydrated yet, so it does not look interactive
+   before it is. */
+.demo:not(:defined) .demo-bar {
+  opacity: 0.5;
+}
+
+/* === Theme gallery === */
+
+.demo-swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr));
+  gap: 0.4rem;
+  padding: 0.85rem 1rem;
+  max-height: 11rem;
+  overflow-y: auto;
+  border-bottom: 1px solid var(--demo-border);
+  background: var(--demo-surface-2);
+}
+
+.demo-swatch {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.45rem;
+  border: 1px solid var(--demo-border);
+  border-radius: 0.4rem;
+  background: var(--demo-surface);
+  color: var(--sl-color-gray-2);
+  font: inherit;
+  font-size: 0.75rem;
+  text-align: start;
+  cursor: pointer;
+}
+
+.demo-swatch:hover {
+  border-color: color-mix(in srgb, var(--brand-teal) 50%, transparent);
+}
+
+.demo-swatch[aria-pressed='true'] {
+  border-color: var(--brand-teal);
+  background: var(--sl-color-accent-low);
+  color: var(--sl-color-accent-high);
+  font-weight: 600;
+}
+
+/* The dot is the theme's own `--hc-primary`, read off a probe element that
+   carries the theme attribute — so the swatch cannot drift from the CSS. */
+.demo-swatch-dot {
+  flex: none;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgb(128 128 128 / 0.35);
+  background: var(--swatch, var(--brand-teal));
+}
+
+/* === Keyboard log === */
+
+.demo-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  padding: 0.7rem 1rem;
+  border-top: 1px solid var(--demo-border);
+  background: var(--demo-surface-2);
+  min-height: 2.6rem;
+  align-items: center;
+}
+
+.demo-keys kbd {
+  border: 1px solid var(--demo-border);
+  border-bottom-width: 2px;
+  border-radius: 0.3rem;
+  padding: 0.1rem 0.4rem;
+  background: var(--demo-surface);
+  font-family: var(--__sl-font-mono, ui-monospace, monospace);
+  font-size: 0.75rem;
+}
+
+/* Consumed by the store; the rest passed through to the browser. */
+.demo-keys kbd[data-consumed] {
+  border-color: var(--brand-teal);
+  color: var(--sl-color-accent-high);
+}
+
+.demo-keys .demo-keys-empty {
+  color: var(--sl-color-gray-4);
+  font-size: 0.8125rem;
+}

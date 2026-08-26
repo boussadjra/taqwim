@@ -1,0 +1,314 @@
+/**
+ * Taqwim's docs theme.
+ *
+ * Two brand colours: teal `#03ADB7` carries structure — links, the active
+ * sidebar entry, focus rings — and gold `#E7BE0B` is the punctuation, used
+ * sparingly on rules, markers and the hero.
+ *
+ * Neither raw hex is used for text on a light background: `#03ADB7` sits at
+ * 2.8:1 on white and `#E7BE0B` at 1.8:1, so the light palette below steps both
+ * down to shades that clear 4.5:1, and keeps the bright values for large text,
+ * borders and fills. `--brand-*` are the source of truth; the `--sl-*`
+ * overrides below map them onto Starlight's own tokens.
+ */
+
+:root {
+  --brand-teal: #03adb7;
+  --brand-teal-bright: #29ccd6;
+  --brand-teal-deep: #00767e;
+  --brand-teal-deeper: #004e54;
+  --brand-gold: #e7be0b;
+  --brand-gold-deep: #8a6f00;
+
+  --brand-radius: 0.75rem;
+  --brand-radius-sm: 0.5rem;
+
+  /* Starlight's accent ramp, dark theme (Starlight's default). */
+  --sl-color-accent-low: #0a3538;
+  --sl-color-accent: #03adb7;
+  --sl-color-accent-high: #8ee3ea;
+
+  /* Cooled towards the brand hue so the chrome and the accent agree. */
+  --sl-color-white: #f4fbfc;
+  --sl-color-gray-1: #e2edef;
+  --sl-color-gray-2: #c0cfd2;
+  --sl-color-gray-3: #8ba1a5;
+  --sl-color-gray-4: #566a6e;
+  --sl-color-gray-5: #364a4e;
+  --sl-color-gray-6: #24363a;
+  --sl-color-gray-7: #1a2a2d;
+  --sl-color-black: #0d1719;
+
+  --sl-color-bg-nav: rgb(13 23 25 / 0.85);
+  --sl-color-bg-sidebar: var(--sl-color-black);
+
+  --brand-surface: #16262a;
+  --brand-surface-2: #0f1e21;
+  --brand-glow: rgb(3 173 183 / 0.16);
+  --brand-shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 12px 32px -12px rgb(0 0 0 / 0.6);
+}
+
+:root[data-theme='light'] {
+  --sl-color-accent-low: #d4f2f4;
+  --sl-color-accent: #00767e;
+  --sl-color-accent-high: #004e54;
+
+  --sl-color-white: #0d1719;
+  --sl-color-gray-1: #16262a;
+  --sl-color-gray-2: #35494d;
+  --sl-color-gray-3: #5a7175;
+  --sl-color-gray-4: #7e9599;
+  --sl-color-gray-5: #c4d6d9;
+  --sl-color-gray-6: #e2eef0;
+  --sl-color-gray-7: #eef6f7;
+  --sl-color-black: #ffffff;
+
+  --sl-color-bg-nav: rgb(255 255 255 / 0.85);
+  --sl-color-bg-sidebar: #f7fbfc;
+
+  --brand-surface: #ffffff;
+  --brand-surface-2: #f2f9fa;
+  --brand-glow: rgb(3 173 183 / 0.1);
+  --brand-shadow: 0 1px 2px rgb(13 23 25 / 0.05), 0 12px 32px -16px rgb(13 23 25 / 0.18);
+}
+
+/* === Type === */
+
+:root {
+  --sl-text-h1: clamp(2.2rem, 1.4rem + 2.6vw, 3.25rem);
+  --sl-text-h2: clamp(1.6rem, 1.25rem + 1.1vw, 2rem);
+}
+
+.sl-markdown-content h1,
+.sl-markdown-content h2,
+.sl-markdown-content h3 {
+  letter-spacing: -0.02em;
+}
+
+.sl-markdown-content h2 {
+  padding-top: 0.4em;
+}
+
+/*
+ * The gold rule under section headings. It is the one place the raw gold is
+ * load-bearing, and it is decoration — never the only signal that a heading is
+ * a heading.
+ */
+.sl-markdown-content h2::after {
+  content: '';
+  display: block;
+  width: 2.5rem;
+  height: 3px;
+  margin-top: 0.55rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--brand-teal), var(--brand-gold));
+}
+
+.sl-markdown-content a:not(:where(.not-content *)) {
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in srgb, var(--sl-color-accent) 45%, transparent);
+  transition: text-decoration-color 0.15s ease;
+}
+
+.sl-markdown-content a:not(:where(.not-content *)):hover {
+  text-decoration-color: currentColor;
+}
+
+/* === Chrome === */
+
+header.header {
+  border-bottom: 1px solid var(--sl-color-gray-6);
+  backdrop-filter: blur(12px);
+}
+
+.sidebar-pane {
+  border-inline-end: 1px solid var(--sl-color-gray-6);
+}
+
+/* The active page reads as a filled pill rather than as bold text alone. */
+.sidebar-content a[aria-current='page'],
+.sidebar-content a[aria-current='page']:hover {
+  border-radius: var(--brand-radius-sm);
+  background: var(--sl-color-accent-low);
+  color: var(--sl-color-accent-high);
+  font-weight: 600;
+}
+
+:root[data-theme='light'] .sidebar-content a[aria-current='page'] {
+  color: var(--sl-color-accent-high);
+}
+
+.sidebar-content a:hover {
+  border-radius: var(--brand-radius-sm);
+}
+
+/* === Focus === */
+
+:where(a, button, input, select, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--brand-teal);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+/* === Code === */
+
+.sl-markdown-content .expressive-code .frame {
+  border-radius: var(--brand-radius);
+  box-shadow: var(--brand-shadow);
+}
+
+.sl-markdown-content :not(pre) > code {
+  border: 1px solid var(--sl-color-gray-6);
+  border-radius: 0.375rem;
+  background: var(--brand-surface-2);
+  color: var(--sl-color-accent-high);
+  font-size: 0.875em;
+  padding: 0.1em 0.35em;
+}
+
+/* === Tables === */
+
+.sl-markdown-content table:not(:where(.not-content *)) {
+  display: block;
+  overflow-x: auto;
+  border: 1px solid var(--sl-color-gray-6);
+  border-radius: var(--brand-radius);
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.sl-markdown-content th:not(:where(.not-content *)) {
+  background: var(--brand-surface-2);
+  font-size: var(--sl-text-sm);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--sl-color-gray-3);
+}
+
+.sl-markdown-content :is(th, td):not(:where(.not-content *)) {
+  border: none;
+  border-bottom: 1px solid var(--sl-color-gray-6);
+  padding: 0.6rem 0.9rem;
+}
+
+.sl-markdown-content tr:last-child :is(th, td):not(:where(.not-content *)) {
+  border-bottom: none;
+}
+
+/* === Lists === */
+
+.sl-markdown-content ul:not(:where(.not-content *)) li::marker {
+  color: var(--brand-teal);
+}
+
+.sl-markdown-content blockquote:not(:where(.not-content *)) {
+  border-inline-start-color: var(--brand-gold);
+}
+
+/* === Asides === */
+
+/*
+ * Only note and caution are retinted. `tip`, `danger` and the rest keep
+ * Starlight's own hues — a warning that looked like the brand colour would be
+ * worse, not more on-brand.
+ */
+.starlight-aside--note {
+  --sl-color-asides-text-accent: var(--sl-color-accent-high);
+  --sl-color-asides-border: var(--brand-teal);
+  background-color: var(--sl-color-accent-low);
+}
+
+.starlight-aside--caution {
+  --sl-color-asides-text-accent: var(--brand-gold);
+  --sl-color-asides-border: var(--brand-gold);
+  background-color: rgb(231 190 11 / 0.1);
+}
+
+:root[data-theme='light'] .starlight-aside--caution {
+  --sl-color-asides-text-accent: var(--brand-gold-deep);
+  --sl-color-asides-border: var(--brand-gold);
+}
+
+/* === Cards, on the landing page === */
+
+.card {
+  border-radius: var(--brand-radius);
+  border-color: var(--sl-color-gray-6);
+  background: var(--brand-surface);
+  box-shadow: var(--brand-shadow);
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--brand-teal) 50%, transparent);
+}
+
+.card .icon {
+  border-radius: var(--brand-radius-sm);
+  background: var(--sl-color-accent-low);
+  color: var(--sl-color-accent-high);
+  padding: 0.35rem;
+}
+
+/* === Hero === */
+
+.hero {
+  position: relative;
+}
+
+/*
+ * A single wash behind the hero rather than a gradient on the text: it reads
+ * at any window width and leaves the tagline at full contrast.
+ */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: -30% -10% auto -10%;
+  height: 30rem;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(45rem 22rem at 20% 25%, var(--brand-glow), transparent 70%),
+    radial-gradient(35rem 18rem at 80% 10%, rgb(231 190 11 / 0.12), transparent 70%);
+}
+
+.hero h1 {
+  background: linear-gradient(120deg, var(--sl-color-white), var(--brand-teal-bright) 70%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+:root[data-theme='light'] .hero h1 {
+  background: linear-gradient(120deg, var(--sl-color-white), var(--brand-teal-deep) 70%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero .actions a[data-variant='primary'] {
+  border-radius: 999px;
+  background: linear-gradient(120deg, var(--brand-teal-deep), var(--brand-teal));
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: 0 8px 24px -10px var(--brand-teal);
+}
+
+.hero .actions a[data-variant='minimal'] {
+  border-radius: 999px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .sl-markdown-content a:not(:where(.not-content *)) {
+    transition: none;
+  }
+
+  .card:hover {
+    transform: none;
+  }
+}
