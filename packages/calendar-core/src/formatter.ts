@@ -14,7 +14,12 @@ export function createFormatter(locale: string): CalendarFormatter {
   return {
     custom: format,
     dayOfMonth: date => format(date, 'iD'),
-    monthYear: date => format(date, 'iMMM iYYYY'),
+    /*
+     * The full month name, not the abbreviation. `iMMM` rendered the Arabic
+     * heading as "ربيع1 1448" — the abbreviations are built for narrow columns,
+     * and a calendar heading has the whole width of the calendar.
+     */
+    monthYear: date => format(date, 'iMMMM iYYYY'),
     fullDate: date => format(date, 'iEEEE, iDD iMMMM iYYYY'),
     isoDate: date => format(date, 'iYYYY-iMM-iDD'),
   }
