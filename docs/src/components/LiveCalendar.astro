@@ -1,0 +1,78 @@
+---
+/**
+ * The live calendar, in whichever framework the reader picked.
+ *
+ * All four islands are emitted; `FrameworkSwitcher` shows one. Hydration is
+ * `client:visible`, and the hidden ones are `display: none` and so never
+ * intersect — so a page with this on it boots one framework, not four, and
+ * picks up a second only if the reader switches to it.
+ *
+ * Angular has no island. `@analogjs/vite-plugin-angular` cannot compile an
+ * Angular app under Vite 8, which is the same gap that keeps Angular out of
+ * the default Playwright run — see `e2e/KNOWN-GAPS.md`. Rather than quietly
+ * showing a Vue calendar under an Angular heading, that tab says so and gives
+ * the reader the playground to run locally.
+ */
+import { CalendarDemo as ReactCalendarDemo } from './demos/react/CalendarDemo'
+import { CalendarDemo as SolidCalendarDemo } from './demos/solid/CalendarDemo'
+import SvelteCalendarDemo from './demos/svelte/CalendarDemo.svelte'
+import VueCalendarDemo from './demos/vue/CalendarDemo.vue'
+
+interface Props {
+  /** Which theme the demo starts on. */
+  theme?: string
+  /** Start in multi-select. */
+  multiple?: boolean
+}
+
+const { theme = 'default', multiple = false } = Astro.props
+---
+
+<div data-framework-example="vue">
+  <VueCalendarDemo client:visible theme={theme as never} multiple={multiple} />
+</div>
+
+<div data-framework-example="react">
+  <ReactCalendarDemo client:visible theme={theme as never} multiple={multiple} />
+</div>
+
+<div data-framework-example="svelte">
+  <SvelteCalendarDemo client:visible theme={theme as never} multiple={multiple} />
+</div>
+
+<div data-framework-example="solid">
+  <SolidCalendarDemo client:visible theme={theme as never} multiple={multiple} />
+</div>
+
+<div data-framework-example="angular">
+  <div class="demo not-content">
+    <div class="demo-stage demo-stage-note">
+      <p>
+        No live Angular island here. <code>@analogjs/vite-plugin-angular</code> does not compile an Angular app under
+        Vite 8, which is the same gap that keeps Angular out of the default end-to-end run.
+      </p>
+      <p>
+        The adapter itself is built and type-checked by <code>ngc</code> with <code>strictTemplates</code> on every
+        change, and <code>playground/angular</code> runs with <code>pnpm --filter taqwim-playground-angular dev</code>.
+      </p>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  .demo-stage-note {
+    display: block;
+    padding: 1.25rem;
+    color: var(--sl-color-gray-3);
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+
+  .demo-stage-note p {
+    margin: 0;
+  }
+
+  .demo-stage-note p + p {
+    margin-top: 0.75rem;
+  }
+</style>

@@ -1,0 +1,46 @@
+---
+/**
+ * The live date picker, in whichever framework the reader picked. Same
+ * arrangement as `LiveCalendar.astro` — four islands, one visible, and no
+ * Angular island because the plugin cannot compile one under Vite 8.
+ */
+import { DatePickerDemo as ReactDatePickerDemo } from './demos/react/DatePickerDemo'
+import { DatePickerDemo as SolidDatePickerDemo } from './demos/solid/DatePickerDemo'
+import SvelteDatePickerDemo from './demos/svelte/DatePickerDemo.svelte'
+import VueDatePickerDemo from './demos/vue/DatePickerDemo.vue'
+
+interface Props {
+  /** Which theme the demo starts on. */
+  theme?: string
+}
+
+const { theme = 'islamic' } = Astro.props
+---
+
+<div data-framework-example="vue">
+  <VueDatePickerDemo client:visible theme={theme as never} />
+</div>
+
+<div data-framework-example="react">
+  <ReactDatePickerDemo client:visible theme={theme as never} />
+</div>
+
+<div data-framework-example="svelte">
+  <SvelteDatePickerDemo client:visible theme={theme as never} />
+</div>
+
+<div data-framework-example="solid">
+  <SolidDatePickerDemo client:visible theme={theme as never} />
+</div>
+
+<div data-framework-example="angular">
+  <div class="demo not-content">
+    <div class="demo-stage demo-stage-note">
+      <p>
+        No live Angular island here — <code>@analogjs/vite-plugin-angular</code> does not compile an Angular app under
+        Vite 8. Run <code>playground/angular</code> locally to try
+        <code>&lt;taqwim-hijri-datepicker&gt;</code>.
+      </p>
+    </div>
+  </div>
+</div>
