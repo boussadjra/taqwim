@@ -11,11 +11,16 @@ import { HijriCalendar, type HijriCalendarSize, type HijriCalendarTheme } from '
 import { Component, provideZonelessChangeDetection, signal } from '@angular/core'
 import { bootstrapApplication } from '@angular/platform-browser'
 import { formatSelection, readConfig } from './harness'
+import { CalendarPlayground, DatePickerPlayground } from './playground'
+import './playground.css'
+// One import, every theme. Selection happens with `data-taqwim-theme`, not
+// by choosing which stylesheet to load.
+import '@taqwim/themes'
 
 const config = readConfig(window.location.search)
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-harness',
   standalone: true,
   imports: [HijriCalendar],
   template: `
@@ -49,7 +54,7 @@ const config = readConfig(window.location.search)
     <output data-testid="selection">{{ selection() }}</output>
   `,
 })
-class AppRoot {
+export class AppHarness {
   protected readonly config = config
   protected readonly themes = ['default', 'dark', 'islamic', 'neon', 'ocean']
   protected readonly size = config.size as HijriCalendarSize
@@ -59,6 +64,53 @@ class AppRoot {
 
   protected selection(): string {
     return formatSelection(this.value())
+  }
+}
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [AppHarness, CalendarPlayground, DatePickerPlayground],
+  template: `
+    <header class="pg-header">
+      <strong>Taqwim — Angular playground</strong>
+      <nav>
+        @for (item of views; track item.id) {
+          <a [href]="'#' + item.id" [attr.aria-current]="view() === item.id ? 'page' : null">{{ item.label }}</a>
+        }
+      </nav>
+    </header>
+
+    <main>
+      @switch (view()) {
+        @case ('calendar') {
+          <app-calendar-playground />
+        }
+        @case ('datepicker') {
+          <app-datepicker-playground />
+        }
+        @default {
+          <app-harness />
+        }
+      }
+    </main>
+  `,
+})
+class AppRoot {
+  protected readonly views = [
+    { id: 'harness', label: 'Harness' },
+    { id: 'calendar', label: 'Calendar' },
+    { id: 'datepicker', label: 'Date picker' },
+  ]
+
+  protected readonly view = signal(this.read())
+
+  constructor() {
+    window.addEventListener('hashchange', () => this.view.set(this.read()))
+  }
+
+  private read(): string {
+    return window.location.hash.replace('#', '') || 'harness'
   }
 }
 
