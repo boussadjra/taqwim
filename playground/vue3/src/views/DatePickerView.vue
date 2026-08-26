@@ -1,62 +1,159 @@
 <script setup lang="ts">
+/**
+ * The date picker with every prop it accepts, exercisable live.
+ *
+ * `HijriDatePicker` extends `HijriCalendarProps`, so everything the calendar
+ * playground drives applies here too — plus the input's own text handling,
+ * which is the part with the interesting failure modes.
+ */
 import type { HijriDateObject } from '@taqwim/core'
-import { HijriDatePicker } from '@taqwim/vue-styled'
-import { ref } from 'vue'
+import { layoutNames, themeNames } from '@taqwim/themes/names'
+import {
+  HijriDatePicker,
+  type HijriCalendarLayout,
+  type HijriCalendarSize,
+  type HijriCalendarTheme,
+} from '@taqwim/vue-styled'
+import { computed, ref, watch } from 'vue'
 
-const value = ref<HijriDateObject>()
-const arabic = ref<HijriDateObject>()
-const readOnlyInput = ref<HijriDateObject>({ hy: 1446, hm: 9, hd: 1 })
+const THEMES: readonly HijriCalendarTheme[] = themeNames
+const LAYOUTS: readonly HijriCalendarLayout[] = layoutNames
+
+const FORMATS = ['iYYYY-iMM-iDD', 'iDD/iMM/iYYYY', 'iD iMMMM iYYYY', 'iEEEE, iD iMMMM iYYYY']
+
+const theme = ref<HijriCalendarTheme>('default')
+const layout = ref<HijriCalendarLayout>('default')
+const size = ref<HijriCalendarSize>('default')
+const locale = ref('en')
+const dir = ref<'ltr' | 'rtl'>('ltr')
+const format = ref(FORMATS[0])
+const label = ref('Appointment date')
+const inputPlaceholder = ref('')
+const editable = ref(true)
+const disabled = ref(false)
+const readonly = ref(false)
+
+// Arabic reads right to left; following the locale means the RTL case is what
+// you see when you pick Arabic rather than something to remember to set.
+watch(locale, next => {
+  dir.value = next === 'ar' ? 'rtl' : 'ltr'
+})
+
+// The picker holds one date: `multiple` is not part of its surface in any
+// adapter, because the input has room for a single formatted value.
+const value = ref<HijriDateObject | undefined>()
+
+const selection = computed(() => JSON.stringify(value.value ?? null, null, 2))
 </script>
 
 <template>
-  <div class="stack">
-    <section>
-      <h2>Typed or picked</h2>
-      <HijriDatePicker v-model="value" label="Appointment date" />
-      <p>Accepts <code>1446-09-01</code> or <code>01/09/1446</code>. Unparseable text reverts.</p>
-      <pre>{{ value ?? 'null' }}</pre>
-    </section>
+  <div class="pg">
+    <aside class="pg-controls">
+      <fieldset class="pg-group">
+        <legend>Appearance</legend>
 
-    <section>
-      <h2>Arabic, right to left</h2>
-      <HijriDatePicker v-model="arabic" locale="ar" dir="rtl" theme="islamic" format="iD iMMMM iYYYY" />
-      <pre>{{ arabic ?? 'null' }}</pre>
-    </section>
+        <label class="pg-field">
+          Theme
+          <select v-model="theme">
+            <option v-for="name in THEMES" :key="name" :value="name">{{ name }}</option>
+          </select>
+        </label>
 
-    <section>
-      <h2>Pick only</h2>
-      <HijriDatePicker v-model="readOnlyInput" :editable="false" theme="material" />
-      <pre>{{ readOnlyInput }}</pre>
+        <label class="pg-field">
+          Layout
+          <select v-model="layout">
+            <option v-for="name in LAYOUTS" :key="name" :value="name">{{ name }}</option>
+          </select>
+        </label>
+
+        <label class="pg-field">
+          Size
+          <select v-model="size">
+            <option value="compact">compact</option>
+            <option value="default">default</option>
+            <option value="large">large</option>
+          </select>
+        </label>
+      </fieldset>
+
+      <fieldset class="pg-group">
+        <legend>Input</legend>
+
+        <label class="pg-field">
+          Format
+          <select v-model="format">
+            <option v-for="pattern in FORMATS" :key="pattern" :value="pattern">{{ pattern }}</option>
+          </select>
+        </label>
+
+        <label class="pg-field">
+          Label
+          <input v-model="label" type="text" />
+        </label>
+
+        <label class="pg-field">
+          Placeholder
+          <input v-model="inputPlaceholder" type="text" />
+        </label>
+
+        <label class="pg-check"><input v-model="editable" type="checkbox" /> <code>editable</code></label>
+      </fieldset>
+
+      <fieldset class="pg-group">
+        <legend>Locale</legend>
+
+        <label class="pg-field">
+          Locale
+          <select v-model="locale">
+            <option value="en">en</option>
+            <option value="ar">ar</option>
+            <option value="fr">fr</option>
+          </select>
+        </label>
+
+        <label class="pg-field">
+          Direction
+          <select v-model="dir">
+            <option value="ltr">ltr</option>
+            <option value="rtl">rtl</option>
+          </select>
+        </label>
+      </fieldset>
+
+      <fieldset class="pg-group">
+        <legend>State</legend>
+
+        <label class="pg-check"><input v-model="disabled" type="checkbox" /> <code>disabled</code></label>
+        <label class="pg-check"><input v-model="readonly" type="checkbox" /> <code>readonly</code></label>
+      </fieldset>
+    </aside>
+
+    <section class="pg-stage">
+      <div class="pg-preview">
+        <HijriDatePicker
+          v-model="value"
+          :theme="theme"
+          :layout="layout"
+          :size="size"
+          :locale="locale"
+          :dir="dir"
+          :format="format"
+          :label="label"
+          :input-placeholder="inputPlaceholder || undefined"
+          :editable="editable"
+          :disabled="disabled"
+          :readonly="readonly"
+        />
+      </div>
+
+      <pre class="pg-output">{{ selection }}</pre>
+
+      <p class="pg-hint">
+        With <code>editable</code> on, the input accepts <code>1446-09-01</code> or <code>01/09/1446</code>, with
+        <code>/</code> or <code>-</code>. Text it cannot parse reverts to the last good value rather than clearing the
+        selection. The trigger is a <code>combobox</code>: <code>Enter</code> or <code>Space</code> opens the popup,
+        <code>Escape</code> closes it and returns focus.
+      </p>
     </section>
   </div>
 </template>
-
-<style scoped>
-.stack {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 3rem;
-}
-
-section {
-  min-width: 18rem;
-}
-
-h2 {
-  font-size: 1rem;
-  margin: 0 0 0.75rem;
-}
-
-p {
-  max-width: 22rem;
-  font-size: 0.8125rem;
-  opacity: 0.75;
-}
-
-pre {
-  font-size: 0.75rem;
-  background: #f4f4f5;
-  padding: 0.5rem;
-  border-radius: 0.25rem;
-}
-</style>

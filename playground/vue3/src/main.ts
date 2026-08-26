@@ -1,4 +1,4 @@
-import './assets/main.css'
+import './assets/playground.css'
 // One import, every theme. Selection happens with `data-taqwim-theme`, not by
 // choosing which stylesheet to load.
 import '@taqwim/themes'
