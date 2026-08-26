@@ -3,7 +3,14 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 // @ts-expect-error -- plain ESM, shared with the build script; no types needed here.
-import { findTokenReferences, parseTokens, tailwindThemeCss, tailwindThemeFromTokens } from '../scripts/tokens.js'
+import {
+  declaredTokens,
+  findTokenReferences,
+  parseTokens,
+  tailwindThemeCss,
+  tailwindThemeFromTokens,
+  themeNames,
+} from '../scripts/tokens.js'
 
 const src = join(dirname(fileURLToPath(import.meta.url)), '..', 'src')
 
@@ -16,15 +23,6 @@ const tokens: Record<string, string> = parseTokens(variables)
 const themeFiles = readdirSync(join(src, 'themes'))
   .filter(name => name.endsWith('.css') && name !== 'all.css')
   .sort()
-
-/** Custom properties a stylesheet *declares* (as opposed to references). */
-function declaredTokens(css: string): string[] {
-  const declared = new Set<string>()
-  for (const match of css.matchAll(/^\s*--hijri-calendar-([\w-]+)\s*:/gm)) {
-    declared.add(match[1])
-  }
-  return [...declared].sort()
-}
 
 describe('token contract', () => {
   it('parses every token declared in :root', () => {
@@ -79,9 +77,14 @@ describe('themes', () => {
     expect(imported.sort()).toEqual(themeFiles)
   })
 
-  it('ships the themes the pre-1.0 stylesheets shipped', () => {
-    // Renaming or dropping one silently breaks every existing `theme` prop.
-    expect(themeFiles.map(file => file.replace(/\.css$/, ''))).toEqual([
+  it('never drops a theme the pre-1.0 stylesheets shipped', () => {
+    /*
+     * Renaming or dropping one silently breaks every existing `theme` prop, so
+     * this list only ever grows. Asserted as a subset rather than an exact
+     * match: adding a preset is meant to be one CSS file, and an equality
+     * check here would make it two.
+     */
+    const PRE_1_0 = [
       'cyberpunk',
       'dark',
       'default',
@@ -95,7 +98,16 @@ describe('themes', () => {
       'neon',
       'ocean',
       'sunset',
-    ])
+    ]
+
+    expect(themeNames(join(src, 'themes'))).toEqual(expect.arrayContaining(PRE_1_0))
+  })
+
+  it('derives the same theme list the build generates from', () => {
+    // The union shipped to the styled packages comes from `themeNames`; if it
+    // and the directory ever disagree, a theme prop accepts a name that has no
+    // stylesheet.
+    expect(themeNames(join(src, 'themes'))).toEqual(themeFiles.map(file => file.replace(/\.css$/, '')))
   })
 })
 
@@ -111,7 +123,7 @@ describe('tailwind preset', () => {
   it('maps values to var() references, never to literals', () => {
     for (const scale of Object.values(theme)) {
       for (const value of Object.values((scale as Record<string, Record<string, string>>).taqwim)) {
-        expect(value).toMatch(/^var\(--hijri-calendar-[\w-]+\)$/)
+        expect(value).toMatch(/^var\(--hc-[\w-]+\)$/)
       }
     }
   })
@@ -125,7 +137,7 @@ describe('tailwind preset', () => {
 
   it('strips the bucket prefix so utilities read naturally', () => {
     const fontSize = (theme.fontSize as Record<string, Record<string, string>>).taqwim
-    expect(fontSize.lg).toBe('var(--hijri-calendar-font-size-lg)')
+    expect(fontSize.lg).toBe('var(--hc-font-size-lg)')
     expect(fontSize).not.toHaveProperty('font-size-lg')
   })
 
@@ -140,7 +152,7 @@ describe('tailwind preset', () => {
   it('emits a Tailwind v4 @theme block over the same tokens', () => {
     const css = tailwindThemeCss(tokens)
     expect(css).toContain('@theme {')
-    expect(css).toContain('--color-taqwim-primary: var(--hijri-calendar-primary);')
-    expect(css).toContain('--text-taqwim-lg: var(--hijri-calendar-font-size-lg);')
+    expect(css).toContain('--color-taqwim-primary: var(--hc-primary);')
+    expect(css).toContain('--text-taqwim-lg: var(--hc-font-size-lg);')
   })
 })

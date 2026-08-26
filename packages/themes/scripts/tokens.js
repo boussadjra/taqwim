@@ -9,7 +9,9 @@
  * without a compile step.
  */
 
-const PREFIX = '--hijri-calendar-'
+import { readdirSync } from 'node:fs'
+
+const PREFIX = '--hc-'
 
 /**
  * Extracts the custom properties declared in the top-level `:root` block.
@@ -19,7 +21,7 @@ const PREFIX = '--hijri-calendar-'
  * not new ones.
  *
  * @param {string} css
- * @returns {Record<string, string>} token name (without the `--hijri-calendar-` prefix) → declared value
+ * @returns {Record<string, string>} token name (without the `--hc-` prefix) → declared value
  */
 export function parseTokens(css) {
   const withoutComments = css.replace(/\/\*[\s\S]*?\*\//g, '')
@@ -36,7 +38,16 @@ export function parseTokens(css) {
     throw new Error('variables.css has an unterminated :root block')
   }
 
-  const body = withoutComments.slice(open + 1, close)
+  return parseDeclarations(withoutComments.slice(open + 1, close))
+}
+
+/**
+ * The `--hc-*` declarations in a block body.
+ *
+ * @param {string} body
+ * @returns {Record<string, string>}
+ */
+function parseDeclarations(body) {
   /** @type {Record<string, string>} */
   const tokens = {}
 
@@ -57,7 +68,88 @@ export function parseTokens(css) {
 }
 
 /**
- * Every `var(--hijri-calendar-*)` reference in a stylesheet.
+ * The tokens a theme stylesheet sets, from its `[data-taqwim-theme='…']` block.
+ *
+ * Themes are a single block by contract — `tokens.test.ts` asserts every rule in
+ * a theme file is scoped to that one selector — so the first block is the theme.
+ *
+ * @param {string} css
+ * @returns {Record<string, string>}
+ */
+export function parseThemeBlock(css) {
+  const withoutComments = css.replace(/\/\*[\s\S]*?\*\//g, '')
+  const start = withoutComments.indexOf('[data-taqwim-theme=')
+
+  if (start === -1) {
+    throw new Error('no [data-taqwim-theme=…] block found')
+  }
+
+  const open = withoutComments.indexOf('{', start)
+  const close = withoutComments.indexOf('}', open)
+
+  if (open === -1 || close === -1) {
+    throw new Error('unterminated [data-taqwim-theme=…] block')
+  }
+
+  return parseDeclarations(withoutComments.slice(open + 1, close))
+}
+
+/**
+ * The bundled theme names, from the stylesheets themselves.
+ *
+ * The filesystem is the source of truth for what themes exist, so that adding
+ * a preset is one file rather than an edit in every package that names one.
+ *
+ * @param {string} themesDir
+ * @returns {string[]} alphabetical, `all.css` excluded
+ */
+export function themeNames(themesDir) {
+  return readdirSync(themesDir)
+    .filter(name => name.endsWith('.css') && name !== 'all.css')
+    .map(name => name.replace(/\.css$/, ''))
+    .sort()
+}
+
+/**
+ * The layout variants, from the stylesheet that implements them.
+ *
+ * Derived rather than listed for the same reason as `themeNames`: the CSS is
+ * what actually decides which values do anything, so a hand-kept list can only
+ * ever be wrong. `default` is always first and never appears in `core.css` —
+ * it is the absence of any layout rule.
+ *
+ * @param {string} coreCss
+ * @returns {string[]}
+ */
+export function layoutNames(coreCss) {
+  const found = new Set()
+
+  for (const match of coreCss.matchAll(/\[data-taqwim-layout='([\w-]+)'\]/g)) {
+    found.add(match[1])
+  }
+
+  return ['default', ...[...found].sort()]
+}
+
+/**
+ * Custom properties a stylesheet *declares*, as opposed to references.
+ *
+ * @param {string} css
+ * @returns {string[]} sorted, deduped, prefix stripped
+ */
+export function declaredTokens(css) {
+  /** @type {Set<string>} */
+  const declared = new Set()
+
+  for (const match of css.matchAll(/^\s*--hc-([\w-]+)\s*:/gm)) {
+    declared.add(match[1])
+  }
+
+  return [...declared].sort()
+}
+
+/**
+ * Every `var(--hc-*)` reference in a stylesheet.
  *
  * Used by the contract test to prove `core.css` consumes nothing that
  * `variables.css` does not define.
@@ -68,7 +160,7 @@ export function parseTokens(css) {
 export function findTokenReferences(css) {
   const references = new Set()
 
-  for (const match of css.matchAll(/var\(\s*--hijri-calendar-([\w-]+)/g)) {
+  for (const match of css.matchAll(/var\(\s*--hc-([\w-]+)/g)) {
     references.add(match[1])
   }
 

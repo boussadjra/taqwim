@@ -17,7 +17,7 @@ const target = join(root, 'src', 'content', 'docs', 'reference', 'tokens.md')
 
 const tokens = parseTokens(readFileSync(variables, 'utf8'))
 const rows = Object.entries(tokens)
-  .map(([name, value]) => `| \`--hijri-calendar-${name}\` | \`${value}\` |`)
+  .map(([name, value]) => `| \`--hc-${name}\` | \`${value}\` |`)
   .join('\n')
 
 writeFileSync(
@@ -33,8 +33,8 @@ The complete token contract. \`core.css\` consumes only these, every bundled the
 sets only these, and the Tailwind preset is generated from them — so this table
 is the whole surface a custom theme has to work with.
 
-Names keep the \`--hijri-calendar-\` prefix from the pre-1.0 stylesheets, so
-overrides written against those still apply.
+Every token is namespaced \`--hc-\`. Pre-1.0 stylesheets used
+\`--hijri-calendar-\`; overrides written against those need the prefix renamed.
 
 | Token | Default |
 | --- | --- |

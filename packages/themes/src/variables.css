@@ -6,93 +6,96 @@
  * these custom properties, and the Tailwind preset is generated from this file
  * so the two can never drift.
  *
- * Property names are kept as `--hijri-calendar-*` for continuity with the
- * pre-1.0 stylesheets, so existing overrides keep working.
+ * Every property is namespaced `--hc-*`. It was `--hijri-calendar-*` before
+ * 1.0; the short form keeps a theme file readable at a glance, and renaming
+ * while nothing is published costs nobody anything.
  */
 
 :root {
   /* === Surface === */
-  --hijri-calendar-background: #ffffff;
-  --hijri-calendar-foreground: #111827;
-  --hijri-calendar-border: 1px solid #e5e7eb;
-  --hijri-calendar-border-radius: 0.5rem;
-  --hijri-calendar-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --hijri-calendar-font-family: inherit;
+  --hc-background: #ffffff;
+  --hc-foreground: #111827;
+  --hc-border: 1px solid #e5e7eb;
+  --hc-border-radius: 0.5rem;
+  --hc-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --hc-font-family: inherit;
 
   /* === Primary / selected === */
-  --hijri-calendar-primary: #2563eb;
-  --hijri-calendar-primary-foreground: #ffffff;
-  --hijri-calendar-primary-hover: #1d4ed8;
+  --hc-primary: #2563eb;
+  --hc-primary-foreground: #ffffff;
+  --hc-primary-hover: #1d4ed8;
 
   /* === Secondary / navigation === */
-  --hijri-calendar-secondary: #f3f4f6;
-  --hijri-calendar-secondary-foreground: #6b7280;
-  --hijri-calendar-secondary-hover: #e5e7eb;
+  --hc-secondary: #f3f4f6;
+  /* 6.87:1 on the nav button; the #6b7280 it replaced measured 4.39:1 there. */
+  --hc-secondary-foreground: #4b5563;
+  --hc-secondary-hover: #e5e7eb;
 
   /* === Accent / today === */
-  --hijri-calendar-accent: #dbeafe;
-  --hijri-calendar-accent-foreground: #1e40af;
+  --hc-accent: #dbeafe;
+  --hc-accent-foreground: #1e40af;
 
   /* === Muted / headers === */
-  --hijri-calendar-muted: #f9fafb;
+  --hc-muted: #f9fafb;
   /*
    * 4.83:1 on the default surface. The lighter #9ca3af this replaced measured
    * 2.53:1 on the 12px weekday labels — an axe failure in the shared suite,
    * and the reason those colours are now a tested contract rather than taste.
    */
-  --hijri-calendar-muted-foreground: #6b7280;
+  --hc-muted-foreground: #6b7280;
 
   /* === Derived state colours === */
-  --hijri-calendar-selected: var(--hijri-calendar-primary);
-  --hijri-calendar-selected-foreground: var(--hijri-calendar-primary-foreground);
-  --hijri-calendar-selected-hover: var(--hijri-calendar-primary-hover);
-  --hijri-calendar-today: var(--hijri-calendar-accent);
-  --hijri-calendar-today-foreground: var(--hijri-calendar-accent-foreground);
-  --hijri-calendar-hover: var(--hijri-calendar-secondary);
-  --hijri-calendar-outside-month: var(--hijri-calendar-muted-foreground);
-  --hijri-calendar-disabled: var(--hijri-calendar-muted-foreground);
-  --hijri-calendar-unavailable: #ef4444;
+  --hc-selected: var(--hc-primary);
+  --hc-selected-foreground: var(--hc-primary-foreground);
+  --hc-selected-hover: var(--hc-primary-hover);
+  --hc-today: var(--hc-accent);
+  --hc-today-foreground: var(--hc-accent-foreground);
+  --hc-hover: var(--hc-secondary);
+  --hc-outside-month: var(--hc-muted-foreground);
+  --hc-disabled: var(--hc-muted-foreground);
+  /* 4.83:1 on white; the #ef4444 it replaced measured 3.76:1. */
+  --hc-unavailable: #dc2626;
 
   /* === Focus === */
-  --hijri-calendar-focus-ring-color: var(--hijri-calendar-primary);
-  --hijri-calendar-focus-ring-width: 2px;
-  --hijri-calendar-focus-ring-offset: 2px;
+  --hc-focus-ring-color: var(--hc-primary);
+  --hc-focus-ring-width: 2px;
+  --hc-focus-ring-offset: 2px;
 
   /* === Typography === */
-  --hijri-calendar-font-size-sm: 0.75rem;
-  --hijri-calendar-font-size-base: 0.875rem;
-  --hijri-calendar-font-size-lg: 1.125rem;
-  --hijri-calendar-font-size-xl: 1.25rem;
-  --hijri-calendar-font-weight-normal: 400;
-  --hijri-calendar-font-weight-medium: 500;
-  --hijri-calendar-font-weight-semibold: 600;
-  --hijri-calendar-font-weight-bold: 700;
+  --hc-font-size-sm: 0.75rem;
+  --hc-font-size-base: 0.875rem;
+  --hc-font-size-lg: 1.125rem;
+  --hc-font-size-xl: 1.25rem;
+  --hc-font-weight-normal: 400;
+  --hc-font-weight-medium: 500;
+  --hc-font-weight-semibold: 600;
+  --hc-font-weight-bold: 700;
 
   /* === Spacing === */
-  --hijri-calendar-spacing-xs: 0.25rem;
-  --hijri-calendar-spacing-sm: 0.5rem;
-  --hijri-calendar-spacing-md: 1rem;
-  --hijri-calendar-spacing-lg: 1.5rem;
-  --hijri-calendar-spacing-xl: 2rem;
+  --hc-spacing-xs: 0.25rem;
+  --hc-spacing-sm: 0.5rem;
+  --hc-spacing-md: 1rem;
+  --hc-spacing-lg: 1.5rem;
+  --hc-spacing-xl: 2rem;
 
   /* === Layout === */
-  --hijri-calendar-header-padding: var(--hijri-calendar-spacing-md);
-  --hijri-calendar-header-border: 1px solid #e5e7eb;
-  --hijri-calendar-cell-size: 2rem;
-  --hijri-calendar-cell-border-radius: 0.375rem;
-  --hijri-calendar-cell-gap: var(--hijri-calendar-spacing-xs);
-  --hijri-calendar-nav-button-size: 2rem;
-  --hijri-calendar-nav-button-border-radius: var(--hijri-calendar-cell-border-radius);
-  --hijri-calendar-grid-gap: var(--hijri-calendar-cell-gap);
-  --hijri-calendar-grid-padding: var(--hijri-calendar-spacing-sm);
+  --hc-header-padding: var(--hc-spacing-md);
+  --hc-header-border: 1px solid #e5e7eb;
+  --hc-cell-size: 2rem;
+  --hc-cell-border-radius: 0.375rem;
+  --hc-cell-gap: var(--hc-spacing-xs);
+  --hc-nav-button-size: 2rem;
+  --hc-nav-button-border-radius: var(--hc-cell-border-radius);
+  --hc-grid-gap: var(--hc-cell-gap);
+  --hc-grid-padding: var(--hc-spacing-sm);
 
   /* === Motion === */
-  --hijri-calendar-transition: all 0.15s ease-in-out;
-  --hijri-calendar-transition-fast: all 0.1s ease-in-out;
-  --hijri-calendar-transition-slow: all 0.3s ease-in-out;
+  --hc-transition: all 0.15s ease-in-out;
+  --hc-transition-fast: all 0.1s ease-in-out;
+  --hc-transition-slow: all 0.3s ease-in-out;
 
   /* === Stacking === */
-  --hijri-calendar-z-index: 50;
+  --hc-z-index: 50;
 }
 
 /*
@@ -100,47 +103,47 @@
  * metrics — so `data-taqwim-theme` and `data-taqwim-size` compose freely.
  */
 [data-taqwim-size='compact'] {
-  --hijri-calendar-cell-size: 1.75rem;
-  --hijri-calendar-nav-button-size: 1.75rem;
-  --hijri-calendar-font-size-base: 0.8125rem;
-  --hijri-calendar-font-size-lg: 1rem;
-  --hijri-calendar-header-padding: var(--hijri-calendar-spacing-sm);
-  --hijri-calendar-grid-padding: var(--hijri-calendar-spacing-xs);
+  --hc-cell-size: 1.75rem;
+  --hc-nav-button-size: 1.75rem;
+  --hc-font-size-base: 0.8125rem;
+  --hc-font-size-lg: 1rem;
+  --hc-header-padding: var(--hc-spacing-sm);
+  --hc-grid-padding: var(--hc-spacing-xs);
 }
 
 [data-taqwim-size='large'] {
-  --hijri-calendar-cell-size: 2.75rem;
-  --hijri-calendar-nav-button-size: 2.75rem;
-  --hijri-calendar-font-size-base: 1rem;
-  --hijri-calendar-font-size-lg: 1.375rem;
-  --hijri-calendar-header-padding: var(--hijri-calendar-spacing-lg);
-  --hijri-calendar-grid-padding: var(--hijri-calendar-spacing-md);
+  --hc-cell-size: 2.75rem;
+  --hc-nav-button-size: 2.75rem;
+  --hc-font-size-base: 1rem;
+  --hc-font-size-lg: 1.375rem;
+  --hc-header-padding: var(--hc-spacing-lg);
+  --hc-grid-padding: var(--hc-spacing-md);
 }
 
 /* Smaller touch targets are wrong on phones; grow the cells instead. */
 @media (max-width: 640px) {
   :root {
-    --hijri-calendar-cell-size: 2.25rem;
-    --hijri-calendar-nav-button-size: 2.25rem;
-    --hijri-calendar-header-padding: 0.75rem;
+    --hc-cell-size: 2.25rem;
+    --hc-nav-button-size: 2.25rem;
+    --hc-header-padding: 0.75rem;
   }
 }
 
 @media (prefers-contrast: more) {
   :root {
-    --hijri-calendar-border: 1px solid #000000;
-    --hijri-calendar-foreground: #000000;
-    --hijri-calendar-background: #ffffff;
-    --hijri-calendar-primary: #0000ee;
-    --hijri-calendar-muted-foreground: #454545;
-    --hijri-calendar-focus-ring-width: 3px;
+    --hc-border: 1px solid #000000;
+    --hc-foreground: #000000;
+    --hc-background: #ffffff;
+    --hc-primary: #0000ee;
+    --hc-muted-foreground: #454545;
+    --hc-focus-ring-width: 3px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --hijri-calendar-transition: none;
-    --hijri-calendar-transition-fast: none;
-    --hijri-calendar-transition-slow: none;
+    --hc-transition: none;
+    --hc-transition-fast: none;
+    --hc-transition-slow: none;
   }
 }
