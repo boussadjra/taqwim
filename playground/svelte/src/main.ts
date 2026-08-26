@@ -1,4 +1,9 @@
-import { mount } from 'svelte'
-import Harness from './Harness.svelte'
+import './playground.css'
+// One import, every theme. Selection happens with `data-taqwim-theme`, not by
+// choosing which stylesheet to load.
+import '@taqwim/themes'
 
-mount(Harness, { target: document.getElementById('app')! })
+import { mount } from 'svelte'
+import App from './App.svelte'
+
+mount(App, { target: document.getElementById('app')! })
