@@ -35,7 +35,7 @@ addHijriBusinessDays(date, 5, { weekend: [0, 6] }) // Sunday and Saturday
 
 ## Out-of-range dates throw
 
-`hDatesTable` covers 1343–1500 AH (1924–2076 CE). Outside it, `toHijri` and
+`hDatesTable` covers 1343–1500 AH (1924–2077 CE). Outside it, `toHijri` and
 `toGregorian` used to return a silently wrong result. They now throw
 `HijriRangeError`, which extends `RangeError`.
 

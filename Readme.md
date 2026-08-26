@@ -56,7 +56,7 @@ formatHijriDate({ hy: 1445, hm: 9, hd: 1 }, 'iYYYY/iMM/iDD', 'ar')
 // => ١٤٤٥/٠٩/٠١
 ```
 
-Conversion is table-driven and covers **1343–1500 AH** (1924–2076 CE). Outside that range it throws `HijriRangeError` rather than returning a silently wrong date. Business-day arithmetic defaults to a Friday/Saturday weekend, overridable per call.
+Conversion is table-driven and covers **1343–1500 AH** (1924–2077 CE). Outside that range it throws `HijriRangeError` rather than returning a silently wrong date. Business-day arithmetic defaults to a Friday/Saturday weekend, overridable per call.
 
 Full API: **[reference](https://boussadjra.github.io/taqwim/api/)**.
 

@@ -99,7 +99,7 @@ Where an adapter cannot pass, it goes in `e2e/KNOWN-GAPS.md` with a real diagnos
 
 One exported function per file under `src/lib/`, re-exported from `index.ts`. Naming is `verbHijriNoun` (`toHijri`, `addHijriDays`, `formatHijriDate`), and subtraction mirrors addition (`addHijriMonths` ↔ `subHijriMonths`). Each function has a matching `tests/<functionName>.test.ts`.
 
-Conversion is table-driven (`hDates.ts`) covering **1343–1500 AH / 1924–2076 CE**, and throws `HijriRangeError` outside it rather than returning a silently wrong date. Business-day arithmetic defaults to a **Friday/Saturday** weekend, overridable per call. `date-fns` is used for Gregorian math only.
+Conversion is table-driven (`hDates.ts`) covering **1343–1500 AH / 1924–2077 CE**, and throws `HijriRangeError` outside it rather than returning a silently wrong date. Business-day arithmetic defaults to a **Friday/Saturday** weekend, overridable per call. `date-fns` is used for Gregorian math only.
 
 ## Versioning
 
