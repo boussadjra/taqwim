@@ -1,26 +1,28 @@
 /* Ocean — deep blue gradient with cyan highlights. */
 [data-taqwim-theme='ocean'] {
-  --hijri-calendar-background: linear-gradient(135deg, #0077be 0%, #004d7a 50%, #003d82 100%);
-  --hijri-calendar-foreground: #ffffff;
-  --hijri-calendar-border: 1px solid #00a8cc;
-  --hijri-calendar-border-radius: 0.75rem;
-  --hijri-calendar-shadow: 0 8px 32px rgb(0 119 190 / 0.3), 0 2px 8px rgb(0 0 0 / 0.2);
+  --hc-background: linear-gradient(135deg, #075985 0%, #0c4a6e 50%, #082f49 100%);
+  --hc-foreground: #ffffff;
+  --hc-border: 1px solid #00a8cc;
+  --hc-border-radius: 0.75rem;
+  --hc-shadow: 0 8px 32px rgb(0 119 190 / 0.3), 0 2px 8px rgb(0 0 0 / 0.2);
 
-  --hijri-calendar-primary: linear-gradient(135deg, #00a8cc, #0077be);
-  --hijri-calendar-primary-foreground: #ffffff;
-  --hijri-calendar-primary-hover: linear-gradient(135deg, #00d4ff, #00a8cc);
+  --hc-primary: linear-gradient(135deg, #0369a1, #075985);
+  --hc-primary-foreground: #ffffff;
+  --hc-primary-hover: linear-gradient(135deg, #0369a1, #0c4a6e);
 
-  --hijri-calendar-secondary: rgb(0 168 204 / 0.18);
-  --hijri-calendar-secondary-foreground: #b3e5fc;
-  --hijri-calendar-secondary-hover: rgb(0 168 204 / 0.32);
+  --hc-secondary: rgb(0 168 204 / 0.18);
+  --hc-secondary-foreground: #e0f2fe;
+  --hc-secondary-hover: rgb(0 168 204 / 0.32);
 
-  --hijri-calendar-accent: rgb(0 212 255 / 0.2);
-  --hijri-calendar-accent-foreground: #00d4ff;
+  --hc-accent: rgb(2 132 199 / 0.25);
+  --hc-accent-foreground: #e0f2fe;
 
-  --hijri-calendar-muted: rgb(0 61 130 / 0.6);
-  --hijri-calendar-muted-foreground: rgb(255 255 255 / 0.7);
+  --hc-muted: rgb(8 47 73 / 0.7);
+  --hc-muted-foreground: rgb(255 255 255 / 0.92);
 
-  --hijri-calendar-header-border: 1px solid rgb(0 168 204 / 0.4);
-  --hijri-calendar-hover: rgb(0 212 255 / 0.18);
-  --hijri-calendar-focus-ring-color: #00d4ff;
+  --hc-header-border: 1px solid rgb(0 168 204 / 0.4);
+  --hc-hover: rgb(0 212 255 / 0.18);
+  --hc-focus-ring-color: #7dd3fc;
+
+  --hc-unavailable: #fecaca;
 }

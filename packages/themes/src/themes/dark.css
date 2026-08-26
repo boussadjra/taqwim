@@ -1,25 +1,27 @@
 /* Dark — neutral slate, matching the default's blue accent. */
 [data-taqwim-theme='dark'] {
-  --hijri-calendar-background: #1f2937;
-  --hijri-calendar-foreground: #f9fafb;
-  --hijri-calendar-border: 1px solid #374151;
-  --hijri-calendar-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.25);
+  --hc-background: #1f2937;
+  --hc-foreground: #f9fafb;
+  --hc-border: 1px solid #374151;
+  --hc-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.25);
 
-  --hijri-calendar-primary: #2563eb;
-  --hijri-calendar-primary-foreground: #ffffff;
-  --hijri-calendar-primary-hover: #1d4ed8;
+  --hc-primary: #2563eb;
+  --hc-primary-foreground: #ffffff;
+  --hc-primary-hover: #1d4ed8;
 
-  --hijri-calendar-secondary: #374151;
-  --hijri-calendar-secondary-foreground: #9ca3af;
-  --hijri-calendar-secondary-hover: #4b5563;
+  --hc-secondary: #374151;
+  --hc-secondary-foreground: #d1d5db;
+  --hc-secondary-hover: #4b5563;
 
-  --hijri-calendar-accent: #1e3a8a;
-  --hijri-calendar-accent-foreground: #60a5fa;
+  --hc-accent: #1e3a8a;
+  --hc-accent-foreground: #93c5fd;
 
-  --hijri-calendar-muted: #111827;
+  --hc-muted: #111827;
   /* 5.3:1 on this theme's dark surface; #6b7280 measured 2.79:1 against it. */
-  --hijri-calendar-muted-foreground: #9ca3af;
+  --hc-muted-foreground: #9ca3af;
 
-  --hijri-calendar-header-border: 1px solid #374151;
-  --hijri-calendar-unavailable: #f87171;
+  --hc-header-border: 1px solid #374151;
+  --hc-unavailable: #f87171;
+
+  --hc-focus-ring-color: #60a5fa;
 }

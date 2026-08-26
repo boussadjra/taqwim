@@ -1,27 +1,27 @@
 /* Sunset — warm orange and amber. */
 [data-taqwim-theme='sunset'] {
-  --hijri-calendar-background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffb74d 100%);
-  --hijri-calendar-foreground: #ffffff;
-  --hijri-calendar-border: 1px solid #ff8a50;
-  --hijri-calendar-border-radius: 0.75rem;
-  --hijri-calendar-shadow: 0 8px 32px rgb(255 107 53 / 0.3), 0 2px 8px rgb(0 0 0 / 0.2);
+  --hc-background: linear-gradient(135deg, #ff6b35 0%, #f7931e 50%, #ffb74d 100%);
+  --hc-foreground: #431407;
+  --hc-border: 1px solid #ff8a50;
+  --hc-border-radius: 0.75rem;
+  --hc-shadow: 0 8px 32px rgb(255 107 53 / 0.3), 0 2px 8px rgb(0 0 0 / 0.2);
 
-  --hijri-calendar-primary: linear-gradient(135deg, #e8590c, #f7931e);
-  --hijri-calendar-primary-foreground: #ffffff;
-  --hijri-calendar-primary-hover: linear-gradient(135deg, #d14904, #e8590c);
+  --hc-primary: linear-gradient(135deg, #9a3412, #7c2d12);
+  --hc-primary-foreground: #ffffff;
+  --hc-primary-hover: linear-gradient(135deg, #7c2d12, #601c0a);
 
-  --hijri-calendar-secondary: rgb(255 255 255 / 0.18);
-  --hijri-calendar-secondary-foreground: #fff3e0;
-  --hijri-calendar-secondary-hover: rgb(255 255 255 / 0.3);
+  --hc-secondary: rgb(255 255 255 / 0.35);
+  --hc-secondary-foreground: #5c1a08;
+  --hc-secondary-hover: rgb(255 255 255 / 0.5);
 
-  --hijri-calendar-accent: rgb(255 213 79 / 0.35);
-  --hijri-calendar-accent-foreground: #7c2d12;
+  --hc-accent: rgb(255 237 213 / 0.75);
+  --hc-accent-foreground: #7c2d12;
 
-  --hijri-calendar-muted: rgb(230 81 0 / 0.35);
-  --hijri-calendar-muted-foreground: rgb(255 255 255 / 0.8);
+  --hc-muted: rgb(255 255 255 / 0.35);
+  --hc-muted-foreground: rgb(67 20 7 / 0.92);
 
-  --hijri-calendar-header-border: 1px solid rgb(255 255 255 / 0.3);
-  --hijri-calendar-hover: rgb(255 255 255 / 0.22);
-  --hijri-calendar-focus-ring-color: #ffffff;
-  --hijri-calendar-unavailable: #7f1d1d;
+  --hc-header-border: 1px solid rgb(255 255 255 / 0.3);
+  --hc-hover: rgb(255 255 255 / 0.3);
+  --hc-focus-ring-color: #7c2d12;
+  --hc-unavailable: #5c1010;
 }

@@ -1,27 +1,27 @@
 /* Nature — layered greens. */
 [data-taqwim-theme='nature'] {
-  --hijri-calendar-background: linear-gradient(135deg, #2e7d32 0%, #388e3c 50%, #4caf50 100%);
-  --hijri-calendar-foreground: #ffffff;
-  --hijri-calendar-border: 1px solid #66bb6a;
-  --hijri-calendar-border-radius: 0.75rem;
-  --hijri-calendar-shadow: 0 8px 32px rgb(76 175 80 / 0.3), 0 2px 8px rgb(0 0 0 / 0.2);
+  --hc-background: linear-gradient(135deg, #052e16 0%, #14532d 50%, #166534 100%);
+  --hc-foreground: #ffffff;
+  --hc-border: 1px solid #66bb6a;
+  --hc-border-radius: 0.75rem;
+  --hc-shadow: 0 8px 32px rgb(76 175 80 / 0.3), 0 2px 8px rgb(0 0 0 / 0.2);
 
-  --hijri-calendar-primary: linear-gradient(135deg, #1b5e20, #2e7d32);
-  --hijri-calendar-primary-foreground: #ffffff;
-  --hijri-calendar-primary-hover: linear-gradient(135deg, #144718, #1b5e20);
+  --hc-primary: linear-gradient(135deg, #14532d, #166534);
+  --hc-primary-foreground: #ffffff;
+  --hc-primary-hover: linear-gradient(135deg, #052e16, #14532d);
 
-  --hijri-calendar-secondary: rgb(255 255 255 / 0.16);
-  --hijri-calendar-secondary-foreground: #e8f5e9;
-  --hijri-calendar-secondary-hover: rgb(255 255 255 / 0.28);
+  --hc-secondary: rgb(255 255 255 / 0.16);
+  --hc-secondary-foreground: #f0fdf4;
+  --hc-secondary-hover: rgb(255 255 255 / 0.2);
 
-  --hijri-calendar-accent: rgb(200 230 201 / 0.35);
-  --hijri-calendar-accent-foreground: #1b5e20;
+  --hc-accent: rgb(220 252 231 / 0.92);
+  --hc-accent-foreground: #14532d;
 
-  --hijri-calendar-muted: rgb(27 94 32 / 0.45);
-  --hijri-calendar-muted-foreground: rgb(255 255 255 / 0.8);
+  --hc-muted: rgb(5 46 22 / 0.6);
+  --hc-muted-foreground: rgb(255 255 255 / 0.92);
 
-  --hijri-calendar-header-border: 1px solid rgb(255 255 255 / 0.28);
-  --hijri-calendar-hover: rgb(255 255 255 / 0.2);
-  --hijri-calendar-focus-ring-color: #ffffff;
-  --hijri-calendar-unavailable: #ffcdd2;
+  --hc-header-border: 1px solid rgb(255 255 255 / 0.28);
+  --hc-hover: rgb(255 255 255 / 0.14);
+  --hc-focus-ring-color: #ffffff;
+  --hc-unavailable: #fee2e2;
 }

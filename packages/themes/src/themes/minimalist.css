@@ -3,26 +3,26 @@
  */
 
 [data-taqwim-theme='minimalist'] {
-  --hijri-calendar-background: #ffffff;
-  --hijri-calendar-foreground: #333333;
-  --hijri-calendar-border: 1px solid #e0e0e0;
-  --hijri-calendar-border-radius: 0.5rem;
-  --hijri-calendar-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
-  --hijri-calendar-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --hc-background: #ffffff;
+  --hc-foreground: #333333;
+  --hc-border: 1px solid #e0e0e0;
+  --hc-border-radius: 0.5rem;
+  --hc-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+  --hc-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-  --hijri-calendar-primary: #007aff;
-  --hijri-calendar-primary-foreground: #ffffff;
-  --hijri-calendar-primary-hover: #0056b3;
+  --hc-primary: #0062cc;
+  --hc-primary-foreground: #ffffff;
+  --hc-primary-hover: #0056b3;
 
-  --hijri-calendar-secondary: #f5f5f5;
-  --hijri-calendar-secondary-foreground: #666666;
-  --hijri-calendar-secondary-hover: #ebebeb;
+  --hc-secondary: #f5f5f5;
+  --hc-secondary-foreground: #666666;
+  --hc-secondary-hover: #ebebeb;
 
-  --hijri-calendar-accent: #e3f2fd;
-  --hijri-calendar-accent-foreground: #1976d2;
+  --hc-accent: #e3f2fd;
+  --hc-accent-foreground: #0d47a1;
 
-  --hijri-calendar-muted: #fafafa;
-  --hijri-calendar-muted-foreground: #999999;
+  --hc-muted: #fafafa;
+  --hc-muted-foreground: #6b6b6b;
 
-  --hijri-calendar-header-border: 1px solid #e0e0e0;
+  --hc-header-border: 1px solid #e0e0e0;
 }

@@ -1,27 +1,27 @@
 /* Cyberpunk — GitHub-dark surface with electric blue and green. */
 [data-taqwim-theme='cyberpunk'] {
-  --hijri-calendar-background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #21262d 100%);
-  --hijri-calendar-foreground: #e6edf3;
-  --hijri-calendar-border: 1px solid #58a6ff;
-  --hijri-calendar-border-radius: 0.5rem;
-  --hijri-calendar-shadow: 0 0 20px rgb(88 166 255 / 0.2), 0 4px 15px rgb(0 0 0 / 0.5);
+  --hc-background: linear-gradient(135deg, #0d1117 0%, #161b22 50%, #21262d 100%);
+  --hc-foreground: #e6edf3;
+  --hc-border: 1px solid #58a6ff;
+  --hc-border-radius: 0.5rem;
+  --hc-shadow: 0 0 20px rgb(88 166 255 / 0.2), 0 4px 15px rgb(0 0 0 / 0.5);
 
-  --hijri-calendar-primary: linear-gradient(135deg, #58a6ff, #238636);
-  --hijri-calendar-primary-foreground: #ffffff;
-  --hijri-calendar-primary-hover: linear-gradient(135deg, #79c0ff, #2ea043);
+  --hc-primary: linear-gradient(135deg, #1f6feb, #196c2e);
+  --hc-primary-foreground: #ffffff;
+  --hc-primary-hover: linear-gradient(135deg, #1f6feb, #1a7f37);
 
-  --hijri-calendar-secondary: rgb(88 166 255 / 0.15);
-  --hijri-calendar-secondary-foreground: #79c0ff;
-  --hijri-calendar-secondary-hover: rgb(88 166 255 / 0.28);
+  --hc-secondary: rgb(88 166 255 / 0.15);
+  --hc-secondary-foreground: #79c0ff;
+  --hc-secondary-hover: rgb(88 166 255 / 0.28);
 
-  --hijri-calendar-accent: rgb(248 81 73 / 0.2);
-  --hijri-calendar-accent-foreground: #f85149;
+  --hc-accent: rgb(248 81 73 / 0.2);
+  --hc-accent-foreground: #ff7b72;
 
-  --hijri-calendar-muted: rgb(13 17 23 / 0.9);
-  --hijri-calendar-muted-foreground: #8b949e;
+  --hc-muted: rgb(13 17 23 / 0.9);
+  --hc-muted-foreground: #8b949e;
 
-  --hijri-calendar-header-border: 1px solid rgb(88 166 255 / 0.35);
-  --hijri-calendar-hover: rgb(88 166 255 / 0.15);
-  --hijri-calendar-focus-ring-color: #58a6ff;
-  --hijri-calendar-unavailable: #f85149;
+  --hc-header-border: 1px solid rgb(88 166 255 / 0.35);
+  --hc-hover: rgb(88 166 255 / 0.15);
+  --hc-focus-ring-color: #58a6ff;
+  --hc-unavailable: #f85149;
 }

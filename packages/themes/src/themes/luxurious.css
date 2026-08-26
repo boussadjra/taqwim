@@ -3,32 +3,32 @@
  */
 
 [data-taqwim-theme='luxurious'] {
-  --hijri-calendar-background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-  --hijri-calendar-foreground: #f5f5f5;
-  --hijri-calendar-border: 2px solid #d4af37;
-  --hijri-calendar-border-radius: 1rem;
-  --hijri-calendar-shadow: 0 20px 60px rgb(212 175 55 / 0.3), 0 8px 24px rgb(0 0 0 / 0.4);
-  --hijri-calendar-font-family: Georgia, 'Times New Roman', serif;
+  --hc-background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  --hc-foreground: #f5f5f5;
+  --hc-border: 2px solid #d4af37;
+  --hc-border-radius: 1rem;
+  --hc-shadow: 0 20px 60px rgb(212 175 55 / 0.3), 0 8px 24px rgb(0 0 0 / 0.4);
+  --hc-font-family: Georgia, 'Times New Roman', serif;
 
-  --hijri-calendar-primary: linear-gradient(135deg, #d4af37, #ffd700);
-  --hijri-calendar-primary-foreground: #1a1a2e;
-  --hijri-calendar-primary-hover: linear-gradient(135deg, #ffd700, #ffed4e);
+  --hc-primary: linear-gradient(135deg, #d4af37, #ffd700);
+  --hc-primary-foreground: #1a1a2e;
+  --hc-primary-hover: linear-gradient(135deg, #ffd700, #ffed4e);
 
-  --hijri-calendar-secondary: rgb(212 175 55 / 0.15);
-  --hijri-calendar-secondary-foreground: #d4af37;
-  --hijri-calendar-secondary-hover: rgb(212 175 55 / 0.3);
+  --hc-secondary: rgb(212 175 55 / 0.15);
+  --hc-secondary-foreground: #e3c65c;
+  --hc-secondary-hover: rgb(212 175 55 / 0.3);
 
-  --hijri-calendar-accent: rgb(255 215 0 / 0.25);
-  --hijri-calendar-accent-foreground: #ffd700;
+  --hc-accent: rgb(255 215 0 / 0.25);
+  --hc-accent-foreground: #ffd700;
 
-  --hijri-calendar-muted: rgb(255 255 255 / 0.04);
-  --hijri-calendar-muted-foreground: #b8a05a;
+  --hc-muted: rgb(255 255 255 / 0.04);
+  --hc-muted-foreground: #b8a05a;
 
-  --hijri-calendar-hover: rgb(212 175 55 / 0.18);
-  --hijri-calendar-outside-month: rgb(245 245 245 / 0.35);
-  --hijri-calendar-disabled: rgb(245 245 245 / 0.25);
-  --hijri-calendar-unavailable: #e57373;
+  --hc-hover: rgb(212 175 55 / 0.18);
+  --hc-outside-month: rgb(245 245 245 / 0.62);
+  --hc-disabled: rgb(245 245 245 / 0.25);
+  --hc-unavailable: #f2a0a0;
 
-  --hijri-calendar-focus-ring-color: #ffd700;
-  --hijri-calendar-header-border: 1px solid rgb(212 175 55 / 0.4);
+  --hc-focus-ring-color: #ffd700;
+  --hc-header-border: 1px solid rgb(212 175 55 / 0.4);
 }

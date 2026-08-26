@@ -7,30 +7,30 @@
  */
 
 [data-taqwim-theme='minimal'] {
-  --hijri-calendar-background: transparent;
-  --hijri-calendar-foreground: inherit;
-  --hijri-calendar-border: none;
-  --hijri-calendar-border-radius: 0;
-  --hijri-calendar-shadow: none;
-  --hijri-calendar-font-family: inherit;
+  --hc-background: transparent;
+  --hc-foreground: inherit;
+  --hc-border: none;
+  --hc-border-radius: 0;
+  --hc-shadow: none;
+  --hc-font-family: inherit;
 
-  --hijri-calendar-primary: currentcolor;
-  --hijri-calendar-primary-foreground: var(--hijri-calendar-background, #ffffff);
-  --hijri-calendar-primary-hover: currentcolor;
+  --hc-primary: currentcolor;
+  --hc-primary-foreground: var(--hc-background, #ffffff);
+  --hc-primary-hover: currentcolor;
 
-  --hijri-calendar-secondary: transparent;
-  --hijri-calendar-secondary-foreground: inherit;
-  --hijri-calendar-secondary-hover: rgb(128 128 128 / 0.12);
+  --hc-secondary: transparent;
+  --hc-secondary-foreground: inherit;
+  --hc-secondary-hover: rgb(128 128 128 / 0.12);
 
-  --hijri-calendar-accent: rgb(128 128 128 / 0.16);
-  --hijri-calendar-accent-foreground: inherit;
+  --hc-accent: rgb(128 128 128 / 0.16);
+  --hc-accent-foreground: inherit;
 
-  --hijri-calendar-muted: transparent;
-  --hijri-calendar-muted-foreground: rgb(128 128 128 / 0.9);
+  --hc-muted: transparent;
+  --hc-muted-foreground: rgb(128 128 128 / 0.9);
 
-  --hijri-calendar-hover: rgb(128 128 128 / 0.12);
-  --hijri-calendar-focus-ring-color: currentcolor;
+  --hc-hover: rgb(128 128 128 / 0.12);
+  --hc-focus-ring-color: currentcolor;
 
-  --hijri-calendar-header-border: none;
-  --hijri-calendar-header-padding: var(--hijri-calendar-spacing-sm);
+  --hc-header-border: none;
+  --hc-header-padding: var(--hc-spacing-sm);
 }

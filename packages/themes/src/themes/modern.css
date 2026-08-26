@@ -1,33 +1,35 @@
 /* Modern — indigo/violet gradient with circular cells. */
 [data-taqwim-theme='modern'] {
-  --hijri-calendar-background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --hijri-calendar-foreground: #ffffff;
-  --hijri-calendar-border: none;
-  --hijri-calendar-border-radius: 1rem;
-  --hijri-calendar-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04);
+  --hc-background: linear-gradient(135deg, #4338ca 0%, #6b21a8 100%);
+  --hc-foreground: #ffffff;
+  --hc-border: none;
+  --hc-border-radius: 1rem;
+  --hc-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04);
 
-  --hijri-calendar-primary: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
-  --hijri-calendar-primary-foreground: #ffffff;
-  --hijri-calendar-primary-hover: linear-gradient(135deg, #4c51bf 0%, #553c9a 100%);
+  --hc-primary: linear-gradient(135deg, #3730a3 0%, #581c87 100%);
+  --hc-primary-foreground: #ffffff;
+  --hc-primary-hover: linear-gradient(135deg, #312e81 0%, #4c1d95 100%);
 
-  --hijri-calendar-secondary: rgb(255 255 255 / 0.12);
-  --hijri-calendar-secondary-foreground: rgb(255 255 255 / 0.85);
-  --hijri-calendar-secondary-hover: rgb(255 255 255 / 0.22);
+  --hc-secondary: rgb(255 255 255 / 0.12);
+  --hc-secondary-foreground: rgb(255 255 255 / 0.95);
+  --hc-secondary-hover: rgb(255 255 255 / 0.16);
 
-  --hijri-calendar-accent: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-  --hijri-calendar-accent-foreground: #ffffff;
+  --hc-accent: linear-gradient(135deg, #a16207 0%, #854d0e 100%);
+  --hc-accent-foreground: #ffffff;
 
-  --hijri-calendar-muted: rgb(255 255 255 / 0.06);
-  --hijri-calendar-muted-foreground: rgb(255 255 255 / 0.65);
+  --hc-muted: rgb(255 255 255 / 0.06);
+  --hc-muted-foreground: rgb(255 255 255 / 0.92);
 
-  --hijri-calendar-header-border: none;
-  --hijri-calendar-hover: rgb(255 255 255 / 0.18);
-  --hijri-calendar-focus-ring-color: #ffffff;
+  --hc-header-border: none;
+  --hc-hover: rgb(255 255 255 / 0.18);
+  --hc-focus-ring-color: #ffffff;
 
-  --hijri-calendar-cell-size: 2.5rem;
-  --hijri-calendar-cell-border-radius: 50%;
-  --hijri-calendar-nav-button-size: 2.5rem;
-  --hijri-calendar-nav-button-border-radius: 50%;
-  --hijri-calendar-header-padding: var(--hijri-calendar-spacing-lg);
-  --hijri-calendar-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --hc-cell-size: 2.5rem;
+  --hc-cell-border-radius: 50%;
+  --hc-nav-button-size: 2.5rem;
+  --hc-nav-button-border-radius: 50%;
+  --hc-header-padding: var(--hc-spacing-lg);
+  --hc-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  --hc-unavailable: #fecaca;
 }
