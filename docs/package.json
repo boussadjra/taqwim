@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "_comment": "build is declared as a vp task in vite.config.ts",
-    "docs:dev": "node scripts/generate-tokens-page.js && node scripts/prepare-api-docs.js && astro dev",
-    "docs:build": "node scripts/generate-tokens-page.js && node scripts/prepare-api-docs.js && astro build",
+    "docs:dev": "node scripts/generate-tokens-page.js && pnpm -w exec typedoc --excludeNotDocumented && node scripts/prepare-api-docs.js && astro dev",
+    "docs:build": "node scripts/generate-tokens-page.js && pnpm -w exec typedoc --excludeNotDocumented && node scripts/prepare-api-docs.js && astro build",
     "docs:preview": "astro preview"
   },
   "dependencies": {
