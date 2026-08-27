@@ -85,13 +85,13 @@ tzdata builds. Every cell of the matrix therefore runs three times — under
 appears on one side of the meridian cannot pass.
 
 The consequence for your own code is the caution on
-[Dates without a calendar](/taqwim/guide/dates/): do not round-trip a
+[Dates without a calendar](/guide/dates/): do not round-trip a
 `toGregorian` result through `.toISOString()`. That is not a runtime
 difference; it is true everywhere, and it is the mistake this design invites.
 
 If your process and your users are in different zones — a server in UTC
 rendering for a reader in Riyadh — see
-[Server rendering](/taqwim/guide/ssr/), which is about exactly that gap.
+[Server rendering](/guide/ssr/), which is about exactly that gap.
 
 ## What is not in the matrix
 
@@ -104,7 +104,7 @@ otherwise.
 **The framework adapters** (`@taqwim/vue`, `@taqwim/react` and the rest) are not
 in this matrix either. They run wherever their framework runs, and their
 server-rendering behaviour is covered on
-[Server rendering](/taqwim/guide/ssr/) instead.
+[Server rendering](/guide/ssr/) instead.
 
 `engines.node` in `package.json` names **Node 20** as the floor. It is a
 Node-specific field; Deno and Bun ignore it, and the versions those two are held

@@ -17,8 +17,15 @@ import { defineConfig } from 'astro/config'
  * breaks, the docs break with it.
  */
 export default defineConfig({
-  site: 'https://boussadjra.github.io',
-  base: '/taqwim',
+  /*
+   * Deployed to Vercel at the domain root, so there is no `base`. This was
+   * configured for GitHub Pages (`boussadjra.github.io` + `base: '/taqwim'`)
+   * while every README pointed at the Vercel URL, which meant the built site
+   * expected to live one path segment deeper than it was ever served from.
+   * `vercel.json` at the repo root carries the build; see it for why the build
+   * command has to be the `vp` task rather than `astro build`.
+   */
+  site: 'https://taqwim.vercel.app',
   vite: {
     resolve: {
       /*

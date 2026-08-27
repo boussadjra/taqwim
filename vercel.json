@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "pnpm install --frozen-lockfile",
+  "buildCommand": "pnpm exec vp run -F taqwim-docs build",
+  "outputDirectory": "docs/dist",
+  "framework": null
+}

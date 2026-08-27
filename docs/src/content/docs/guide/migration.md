@@ -77,7 +77,7 @@ attribute, so a page can host several themes at once and switch at runtime.
 
 Custom properties were renamed from `--hijri-calendar-*` to `--hc-*`. If you
 overrode any, rename the prefix — the token names after it are unchanged.
-See [Theming](/taqwim/guide/theming/).
+See [Theming](/guide/theming/).
 
 ## Props that used to do nothing now work
 
@@ -93,7 +93,7 @@ expecting no effect, expect an effect now:
 - `isDateUnavailable` — guarded the click handler but not the selection itself
 
 There is also full keyboard navigation, which did not exist at all. See
-[Accessibility and keyboard](/taqwim/guide/accessibility/).
+[Accessibility and keyboard](/guide/accessibility/).
 
 ## The compound parts take a day, not a date
 
