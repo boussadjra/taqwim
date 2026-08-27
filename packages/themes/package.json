@@ -1,6 +1,6 @@
 {
   "name": "@taqwim/themes",
-  "version": "0.1.0-beta.0",
+  "version": "0.1.0-beta.1",
   "private": false,
   "description": "Framework-free CSS themes for Taqwim Hijri calendars, plus a Tailwind v4 preset",
   "keywords": [
