@@ -55,6 +55,22 @@ export default defineConfig({
         input: ['src/**', 'tests/**', 'vite.config.ts', 'package.json'],
         output: ['coverage/**'],
       },
+      /*
+       * Runs the built package under Node, Deno and Bun — both module formats,
+       * several time zones. Vitest only ever exercises `src/` under Node, so
+       * this is the only thing that observes the shipped artifact anywhere
+       * else. See runtimes/README.md.
+       *
+       * Uncacheable on purpose: the result depends on which runtimes are
+       * installed on the machine, and that is not something `input` can
+       * describe. A cache hit here would report a green Deno leg on a machine
+       * that has since lost its Deno.
+       */
+      'test:runtimes': {
+        command: 'node runtimes/run.mjs',
+        dependsOn: ['build'],
+        cache: false,
+      },
       bench: {
         command: 'vitest bench --run',
         cache: false,

@@ -5,8 +5,10 @@
   "description": "Umm al-Qura Hijri date conversion, arithmetic and formatting for JavaScript",
   "keywords": [
     "backend",
+    "bun",
     "calendar",
     "date",
+    "deno",
     "hijri",
     "islamic",
     "nodejs",

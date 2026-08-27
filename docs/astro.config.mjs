@@ -172,6 +172,7 @@ export default defineConfig({
             { label: 'Theming', slug: 'guide/theming' },
             { label: 'Accessibility and keyboard', slug: 'guide/accessibility' },
             { label: 'Server rendering', slug: 'guide/ssr' },
+            { label: 'Node, Deno and Bun', slug: 'guide/runtimes' },
             { label: 'Migrating to 1.0', slug: 'guide/migration' },
           ],
         },

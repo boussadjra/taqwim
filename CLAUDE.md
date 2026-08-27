@@ -18,6 +18,7 @@ vp run -r type-check             # tsc / vue-tsc / svelte-check against every ap
 vp check                         # lint + format + type-check, all in one
 vp check --fix
 vp run -r verify-package         # publint + attw against the packable output
+vp run -F @taqwim/core test:runtimes   # built core under node, deno and bun
 playwright test                  # shared e2e suite (vue, react, svelte, solid)
 playwright test --project=angular   # Angular is declared but not in the default run
 ```
@@ -100,6 +101,8 @@ Where an adapter cannot pass, it goes in `e2e/KNOWN-GAPS.md` with a real diagnos
 One exported function per file under `src/lib/`, re-exported from `index.ts`. Naming is `verbHijriNoun` (`toHijri`, `addHijriDays`, `formatHijriDate`), and subtraction mirrors addition (`addHijriMonths` ↔ `subHijriMonths`). Each function has a matching `tests/<functionName>.test.ts`.
 
 Conversion is table-driven (`hDates.ts`) covering **1343–1500 AH / 1924–2077 CE**, and throws `HijriRangeError` outside it rather than returning a silently wrong date. Business-day arithmetic defaults to a **Friday/Saturday** weekend, overridable per call. `date-fns` is used for Gregorian math only.
+
+The package touches no DOM and imports nothing from `node:`, so it is held to running on **Node, Deno and Bun**. `runtimes/` is the suite that proves it: one checks file run unchanged across runtime × module format × time zone, against `dist/` rather than `src/`. That is the only thing in the repo that observes the shipped artifact outside Node — Vitest never does. Adding a runtime means one entry in `runtimes/run.mjs`, not a new checks file; see `packages/core/runtimes/README.md`.
 
 ## Versioning
 

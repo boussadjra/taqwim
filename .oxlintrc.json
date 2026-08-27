@@ -39,7 +39,7 @@
       }
     },
     {
-      "files": ["playground/**", "**/*.config.*", "scripts/**"],
+      "files": ["playground/**", "**/*.config.*", "scripts/**", "**/runtimes/**"],
       "rules": {
         "no-console": "off"
       }

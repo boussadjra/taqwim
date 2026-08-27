@@ -87,6 +87,46 @@ jobs:
           directory: ./packages/core/coverage
           fail_ci_if_error: true
 
+  runtimes:
+    # @taqwim/core has no DOM, no `node:` imports and no framework, so it is
+    # meant to run wherever a `Date` does. The `test` job only ever proves that
+    # for Node — this one runs the built package under Deno and Bun as well.
+    # It is a separate job because it needs those two toolchains installed and
+    # nothing else in the matrix does.
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install Vite+
+        run: curl -fsSL https://vite.plus | bash
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run the conformance checks under every runtime
+        # Builds @taqwim/core first, then runs packages/core/runtimes against
+        # dist/ in each runtime, module format and time zone. CI is set here,
+        # so a runtime that failed to install is a failure rather than a skip.
+        run: pnpm exec vp run -F @taqwim/core test:runtimes
+
   security:
     runs-on: ubuntu-latest
     steps:
