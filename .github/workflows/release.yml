@@ -54,7 +54,7 @@ jobs:
       # publishes once that PR is merged. Lockstep is configured in
       # .changeset/config.json, so every @taqwim/* package moves together.
       - name: Create version PR or publish
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
           version: pnpm exec changeset version
           publish: pnpm exec changeset publish
