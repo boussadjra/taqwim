@@ -1,6 +1,6 @@
 {
   "name": "@taqwim/svelte-styled",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.0-beta.0",
   "private": false,
   "description": "Ready-to-use themed Svelte 5 Hijri calendar and date picker",
   "keywords": [

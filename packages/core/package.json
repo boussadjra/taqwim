@@ -1,6 +1,6 @@
 {
   "name": "@taqwim/core",
-  "version": "0.1.0-alpha.2",
+  "version": "0.1.0-beta.0",
   "private": false,
   "description": "Umm al-Qura Hijri date conversion, arithmetic and formatting for JavaScript",
   "keywords": [
