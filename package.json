@@ -82,5 +82,8 @@
       "@commitlint/config-conventional"
     ]
   },
+  "engines": {
+    "node": "24.x"
+  },
   "packageManager": "pnpm@11.18.0"
 }
