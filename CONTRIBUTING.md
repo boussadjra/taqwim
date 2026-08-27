@@ -87,11 +87,19 @@ pnpm version:set patch --dry-run   # preview, write nothing
 
 It accepts an exact version or any semver release type (`major`, `minor`, `patch`, `premajor`, `preminor`, `prepatch`, `prerelease`), with `--preid alpha|beta|rc`. Continuing a prerelease keeps its identifier unless you ask for another, so `pnpm version:alpha` twice gives `alpha.2` then `alpha.3`. It writes only the `version` field — internal dependencies are `workspace:*`, which pnpm resolves at publish time — and it never touches `legacy/*`, which is frozen at the versions npm already has.
 
-Publish a prerelease under its own dist-tag, so `pnpm add @taqwim/vue` does not resolve to it:
+Then publish:
 
 ```bash
-pnpm -r --filter "@taqwim/*" publish --access public --tag alpha --no-git-checks
+pnpm publish:packages           # add --dry-run to see the plan first
 ```
+
+`scripts/publish.js` drives one `pnpm publish` per package. `pnpm -r publish` is the obvious tool and it does not survive contact with a thirteen-package release: it stops at the first package the registry rejects, and recovering means hand-assembling a filter of whatever did not make it. The script checks each package against the registry first and skips what is already there, so a re-run resumes rather than starting over, and it collects failures instead of stopping at the first one.
+
+It derives the dist-tag from the version — `0.1.0-beta.0` publishes under `beta`, so `pnpm add @taqwim/vue` cannot resolve to a prerelease. Override with `--tag`, and pass `--otp` if your npm account requires a one-time password.
+
+> npm forces a `latest` tag onto a package's **first ever** publish whatever `--tag` says, so the first prerelease of a new package will hold `latest` until a stable version exists to point it at. This is npm's behaviour, not the script's.
+
+If 2FA is set to `auth-and-writes`, use an **Automation** access token rather than a login token — an OTP is valid for about thirty seconds, which is not long enough for thirteen packages that each run a build first. The same applies to the `NPM_TOKEN` secret the release workflow uses.
 
 ### Later: 1.0.0 and after
 

@@ -41,6 +41,8 @@
     "version:set": "node scripts/version.js",
     "version:alpha": "node scripts/version.js prerelease --preid alpha",
     "version:beta": "node scripts/version.js prerelease --preid beta",
+    "_publishing": "One `pnpm publish` per package, resumable. `pnpm -r publish` stops at the first rejection.",
+    "publish:packages": "node scripts/publish.js",
     "_release": "Changesets drives 1.0.0 and everything after it; prereleases use version:* above.",
     "changeset": "changeset",
     "changeset:status": "changeset status",
