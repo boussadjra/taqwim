@@ -35,12 +35,19 @@ function sameDay(a: CalendarDay, b: CalendarDay): boolean {
     a.isUnavailable === b.isUnavailable &&
     a.isFocused === b.isFocused &&
     a.isTabbable === b.isTabbable &&
-    sameDate(a.date, b.date)
+    sameDate(a.date, b.date) &&
+    a.gregorianDate.getTime() === b.gregorianDate.getTime()
   )
 }
 
 function sameMonth(a: CalendarMonth, b: CalendarMonth): boolean {
-  if (a.label !== b.label || !sameDate(a.value, b.value) || a.weeks.length !== b.weeks.length) return false
+  if (
+    a.label !== b.label ||
+    a.secondaryLabel !== b.secondaryLabel ||
+    !sameDate(a.value, b.value) ||
+    a.weeks.length !== b.weeks.length
+  )
+    return false
 
   return a.weeks.every((week, weekIndex) => {
     const other = b.weeks[weekIndex]
@@ -48,10 +55,24 @@ function sameMonth(a: CalendarMonth, b: CalendarMonth): boolean {
   })
 }
 
+function sameGregorianValue(a: Date | Date[] | undefined, b: Date | Date[] | undefined): boolean {
+  if (Array.isArray(a) !== Array.isArray(b)) return false
+  if (!Array.isArray(a) || !Array.isArray(b)) {
+    if (!a && !b) return true
+    if (!a || !b) return false
+    return a.getTime() === (b as Date).getTime()
+  }
+  return a.length === b.length && a.every((date, index) => date.getTime() === b[index]!.getTime())
+}
+
 export function sameState(a: CalendarState, b: CalendarState): boolean {
   return (
     a.headingValue === b.headingValue &&
+    a.secondaryHeadingValue === b.secondaryHeadingValue &&
     a.fullCalendarLabel === b.fullCalendarLabel &&
+    a.showGregorian === b.showGregorian &&
+    a.dateEmphasis === b.dateEmphasis &&
+    a.gregorianLocale === b.gregorianLocale &&
     a.isInvalid === b.isInvalid &&
     a.isNextDisabled === b.isNextDisabled &&
     a.isPrevDisabled === b.isPrevDisabled &&
@@ -65,6 +86,7 @@ export function sameState(a: CalendarState, b: CalendarState): boolean {
     sameDate(a.placeholder, b.placeholder) &&
     sameDate(a.focusedDate, b.focusedDate) &&
     sameValue(a.value, b.value) &&
+    sameGregorianValue(a.gregorianValue, b.gregorianValue) &&
     a.weekDays.length === b.weekDays.length &&
     a.weekDays.every((label, index) => label === b.weekDays[index]) &&
     a.months.length === b.months.length &&

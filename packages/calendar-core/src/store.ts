@@ -1,7 +1,8 @@
 import { getDayInWeek, type HijriDateObject } from '@taqwim/core'
 import { compareDates, isSameDate, isSameMonth, shiftDays, shiftMonths, startOfMonth, todayHijri } from './dateUtils'
 import { sameState } from './equality'
-import { createFormatter } from './formatter'
+import { createFormatter, gregorianIsoDate } from './formatter'
+import { deriveGregorianValue, toGregorianDate } from './gregorian'
 import { buildMonthWeeks, buildWeekDays, visibleMonths, type RawDay } from './grid'
 import type {
   CalendarDay,
@@ -10,6 +11,7 @@ import type {
   CalendarState,
   CalendarStore,
   CellTriggerProps,
+  DateEmphasis,
   Direction,
   GridProps,
   PageButtonProps,
@@ -34,6 +36,8 @@ interface DefaultedOptions {
   disabled: boolean
   readonly: boolean
   locale: string
+  showGregorian: boolean
+  dateEmphasis: DateEmphasis
   dir: Direction
 }
 
@@ -49,6 +53,8 @@ const DEFAULTS: DefaultedOptions = {
   disabled: false,
   readonly: false,
   locale: 'en',
+  showGregorian: false,
+  dateEmphasis: 'hijri',
   dir: 'ltr',
 }
 
@@ -89,6 +95,8 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
 
   const opt = <K extends keyof DefaultedOptions>(key: K): DefaultedOptions[K] =>
     (options[key as keyof CalendarOptions] as DefaultedOptions[K] | undefined) ?? DEFAULTS[key]
+
+  const gregorianLocale = () => options.gregorianLocale ?? opt('locale')
 
   const currentValue = () => (options.value !== undefined ? options.value : internalValue)
   const currentPlaceholder = () => options.placeholder ?? internalPlaceholder
@@ -349,6 +357,7 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
   ): CalendarDay {
     return {
       date: raw.date,
+      gregorianDate: toGregorianDate(raw.date),
       dayInMonth: raw.dayInMonth,
       dayOfWeek: raw.dayOfWeek,
       isOutsideMonth: raw.isOutsideMonth,
@@ -393,35 +402,66 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
     return start
   }
 
+  function monthHeadings(month: HijriDateObject, formatter: ReturnType<typeof createFormatter>) {
+    const hijri = formatter.monthYear(month)
+    const gregorian = formatter.gregorianMonthRange(month)
+
+    if (!opt('showGregorian')) {
+      return { label: hijri, secondaryLabel: undefined as string | undefined }
+    }
+
+    if (opt('dateEmphasis') === 'gregorian') {
+      return { label: gregorian, secondaryLabel: hijri }
+    }
+
+    return { label: hijri, secondaryLabel: gregorian }
+  }
+
   function build(): CalendarState {
     const placeholder = currentPlaceholder()
     const locale = opt('locale')
-    const formatter = createFormatter(locale)
+    const formatter = createFormatter(locale, gregorianLocale())
+    const showGregorian = opt('showGregorian')
+    const dateEmphasis = opt('dateEmphasis')
     const weekStartsOn = opt('weekStartsOn')
     const fixedWeeks = opt('fixedWeeks')
     // Resolved once per build rather than once per cell.
     const today = todayHijri() ?? undefined
     const tabbable = tabbableDate()
 
-    const months: CalendarMonth[] = visibleMonths(placeholder, opt('numberOfMonths')).map(month => ({
-      value: month,
-      label: formatter.monthYear(month),
-      weeks: buildMonthWeeks(month, weekStartsOn, fixedWeeks).map(week =>
-        week.map(day => decorate(day, today, tabbable)),
-      ),
-    }))
+    const months: CalendarMonth[] = visibleMonths(placeholder, opt('numberOfMonths')).map(month => {
+      const headings = monthHeadings(month, formatter)
+      return {
+        value: month,
+        label: headings.label,
+        secondaryLabel: headings.secondaryLabel,
+        weeks: buildMonthWeeks(month, weekStartsOn, fixedWeeks).map(week =>
+          week.map(day => decorate(day, today, tabbable)),
+        ),
+      }
+    })
 
     const value = currentValue()
     const isInvalid = toArray(value).some(isOutOfBounds)
+    const primaryHeading = monthHeadings(placeholder, formatter)
 
     return {
       placeholder,
       value,
+      gregorianValue: deriveGregorianValue(value),
       focusedDate,
       months,
       weekDays: buildWeekDays(locale, opt('weekdayFormat'), weekStartsOn),
-      headingValue: formatter.monthYear(placeholder),
-      fullCalendarLabel: options.calendarLabel ?? `Calendar for ${formatter.monthYear(placeholder)}`,
+      headingValue: primaryHeading.label,
+      secondaryHeadingValue: primaryHeading.secondaryLabel,
+      fullCalendarLabel:
+        options.calendarLabel ??
+        (showGregorian && primaryHeading.secondaryLabel
+          ? `Calendar for ${primaryHeading.label}, ${primaryHeading.secondaryLabel}`
+          : `Calendar for ${formatter.monthYear(placeholder)}`),
+      showGregorian,
+      dateEmphasis,
+      gregorianLocale: gregorianLocale(),
       isInvalid,
       isNextDisabled: isPageDisabled(1),
       isPrevDisabled: isPageDisabled(-1),
@@ -451,6 +491,7 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
       'aria-label': state.fullCalendarLabel,
       dir: state.dir,
       'data-taqwim-calendar': '',
+      ...(state.showGregorian ? { 'data-show-gregorian': '' as const, 'data-date-emphasis': state.dateEmphasis } : {}),
       ...(state.disabled ? { 'data-disabled': '' as const } : {}),
       ...(state.readonly ? { 'data-readonly': '' as const } : {}),
       ...(state.isInvalid ? { 'data-invalid': '' as const } : {}),
@@ -469,17 +510,19 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
   }
 
   function getCellTriggerProps(day: CalendarDay): CellTriggerProps {
-    const formatter = createFormatter(opt('locale'))
+    const formatter = createFormatter(opt('locale'), gregorianLocale())
     const blocked = day.isDisabled || day.isUnavailable
+    const showGregorian = opt('showGregorian')
 
     return {
       role: 'button',
       type: 'button',
       // Roving tabindex: exactly one cell is tabbable at a time.
       tabindex: day.isTabbable && !blocked ? 0 : -1,
-      'aria-label': formatter.fullDate(day.date),
+      'aria-label': showGregorian ? formatter.dualFullDate(day.date) : formatter.fullDate(day.date),
       'aria-disabled': blocked,
       'data-value': formatter.isoDate(day.date),
+      ...(showGregorian ? { 'data-gregorian-value': gregorianIsoDate(day.date) } : {}),
       'data-taqwim-calendar-cell-trigger': '',
       ...(day.isSelected ? { 'data-selected': '' as const } : {}),
       ...(day.isDisabled ? { 'data-disabled': '' as const } : {}),
@@ -530,7 +573,7 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
     focusInitial,
     handleKeydown,
     get formatter() {
-      return createFormatter(opt('locale'))
+      return createFormatter(opt('locale'), gregorianLocale())
     },
     getRootProps,
     getGridProps,

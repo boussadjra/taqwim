@@ -2,6 +2,9 @@ import type { HijriDateObject } from '@taqwim/core'
 
 export type Direction = 'ltr' | 'rtl'
 
+/** Which calendar system's information is visually primary when both are shown. */
+export type DateEmphasis = 'hijri' | 'gregorian'
+
 /** Predicate over a Hijri date, used for the `isDateDisabled` / `isDateUnavailable` hooks. */
 export type Matcher = (date: HijriDateObject) => boolean
 
@@ -23,10 +26,24 @@ export interface CalendarFormatter {
   fullDate: (date: HijriDateObject) => string
   /** Machine-readable `iYYYY-iMM-iDD`, used for `data-value`. */
   isoDate: (date: HijriDateObject) => string
+  /** Gregorian day of month for a Hijri date, e.g. `'18'`. */
+  gregorianDayOfMonth: (date: HijriDateObject) => string
+  /** Compact Gregorian label, e.g. `'18 Mar'`. */
+  gregorianShortDate: (date: HijriDateObject) => string
+  /** Full Gregorian date, e.g. `'Monday, 18 March 2027'`. */
+  gregorianFullDate: (date: HijriDateObject) => string
+  /** Compact Hijri label for secondary display, e.g. `'9 Ramadan'`. */
+  hijriShortDate: (date: HijriDateObject) => string
+  /** Gregorian period spanned by a Hijri month, e.g. `'February – March 2026'`. */
+  gregorianMonthRange: (month: HijriDateObject) => string
+  /** Accessible label with both calendars when Gregorian display is enabled. */
+  dualFullDate: (date: HijriDateObject) => string
 }
 
 export interface CalendarDay {
   date: HijriDateObject
+  /** Corresponding Gregorian date, derived via `toGregorian`. */
+  gregorianDate: Date
   /** Day number within its own Hijri month. */
   dayInMonth: number
   /** 0 = Sunday .. 6 = Saturday. */
@@ -51,8 +68,10 @@ export interface CalendarDay {
 export interface CalendarMonth {
   /** First day of the month this grid represents. */
   value: HijriDateObject
-  /** Localised heading, e.g. `'Ramadan 1445'`. */
+  /** Primary localised heading for this month grid. */
   label: string
+  /** Secondary heading when `showGregorian` is enabled. */
+  secondaryLabel?: string
   /** Rows of seven days, ordered by `weekStartsOn`. */
   weeks: CalendarDay[][]
 }
@@ -61,16 +80,26 @@ export interface CalendarState {
   /** Which month the calendar is scrolled to. */
   placeholder: HijriDateObject
   value: HijriDateObject | HijriDateObject[] | undefined
+  /** Selection converted to Gregorian via `toGregorian`, in the same order. */
+  gregorianValue: Date | Date[] | undefined
   /** The roving-focus target. `undefined` until the calendar is focused. */
   focusedDate: HijriDateObject | undefined
   /** One entry per `numberOfMonths`. */
   months: CalendarMonth[]
   /** Weekday labels, already rotated to match `weekStartsOn`. */
   weekDays: string[]
-  /** Heading for the first visible month. */
+  /** Primary heading for the first visible month. */
   headingValue: string
+  /** Secondary heading when `showGregorian` is enabled. */
+  secondaryHeadingValue?: string
   /** Accessible label for the calendar as a whole. */
   fullCalendarLabel: string
+  /** Whether corresponding Gregorian dates are shown in the grid. */
+  showGregorian: boolean
+  /** Which calendar is visually primary when both are shown. */
+  dateEmphasis: DateEmphasis
+  /** Locale used for Gregorian formatting. */
+  gregorianLocale: string
   /** True when the current value falls outside `minValue`/`maxValue`. */
   isInvalid: boolean
   isNextDisabled: boolean
@@ -114,6 +143,12 @@ export interface CalendarOptions {
   maxValue?: HijriDateObject
   /** @default 'en' */
   locale?: string
+  /** Show the corresponding Gregorian date alongside Hijri dates. @default false */
+  showGregorian?: boolean
+  /** Which calendar is visually primary when both are shown. @default 'hijri' */
+  dateEmphasis?: DateEmphasis
+  /** Locale for Gregorian formatting. @default `locale` */
+  gregorianLocale?: string
   /** @default 'ltr' */
   dir?: Direction
   /** Accessible label for the calendar. Defaults to the visible month and year. */
@@ -140,6 +175,8 @@ export interface RootProps {
   'aria-label': string
   dir: Direction
   'data-taqwim-calendar': ''
+  'data-show-gregorian'?: ''
+  'data-date-emphasis'?: DateEmphasis
   'data-disabled'?: ''
   'data-readonly'?: ''
   'data-invalid'?: ''
@@ -169,6 +206,7 @@ export interface CellTriggerProps {
    */
   'aria-disabled': boolean
   'data-value': string
+  'data-gregorian-value'?: string
   'data-taqwim-calendar-cell-trigger': ''
   'data-selected'?: ''
   'data-disabled'?: ''
