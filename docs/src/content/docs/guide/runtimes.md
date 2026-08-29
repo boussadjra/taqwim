@@ -27,17 +27,17 @@ unit suite as well; the artifact matrix runs on 22. The whole thing lives in
 
 ```sh
 # Node, with any package manager
-pnpm add @taqwim/core@alpha
+pnpm add @taqwim/core@beta
 ```
 
 ```sh
 # Bun
-bun add @taqwim/core@alpha
+bun add @taqwim/core@beta
 ```
 
 ```sh
 # Deno
-deno add npm:@taqwim/core@alpha
+deno add npm:@taqwim/core@beta
 ```
 
 The import is the same in all three:
@@ -53,7 +53,7 @@ Deno can also skip the manifest entirely and reach for the package inline,
 which is the shortest path to a one-off script:
 
 ```ts
-import { toHijri } from 'npm:@taqwim/core@alpha'
+import { toHijri } from 'npm:@taqwim/core@beta'
 ```
 
 ## What the checks cover

@@ -1,7 +1,7 @@
 # Taqwim
 
 [![CI](https://github.com/boussadjra/taqwim/workflows/CI/badge.svg)](https://github.com/boussadjra/taqwim/actions)
-[![npm](https://img.shields.io/npm/v/@taqwim/core/alpha.svg)](https://www.npmjs.com/package/@taqwim/core)
+[![npm](https://img.shields.io/npm/v/@taqwim/core/beta.svg)](https://www.npmjs.com/package/@taqwim/core)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue.svg)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -9,7 +9,7 @@ Umm al-Qura Hijri date utilities, and an accessible calendar for **Vue, React, S
 
 Calendar behaviour — grid building, selection, paging, keyboard navigation, accessibility attributes — is implemented once in a framework-free state machine. Every adapter is a thin binding to it, so the five behave identically and emit the same markup.
 
-> **Alpha.** The current release line is `0.1.0-alpha.1`, published under the `alpha` dist-tag. The API is settling and can still change between alphas.
+> **Beta.** The current release is `0.1.0-beta.1`, published under the `beta` dist-tag. The API is settling and can still change between betas.
 
 📖 **[Documentation](https://boussadjra.github.io/taqwim/)**
 
@@ -40,7 +40,7 @@ Reach for **headless** when you are building your own markup, and **styled** whe
 ### Dates only
 
 ```sh
-pnpm add @taqwim/core@alpha
+pnpm add @taqwim/core@beta
 ```
 
 ```typescript
@@ -63,7 +63,7 @@ Full API: **[reference](https://boussadjra.github.io/taqwim/api/)**.
 ### A calendar
 
 ```sh
-pnpm add @taqwim/vue-styled@alpha    # or react-styled, svelte-styled, solid-styled, angular-styled
+pnpm add @taqwim/vue-styled@beta    # or react-styled, svelte-styled, solid-styled, angular-styled
 ```
 
 ```vue
