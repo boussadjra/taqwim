@@ -107,6 +107,17 @@
 
   /* === Stacking === */
   --hc-z-index: 50;
+
+  /* === Tooltips === */
+  --hc-tooltip-background: var(--hc-foreground);
+  --hc-tooltip-foreground: var(--hc-background);
+  --hc-tooltip-padding: var(--hc-spacing-xs) var(--hc-spacing-sm);
+  --hc-tooltip-font-size: var(--hc-font-size-sm);
+  --hc-tooltip-border-radius: calc(var(--hc-border-radius) * 0.75);
+  --hc-tooltip-offset: var(--hc-spacing-xs);
+  --hc-tooltip-max-width: 16rem;
+  --hc-tooltip-shadow: var(--hc-shadow);
+  --hc-tooltip-z-index: calc(var(--hc-z-index) + 1);
 }
 
 /*

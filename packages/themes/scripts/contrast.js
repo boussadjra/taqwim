@@ -155,6 +155,14 @@ export const PAIRS = [
     minimum: 4.5,
   },
   {
+    id: 'day-cell-tooltip',
+    description: 'day cell tooltip (tooltip-foreground on tooltip-background)',
+    rule: '[data-taqwim-calendar-cell][data-tooltip]::after',
+    foreground: 'tooltip-foreground',
+    surface: ['tooltip-background'],
+    minimum: 4.5,
+  },
+  {
     id: 'focus-ring',
     // Non-text contrast: WCAG 1.4.11 asks for 3:1 on a focus indicator.
     description: 'focus ring (focus-ring-color against the calendar surface)',

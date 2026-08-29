@@ -20,7 +20,11 @@
   font-family: var(--hc-font-family);
   font-size: var(--hc-font-size-base);
   position: relative;
-  overflow: hidden;
+  /*
+   * Visible so day-cell tooltips can extend above the grid. Border radius still
+   * clips the calendar surface itself; only descendants are allowed to escape.
+   */
+  overflow: visible;
 }
 
 [data-taqwim-calendar][data-disabled] {
@@ -241,6 +245,8 @@
   align-items: center;
   justify-content: center;
   min-width: 0;
+  position: relative;
+  overflow: visible;
 }
 
 .taqwim-calendar-weekday {
@@ -256,6 +262,7 @@
 /* === Day cells === */
 
 [data-taqwim-calendar-cell-trigger] {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -436,6 +443,60 @@
   color: var(--hc-unavailable);
   cursor: not-allowed;
   text-decoration: line-through;
+}
+
+/*
+ * Hover/focus tooltip for the full date string the store puts on `data-tooltip`.
+ * Rendered on the gridcell, not the button: pseudo-elements on `<button>` are
+ * unreliable across browsers, and the cell already receives the same label.
+ */
+[data-taqwim-calendar-cell][data-tooltip]::after {
+  content: attr(data-tooltip);
+  display: block;
+  position: absolute;
+  z-index: var(--hc-tooltip-z-index);
+  bottom: calc(100% + var(--hc-tooltip-offset));
+  left: 50%;
+  width: max-content;
+  max-width: var(--hc-tooltip-max-width);
+  padding: var(--hc-tooltip-padding);
+  border-radius: var(--hc-tooltip-border-radius);
+  background: var(--hc-tooltip-background);
+  color: var(--hc-tooltip-foreground);
+  font-size: var(--hc-tooltip-font-size);
+  font-weight: var(--hc-font-weight-medium);
+  line-height: 1.35;
+  text-align: center;
+  white-space: normal;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(0.125rem);
+  transition:
+    opacity var(--hc-transition-fast),
+    transform var(--hc-transition-fast),
+    visibility var(--hc-transition-fast);
+  box-shadow: var(--hc-tooltip-shadow);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  [data-taqwim-calendar-cell][data-tooltip]:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+[data-taqwim-calendar-cell][data-tooltip]:focus-within::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-taqwim-calendar-cell][data-tooltip]::after {
+    transition: none;
+  }
 }
 
 /* === Layouts === */
