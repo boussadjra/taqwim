@@ -13,6 +13,7 @@ import {
   HijriCalendarNext,
   HijriCalendarPrev,
   HijriCalendarRoot,
+  useHijriCalendarContext,
 } from '@taqwim/solid'
 import { createSignal, For, Index, Show, splitProps, type Component, type JSX } from 'solid-js'
 import { Dynamic } from 'solid-js/web'
@@ -74,6 +75,17 @@ export interface HijriCalendarProps extends HijriCalendarRootOptions {
   renderWeekday?: (props: { weekday: string; index: number }) => JSX.Element
 }
 
+type HijriCalendarChromeProps = Pick<
+  HijriCalendarProps,
+  | 'layout'
+  | 'showNavigation'
+  | 'showWeekdays'
+  | 'selectableHeading'
+  | 'navigationIcons'
+  | 'renderCell'
+  | 'renderWeekday'
+>
+
 function renderDefaultCell(cell: HijriCalendarCellRenderProps, dateEmphasis: 'hijri' | 'gregorian'): JSX.Element {
   if (cell.secondaryDayValue) {
     return (
@@ -96,7 +108,7 @@ function renderDefaultCell(cell: HijriCalendarCellRenderProps, dateEmphasis: 'hi
     )
   }
 
-  return <>{cell.dayValue}</>
+  return <span>{cell.dayValue}</span>
 }
 
 /*
@@ -105,6 +117,207 @@ function renderDefaultCell(cell: HijriCalendarCellRenderProps, dateEmphasis: 'hi
  * that offered years the calendar cannot convert.
  */
 const YEARS = Array.from({ length: MAX_HIJRI_YEAR - MIN_HIJRI_YEAR + 1 }, (_, i) => MIN_HIJRI_YEAR + i)
+
+/*
+ * Rendered as a child of `HijriCalendarRoot` rather than through its render
+ * prop. Solid SSR hydrates render-prop children by invoking the function during
+ * render; any reactive text inside the returned tree can be created and
+ * discarded before the DOM is written, which leaves nodes like the month
+ * heading button empty and breaks hydration in Astro islands.
+ */
+function HijriCalendarBody(props: HijriCalendarChromeProps): JSX.Element {
+  const { store, state } = useHijriCalendarContext()
+  const [picker, setPicker] = createSignal<'month' | 'year' | null>(null)
+
+  const layout = () => props.layout ?? 'default'
+  const showNavigation = () => props.showNavigation ?? true
+  const showWeekdays = () => props.showWeekdays ?? true
+  const selectableHeading = () => props.selectableHeading ?? true
+
+  const months = () => getLocaleData(state().locale, 'monthsLong') as string[]
+  const monthLabel = () => store.formatter.custom(state().placeholder, 'iMMMM')
+  const togglePicker = (which: 'month' | 'year') => setPicker(current => (current === which ? null : which))
+  const gregorianPrimary = () => state().showGregorian && state().dateEmphasis === 'gregorian'
+  const hijriHeadingButtons = () => (
+    <>
+      <button
+        type="button"
+        class="taqwim-calendar-heading-button"
+        data-taqwim-heading="month"
+        aria-expanded={picker() === 'month'}
+        onClick={() => togglePicker('month')}
+      >
+        {monthLabel()}
+      </button>
+      <button
+        type="button"
+        class="taqwim-calendar-heading-button"
+        data-taqwim-heading="year"
+        aria-expanded={picker() === 'year'}
+        onClick={() => togglePicker('year')}
+      >
+        {state().placeholder.hy}
+      </button>
+    </>
+  )
+
+  // Day 1 keeps the jump inside the target month regardless of its length.
+  const jumpTo = (part: Partial<HijriDateObject>) => {
+    store.setPlaceholder({ ...state().placeholder, ...part, hd: 1 })
+    setPicker(null)
+  }
+
+  return (
+    <div class="taqwim-calendar-body">
+      <HijriCalendarHeader class="taqwim-calendar-header">
+        <Show when={showNavigation()}>
+          <HijriCalendarPrev class="taqwim-calendar-nav-button">
+            <Dynamic component={props.navigationIcons?.prev ?? ArrowLeft} />
+          </HijriCalendarPrev>
+        </Show>
+
+        <HijriCalendarHeading class="taqwim-calendar-heading">
+          {/*
+            Keep keyed DOM outside the conditional. Solid's SSR transform
+            allocates hydration ids for a JSX fallback eagerly while the
+            client transform leaves it lazy, so putting this wrapper in either
+            branch shifts the active branch's keys and aborts hydration.
+          */}
+          <div class="taqwim-calendar-heading-stack">
+            <span
+              class="taqwim-calendar-heading-primary"
+              data-calendar-system={gregorianPrimary() ? 'gregorian' : 'hijri'}
+            >
+              <Show when={selectableHeading() && !gregorianPrimary()} fallback={state().headingValue}>
+                {hijriHeadingButtons()}
+              </Show>
+            </span>
+            <Show when={state().secondaryHeadingValue}>
+              <span
+                class="taqwim-calendar-heading-secondary"
+                data-calendar-system={gregorianPrimary() ? 'hijri' : 'gregorian'}
+              >
+                <Show when={selectableHeading() && gregorianPrimary()} fallback={state().secondaryHeadingValue}>
+                  {hijriHeadingButtons()}
+                </Show>
+              </span>
+            </Show>
+          </div>
+        </HijriCalendarHeading>
+
+        <Show when={showNavigation()}>
+          <HijriCalendarNext class="taqwim-calendar-nav-button">
+            <Dynamic component={props.navigationIcons?.next ?? ArrowRight} />
+          </HijriCalendarNext>
+        </Show>
+      </HijriCalendarHeader>
+
+      {/*
+        Rendered inline rather than in a portal: the theme lives on this
+        element's ancestors, so a portalled panel would lose it.
+      */}
+      <Show when={picker()}>
+        <div class="taqwim-calendar-picker">
+          <div class="taqwim-calendar-picker-grid">
+            <Show when={picker() === 'month'}>
+              <For each={months()}>
+                {(month, index) => (
+                  <button
+                    type="button"
+                    data-selected={state().placeholder.hm === index() + 1 ? '' : undefined}
+                    onClick={() => jumpTo({ hm: index() + 1 })}
+                  >
+                    {month}
+                  </button>
+                )}
+              </For>
+            </Show>
+            <Show when={picker() === 'year'}>
+              <For each={YEARS}>
+                {year => (
+                  <button
+                    type="button"
+                    data-selected={state().placeholder.hy === year ? '' : undefined}
+                    onClick={() => jumpTo({ hy: year })}
+                  >
+                    {year}
+                  </button>
+                )}
+              </For>
+            </Show>
+          </div>
+        </div>
+      </Show>
+
+      {/*
+        `panel` keeps the grid mounted beside the picker. Every other
+        layout unmounts it, so the grid is never merely hidden from
+        sight while still reachable by Tab.
+      */}
+      <Show when={!picker() || layout() === 'panel'}>
+        {/*
+          `Index` throughout, never `For`.
+
+          The store rebuilds its whole object graph on each snapshot, and
+          `For` keys by reference — so any state change threw away every
+          cell and built new ones. Solid delegates click to the document,
+          so a button replaced between `mousedown` and `click` never
+          fired its handler. Since a real browser focuses a button before
+          clicking it, and the focus handler is itself a state change,
+          selection was dead in the browser while passing in jsdom, where
+          `fireEvent.click` sends no focus.
+
+          `Index` keys by position instead and hands each item over as an
+          accessor. The grid is a fixed shape whose contents change, which
+          is exactly what it is for.
+        */}
+        <div class="taqwim-calendar-months">
+          <Index each={state().months}>
+            {month => (
+              <HijriCalendarGrid month={month()}>
+                <Show when={showWeekdays()}>
+                  <HijriCalendarGridHead>
+                    <HijriCalendarGridRow>
+                      <Index each={state().weekDays}>
+                        {(weekday, index) => (
+                          <HijriCalendarHeadCell class="taqwim-calendar-weekday">
+                            {props.renderWeekday ? props.renderWeekday({ weekday: weekday(), index }) : weekday()}
+                          </HijriCalendarHeadCell>
+                        )}
+                      </Index>
+                    </HijriCalendarGridRow>
+                  </HijriCalendarGridHead>
+                </Show>
+
+                <HijriCalendarGridBody>
+                  <Index each={month().weeks}>
+                    {week => (
+                      <HijriCalendarGridRow>
+                        <Index each={week()}>
+                          {day => (
+                            <HijriCalendarCell day={day()}>
+                              <HijriCalendarCellTrigger day={day()}>
+                                {cell =>
+                                  props.renderCell
+                                    ? props.renderCell(cell)
+                                    : renderDefaultCell(cell, state().dateEmphasis ?? 'hijri')
+                                }
+                              </HijriCalendarCellTrigger>
+                            </HijriCalendarCell>
+                          )}
+                        </Index>
+                      </HijriCalendarGridRow>
+                    )}
+                  </Index>
+                </HijriCalendarGridBody>
+              </HijriCalendarGrid>
+            )}
+          </Index>
+        </div>
+      </Show>
+    </div>
+  )
+}
 
 export function HijriCalendar(props: HijriCalendarProps): JSX.Element {
   const [local, options] = splitProps(props, [
@@ -119,17 +332,9 @@ export function HijriCalendar(props: HijriCalendarProps): JSX.Element {
     'renderWeekday',
   ])
 
-  const [picker, setPicker] = createSignal<'month' | 'year' | null>(null)
-
   const theme = () => local.theme ?? 'default'
   const size = () => local.size ?? 'default'
   const layout = () => local.layout ?? 'default'
-  const showNavigation = () => local.showNavigation ?? true
-  const showWeekdays = () => local.showWeekdays ?? true
-  const selectableHeading = () => local.selectableHeading ?? true
-
-  const months = () => getLocaleData(options.locale ?? 'en', 'monthsLong') as string[]
-  const togglePicker = (which: 'month' | 'year') => setPicker(current => (current === which ? null : which))
 
   return (
     <HijriCalendarRoot
@@ -138,181 +343,7 @@ export function HijriCalendar(props: HijriCalendarProps): JSX.Element {
       data-taqwim-size={size() === 'default' ? undefined : size()}
       data-taqwim-layout={layout() === 'default' ? undefined : layout()}
     >
-      {/*
-        Never destructured. The root hands these over as getters so they stay
-        live; pulling them out of the object reads each one once and freezes the
-        grid at its first render — which looks fine on load and then silently
-        stops updating.
-      */}
-      {rendered => {
-        // Day 1 keeps the jump inside the target month regardless of its length.
-        const jumpTo = (part: Partial<HijriDateObject>) => {
-          rendered.store.setPlaceholder({ ...rendered.state.placeholder, ...part, hd: 1 })
-          setPicker(null)
-        }
-
-        return (
-          <>
-            <HijriCalendarHeader class="taqwim-calendar-header">
-              <Show when={showNavigation()}>
-                <HijriCalendarPrev class="taqwim-calendar-nav-button">
-                  <Dynamic component={local.navigationIcons?.prev ?? ArrowLeft} />
-                </HijriCalendarPrev>
-              </Show>
-
-              <HijriCalendarHeading class="taqwim-calendar-heading">
-                <Show
-                  when={selectableHeading()}
-                  fallback={
-                    <>
-                      <span>{rendered.state.headingValue}</span>
-                      <Show when={rendered.state.secondaryHeadingValue}>
-                        <span class="taqwim-calendar-heading-secondary">{rendered.state.secondaryHeadingValue}</span>
-                      </Show>
-                    </>
-                  }
-                >
-                  <>
-                    <button
-                      type="button"
-                      class="taqwim-calendar-heading-button"
-                      data-taqwim-heading="month"
-                      aria-expanded={picker() === 'month'}
-                      onClick={() => togglePicker('month')}
-                    >
-                      {months()[rendered.state.placeholder.hm - 1]}
-                    </button>
-                    <button
-                      type="button"
-                      class="taqwim-calendar-heading-button"
-                      data-taqwim-heading="year"
-                      aria-expanded={picker() === 'year'}
-                      onClick={() => togglePicker('year')}
-                    >
-                      {rendered.state.placeholder.hy}
-                    </button>
-                    <Show when={rendered.state.showGregorian && rendered.state.secondaryHeadingValue}>
-                      <span class="taqwim-calendar-heading-secondary">{rendered.state.secondaryHeadingValue}</span>
-                    </Show>
-                  </>
-                </Show>
-              </HijriCalendarHeading>
-
-              <Show when={showNavigation()}>
-                <HijriCalendarNext class="taqwim-calendar-nav-button">
-                  <Dynamic component={local.navigationIcons?.next ?? ArrowRight} />
-                </HijriCalendarNext>
-              </Show>
-            </HijriCalendarHeader>
-
-            {/*
-              Rendered inline rather than in a portal: the theme lives on this
-              element's ancestors, so a portalled panel would lose it.
-            */}
-            <Show when={picker()}>
-              <div class="taqwim-calendar-picker">
-                <div class="taqwim-calendar-picker-grid">
-                  <Show
-                    when={picker() === 'month'}
-                    fallback={
-                      <For each={YEARS}>
-                        {year => (
-                          <button
-                            type="button"
-                            data-selected={rendered.state.placeholder.hy === year ? '' : undefined}
-                            onClick={() => jumpTo({ hy: year })}
-                          >
-                            {year}
-                          </button>
-                        )}
-                      </For>
-                    }
-                  >
-                    <For each={months()}>
-                      {(month, index) => (
-                        <button
-                          type="button"
-                          data-selected={rendered.state.placeholder.hm === index() + 1 ? '' : undefined}
-                          onClick={() => jumpTo({ hm: index() + 1 })}
-                        >
-                          {month}
-                        </button>
-                      )}
-                    </For>
-                  </Show>
-                </div>
-              </div>
-            </Show>
-
-            {/*
-              `panel` keeps the grid mounted beside the picker. Every other
-              layout unmounts it, so the grid is never merely hidden from
-              sight while still reachable by Tab.
-            */}
-            <Show when={!picker() || layout() === 'panel'}>
-              {/*
-                `Index` throughout, never `For`.
-
-                The store rebuilds its whole object graph on each snapshot, and
-                `For` keys by reference — so any state change threw away every
-                cell and built new ones. Solid delegates click to the document,
-                so a button replaced between `mousedown` and `click` never
-                fired its handler. Since a real browser focuses a button before
-                clicking it, and the focus handler is itself a state change,
-                selection was dead in the browser while passing in jsdom, where
-                `fireEvent.click` sends no focus.
-
-                `Index` keys by position instead and hands each item over as an
-                accessor. The grid is a fixed shape whose contents change, which
-                is exactly what it is for.
-              */}
-              <div class="taqwim-calendar-months">
-                <Index each={rendered.months}>
-                  {month => (
-                    <HijriCalendarGrid month={month()}>
-                      <Show when={showWeekdays()}>
-                        <HijriCalendarGridHead>
-                          <HijriCalendarGridRow>
-                            <Index each={rendered.weekDays}>
-                              {(weekday, index) => (
-                                <HijriCalendarHeadCell class="taqwim-calendar-weekday">
-                                  {local.renderWeekday ? local.renderWeekday({ weekday: weekday(), index }) : weekday()}
-                                </HijriCalendarHeadCell>
-                              )}
-                            </Index>
-                          </HijriCalendarGridRow>
-                        </HijriCalendarGridHead>
-                      </Show>
-
-                      <HijriCalendarGridBody>
-                        <Index each={month().weeks}>
-                          {week => (
-                            <HijriCalendarGridRow>
-                              <Index each={week()}>
-                                {day => (
-                                  <HijriCalendarCell day={day()}>
-                                    <HijriCalendarCellTrigger day={day()}>
-                                      {cell =>
-                                        local.renderCell
-                                          ? local.renderCell(cell)
-                                          : renderDefaultCell(cell, rendered.state.dateEmphasis ?? 'hijri')
-                                      }
-                                    </HijriCalendarCellTrigger>
-                                  </HijriCalendarCell>
-                                )}
-                              </Index>
-                            </HijriCalendarGridRow>
-                          )}
-                        </Index>
-                      </HijriCalendarGridBody>
-                    </HijriCalendarGrid>
-                  )}
-                </Index>
-              </div>
-            </Show>
-          </>
-        )
-      }}
+      <HijriCalendarBody {...local} />
     </HijriCalendarRoot>
   )
 }
