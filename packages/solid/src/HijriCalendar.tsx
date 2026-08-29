@@ -264,14 +264,21 @@ export function HijriCalendarHeadCell(props: DivProps & { children?: JSX.Element
 }
 
 export function HijriCalendarCell(props: DivProps & { day: CalendarDay; children?: JSX.Element }): JSX.Element {
+  const { store, state } = useHijriCalendarContext()
   const [local, rest] = splitProps(props, ['day', 'children'])
+  const cellProps = () => {
+    void state()
+    return store.getCellProps(local.day)
+  }
 
   return (
     <div
       role="gridcell"
       aria-selected={local.day.isSelected || undefined}
       aria-disabled={local.day.isDisabled || local.day.isUnavailable || undefined}
-      data-taqwim-calendar-cell=""
+      data-taqwim-calendar-cell={cellProps()['data-taqwim-calendar-cell']}
+      data-tooltip={cellProps()['data-tooltip']}
+      title={cellProps()['data-tooltip']}
       data-disabled={local.day.isDisabled ? '' : undefined}
       data-outside-month={local.day.isOutsideMonth ? '' : undefined}
       {...rest}
