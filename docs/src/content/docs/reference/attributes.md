@@ -25,18 +25,18 @@ If you are writing your own styles, target these rather than class names.
 
 ## Grid and structure
 
-| Selector                           |                                      |
-| ---------------------------------- | ------------------------------------ |
-| `[data-taqwim-calendar-header]`    | The header group                     |
-| `[data-taqwim-calendar-heading]`   | The month and year label             |
-| `[data-taqwim-heading='month']`    | Styled packages: the month button    |
-| `[data-taqwim-heading='year']`     | Styled packages: the year button     |
-| `[data-taqwim-calendar-grid]`      | One per visible month                |
-| `[data-taqwim-calendar-grid-head]` | The weekday label row, `aria-hidden` |
-| `[data-taqwim-calendar-grid-body]` | The rows of days                     |
-| `[data-taqwim-calendar-grid-row]`  | A week                               |
-| `[data-taqwim-calendar-head-cell]` | A weekday label                      |
-| `[data-taqwim-calendar-cell]`      | A gridcell                           |
+| Selector                           |                                                            |
+| ---------------------------------- | ---------------------------------------------------------- |
+| `[data-taqwim-calendar-header]`    | The header group                                           |
+| `[data-taqwim-calendar-heading]`   | The month and year label                                   |
+| `[data-taqwim-heading='month']`    | Styled packages: the month button                          |
+| `[data-taqwim-heading='year']`     | Styled packages: the year button                           |
+| `[data-taqwim-calendar-grid]`      | One per visible month                                      |
+| `[data-taqwim-calendar-grid-head]` | The weekday label row, `aria-hidden`                       |
+| `[data-taqwim-calendar-grid-body]` | The rows of days                                           |
+| `[data-taqwim-calendar-grid-row]`  | A week                                                     |
+| `[data-taqwim-calendar-head-cell]` | A weekday label                                            |
+| `[data-taqwim-calendar-cell]`      | A gridcell; carries `data-tooltip` for themed hover labels |
 
 ## Day trigger
 

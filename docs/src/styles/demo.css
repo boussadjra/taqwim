@@ -22,7 +22,8 @@
   border-radius: var(--brand-radius);
   background: var(--demo-surface);
   box-shadow: var(--brand-shadow);
-  overflow: hidden;
+  /* Day-cell tooltips render above the grid; clipping here hid them entirely. */
+  overflow: visible;
 }
 
 /* === Control bar === */
@@ -81,7 +82,7 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 1.5rem;
-  padding: 2rem 1rem;
+  padding: 2.75rem 1rem 2rem;
   /* A quiet checkerboard, so a transparent theme like `minimal` is visibly
      transparent rather than looking like a card. */
   background: repeating-conic-gradient(
@@ -92,10 +93,9 @@
 }
 
 /*
- * The date picker opens a popup, and `.demo` clips to its rounded corners, so
- * the stage has to reserve the room the popup will need. Sized to the open
- * state — a little empty space while it is closed is the price of not having
- * the calendar cut off when it is not.
+ * The date picker opens a popup, so the stage reserves room it will need.
+ * Sized to the open state — a little empty space while it is closed is the
+ * price of not having the calendar cut off when it is not.
  */
 .demo-stage[data-tall] {
   min-height: 23rem;

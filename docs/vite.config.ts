@@ -65,8 +65,14 @@ export default defineConfig({
        * leaves a stale `dist/` in place and Vite dies on the missing export.
        */
       dev: {
-        command:
-          'node scripts/generate-tokens-page.js && pnpm -w exec typedoc --excludeNotDocumented && node scripts/prepare-api-docs.js && astro dev',
+        command: [
+          'node scripts/verify-workspace-build.js',
+          'node scripts/generate-tokens-page.js',
+          'pnpm -w exec typedoc --excludeNotDocumented',
+          'node scripts/prepare-api-docs.js',
+          // `--force` drops Vite's dep cache so linked `@taqwim/*` rebuilds are picked up.
+          'astro dev --force',
+        ],
         dependsOn: afterDeps,
         cache: false,
       },
