@@ -1,4 +1,4 @@
-import type { CalendarDay, CalendarMonth } from '@taqwim/calendar-core'
+import type { CalendarDay, CalendarMonth, CellProps } from '@taqwim/calendar-core'
 import { getCellDisplayValues } from '@taqwim/calendar-core'
 import type { HijriDateObject } from '@taqwim/core'
 import {
@@ -294,12 +294,18 @@ export class HijriCalendarHeadCell {}
     '[attr.aria-selected]': "day().isSelected ? 'true' : null",
     '[attr.aria-disabled]': "day().isDisabled || day().isUnavailable ? 'true' : null",
     '[attr.data-taqwim-calendar-cell]': '""',
+    '[attr.data-tooltip]': "cellProps()['data-tooltip']",
+    '[attr.title]': "cellProps()['data-tooltip']",
     '[attr.data-disabled]': "day().isDisabled ? '' : null",
     '[attr.data-outside-month]': "day().isOutsideMonth ? '' : null",
   },
 })
 export class HijriCalendarCell {
+  private readonly calendar = inject(TaqwimCalendarService)
+
   readonly day = input.required<CalendarDay>({ alias: 'taqwimCalendarCell' })
+
+  protected readonly cellProps = computed((): CellProps => this.calendar.store.getCellProps(this.day()))
 }
 
 @Component({
@@ -311,6 +317,7 @@ export class HijriCalendarCell {
     '[attr.tabindex]': 'props().tabindex',
     '[attr.aria-label]': "props()['aria-label']",
     '[attr.aria-disabled]': "props()['aria-disabled']",
+    '[attr.data-tooltip]': "props()['data-tooltip']",
     '[attr.data-value]': "props()['data-value']",
     '[attr.data-gregorian-value]': "props()['data-gregorian-value'] ?? null",
     '[attr.data-taqwim-calendar-cell-trigger]': '""',
