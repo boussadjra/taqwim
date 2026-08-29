@@ -28,8 +28,9 @@ export function getCellDisplayValues(
   }
 
   const primaryDayValue = dateEmphasis === 'gregorian' ? gregorianDayValue : hijriDayValue
-  const secondaryDayValue =
-    dateEmphasis === 'gregorian' ? formatter.hijriShortDate(day.date) : formatter.gregorianShortDate(day.date)
+  // Day numbers only — the header already carries the month range, and a
+  // compact label like "Aug 29" wraps unpredictably inside a 2rem cell.
+  const secondaryDayValue = dateEmphasis === 'gregorian' ? hijriDayValue : gregorianDayValue
 
   return {
     dayValue: primaryDayValue,
