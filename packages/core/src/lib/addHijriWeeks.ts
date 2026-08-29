@@ -1,5 +1,4 @@
-import { addWeeks } from 'date-fns'
-import { toHijri, toGregorian, isValidHijriDate, type HijriDateObject } from '.'
+import { addHijriDays, isValidHijriDate, type HijriDateObject } from '.'
 
 /**
  * Adds a specified number of weeks to a Hijri date.
@@ -18,11 +17,7 @@ import { toHijri, toGregorian, isValidHijriDate, type HijriDateObject } from '.'
  */
 export function addHijriWeeks(date: HijriDateObject, amount: number): HijriDateObject | null {
   if (date && isValidHijriDate(date)) {
-    const gregorianDate = toGregorian(date)
-    if (gregorianDate) {
-      const newGregorianDate = addWeeks(gregorianDate, amount)
-      return toHijri(newGregorianDate)
-    }
+    return addHijriDays(date, amount * 7)
   }
   return null
 }

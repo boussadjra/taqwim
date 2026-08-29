@@ -42,9 +42,8 @@ runtimes. The gap between those two is where these failures live:
 - **`instanceof HijriRangeError` breaking across the module boundary.** The
   class extends `RangeError` and repairs its prototype in the constructor;
   whether that survives depends on the emitted output, not the source.
-- **`date-fns/locale` failing to resolve.** It is a deep import through another
-  package's export map, and it is the one place in this library where module
-  resolution can differ between runtimes rather than just arithmetic.
+- **Gregorian formatting via `Intl`**, with `calendar: 'gregory'` forced so Arabic
+  locales do not default to a Hijri calendar for `MMMM`/`EEE` tokens.
 - **A runtime whose `Date` disagrees.** Every one of the ~56,000 days the
   Umm al-Qura table covers is round-tripped in each cell.
 

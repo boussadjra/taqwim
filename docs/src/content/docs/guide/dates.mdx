@@ -4,8 +4,7 @@ description: Convert, compare, format and do arithmetic on Umm al-Qura Hijri dat
 ---
 
 Half of Taqwim has no user interface. `@taqwim/core` is the conversion table and
-the arithmetic on top of it: no framework, no DOM, no peer dependencies beyond
-`date-fns` for the Gregorian side. It runs in a server handler, a CLI, a worker,
+the arithmetic on top of it: no framework, no DOM, and zero production dependencies. It runs in a server handler, a CLI, a worker,
 or a test.
 
 If you came here for a calendar component, [Getting started](/guide/getting-started/)
@@ -188,9 +187,10 @@ from a database.
 
 ## Formatting and locales
 
-Format tokens are `date-fns` tokens with an `i` prefix, so `iYYYY` is the Hijri
-year where `yyyy` would be the Gregorian one. Month and weekday names come from
-the bundled locale data.
+Format tokens use an `i` prefix for Hijri fields (`iYYYY`, `iMMMM`, …) and
+plain tokens for the corresponding Gregorian fields (`yyyy`, `MMMM`, …). Month
+and weekday names come from the bundled locale data; Gregorian month names use
+`Intl` with an explicit `gregory` calendar.
 
 ```ts
 import { formatHijriDate } from '@taqwim/core'

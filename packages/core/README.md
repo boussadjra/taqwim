@@ -2,7 +2,7 @@
 
 ## Overview
 
-Taqwim provides a collection of utilities and components designed for managing Hijri dates in frontend applications. It includes a Hijri date converter, handler, and format, it uses the Umm al-Qura calendar system and date-fns library.
+Taqwim provides a collection of utilities and components designed for managing Hijri dates in frontend applications. It includes a Hijri date converter, handler, and formatter built on the Umm al-Qura calendar system.
 
 ## Installation
 

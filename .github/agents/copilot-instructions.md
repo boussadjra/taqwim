@@ -9,7 +9,7 @@ Umm al-Qura Hijri date utilities, and an accessible calendar for Vue, React, Sve
 ```
 taqwim/
 ├── packages/
-│   ├── core/              # Hijri date utilities (date-fns for Gregorian math only)
+│   ├── core/              # Hijri date utilities (dependency-free, epoch-day Gregorian helpers)
 │   │   ├── src/lib/       # One exported function per file, re-exported from index.ts
 │   │   ├── src/lib/hDates.ts   # Umm al-Qura table
 │   │   ├── src/lib/locales/    # ar, en, fr

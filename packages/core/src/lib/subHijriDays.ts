@@ -1,12 +1,10 @@
-import { subDays } from 'date-fns'
-import { toHijri, toGregorian, isValidHijriDate, type HijriDateObject } from '.'
+import { isValidHijriDate, type HijriDateObject } from '.'
+import { shiftHijriDays } from './hijriEpoch'
 
 /**
  * Subtract the specified number of days from the given date.
  *
  * @category Day Helpers
- *
- * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
  *
  * @param date - The date to be changed
  * @param amount - The amount of days to be substracted.
@@ -23,11 +21,7 @@ import { toHijri, toGregorian, isValidHijriDate, type HijriDateObject } from '.'
 
 export function subHijriDays(date: HijriDateObject, amount: number): HijriDateObject | null {
   if (date && isValidHijriDate(date)) {
-    const gregorianDate = toGregorian(date)
-    if (gregorianDate) {
-      const newGregorianDate = subDays(gregorianDate, amount)
-      return toHijri(newGregorianDate)
-    }
+    return shiftHijriDays(date, -amount)
   }
   return null
 }

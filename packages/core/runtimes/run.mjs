@@ -51,8 +51,8 @@ const RUNTIMES = [
     // Deno consumers reach the package as `npm:@taqwim/core`, which resolves
     // the `import` condition. There is no CommonJS path worth testing.
     //
-    // --allow-read covers the dist files and the node_modules that `date-fns`
-    // resolves out of; --allow-env because Deno gates the TZ lookup behind it,
+    // --allow-read covers the dist files resolved from the built package;
+    // --allow-env because Deno gates the TZ lookup behind it,
     // and the time-zone axis is the whole reason this matrix has three columns.
     formats: ['esm'],
     argv: (script, entry) => ['run', '--allow-read', '--allow-env', script, entry],

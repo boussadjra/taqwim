@@ -1,6 +1,6 @@
-import { parseISO } from 'date-fns'
 import { HijriRangeError } from './errors'
 import { daysInHijriMonth, epochDayOf, recordForEpochDay } from './hDatesIndex'
+import { parseIsoDate } from './parseIsoDate'
 import type { HijriDateObject } from './types'
 
 interface DateObject {
@@ -33,7 +33,7 @@ export function toHijri(
     throw new Error('Invalid Gregorian date')
   }
   if (typeof dateOrYear === 'string') {
-    gregorianDate = parseISO(dateOrYear)
+    gregorianDate = parseIsoDate(dateOrYear)
   } else if (typeof dateOrYear === 'number') {
     if (month === undefined || day === undefined) {
       throw new Error('Invalid arguments')

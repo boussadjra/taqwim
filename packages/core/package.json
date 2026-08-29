@@ -54,9 +54,7 @@
     "prepublishOnly": "vp run build",
     "publish": "pnpm publish"
   },
-  "dependencies": {
-    "date-fns": "^4.1.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.2",
     "@vitest/coverage-v8": "^4.1.10",

@@ -1,5 +1,6 @@
 import type { ValidHijriDate } from '.'
-import { toGregorian, normalizeHijriDate } from '.'
+import { normalizeHijriDate } from '.'
+import { dayOfWeekForHijriDate } from './hijriEpoch'
 
 /**
  * Returns the day of the week for a given Hijri date.
@@ -10,6 +11,5 @@ import { toGregorian, normalizeHijriDate } from '.'
  */
 export const getDayInWeek = (hijriDate: ValidHijriDate): number | undefined => {
   const normalizedHijriDate = normalizeHijriDate(hijriDate)
-  const gregorianDate = toGregorian(normalizedHijriDate)
-  return gregorianDate?.getDay()
+  return dayOfWeekForHijriDate(normalizedHijriDate)
 }

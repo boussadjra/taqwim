@@ -4,9 +4,9 @@ description: Where @taqwim/core runs, how to install it in each runtime, and wha
 ---
 
 `@taqwim/core` is a conversion table and the arithmetic on top of it. It touches
-no DOM, imports nothing from `node:`, and has one dependency — `date-fns`, for
-the Gregorian side. All it needs is `Date`, `Math` and plain string work; it
-never reaches for `Intl`. So it runs wherever JavaScript does.
+no DOM, imports nothing from `node:`, and ships with zero production dependencies.
+All it needs is `Date`, `Math`, `Intl`, and plain string work. So it runs wherever
+JavaScript does.
 
 That is easy to claim and easy to get wrong, so it is tested rather than
 asserted. CI runs the built package through a matrix of
@@ -67,9 +67,8 @@ appear between the source and the artifact, or between one runtime and another:
 - **`instanceof HijriRangeError`** across the module boundary. The class
   extends `RangeError`, and whether that survives depends on the emitted output
   rather than the source.
-- **`date-fns/locale`**, a deep import through another package's export map —
-  the one place in this library where module resolution can differ between
-  runtimes rather than just arithmetic.
+- **Gregorian formatting via `Intl`**, with `calendar: 'gregory'` forced so Arabic
+  locales do not default to a Hijri calendar for `MMMM`/`EEE` tokens.
 - **Every one of the ~56,000 days** the Umm al-Qura table covers, round-tripped
   Gregorian → Hijri → Gregorian in each cell.
 

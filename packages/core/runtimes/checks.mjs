@@ -248,9 +248,6 @@ export function runChecks(t) {
   })
 
   check('formatting: month and weekday names in en, ar and fr', () => {
-    // Reaches `date-fns/locale`, a deep import through that package's own
-    // export map — the one place in this library where resolution can differ
-    // between runtimes rather than just arithmetic.
     same(t.formatHijriDate(ramadan1, 'iEEEE iD iMMMM iYYYY', 'en'), 'Monday 1 Ramadan 1445', 'English')
     same(t.formatHijriDate(ramadan1, 'iMMMM', 'ar'), RAMADAN_AR, 'Arabic')
     same(t.getLocaleData('ar', 'monthsLong')[8], RAMADAN_AR, 'the Arabic month table')
@@ -258,7 +255,7 @@ export function runChecks(t) {
     throws(() => t.formatHijriDate(ramadan1, 'iD', 'xx'), 'an unsupported locale')
   })
 
-  check('formatting: Gregorian tokens fall through to date-fns', () => {
+  check('formatting: Gregorian tokens use Intl with gregory calendar', () => {
     same(t.formatHijriDate(ramadan1, 'yyyy-MM-dd'), '2024-03-11', 'the Gregorian equivalent')
   })
 

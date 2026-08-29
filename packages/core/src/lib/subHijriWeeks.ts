@@ -1,5 +1,4 @@
-import { subWeeks } from 'date-fns'
-import { toHijri, toGregorian, isValidHijriDate, type HijriDateObject } from '.'
+import { subHijriDays, isValidHijriDate, type HijriDateObject } from '.'
 
 /**
  * Substracts a specified number of weeks from a Hijri date.
@@ -18,11 +17,7 @@ import { toHijri, toGregorian, isValidHijriDate, type HijriDateObject } from '.'
  */
 export function subHijriWeeks(date: HijriDateObject, amount: number): HijriDateObject | null {
   if (date && isValidHijriDate(date)) {
-    const gregorianDate = toGregorian(date)
-    if (gregorianDate) {
-      const newGregorianDate = subWeeks(gregorianDate, amount)
-      return toHijri(newGregorianDate)
-    }
+    return subHijriDays(date, amount * 7)
   }
   return null
 }
