@@ -98,13 +98,19 @@ export const PAIRS = [
     minimum: 4.5,
   },
   {
-    id: 'picker-tab',
-    // The picker sits in the calendar body, not the header, so it stacks
-    // straight onto the background.
-    description: 'month/year picker tab (secondary-foreground on secondary)',
-    rule: '.taqwim-calendar-picker-tabs button',
+    id: 'heading-button-hover',
+    description: 'month/year heading button, hovered (foreground on secondary-hover, in the header)',
+    rule: '.taqwim-calendar-heading-button:hover',
+    foreground: 'foreground',
+    surface: ['background', 'muted', 'secondary-hover'],
+    minimum: 4.5,
+  },
+  {
+    id: 'heading-button-open',
+    description: 'month/year heading button, expanded (secondary-foreground on secondary, in the header)',
+    rule: '.taqwim-calendar-heading-button[aria-expanded="true"]',
     foreground: 'secondary-foreground',
-    surface: ['background', 'secondary'],
+    surface: ['background', 'muted', 'secondary'],
     minimum: 4.5,
   },
   {

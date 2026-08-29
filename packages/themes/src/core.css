@@ -41,12 +41,66 @@
 }
 
 .taqwim-calendar-heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex: 1;
+  min-width: 0;
+  gap: var(--hc-spacing-xs);
   margin: 0;
   text-align: center;
   font-size: var(--hc-font-size-lg);
   font-weight: var(--hc-font-weight-semibold);
   color: var(--hc-foreground);
+}
+
+/*
+ * Month and year are separate buttons so the pickers are visible rather
+ * than hidden behind a title that looked like static text.
+ */
+.taqwim-calendar-heading-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  margin: 0;
+  padding: var(--hc-spacing-xs) var(--hc-spacing-sm);
+  border: none;
+  border-radius: var(--hc-cell-border-radius);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  cursor: pointer;
+  transition: var(--hc-transition);
+}
+
+.taqwim-calendar-heading-button:hover {
+  background: var(--hc-secondary-hover);
+}
+
+.taqwim-calendar-heading-button[aria-expanded='true'] {
+  background: var(--hc-secondary);
+  color: var(--hc-secondary-foreground);
+}
+
+.taqwim-calendar-heading-button:focus-visible {
+  outline: var(--hc-focus-ring-width) solid var(--hc-focus-ring-color);
+  outline-offset: var(--hc-focus-ring-offset);
+}
+
+/* Caret: the heading used to look like a title, so nothing told you it opened. */
+.taqwim-calendar-heading-button::after {
+  content: '';
+  width: 0.35em;
+  height: 0.35em;
+  border-inline-end: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-0.12em) rotate(45deg);
+  opacity: 0.7;
+}
+
+.taqwim-calendar-heading-button[aria-expanded='true']::after {
+  transform: translateY(0.08em) rotate(225deg);
 }
 
 /* === Navigation === */
@@ -81,6 +135,11 @@
   transform: scaleX(-1);
 }
 
+/* Clicks on the path must hit the button, or some browsers never move focus. */
+.taqwim-calendar-nav-button svg {
+  pointer-events: none;
+}
+
 /* === Month layout === */
 
 /* Several months sit side by side, wrapping on narrow viewports. */
@@ -94,29 +153,6 @@
 
 .taqwim-calendar-picker {
   padding: var(--hc-grid-padding);
-}
-
-.taqwim-calendar-picker-tabs {
-  display: flex;
-  gap: var(--hc-spacing-xs);
-  margin-bottom: var(--hc-spacing-sm);
-}
-
-.taqwim-calendar-picker-tabs button {
-  flex: 1;
-  padding: var(--hc-spacing-xs) var(--hc-spacing-sm);
-  border: none;
-  border-radius: var(--hc-cell-border-radius);
-  background: var(--hc-secondary);
-  color: var(--hc-secondary-foreground);
-  font: inherit;
-  cursor: pointer;
-  transition: var(--hc-transition);
-}
-
-.taqwim-calendar-picker-tabs button[data-active] {
-  background: var(--hc-selected);
-  color: var(--hc-selected-foreground);
 }
 
 .taqwim-calendar-picker-grid {
@@ -286,6 +322,7 @@
 }
 
 [data-taqwim-layout='compact'] .taqwim-calendar-heading {
+  justify-content: flex-start;
   text-align: start;
   font-size: var(--hc-font-size-base);
 }
