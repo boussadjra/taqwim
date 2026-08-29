@@ -1,6 +1,6 @@
 import type { CalendarDay, CalendarMonth } from '@taqwim/calendar-core'
 import { getCellDisplayValues } from '@taqwim/calendar-core'
-import { createEffect, onMount, splitProps, type JSX } from 'solid-js'
+import { children, createEffect, onMount, splitProps, type JSX } from 'solid-js'
 import { HijriCalendarContext, useHijriCalendarContext } from './context'
 import { OPTION_KEYS, type HijriCalendarRootProps } from './types'
 import { createCalendarStore } from './useCalendar'
@@ -36,11 +36,11 @@ type ButtonProps = Omit<JSX.ButtonHTMLAttributes<HTMLButtonElement>, 'children' 
  * function, and the JSX subtree is created once and then updated in place by
  * the fine-grained bindings inside it.
  */
-function renderChildren<T>(
-  children: JSX.Element | ((props: T) => JSX.Element) | undefined,
-  props: () => T,
-): JSX.Element {
-  return typeof children === 'function' ? (children as (props: T) => JSX.Element)(props()) : children
+function renderChildren<T>(raw: JSX.Element | ((props: T) => JSX.Element) | undefined, props: () => T): JSX.Element {
+  if (typeof raw !== 'function') return raw
+
+  const resolved = children(() => (raw as (props: T) => JSX.Element)(props()))
+  return resolved() as JSX.Element
 }
 
 export function HijriCalendarRoot(props: HijriCalendarRootProps): JSX.Element {
@@ -146,11 +146,12 @@ export function HijriCalendarHeading(
   props: DivProps & { children?: JSX.Element | ((headingValue: string) => JSX.Element) },
 ): JSX.Element {
   const { state } = useHijriCalendarContext()
+  const hasChildren = 'children' in props
   const [local, rest] = splitProps(props, ['children'])
 
   return (
     <div data-taqwim-calendar-heading="" data-disabled={state().disabled ? '' : undefined} {...rest}>
-      {local.children === undefined ? state().headingValue : renderChildren(local.children, () => state().headingValue)}
+      {hasChildren ? renderChildren(local.children, () => state().headingValue) : state().headingValue}
     </div>
   )
 }
@@ -296,6 +297,7 @@ export function HijriCalendarCellTrigger(
   },
 ): JSX.Element {
   const { store, state } = useHijriCalendarContext()
+  const hasChildren = 'children' in props
   const [local, rest] = splitProps(props, ['day', 'children'])
   const display = () => getCellDisplayValues(local.day, store.formatter, state().showGregorian, state().dateEmphasis)
 
@@ -326,16 +328,16 @@ export function HijriCalendarCellTrigger(
 
   return (
     <button {...triggerProps()} {...rest} onClick={onClick} onFocus={onFocus}>
-      {local.children === undefined
-        ? display().dayValue
-        : renderChildren(local.children, () => ({
+      {hasChildren
+        ? renderChildren(local.children, () => ({
             dayValue: display().dayValue,
             hijriDayValue: display().hijriDayValue,
             gregorianDayValue: display().gregorianDayValue,
             primaryDayValue: display().primaryDayValue,
             secondaryDayValue: display().secondaryDayValue,
             day: local.day,
-          }))}
+          }))
+        : display().dayValue}
     </button>
   )
 }
