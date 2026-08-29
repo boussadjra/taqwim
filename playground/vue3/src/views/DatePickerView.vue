@@ -151,8 +151,9 @@ const selection = computed(() => JSON.stringify(value.value ?? null, null, 2))
       <p class="pg-hint">
         With <code>editable</code> on, the input accepts <code>1446-09-01</code> or <code>01/09/1446</code>, with
         <code>/</code> or <code>-</code>. Text it cannot parse reverts to the last good value rather than clearing the
-        selection. The trigger is a <code>combobox</code>: <code>Enter</code> or <code>Space</code> opens the popup,
-        <code>Escape</code> closes it and returns focus.
+        selection. The trigger is a <code>combobox</code>: <code>Enter</code> or <code>ArrowDown</code> opens the popup,
+        <code>Escape</code> closes it. Previous/next page the month; the heading is two buttons — month and year — that
+        open their pickers.
       </p>
     </section>
   </div>
