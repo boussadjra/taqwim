@@ -79,6 +79,19 @@ describe('month and year picker', () => {
     expect(yearButton().textContent).toBe('1445')
   })
 
+  it('promotes the Gregorian date span while keeping Hijri picker controls available', () => {
+    render(<HijriCalendar defaultPlaceholder={RAMADAN_1445} showGregorian dateEmphasis="gregorian" />)
+
+    const primary = document.querySelector('.taqwim-calendar-heading-primary')!
+    const secondary = document.querySelector('.taqwim-calendar-heading-secondary')!
+
+    expect(primary.getAttribute('data-calendar-system')).toBe('gregorian')
+    expect(primary.textContent).toMatch(/March.*April.*2024/)
+    expect(secondary.getAttribute('data-calendar-system')).toBe('hijri')
+    expect(secondary.textContent).toContain('Ramadan')
+    expect(secondary.contains(monthButton())).toBe(true)
+  })
+
   it('opens the month grid from the month button', () => {
     render(<HijriCalendar defaultPlaceholder={RAMADAN_1445} />)
     fireEvent.click(monthButton())

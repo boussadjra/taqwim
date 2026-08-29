@@ -137,6 +137,29 @@ export function HijriCalendar({
           setPicker(null)
         }
         const togglePicker = (which: 'month' | 'year') => setPicker(current => (current === which ? null : which))
+        const gregorianPrimary = state.showGregorian && state.dateEmphasis === 'gregorian'
+        const hijriHeadingButtons = () => (
+          <>
+            <button
+              type="button"
+              className="taqwim-calendar-heading-button"
+              data-taqwim-heading="month"
+              aria-expanded={picker === 'month'}
+              onClick={() => togglePicker('month')}
+            >
+              {months[state.placeholder.hm - 1]}
+            </button>
+            <button
+              type="button"
+              className="taqwim-calendar-heading-button"
+              data-taqwim-heading="year"
+              aria-expanded={picker === 'year'}
+              onClick={() => togglePicker('year')}
+            >
+              {state.placeholder.hy}
+            </button>
+          </>
+        )
 
         return (
           <>
@@ -150,33 +173,36 @@ export function HijriCalendar({
               <HijriCalendarHeading className="taqwim-calendar-heading">
                 {selectableHeading ? (
                   <>
-                    <button
-                      type="button"
-                      className="taqwim-calendar-heading-button"
-                      data-taqwim-heading="month"
-                      aria-expanded={picker === 'month'}
-                      onClick={() => togglePicker('month')}
+                    <span
+                      className="taqwim-calendar-heading-primary"
+                      data-calendar-system={gregorianPrimary ? 'gregorian' : 'hijri'}
                     >
-                      {months[state.placeholder.hm - 1]}
-                    </button>
-                    <button
-                      type="button"
-                      className="taqwim-calendar-heading-button"
-                      data-taqwim-heading="year"
-                      aria-expanded={picker === 'year'}
-                      onClick={() => togglePicker('year')}
-                    >
-                      {state.placeholder.hy}
-                    </button>
+                      {gregorianPrimary ? state.headingValue : hijriHeadingButtons()}
+                    </span>
                     {state.showGregorian && state.secondaryHeadingValue && (
-                      <span className="taqwim-calendar-heading-secondary">{state.secondaryHeadingValue}</span>
+                      <span
+                        className="taqwim-calendar-heading-secondary"
+                        data-calendar-system={gregorianPrimary ? 'hijri' : 'gregorian'}
+                      >
+                        {gregorianPrimary ? hijriHeadingButtons() : state.secondaryHeadingValue}
+                      </span>
                     )}
                   </>
                 ) : (
                   <>
-                    <span>{state.headingValue}</span>
+                    <span
+                      className="taqwim-calendar-heading-primary"
+                      data-calendar-system={gregorianPrimary ? 'gregorian' : 'hijri'}
+                    >
+                      {state.headingValue}
+                    </span>
                     {state.secondaryHeadingValue && (
-                      <span className="taqwim-calendar-heading-secondary">{state.secondaryHeadingValue}</span>
+                      <span
+                        className="taqwim-calendar-heading-secondary"
+                        data-calendar-system={gregorianPrimary ? 'hijri' : 'gregorian'}
+                      >
+                        {state.secondaryHeadingValue}
+                      </span>
                     )}
                   </>
                 )}
