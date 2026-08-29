@@ -181,31 +181,78 @@ export class StyledCalendarCellTrigger {
           [attr.data-disabled]="root.state().disabled ? '' : null"
         >
           @if (selectableHeading) {
-            <button
-              type="button"
-              class="taqwim-calendar-heading-button"
-              data-taqwim-heading="month"
-              [attr.aria-expanded]="picker() === 'month'"
-              (click)="togglePicker('month')"
+            <span
+              class="taqwim-calendar-heading-primary"
+              [attr.data-calendar-system]="
+                root.state().showGregorian && root.state().dateEmphasis === 'gregorian' ? 'gregorian' : 'hijri'
+              "
             >
-              {{ months()[root.state().placeholder.hm - 1] }}
-            </button>
-            <button
-              type="button"
-              class="taqwim-calendar-heading-button"
-              data-taqwim-heading="year"
-              [attr.aria-expanded]="picker() === 'year'"
-              (click)="togglePicker('year')"
-            >
-              {{ root.state().placeholder.hy }}
-            </button>
+              @if (root.state().showGregorian && root.state().dateEmphasis === 'gregorian') {
+                {{ root.state().headingValue }}
+              } @else {
+                <button
+                  type="button"
+                  class="taqwim-calendar-heading-button"
+                  data-taqwim-heading="month"
+                  [attr.aria-expanded]="picker() === 'month'"
+                  (click)="togglePicker('month')"
+                >
+                  {{ months()[root.state().placeholder.hm - 1] }}
+                </button>
+                <button
+                  type="button"
+                  class="taqwim-calendar-heading-button"
+                  data-taqwim-heading="year"
+                  [attr.aria-expanded]="picker() === 'year'"
+                  (click)="togglePicker('year')"
+                >
+                  {{ root.state().placeholder.hy }}
+                </button>
+              }
+            </span>
             @if (root.state().showGregorian && root.state().secondaryHeadingValue) {
-              <span class="taqwim-calendar-heading-secondary">{{ root.state().secondaryHeadingValue }}</span>
+              <span
+                class="taqwim-calendar-heading-secondary"
+                [attr.data-calendar-system]="root.state().dateEmphasis === 'gregorian' ? 'hijri' : 'gregorian'"
+              >
+                @if (root.state().dateEmphasis === 'gregorian') {
+                  <button
+                    type="button"
+                    class="taqwim-calendar-heading-button"
+                    data-taqwim-heading="month"
+                    [attr.aria-expanded]="picker() === 'month'"
+                    (click)="togglePicker('month')"
+                  >
+                    {{ months()[root.state().placeholder.hm - 1] }}
+                  </button>
+                  <button
+                    type="button"
+                    class="taqwim-calendar-heading-button"
+                    data-taqwim-heading="year"
+                    [attr.aria-expanded]="picker() === 'year'"
+                    (click)="togglePicker('year')"
+                  >
+                    {{ root.state().placeholder.hy }}
+                  </button>
+                } @else {
+                  {{ root.state().secondaryHeadingValue }}
+                }
+              </span>
             }
           } @else {
-            {{ root.state().headingValue }}
+            <span
+              class="taqwim-calendar-heading-primary"
+              [attr.data-calendar-system]="
+                root.state().showGregorian && root.state().dateEmphasis === 'gregorian' ? 'gregorian' : 'hijri'
+              "
+              >{{ root.state().headingValue }}</span
+            >
             @if (root.state().secondaryHeadingValue) {
-              <span class="taqwim-calendar-heading-secondary">{{ root.state().secondaryHeadingValue }}</span>
+              <span
+                class="taqwim-calendar-heading-secondary"
+                [attr.data-calendar-system]="root.state().dateEmphasis === 'gregorian' ? 'hijri' : 'gregorian'"
+                >{{ root.state().secondaryHeadingValue }}</span
+              >
             }
           }
         </div>
