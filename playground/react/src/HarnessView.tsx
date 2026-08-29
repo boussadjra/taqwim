@@ -38,6 +38,9 @@ export function Harness() {
         disabled={config.disabled}
         readonly={config.readonly}
         initialFocus={config.initialFocus}
+        showGregorian={config.showGregorian}
+        dateEmphasis={config.dateEmphasis}
+        gregorianLocale={config.gregorianLocale}
         defaultPlaceholder={config.placeholder}
         minValue={config.min}
         maxValue={config.max}

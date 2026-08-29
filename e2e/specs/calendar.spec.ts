@@ -307,6 +307,31 @@ test.describe('theming', () => {
   })
 })
 
+test.describe('dual calendar presentation', () => {
+  test('hides Gregorian information by default', async ({ page }) => {
+    await open(page)
+
+    await expect(calendar(page)).not.toHaveAttribute('data-show-gregorian', '')
+    await expect(page.locator('[data-gregorian-value]')).toHaveCount(0)
+  })
+
+  test('shows corresponding Gregorian dates when enabled', async ({ page }) => {
+    await open(page, { showGregorian: true })
+
+    await expect(calendar(page)).toHaveAttribute('data-show-gregorian', '')
+    await expect(calendar(page)).toHaveAttribute('data-date-emphasis', 'hijri')
+    await expect(page.locator('.taqwim-calendar-cell-secondary').first()).toBeVisible()
+    await expect(page.locator('[data-gregorian-value]').first()).toBeTruthy()
+  })
+
+  test('can emphasize Gregorian presentation', async ({ page }) => {
+    await open(page, { showGregorian: true, dateEmphasis: 'gregorian' })
+
+    await expect(calendar(page)).toHaveAttribute('data-date-emphasis', 'gregorian')
+    await expect(heading(page)).toContainText('2026')
+  })
+})
+
 test.describe('accessibility', () => {
   /*
    * A calendar is a high-risk widget and the roving focus is new code, so this

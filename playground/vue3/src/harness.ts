@@ -22,6 +22,9 @@ export interface HarnessConfig {
   disabled: boolean
   readonly: boolean
   initialFocus: boolean
+  showGregorian: boolean
+  dateEmphasis: 'hijri' | 'gregorian'
+  gregorianLocale?: string
   placeholder?: { hy: number; hm: number; hd: number }
   value?: { hy: number; hm: number; hd: number }
   min?: { hy: number; hm: number; hd: number }
@@ -53,6 +56,9 @@ export function readConfig(search: string): HarnessConfig {
     disabled: flag('disabled'),
     readonly: flag('readonly'),
     initialFocus: flag('initialFocus'),
+    showGregorian: flag('showGregorian'),
+    dateEmphasis: params.get('dateEmphasis') === 'gregorian' ? 'gregorian' : 'hijri',
+    gregorianLocale: params.get('gregorianLocale') ?? undefined,
     placeholder: parseDate(params.get('placeholder')),
     value: parseDate(params.get('value')),
     min: parseDate(params.get('min')),
