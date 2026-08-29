@@ -76,13 +76,34 @@ const YEARS = Array.from({ length: MAX_HIJRI_YEAR - MIN_HIJRI_YEAR + 1 }, (_, i)
           </button>
         }
 
-        <taqwim-calendar-heading
+        <div
           class="taqwim-calendar-heading"
-          [attr.role]="selectableHeading ? 'button' : null"
-          [attr.tabindex]="selectableHeading ? 0 : null"
-          (click)="toggleMonthPicker()"
-          (keydown.enter)="toggleMonthPicker()"
-        />
+          data-taqwim-calendar-heading
+          [attr.data-disabled]="root.state().disabled ? '' : null"
+        >
+          @if (selectableHeading) {
+            <button
+              type="button"
+              class="taqwim-calendar-heading-button"
+              data-taqwim-heading="month"
+              [attr.aria-expanded]="picker() === 'month'"
+              (click)="togglePicker('month')"
+            >
+              {{ months()[root.state().placeholder.hm - 1] }}
+            </button>
+            <button
+              type="button"
+              class="taqwim-calendar-heading-button"
+              data-taqwim-heading="year"
+              [attr.aria-expanded]="picker() === 'year'"
+              (click)="togglePicker('year')"
+            >
+              {{ root.state().placeholder.hy }}
+            </button>
+          } @else {
+            {{ root.state().headingValue }}
+          }
+        </div>
 
         @if (showNavigation) {
           <button taqwimCalendarNext class="taqwim-calendar-nav-button">
@@ -110,15 +131,6 @@ const YEARS = Array.from({ length: MAX_HIJRI_YEAR - MIN_HIJRI_YEAR + 1 }, (_, i)
       -->
       @if (picker(); as active) {
         <div class="taqwim-calendar-picker">
-          <div class="taqwim-calendar-picker-tabs">
-            <button type="button" [attr.data-active]="active === 'month' ? '' : null" (click)="picker.set('month')">
-              {{ root.state().headingValue.split(' ')[0] }}
-            </button>
-            <button type="button" [attr.data-active]="active === 'year' ? '' : null" (click)="picker.set('year')">
-              {{ root.state().placeholder.hy }}
-            </button>
-          </div>
-
           <div class="taqwim-calendar-picker-grid">
             @if (active === 'month') {
               @for (month of months(); track month; let index = $index) {
@@ -198,7 +210,7 @@ export class HijriCalendar implements OnChanges {
   @Input() showNavigation = true
   /** Show the weekday label row. */
   @Input() showWeekdays = true
-  /** Let the heading open month and year pickers. */
+  /** Show the month and year as separate heading buttons that open their pickers. */
   @Input() selectableHeading = true
 
   @Input() defaultValue?: HijriCalendarInputs['defaultValue']
@@ -239,9 +251,9 @@ export class HijriCalendar implements OnChanges {
     this.localeSignal.set(this.locale)
   }
 
-  protected toggleMonthPicker(): void {
+  protected togglePicker(which: 'month' | 'year'): void {
     if (!this.selectableHeading) return
-    this.picker.update(current => (current === 'month' ? null : 'month'))
+    this.picker.update(current => (current === which ? null : which))
   }
 
   protected jumpTo(

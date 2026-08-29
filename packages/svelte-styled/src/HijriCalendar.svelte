@@ -45,9 +45,9 @@
   const PrevIcon = $derived(navigationIcons?.prev ?? ArrowLeft)
   const NextIcon = $derived(navigationIcons?.next ?? ArrowRight)
 
-  function toggleMonthPicker() {
+  function togglePicker(which: 'month' | 'year') {
     if (!selectableHeading) return
-    picker = picker === 'month' ? null : 'month'
+    picker = picker === which ? null : which
   }
 </script>
 
@@ -71,17 +71,30 @@
         </HijriCalendarPrev>
       {/if}
 
-      <HijriCalendarHeading
-        class="taqwim-calendar-heading"
-        role={selectableHeading ? 'button' : undefined}
-        tabindex={selectableHeading ? 0 : undefined}
-        onclick={toggleMonthPicker}
-        onkeydown={(event: KeyboardEvent) => {
-          if (event.key !== 'Enter') return
-          event.preventDefault()
-          toggleMonthPicker()
-        }}
-      />
+      <HijriCalendarHeading class="taqwim-calendar-heading">
+        {#if selectableHeading}
+          <button
+            type="button"
+            class="taqwim-calendar-heading-button"
+            data-taqwim-heading="month"
+            aria-expanded={picker === 'month'}
+            onclick={() => togglePicker('month')}
+          >
+            {months[state.placeholder.hm - 1]}
+          </button>
+          <button
+            type="button"
+            class="taqwim-calendar-heading-button"
+            data-taqwim-heading="year"
+            aria-expanded={picker === 'year'}
+            onclick={() => togglePicker('year')}
+          >
+            {state.placeholder.hy}
+          </button>
+        {:else}
+          {state.headingValue}
+        {/if}
+      </HijriCalendarHeading>
 
       {#if showNavigation}
         <HijriCalendarNext class="taqwim-calendar-nav-button">
@@ -96,15 +109,6 @@
     -->
     {#if picker}
       <div class="taqwim-calendar-picker">
-        <div class="taqwim-calendar-picker-tabs">
-          <button type="button" data-active={picker === 'month' ? '' : undefined} onclick={() => (picker = 'month')}>
-            {state.headingValue.split(' ')[0]}
-          </button>
-          <button type="button" data-active={picker === 'year' ? '' : undefined} onclick={() => (picker = 'year')}>
-            {state.placeholder.hy}
-          </button>
-        </div>
-
         <div class="taqwim-calendar-picker-grid">
           {#if picker === 'month'}
             {#each months as month, index (month)}

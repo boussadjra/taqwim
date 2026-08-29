@@ -1,6 +1,6 @@
 <script lang="ts">
   import { formatHijriDate, type HijriDateObject } from '@taqwim/core'
-  import { untrack } from 'svelte'
+  import { onMount, untrack } from 'svelte'
   import HijriCalendar from './HijriCalendar.svelte'
   import { parseDraft } from './parseDraft'
   import type { HijriDatePickerProps } from './types'
@@ -61,6 +61,28 @@
       draft = formatted
     }
   }
+
+  /*
+   * A month page unmounts the focused day cell, which fires `focusout` with
+   * `relatedTarget === null`. Closing on that made prev/next dismiss the
+   * popover before the new month could be seen. Close only when focus actually
+   * moved to a node outside the picker; clicks on the page are handled below.
+   */
+  function onFocusOut(event: FocusEvent) {
+    const next = event.relatedTarget as Node | null
+    if (next && !container?.contains(next)) isOpen = false
+  }
+
+  function onDocumentPointerDown(event: PointerEvent) {
+    if (!isOpen) return
+    if (container?.contains(event.target as Node)) return
+    isOpen = false
+  }
+
+  onMount(() => {
+    document.addEventListener('pointerdown', onDocumentPointerDown, true)
+    return () => document.removeEventListener('pointerdown', onDocumentPointerDown, true)
+  })
 </script>
 
 <div
@@ -68,11 +90,7 @@
   class="taqwim-datepicker"
   data-taqwim-theme={calendarProps.theme ?? 'default'}
   data-open={isOpen ? '' : undefined}
-  onfocusout={event => {
-    const next = event.relatedTarget as Node | null
-    if (next && container?.contains(next)) return
-    isOpen = false
-  }}
+  onfocusout={onFocusOut}
 >
   <input
     class="taqwim-datepicker-input"

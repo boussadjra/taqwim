@@ -37,7 +37,10 @@ export interface HijriCalendarProps extends HijriCalendarRootProps {
   showNavigation?: boolean
   /** Show the weekday label row. @default true */
   showWeekdays?: boolean
-  /** Let the heading open month and year pickers. @default true */
+  /**
+   * Show the month and year as separate heading buttons that open their pickers.
+   * @default true
+   */
   selectableHeading?: boolean
   /** Replace the default chevrons. */
   navigationIcons?: { prev?: Component; next?: Component }
@@ -128,6 +131,10 @@ function jumpTo(part: Partial<HijriDateObject>, current: HijriDateObject) {
   placeholder.value = { ...current, ...part, hd: 1 }
   picker.value = null
 }
+
+function togglePicker(which: 'month' | 'year') {
+  picker.value = picker.value === which ? null : which
+}
 </script>
 
 <template>
@@ -148,13 +155,29 @@ function jumpTo(part: Partial<HijriDateObject>, current: HijriDateObject) {
           </slot>
         </HijriCalendarPrev>
 
-        <HijriCalendarHeading
-          class="taqwim-calendar-heading"
-          :role="selectableHeading ? 'button' : undefined"
-          :tabindex="selectableHeading ? 0 : undefined"
-          @click="selectableHeading && (picker = picker === 'month' ? null : 'month')"
-          @keydown.enter.prevent="selectableHeading && (picker = picker === 'month' ? null : 'month')"
-        />
+        <HijriCalendarHeading class="taqwim-calendar-heading">
+          <template v-if="selectableHeading">
+            <button
+              type="button"
+              class="taqwim-calendar-heading-button"
+              data-taqwim-heading="month"
+              :aria-expanded="picker === 'month'"
+              @click="togglePicker('month')"
+            >
+              {{ months[state.placeholder.hm - 1] }}
+            </button>
+            <button
+              type="button"
+              class="taqwim-calendar-heading-button"
+              data-taqwim-heading="year"
+              :aria-expanded="picker === 'year'"
+              @click="togglePicker('year')"
+            >
+              {{ state.placeholder.hy }}
+            </button>
+          </template>
+          <template v-else>{{ state.headingValue }}</template>
+        </HijriCalendarHeading>
 
         <HijriCalendarNext v-if="showNavigation" class="taqwim-calendar-nav-button" v-slot="{ disabled }">
           <slot name="next-button" :disabled="disabled">
@@ -169,15 +192,6 @@ function jumpTo(part: Partial<HijriDateObject>, current: HijriDateObject) {
       element's ancestors, so a teleported panel would lose it.
     -->
     <div v-if="picker" class="taqwim-calendar-picker">
-      <div class="taqwim-calendar-picker-tabs">
-        <button type="button" :data-active="picker === 'month' ? '' : undefined" @click="picker = 'month'">
-          {{ state.headingValue.split(' ')[0] }}
-        </button>
-        <button type="button" :data-active="picker === 'year' ? '' : undefined" @click="picker = 'year'">
-          {{ state.placeholder.hy }}
-        </button>
-      </div>
-
       <div class="taqwim-calendar-picker-grid">
         <template v-if="picker === 'month'">
           <button

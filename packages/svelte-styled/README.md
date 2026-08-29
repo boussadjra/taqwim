@@ -45,14 +45,14 @@ To restyle rather than re-theme, override the tokens — see [`@taqwim/themes`](
 
 Everything [`@taqwim/svelte`](../svelte)'s root accepts, plus:
 
-|                     |                                                      |
-| ------------------- | ---------------------------------------------------- |
-| `theme`             | Bundled theme name. Default `'default'`              |
-| `size`              | `'compact' \| 'default' \| 'large'`                  |
-| `showNavigation`    | Previous/next buttons. Default `true`                |
-| `showWeekdays`      | Weekday label row. Default `true`                    |
-| `selectableHeading` | Heading opens month and year pickers. Default `true` |
-| `navigationIcons`   | `{ prev?, next? }` components replacing the chevrons |
+|                     |                                                                        |
+| ------------------- | ---------------------------------------------------------------------- |
+| `theme`             | Bundled theme name. Default `'default'`                                |
+| `size`              | `'compact' \| 'default' \| 'large'`                                    |
+| `showNavigation`    | Previous/next buttons. Default `true`                                  |
+| `showWeekdays`      | Weekday label row. Default `true`                                      |
+| `selectableHeading` | Month and year heading buttons that open their pickers. Default `true` |
+| `navigationIcons`   | `{ prev?, next? }` components replacing the chevrons                   |
 
 Snippet props: `cell` and `weekday`.
 

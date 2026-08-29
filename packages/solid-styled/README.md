@@ -50,15 +50,15 @@ To restyle rather than re-theme, override the tokens — see [`@taqwim/themes`](
 
 Everything [`@taqwim/solid`](../solid)'s root accepts, plus:
 
-|                               |                                                      |
-| ----------------------------- | ---------------------------------------------------- |
-| `theme`                       | Bundled theme name. Default `'default'`              |
-| `size`                        | `'compact' \| 'default' \| 'large'`                  |
-| `showNavigation`              | Previous/next buttons. Default `true`                |
-| `showWeekdays`                | Weekday label row. Default `true`                    |
-| `selectableHeading`           | Heading opens month and year pickers. Default `true` |
-| `navigationIcons`             | `{ prev?, next? }` components replacing the chevrons |
-| `renderCell`, `renderWeekday` | Render props for cell contents and weekday labels    |
+|                               |                                                                        |
+| ----------------------------- | ---------------------------------------------------------------------- |
+| `theme`                       | Bundled theme name. Default `'default'`                                |
+| `size`                        | `'compact' \| 'default' \| 'large'`                                    |
+| `showNavigation`              | Previous/next buttons. Default `true`                                  |
+| `showWeekdays`                | Weekday label row. Default `true`                                      |
+| `selectableHeading`           | Month and year heading buttons that open their pickers. Default `true` |
+| `navigationIcons`             | `{ prev?, next? }` components replacing the chevrons                   |
+| `renderCell`, `renderWeekday` | Render props for cell contents and weekday labels                      |
 
 `HijriDatePicker` adds `format` (default `'iYYYY-iMM-iDD'`), `inputPlaceholder`, `label` and `editable`. It accepts typed dates in `iYYYY-MM-DD` or `DD-MM-iYYYY`, with `/` or `-`; unparseable text reverts rather than clearing the selection.
 

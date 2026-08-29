@@ -1,5 +1,5 @@
 import { formatHijriDate, isValidHijriDate, type HijriDateObject } from '@taqwim/core'
-import { createEffect, createSignal, createUniqueId, Show, splitProps, type JSX } from 'solid-js'
+import { createEffect, createSignal, createUniqueId, onCleanup, onMount, Show, splitProps, type JSX } from 'solid-js'
 import { HijriCalendar, type HijriCalendarProps } from './HijriCalendar'
 
 export interface HijriDatePickerProps extends Omit<HijriCalendarProps, 'value' | 'onValueChange' | 'multiple'> {
@@ -73,6 +73,34 @@ export function HijriDatePicker(props: HijriDatePickerProps): JSX.Element {
 
   let container: HTMLDivElement | undefined
 
+  /*
+   * A month page unmounts the focused day cell, which fires `focusout` with
+   * `relatedTarget === null`. Closing on that made prev/next dismiss the
+   * popover before the new month could be seen. Close only when focus actually
+   * moved to a node outside the picker; clicks on the page are handled below.
+   */
+  function onFocusOut(event: FocusEvent) {
+    const next = event.relatedTarget as Node | null
+    if (next && !container?.contains(next)) setIsOpen(false)
+  }
+
+  function onDocumentPointerDown(event: PointerEvent) {
+    if (!isOpen()) return
+    if (container?.contains(event.target as Node)) return
+    setIsOpen(false)
+  }
+
+  /*
+   * `onCleanup` at the top level of a Solid component runs when the SSR owner
+   * is disposed, and `document` does not exist there. Nesting it inside
+   * `onMount` keeps the listener a client-only concern — Astro islands still
+   * server-render this picker.
+   */
+  onMount(() => {
+    document.addEventListener('pointerdown', onDocumentPointerDown, true)
+    onCleanup(() => document.removeEventListener('pointerdown', onDocumentPointerDown, true))
+  })
+
   function commit(next: HijriDateObject | undefined) {
     if (local.value === undefined) setUncontrolled(next)
     local.onValueChange?.(next)
@@ -104,11 +132,7 @@ export function HijriDatePicker(props: HijriDatePickerProps): JSX.Element {
       class="taqwim-datepicker"
       data-taqwim-theme={calendarProps.theme ?? 'default'}
       data-open={isOpen() ? '' : undefined}
-      onFocusOut={event => {
-        const next = event.relatedTarget as Node | null
-        if (next && container?.contains(next)) return
-        setIsOpen(false)
-      }}
+      onFocusOut={onFocusOut}
       onKeyDown={event => {
         if (event.key === 'Escape') setIsOpen(false)
       }}

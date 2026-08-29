@@ -70,42 +70,53 @@ describe('composition', () => {
 })
 
 describe('month and year picker', () => {
-  const openPicker = async (wrapper: ReturnType<typeof mountCalendar>) => {
-    await wrapper.get('[data-taqwim-calendar-heading]').trigger('click')
+  const monthButton = (wrapper: ReturnType<typeof mountCalendar>) => wrapper.get('[data-taqwim-heading="month"]')
+  const yearButton = (wrapper: ReturnType<typeof mountCalendar>) => wrapper.get('[data-taqwim-heading="year"]')
+
+  const openMonthPicker = async (wrapper: ReturnType<typeof mountCalendar>) => {
+    await monthButton(wrapper).trigger('click')
     return wrapper
   }
 
-  it('opens from the heading', async () => {
-    const wrapper = await openPicker(mountCalendar())
+  it('shows the month and year as separate heading buttons', () => {
+    const wrapper = mountCalendar()
+
+    expect(monthButton(wrapper).text()).toBe('Ramadan')
+    expect(yearButton(wrapper).text()).toBe('1445')
+  })
+
+  it('opens the month grid from the month button', async () => {
+    const wrapper = await openMonthPicker(mountCalendar())
 
     expect(wrapper.find('.taqwim-calendar-picker').exists()).toBe(true)
+    expect(monthButton(wrapper).attributes('aria-expanded')).toBe('true')
+  })
+
+  it('opens the year grid from the year button', async () => {
+    const wrapper = mountCalendar()
+    await yearButton(wrapper).trigger('click')
+
+    const years = wrapper.findAll('.taqwim-calendar-picker-grid button').map(button => Number(button.text()))
+
+    expect(years[0]).toBe(1343)
+    expect(years.at(-1)).toBe(1500)
   })
 
   it('stays closed when the heading is not selectable', async () => {
-    const wrapper = await openPicker(mountCalendar({ selectableHeading: false }))
+    const wrapper = mountCalendar({ selectableHeading: false })
+    await wrapper.get('[data-taqwim-calendar-heading]').trigger('click')
 
     expect(wrapper.find('.taqwim-calendar-picker').exists()).toBe(false)
+    expect(wrapper.find('[data-taqwim-heading]').exists()).toBe(false)
   })
 
   it('jumps to the chosen month', async () => {
-    const wrapper = await openPicker(mountCalendar())
+    const wrapper = await openMonthPicker(mountCalendar())
     const buttons = wrapper.findAll('.taqwim-calendar-picker-grid button')
 
     // Rajab, the seventh month.
     await buttons[6].trigger('click')
 
     expect(wrapper.emitted('update:placeholder')?.at(-1)?.[0]).toEqual(expect.objectContaining({ hm: 7, hd: 1 }))
-  })
-
-  it('offers only years the conversion table covers', async () => {
-    const wrapper = await openPicker(mountCalendar())
-    await wrapper.findAll('.taqwim-calendar-picker-tabs button')[1].trigger('click')
-
-    const years = wrapper.findAll('.taqwim-calendar-picker-grid button').map(button => Number(button.text()))
-
-    // The pre-1.0 version derived these from `getFullYear() + 579`, offering
-    // years the calendar cannot convert.
-    expect(years[0]).toBe(1343)
-    expect(years.at(-1)).toBe(1500)
   })
 })

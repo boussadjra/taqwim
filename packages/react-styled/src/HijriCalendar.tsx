@@ -51,7 +51,10 @@ export interface HijriCalendarProps extends Omit<HijriCalendarRootProps, 'childr
   showNavigation?: boolean
   /** Show the weekday label row. @default true */
   showWeekdays?: boolean
-  /** Let the heading open month and year pickers. @default true */
+  /**
+   * Show the month and year as separate heading buttons that open their pickers.
+   * @default true
+   */
   selectableHeading?: boolean
   /** Replace the default chevrons. */
   navigationIcons?: { prev?: ComponentType; next?: ComponentType }
@@ -99,7 +102,7 @@ export function HijriCalendar({
           store.setPlaceholder({ ...state.placeholder, ...part, hd: 1 })
           setPicker(null)
         }
-        const toggleMonthPicker = () => setPicker(current => (current === 'month' ? null : 'month'))
+        const togglePicker = (which: 'month' | 'year') => setPicker(current => (current === which ? null : which))
 
         return (
           <>
@@ -110,21 +113,30 @@ export function HijriCalendar({
                 </HijriCalendarPrev>
               )}
 
-              <HijriCalendarHeading
-                className="taqwim-calendar-heading"
-                role={selectableHeading ? 'button' : undefined}
-                tabIndex={selectableHeading ? 0 : undefined}
-                onClick={selectableHeading ? toggleMonthPicker : undefined}
-                onKeyDown={
-                  selectableHeading
-                    ? event => {
-                        if (event.key !== 'Enter') return
-                        event.preventDefault()
-                        toggleMonthPicker()
-                      }
-                    : undefined
-                }
-              />
+              <HijriCalendarHeading className="taqwim-calendar-heading">
+                {selectableHeading ? (
+                  <>
+                    <button
+                      type="button"
+                      className="taqwim-calendar-heading-button"
+                      data-taqwim-heading="month"
+                      aria-expanded={picker === 'month'}
+                      onClick={() => togglePicker('month')}
+                    >
+                      {months[state.placeholder.hm - 1]}
+                    </button>
+                    <button
+                      type="button"
+                      className="taqwim-calendar-heading-button"
+                      data-taqwim-heading="year"
+                      aria-expanded={picker === 'year'}
+                      onClick={() => togglePicker('year')}
+                    >
+                      {state.placeholder.hy}
+                    </button>
+                  </>
+                ) : undefined}
+              </HijriCalendarHeading>
 
               {showNavigation && (
                 <HijriCalendarNext className="taqwim-calendar-nav-button">
@@ -139,23 +151,6 @@ export function HijriCalendar({
             */}
             {picker && (
               <div className="taqwim-calendar-picker">
-                <div className="taqwim-calendar-picker-tabs">
-                  <button
-                    type="button"
-                    data-active={picker === 'month' ? '' : undefined}
-                    onClick={() => setPicker('month')}
-                  >
-                    {state.headingValue.split(' ')[0]}
-                  </button>
-                  <button
-                    type="button"
-                    data-active={picker === 'year' ? '' : undefined}
-                    onClick={() => setPicker('year')}
-                  >
-                    {state.placeholder.hy}
-                  </button>
-                </div>
-
                 <div className="taqwim-calendar-picker-grid">
                   {picker === 'month'
                     ? months.map((month, index) => (

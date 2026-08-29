@@ -28,7 +28,7 @@ export interface HijriDatePickerSlots {
 
 <script setup lang="ts">
 import { formatHijriDate, isValidHijriDate, type HijriDateObject as HijriDate } from '@taqwim/core'
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import HijriCalendar from './HijriCalendar.vue'
 
 let instances = 0
@@ -38,6 +38,12 @@ const props = withDefaults(defineProps<HijriDatePickerProps>(), {
   label: 'Hijri date',
   editable: true,
   locale: 'en',
+  // Same defaults as HijriCalendar. Vue treats undeclared optional booleans
+  // as `false`, so without these the popover opened with no prev/next and a
+  // static heading — which is how the picker looked like it could not page.
+  showNavigation: true,
+  showWeekdays: true,
+  selectableHeading: true,
 })
 
 defineSlots<HijriDatePickerSlots>()
@@ -132,11 +138,25 @@ function commitDraft() {
   }
 }
 
+/*
+ * A month page unmounts the focused day cell, which fires `focusout` with
+ * `relatedTarget === null`. Closing on that made prev/next dismiss the
+ * popover before the new month could be seen. Close only when focus actually
+ * moved to a node outside the picker; clicks on the page are handled below.
+ */
 function onFocusOut(event: FocusEvent) {
   const next = event.relatedTarget as Node | null
-  if (next && container.value?.contains(next)) return
+  if (next && !container.value?.contains(next)) close()
+}
+
+function onDocumentPointerDown(event: PointerEvent) {
+  if (!isOpen.value) return
+  if (container.value?.contains(event.target as Node)) return
   close()
 }
+
+onMounted(() => document.addEventListener('pointerdown', onDocumentPointerDown, true))
+onUnmounted(() => document.removeEventListener('pointerdown', onDocumentPointerDown, true))
 </script>
 
 <template>

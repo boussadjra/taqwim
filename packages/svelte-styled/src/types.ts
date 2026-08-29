@@ -34,7 +34,10 @@ export interface HijriCalendarProps extends HijriCalendarRootOptions {
   showNavigation?: boolean
   /** Show the weekday label row. @default true */
   showWeekdays?: boolean
-  /** Let the heading open month and year pickers. @default true */
+  /**
+   * Show the month and year as separate heading buttons that open their pickers.
+   * @default true
+   */
   selectableHeading?: boolean
   /** Replace the default chevrons. */
   navigationIcons?: { prev?: Component; next?: Component }

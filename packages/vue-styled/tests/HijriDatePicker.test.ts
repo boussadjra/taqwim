@@ -90,6 +90,21 @@ describe('popover', () => {
     expect(wrapper.find('[data-taqwim-calendar]').exists()).toBe(true)
   })
 
+  /*
+   * Vue treats optional boolean props as `false` unless `withDefaults` says
+   * otherwise. The picker used to forward that into HijriCalendar, so the
+   * popover opened with no chevrons and a static heading.
+   */
+  it('shows paging and month/year heading buttons', async () => {
+    const wrapper = mountPicker({ defaultPlaceholder: RAMADAN_1445 })
+    await wrapper.get('input').trigger('focus')
+
+    expect(wrapper.find('[aria-label="Previous page"]').exists()).toBe(true)
+    expect(wrapper.find('[aria-label="Next page"]').exists()).toBe(true)
+    expect(wrapper.get('[data-taqwim-heading="month"]').text()).toBe('Ramadan')
+    expect(wrapper.get('[data-taqwim-heading="year"]').text()).toBe('1445')
+  })
+
   it('does not open while disabled', async () => {
     const wrapper = mountPicker({ disabled: true })
     await wrapper.get('input').trigger('focus')
@@ -139,5 +154,55 @@ describe('popover', () => {
     await pick('12')
 
     expect(wrapper.emitted('update:modelValue')?.at(-1)?.[0]).toEqual({ hy: 1445, hm: 9, hd: 12 })
+  })
+
+  it('pages months without closing the popover', async () => {
+    const wrapper = mountPicker({ defaultPlaceholder: RAMADAN_1445 })
+    await wrapper.get('input').trigger('focus')
+
+    const start = wrapper.get('[data-taqwim-heading="month"]').text()
+    await wrapper.get('[aria-label="Next page"]').trigger('click')
+
+    expect(wrapper.find('[data-taqwim-calendar]').exists()).toBe(true)
+    expect(wrapper.get('[data-taqwim-heading="month"]').text()).not.toBe(start)
+
+    await wrapper.get('[aria-label="Previous page"]').trigger('click')
+
+    expect(wrapper.get('[data-taqwim-heading="month"]').text()).toBe(start)
+  })
+
+  it('does not close when a focused cell unmounts', async () => {
+    const wrapper = mountPicker({ defaultPlaceholder: RAMADAN_1445 })
+    await wrapper.get('input').trigger('focus')
+
+    // A month page removes the focused cell; the browser then fires focusout
+    // with relatedTarget null. That used to dismiss the popover.
+    await wrapper.get('.taqwim-datepicker').trigger('focusout', { relatedTarget: null })
+
+    expect(wrapper.find('[data-taqwim-calendar]').exists()).toBe(true)
+  })
+
+  it('closes when focus moves outside', async () => {
+    const wrapper = mountPicker()
+    await wrapper.get('input').trigger('focus')
+
+    const outside = document.createElement('button')
+    document.body.append(outside)
+    await wrapper.get('.taqwim-datepicker').trigger('focusout', { relatedTarget: outside })
+    outside.remove()
+
+    expect(wrapper.find('[data-taqwim-calendar]').exists()).toBe(false)
+  })
+
+  it('opens month and year pickers from the heading', async () => {
+    const wrapper = mountPicker({ defaultPlaceholder: RAMADAN_1445 })
+    await wrapper.get('input').trigger('focus')
+
+    await wrapper.get('[data-taqwim-heading="month"]').trigger('click')
+    expect(wrapper.find('.taqwim-calendar-picker').exists()).toBe(true)
+
+    await wrapper.get('[data-taqwim-heading="year"]').trigger('click')
+    expect(wrapper.get('[data-taqwim-heading="year"]').attributes('aria-expanded')).toBe('true')
+    expect(wrapper.find('[data-taqwim-calendar]').exists()).toBe(true)
   })
 })

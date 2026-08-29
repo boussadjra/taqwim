@@ -1,5 +1,15 @@
 import { formatHijriDate, isValidHijriDate, type HijriDateObject } from '@taqwim/core'
-import { Component, EventEmitter, Input, Output, signal, type OnChanges } from '@angular/core'
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  inject,
+  signal,
+  type OnChanges,
+  type OnDestroy,
+} from '@angular/core'
 import { HijriCalendar, type HijriCalendarSize, type HijriCalendarTheme } from './calendar'
 
 /*
@@ -86,7 +96,7 @@ let instances = 0
     }
   `,
 })
-export class HijriDatePicker implements OnChanges {
+export class HijriDatePicker implements OnChanges, OnDestroy {
   @Input() theme: HijriCalendarTheme = 'default'
   @Input() size: HijriCalendarSize = 'default'
   @Input() locale = 'en'
@@ -115,7 +125,18 @@ export class HijriDatePicker implements OnChanges {
   protected readonly isOpen = signal(false)
   protected readonly draft = signal('')
 
+  private readonly host = inject(ElementRef<HTMLElement>)
   private readonly uncontrolled = signal<HijriDateObject | undefined>(undefined)
+
+  constructor() {
+    if (typeof document === 'undefined') return
+    document.addEventListener('pointerdown', this.onDocumentPointerDown, true)
+  }
+
+  ngOnDestroy(): void {
+    if (typeof document === 'undefined') return
+    document.removeEventListener('pointerdown', this.onDocumentPointerDown, true)
+  }
 
   protected selected(): HijriDateObject | undefined {
     return this.value !== undefined ? this.value : this.uncontrolled()
@@ -154,10 +175,21 @@ export class HijriDatePicker implements OnChanges {
     }
   }
 
+  /*
+   * A month page unmounts the focused day cell, which fires `focusout` with
+   * `relatedTarget === null`. Closing on that made prev/next dismiss the
+   * popover before the new month could be seen. Close only when focus actually
+   * moved to a node outside the picker; clicks on the page are handled below.
+   */
   protected onFocusOut(event: FocusEvent): void {
     const next = event.relatedTarget as Node | null
     const host = (event.currentTarget as HTMLElement) ?? null
-    if (next && host?.contains(next)) return
+    if (next && host && !host.contains(next)) this.isOpen.set(false)
+  }
+
+  private readonly onDocumentPointerDown = (event: PointerEvent): void => {
+    if (!this.isOpen()) return
+    if (this.host.nativeElement.contains(event.target as Node)) return
     this.isOpen.set(false)
   }
 

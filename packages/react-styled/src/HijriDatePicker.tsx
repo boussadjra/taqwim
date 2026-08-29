@@ -92,11 +92,27 @@ export function HijriDatePicker({
     }
   }
 
+  /*
+   * A month page unmounts the focused day cell, which fires `focusout` with
+   * `relatedTarget === null`. Closing on that made prev/next dismiss the
+   * popover before the new month could be seen. Close only when focus actually
+   * moved to a node outside the picker; clicks on the page are handled below.
+   */
   function onBlurCapture(event: FocusEvent<HTMLDivElement>) {
     const next = event.relatedTarget as Node | null
-    if (next && containerRef.current?.contains(next)) return
-    setIsOpen(false)
+    if (next && !containerRef.current?.contains(next)) setIsOpen(false)
   }
+
+  useEffect(() => {
+    function onPointerDown(event: PointerEvent) {
+      if (!isOpen) return
+      if (containerRef.current?.contains(event.target as Node)) return
+      setIsOpen(false)
+    }
+
+    document.addEventListener('pointerdown', onPointerDown, true)
+    return () => document.removeEventListener('pointerdown', onPointerDown, true)
+  }, [isOpen])
 
   return (
     <div

@@ -62,26 +62,36 @@ describe('composition', () => {
 })
 
 describe('month and year picker', () => {
-  const openPicker = () => fireEvent.click(document.querySelector('[data-taqwim-calendar-heading]')!)
+  const monthButton = () => document.querySelector('[data-taqwim-heading="month"]')!
+  const yearButton = () => document.querySelector('[data-taqwim-heading="year"]')!
 
-  it('opens from the heading', () => {
+  it('shows the month and year as separate heading buttons', () => {
     render(() => <HijriCalendar defaultPlaceholder={RAMADAN_1445} />)
-    openPicker()
+
+    expect(monthButton().textContent).toBe('Ramadan')
+    expect(yearButton().textContent).toBe('1445')
+  })
+
+  it('opens the month grid from the month button', () => {
+    render(() => <HijriCalendar defaultPlaceholder={RAMADAN_1445} />)
+    fireEvent.click(monthButton())
 
     expect(document.querySelector('.taqwim-calendar-picker')).not.toBeNull()
+    expect(monthButton().getAttribute('aria-expanded')).toBe('true')
   })
 
   it('stays closed when the heading is not selectable', () => {
     render(() => <HijriCalendar defaultPlaceholder={RAMADAN_1445} selectableHeading={false} />)
-    openPicker()
+    fireEvent.click(document.querySelector('[data-taqwim-calendar-heading]')!)
 
     expect(document.querySelector('.taqwim-calendar-picker')).toBeNull()
+    expect(document.querySelector('[data-taqwim-heading]')).toBeNull()
   })
 
   it('jumps to the chosen month', () => {
     const onPlaceholderChange = vi.fn()
     render(() => <HijriCalendar defaultPlaceholder={RAMADAN_1445} onPlaceholderChange={onPlaceholderChange} />)
-    openPicker()
+    fireEvent.click(monthButton())
 
     // Rajab, the seventh month.
     fireEvent.click(document.querySelectorAll('.taqwim-calendar-picker-grid button')[6])
@@ -89,10 +99,9 @@ describe('month and year picker', () => {
     expect(onPlaceholderChange).toHaveBeenCalledWith(expect.objectContaining({ hm: 7, hd: 1 }))
   })
 
-  it('offers only years the conversion table covers', () => {
+  it('opens the year grid from the year button', () => {
     render(() => <HijriCalendar defaultPlaceholder={RAMADAN_1445} />)
-    openPicker()
-    fireEvent.click(document.querySelectorAll('.taqwim-calendar-picker-tabs button')[1])
+    fireEvent.click(yearButton())
 
     const years = [...document.querySelectorAll('.taqwim-calendar-picker-grid button')].map(button =>
       Number(button.textContent),
@@ -154,6 +163,16 @@ describe('date picker', () => {
     expect(document.querySelector('[data-taqwim-calendar]')).not.toBeNull()
   })
 
+  it('shows paging and month/year heading buttons', () => {
+    render(() => <HijriDatePicker defaultPlaceholder={RAMADAN_1445} />)
+    fireEvent.focus(input())
+
+    expect(screen.getByRole('button', { name: 'Previous page' })).toBeTruthy()
+    expect(screen.getByRole('button', { name: 'Next page' })).toBeTruthy()
+    expect(document.querySelector('[data-taqwim-heading="month"]')?.textContent).toBe('Ramadan')
+    expect(document.querySelector('[data-taqwim-heading="year"]')?.textContent).toBe('1445')
+  })
+
   it('does not open while disabled', () => {
     render(() => <HijriDatePicker disabled />)
     fireEvent.focus(input())
@@ -175,5 +194,41 @@ describe('date picker', () => {
     render(() => <HijriDatePicker editable={false} />)
 
     expect(input().readOnly).toBe(true)
+  })
+
+  it('pages months without closing the popover', () => {
+    render(() => <HijriDatePicker defaultPlaceholder={RAMADAN_1445} />)
+    fireEvent.focus(input())
+
+    const start = document.querySelector('[data-taqwim-heading="month"]')!.textContent
+    fireEvent.click(screen.getByRole('button', { name: 'Next page' }))
+
+    expect(document.querySelector('[data-taqwim-calendar]')).not.toBeNull()
+    expect(document.querySelector('[data-taqwim-heading="month"]')!.textContent).not.toBe(start)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Previous page' }))
+
+    expect(document.querySelector('[data-taqwim-heading="month"]')!.textContent).toBe(start)
+  })
+
+  it('does not close when a focused cell unmounts', () => {
+    render(() => <HijriDatePicker defaultPlaceholder={RAMADAN_1445} />)
+    fireEvent.focus(input())
+
+    fireEvent.focusOut(document.querySelector('.taqwim-datepicker')!, { relatedTarget: null })
+
+    expect(document.querySelector('[data-taqwim-calendar]')).not.toBeNull()
+  })
+
+  it('opens month and year pickers from the heading', () => {
+    render(() => <HijriDatePicker defaultPlaceholder={RAMADAN_1445} />)
+    fireEvent.focus(input())
+
+    fireEvent.click(document.querySelector('[data-taqwim-heading="month"]')!)
+    expect(document.querySelector('.taqwim-calendar-picker')).not.toBeNull()
+
+    fireEvent.click(document.querySelector('[data-taqwim-heading="year"]')!)
+    expect(document.querySelector('[data-taqwim-heading="year"]')?.getAttribute('aria-expanded')).toBe('true')
+    expect(document.querySelector('[data-taqwim-calendar]')).not.toBeNull()
   })
 })
