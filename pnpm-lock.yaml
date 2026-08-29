@@ -223,6 +223,9 @@ importers:
       '@taqwim/angular':
         specifier: workspace:*
         version: link:../angular
+      '@taqwim/calendar-core':
+        specifier: workspace:*
+        version: link:../calendar-core
       '@taqwim/core':
         specifier: workspace:*
         version: link:../core
@@ -377,6 +380,9 @@ importers:
 
   packages/react-styled:
     dependencies:
+      '@taqwim/calendar-core':
+        specifier: workspace:*
+        version: link:../calendar-core
       '@taqwim/core':
         specifier: workspace:*
         version: link:../core
@@ -469,6 +475,9 @@ importers:
 
   packages/solid-styled:
     dependencies:
+      '@taqwim/calendar-core':
+        specifier: workspace:*
+        version: link:../calendar-core
       '@taqwim/core':
         specifier: workspace:*
         version: link:../core
@@ -558,6 +567,9 @@ importers:
 
   packages/svelte-styled:
     dependencies:
+      '@taqwim/calendar-core':
+        specifier: workspace:*
+        version: link:../calendar-core
       '@taqwim/core':
         specifier: workspace:*
         version: link:../core
@@ -677,6 +689,9 @@ importers:
 
   packages/vue-styled:
     dependencies:
+      '@taqwim/calendar-core':
+        specifier: workspace:*
+        version: link:../calendar-core
       '@taqwim/core':
         specifier: workspace:*
         version: link:../core

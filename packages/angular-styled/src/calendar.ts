@@ -1,6 +1,20 @@
 import { getLocaleData, MAX_HIJRI_YEAR, MIN_HIJRI_YEAR, type HijriDateObject } from '@taqwim/core'
-import { TAQWIM_CALENDAR, TaqwimCalendarService, type CalendarDay, type HijriCalendarInputs } from '@taqwim/angular'
-import { Component, EventEmitter, Input, Output, computed, signal, type OnChanges } from '@angular/core'
+import { getCellDisplayValues, type CalendarDay, type DateEmphasis } from '@taqwim/calendar-core'
+import {
+  HijriCalendarCell,
+  HijriCalendarGrid,
+  HijriCalendarGridBody,
+  HijriCalendarGridHead,
+  HijriCalendarGridRow,
+  HijriCalendarHeadCell,
+  HijriCalendarHeader,
+  HijriCalendarNext,
+  HijriCalendarPrev,
+  HijriCalendarRoot,
+  TaqwimCalendarService,
+  type HijriCalendarInputs,
+} from '@taqwim/angular'
+import { Component, EventEmitter, Input, Output, computed, inject, input, signal, type OnChanges } from '@angular/core'
 
 /*
  * Generated from the stylesheets in @taqwim/themes, so a new preset is one
@@ -20,9 +34,91 @@ export type HijriCalendarSize = 'compact' | 'default' | 'large'
 const YEARS = Array.from({ length: MAX_HIJRI_YEAR - MIN_HIJRI_YEAR + 1 }, (_, i) => MIN_HIJRI_YEAR + i)
 
 @Component({
+  selector: 'button[taqwimStyledCalendarCellTrigger]',
+  standalone: true,
+  host: {
+    type: 'button',
+    role: 'button',
+    '[attr.tabindex]': 'props().tabindex',
+    '[attr.aria-label]': "props()['aria-label']",
+    '[attr.aria-disabled]': "props()['aria-disabled']",
+    '[attr.data-value]': "props()['data-value']",
+    '[attr.data-gregorian-value]': "props()['data-gregorian-value'] ?? null",
+    '[attr.data-taqwim-calendar-cell-trigger]': '""',
+    '[attr.data-selected]': "day().isSelected ? '' : null",
+    '[attr.data-disabled]': "day().isDisabled ? '' : null",
+    '[attr.data-unavailable]': "day().isUnavailable ? '' : null",
+    '[attr.data-today]': "day().isToday ? '' : null",
+    '[attr.data-outside-month]': "day().isOutsideMonth ? '' : null",
+    '[attr.data-focused]': "day().isFocused ? '' : null",
+    '(click)': 'onClick()',
+    '(focus)': 'onFocus()',
+  },
+  template: `
+    @if (display().secondaryDayValue) {
+      <span class="taqwim-calendar-cell-dates">
+        <span class="taqwim-calendar-cell-primary" data-primary [attr.data-calendar-system]="primarySystem()">{{
+          display().primaryDayValue
+        }}</span>
+        <span class="taqwim-calendar-cell-secondary" data-secondary [attr.data-calendar-system]="secondarySystem()">{{
+          display().secondaryDayValue
+        }}</span>
+      </span>
+    } @else {
+      {{ display().dayValue }}
+    }
+  `,
+})
+export class StyledCalendarCellTrigger {
+  private readonly calendar = inject(TaqwimCalendarService)
+
+  readonly day = input.required<CalendarDay>({ alias: 'taqwimStyledCalendarCellTrigger' })
+
+  protected readonly props = computed(() => this.calendar.store.getCellTriggerProps(this.day()))
+  protected readonly display = computed(() =>
+    getCellDisplayValues(
+      this.day(),
+      this.calendar.store.formatter,
+      this.calendar.state().showGregorian,
+      this.calendar.state().dateEmphasis,
+    ),
+  )
+  protected readonly primarySystem = computed(() =>
+    this.calendar.state().dateEmphasis === 'gregorian' ? 'gregorian' : 'hijri',
+  )
+  protected readonly secondarySystem = computed(() =>
+    this.calendar.state().dateEmphasis === 'gregorian' ? 'hijri' : 'gregorian',
+  )
+
+  onClick(): void {
+    const day = this.day()
+    if (day.isDisabled || day.isUnavailable) return
+    this.calendar.store.select(day.date)
+  }
+
+  onFocus(): void {
+    const day = this.day()
+    if (day.isDisabled || day.isFocused) return
+    this.calendar.store.focusDate(day.date)
+  }
+}
+
+@Component({
   selector: 'taqwim-hijri-calendar',
   standalone: true,
-  imports: [TAQWIM_CALENDAR],
+  imports: [
+    HijriCalendarRoot,
+    HijriCalendarHeader,
+    HijriCalendarNext,
+    HijriCalendarPrev,
+    HijriCalendarGrid,
+    HijriCalendarGridHead,
+    HijriCalendarGridBody,
+    HijriCalendarGridRow,
+    HijriCalendarHeadCell,
+    HijriCalendarCell,
+    StyledCalendarCellTrigger,
+  ],
   template: `
     <taqwim-calendar
       #root
@@ -47,6 +143,9 @@ const YEARS = Array.from({ length: MAX_HIJRI_YEAR - MIN_HIJRI_YEAR + 1 }, (_, i)
       [minValue]="minValue"
       [maxValue]="maxValue"
       [locale]="locale"
+      [showGregorian]="showGregorian"
+      [dateEmphasis]="dateEmphasis"
+      [gregorianLocale]="gregorianLocale"
       [dir]="dir"
       [isDateDisabled]="isDateDisabled"
       [isDateUnavailable]="isDateUnavailable"
@@ -100,8 +199,14 @@ const YEARS = Array.from({ length: MAX_HIJRI_YEAR - MIN_HIJRI_YEAR + 1 }, (_, i)
             >
               {{ root.state().placeholder.hy }}
             </button>
+            @if (root.state().showGregorian && root.state().secondaryHeadingValue) {
+              <span class="taqwim-calendar-heading-secondary">{{ root.state().secondaryHeadingValue }}</span>
+            }
           } @else {
             {{ root.state().headingValue }}
+            @if (root.state().secondaryHeadingValue) {
+              <span class="taqwim-calendar-heading-secondary">{{ root.state().secondaryHeadingValue }}</span>
+            }
           }
         </div>
 
@@ -176,7 +281,7 @@ const YEARS = Array.from({ length: MAX_HIJRI_YEAR - MIN_HIJRI_YEAR + 1 }, (_, i)
                   <div taqwimCalendarGridRow>
                     @for (day of week; track day.date.hy + '-' + day.date.hm + '-' + day.date.hd) {
                       <div [taqwimCalendarCell]="day">
-                        <button [taqwimCalendarCellTrigger]="day"></button>
+                        <button [taqwimStyledCalendarCellTrigger]="day"></button>
                       </div>
                     }
                   </div>
@@ -231,6 +336,9 @@ export class HijriCalendar implements OnChanges {
   @Input() minValue?: HijriDateObject
   @Input() maxValue?: HijriDateObject
   @Input() locale = 'en'
+  @Input() showGregorian?: boolean
+  @Input() dateEmphasis?: DateEmphasis
+  @Input() gregorianLocale?: string
   @Input() dir?: 'ltr' | 'rtl'
   @Input() isDateDisabled?: HijriCalendarInputs['isDateDisabled']
   @Input() isDateUnavailable?: HijriCalendarInputs['isDateUnavailable']

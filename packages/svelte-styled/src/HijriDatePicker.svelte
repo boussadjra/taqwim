@@ -1,8 +1,12 @@
 <script lang="ts">
-  import { formatHijriDate, type HijriDateObject } from '@taqwim/core'
+  import {
+    DEFAULT_GREGORIAN_FORMAT_OPTIONS,
+    formatDatePickerValues,
+    parseDatePickerDraft,
+  } from '@taqwim/calendar-core'
+  import type { HijriDateObject } from '@taqwim/core'
   import { onMount, untrack } from 'svelte'
   import HijriCalendar from './HijriCalendar.svelte'
-  import { parseDraft } from './parseDraft'
   import type { HijriDatePickerProps } from './types'
 
   let {
@@ -10,14 +14,15 @@
     defaultValue,
     onValueChange,
     format = 'iYYYY-iMM-iDD',
+    gregorianFormat = DEFAULT_GREGORIAN_FORMAT_OPTIONS,
+    inputDisplay = 'hijri',
     inputPlaceholder,
     label = 'Hijri date',
     editable = true,
+    trigger,
     ...calendarProps
   }: HijriDatePickerProps = $props()
 
-  // `defaultValue` is the uncontrolled seed by definition, so reading it once
-  // is the intent; `untrack` says so rather than leaving a warning behind.
   let uncontrolled = $state<HijriDateObject | undefined>(
     untrack(() => (Array.isArray(defaultValue) ? defaultValue[0] : defaultValue)),
   )
@@ -29,12 +34,20 @@
   // `role="combobox"` is only complete when it points at the popup it controls.
   const popoverId = $props.id()
 
-  const formatted = $derived(selected ? formatHijriDate(selected, format, calendarProps.locale ?? 'en') : '')
+  const formatOptions = $derived({
+    hijriFormat: format,
+    gregorianFormat,
+    locale: calendarProps.locale ?? 'en',
+    gregorianLocale: calendarProps.gregorianLocale ?? calendarProps.locale ?? 'en',
+    inputDisplay,
+  })
+
+  const formatted = $derived(formatDatePickerValues(selected, formatOptions))
 
   // The draft only diverges from the selection while the user is mid-edit.
   let draft = $state('')
   $effect(() => {
-    draft = formatted
+    draft = formatted.value
   })
 
   function commit(next: HijriDateObject | undefined) {
@@ -48,17 +61,17 @@
   }
 
   function commitDraft() {
-    if (draft.trim() === '') {
+    const parsed = parseDatePickerDraft(draft, inputDisplay)
+    if (parsed === 'empty') {
       commit(undefined)
       return
     }
 
-    const parsed = parseDraft(draft)
     if (parsed) {
       commit(parsed)
     } else {
       // Unparseable input reverts rather than silently clearing the selection.
-      draft = formatted
+      draft = formatted.value
     }
   }
 
@@ -92,33 +105,43 @@
   data-open={isOpen ? '' : undefined}
   onfocusout={onFocusOut}
 >
-  <input
-    class="taqwim-datepicker-input"
-    type="text"
-    role="combobox"
-    aria-haspopup="dialog"
-    aria-expanded={isOpen}
-    aria-controls={popoverId}
-    aria-label={label}
-    placeholder={inputPlaceholder ?? format}
-    readonly={!editable || calendarProps.readonly}
-    disabled={calendarProps.disabled}
-    bind:value={draft}
-    onfocus={open}
-    onclick={open}
-    onchange={commitDraft}
-    onkeydown={event => {
-      if (event.key === 'Enter') {
-        event.preventDefault()
-        commitDraft()
-      } else if (event.key === 'ArrowDown') {
-        event.preventDefault()
-        open()
-      } else if (event.key === 'Escape') {
-        isOpen = false
-      }
-    }}
-  />
+  {#if trigger}
+    {@render trigger({
+      value: formatted.value,
+      hijriValue: formatted.hijriValue,
+      gregorianValue: formatted.gregorianValue,
+      open,
+      isOpen,
+    })}
+  {:else}
+    <input
+      class="taqwim-datepicker-input"
+      type="text"
+      role="combobox"
+      aria-haspopup="dialog"
+      aria-expanded={isOpen}
+      aria-controls={popoverId}
+      aria-label={label}
+      placeholder={inputPlaceholder ?? format}
+      readonly={!editable || calendarProps.readonly || inputDisplay === 'both'}
+      disabled={calendarProps.disabled}
+      bind:value={draft}
+      onfocus={open}
+      onclick={open}
+      onchange={commitDraft}
+      onkeydown={event => {
+        if (event.key === 'Enter') {
+          event.preventDefault()
+          commitDraft()
+        } else if (event.key === 'ArrowDown') {
+          event.preventDefault()
+          open()
+        } else if (event.key === 'Escape') {
+          isOpen = false
+        }
+      }}
+    />
+  {/if}
 
   {#if isOpen}
     <div

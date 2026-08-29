@@ -11,6 +11,15 @@ export type { HijriCalendarLayout, HijriCalendarTheme }
 
 export type HijriCalendarSize = 'compact' | 'default' | 'large'
 
+export type HijriCalendarCellRenderProps = {
+  dayValue: string
+  hijriDayValue: string
+  gregorianDayValue: string
+  primaryDayValue: string
+  secondaryDayValue?: string
+  day: CalendarDay
+}
+
 export interface HijriCalendarProps extends HijriCalendarRootOptions {
   /**
    * Which bundled theme to render with.
@@ -42,7 +51,7 @@ export interface HijriCalendarProps extends HijriCalendarRootOptions {
   /** Replace the default chevrons. */
   navigationIcons?: { prev?: Component; next?: Component }
   /** Replaces the contents of a day cell. */
-  cell?: Snippet<[{ dayValue: string; day: CalendarDay }]>
+  cell?: Snippet<[HijriCalendarCellRenderProps]>
   /** Replaces a weekday label. */
   weekday?: Snippet<[{ weekday: string; index: number }]>
 }
@@ -51,12 +60,28 @@ export interface HijriDatePickerProps extends Omit<HijriCalendarProps, 'value' |
   /** Controlled selection. */
   value?: import('@taqwim/core').HijriDateObject
   onValueChange?: (value: import('@taqwim/core').HijriDateObject | undefined) => void
-  /** Pattern used for the input's text, e.g. `'iD iMMMM iYYYY'`. @default 'iYYYY-iMM-iDD' */
+  /** Pattern used for the input's Hijri text, e.g. `'iD iMMMM iYYYY'`. @default 'iYYYY-iMM-iDD' */
   format?: string
+  /** `Intl.DateTimeFormatOptions` for Gregorian input text. @default ISO-like `YYYY-MM-DD` */
+  gregorianFormat?: Intl.DateTimeFormatOptions
+  /** Which representation appears in the input. @default 'hijri' */
+  inputDisplay?: import('@taqwim/calendar-core').DatePickerInputDisplay
   /** Placeholder text for the empty input. */
   inputPlaceholder?: string
   /** Accessible label for the input. @default 'Hijri date' */
   label?: string
   /** Let the user type a date as well as pick one. @default true */
   editable?: boolean
+  /** Replaces the trigger input entirely. */
+  trigger?: Snippet<
+    [
+      {
+        value: string
+        hijriValue: string
+        gregorianValue: string
+        open: () => void
+        isOpen: boolean
+      },
+    ]
+  >
 }

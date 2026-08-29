@@ -27,6 +27,15 @@ export type { HijriCalendarLayout, HijriCalendarTheme }
 
 export type HijriCalendarSize = 'compact' | 'default' | 'large'
 
+export type HijriCalendarCellRenderProps = {
+  dayValue: string
+  hijriDayValue: string
+  gregorianDayValue: string
+  primaryDayValue: string
+  secondaryDayValue?: string
+  day: CalendarDay
+}
+
 export interface HijriCalendarProps extends Omit<HijriCalendarRootProps, 'children'> {
   /**
    * Which bundled theme to render with.
@@ -59,9 +68,34 @@ export interface HijriCalendarProps extends Omit<HijriCalendarRootProps, 'childr
   /** Replace the default chevrons. */
   navigationIcons?: { prev?: ComponentType; next?: ComponentType }
   /** Replaces the contents of a day cell. */
-  renderCell?: (props: { dayValue: string; day: CalendarDay }) => ReactNode
+  renderCell?: (props: HijriCalendarCellRenderProps) => ReactNode
   /** Replaces a weekday label. */
   renderWeekday?: (props: { weekday: string; index: number }) => ReactNode
+}
+
+function renderDefaultCell(cell: HijriCalendarCellRenderProps, dateEmphasis: 'hijri' | 'gregorian'): ReactNode {
+  if (cell.secondaryDayValue) {
+    return (
+      <span className="taqwim-calendar-cell-dates">
+        <span
+          className="taqwim-calendar-cell-primary"
+          data-primary
+          data-calendar-system={dateEmphasis === 'gregorian' ? 'gregorian' : 'hijri'}
+        >
+          {cell.primaryDayValue}
+        </span>
+        <span
+          className="taqwim-calendar-cell-secondary"
+          data-secondary
+          data-calendar-system={dateEmphasis === 'gregorian' ? 'hijri' : 'gregorian'}
+        >
+          {cell.secondaryDayValue}
+        </span>
+      </span>
+    )
+  }
+
+  return cell.dayValue
 }
 
 /*
@@ -134,8 +168,18 @@ export function HijriCalendar({
                     >
                       {state.placeholder.hy}
                     </button>
+                    {state.showGregorian && state.secondaryHeadingValue && (
+                      <span className="taqwim-calendar-heading-secondary">{state.secondaryHeadingValue}</span>
+                    )}
                   </>
-                ) : undefined}
+                ) : (
+                  <>
+                    <span>{state.headingValue}</span>
+                    {state.secondaryHeadingValue && (
+                      <span className="taqwim-calendar-heading-secondary">{state.secondaryHeadingValue}</span>
+                    )}
+                  </>
+                )}
               </HijriCalendarHeading>
 
               {showNavigation && (
@@ -198,7 +242,11 @@ export function HijriCalendar({
                         <HijriCalendarGridRow key={index}>
                           {week.map(day => (
                             <HijriCalendarCell key={`${day.date.hy}-${day.date.hm}-${day.date.hd}`} day={day}>
-                              <HijriCalendarCellTrigger day={day}>{renderCell ?? undefined}</HijriCalendarCellTrigger>
+                              <HijriCalendarCellTrigger day={day}>
+                                {cell =>
+                                  renderCell ? renderCell(cell) : renderDefaultCell(cell, state.dateEmphasis ?? 'hijri')
+                                }
+                              </HijriCalendarCellTrigger>
                             </HijriCalendarCell>
                           ))}
                         </HijriCalendarGridRow>

@@ -1,4 +1,11 @@
-import { formatHijriDate, isValidHijriDate, type HijriDateObject } from '@taqwim/core'
+import {
+  DEFAULT_GREGORIAN_FORMAT_OPTIONS,
+  formatDatePickerValues,
+  parseDatePickerDraft,
+  type DateEmphasis,
+  type DatePickerInputDisplay,
+} from '@taqwim/calendar-core'
+import type { HijriDateObject } from '@taqwim/core'
 import {
   Component,
   ElementRef,
@@ -10,30 +17,7 @@ import {
   type OnChanges,
   type OnDestroy,
 } from '@angular/core'
-import { HijriCalendar, type HijriCalendarSize, type HijriCalendarTheme } from './calendar'
-
-/*
- * Deliberately not `@taqwim/core`'s `parseDateString`: that throws on bad input
- * and resolves an empty string to today, neither of which suits an input the
- * user is still typing into.
- */
-const YMD = /^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$/
-const DMY = /^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/
-
-function parseDraft(text: string): HijriDateObject | null {
-  const trimmed = text.trim()
-
-  const ymd = YMD.exec(trimmed)
-  const dmy = ymd ? null : DMY.exec(trimmed)
-  if (!ymd && !dmy) return null
-
-  const [hy, hm, hd] = ymd
-    ? [Number(ymd[1]), Number(ymd[2]), Number(ymd[3])]
-    : [Number(dmy![3]), Number(dmy![2]), Number(dmy![1])]
-
-  const candidate = { hy, hm, hd }
-  return isValidHijriDate(candidate) ? candidate : null
-}
+import { HijriCalendar, type HijriCalendarLayout, type HijriCalendarSize, type HijriCalendarTheme } from './calendar'
 
 let instances = 0
 
@@ -57,7 +41,7 @@ let instances = 0
       [attr.aria-controls]="popoverId"
       [attr.aria-label]="label"
       [attr.placeholder]="inputPlaceholder ?? format"
-      [readOnly]="!editable || !!readonly"
+      [readOnly]="!editable || !!readonly || inputDisplay === 'both'"
       [disabled]="!!disabled"
       [value]="draft()"
       (input)="draft.set($any($event.target).value)"
@@ -81,7 +65,14 @@ let instances = 0
         <taqwim-hijri-calendar
           [theme]="theme"
           [size]="size"
+          [layout]="layout"
+          [showNavigation]="showNavigation"
+          [showWeekdays]="showWeekdays"
+          [selectableHeading]="selectableHeading"
           [locale]="locale"
+          [showGregorian]="showGregorian"
+          [dateEmphasis]="dateEmphasis"
+          [gregorianLocale]="gregorianLocale"
           [dir]="dir"
           [value]="selected()"
           [defaultPlaceholder]="defaultPlaceholder"
@@ -99,7 +90,14 @@ let instances = 0
 export class HijriDatePicker implements OnChanges, OnDestroy {
   @Input() theme: HijriCalendarTheme = 'default'
   @Input() size: HijriCalendarSize = 'default'
+  @Input() layout: HijriCalendarLayout = 'default'
+  @Input() showNavigation = true
+  @Input() showWeekdays = true
+  @Input() selectableHeading = true
   @Input() locale = 'en'
+  @Input() showGregorian?: boolean
+  @Input() dateEmphasis?: DateEmphasis
+  @Input() gregorianLocale?: string
   @Input() dir?: 'ltr' | 'rtl'
   @Input() value?: HijriDateObject
   @Input() defaultValue?: HijriDateObject
@@ -108,8 +106,12 @@ export class HijriDatePicker implements OnChanges, OnDestroy {
   @Input() maxValue?: HijriDateObject
   @Input() disabled?: boolean
   @Input() readonly?: boolean
-  /** Pattern used for the input's text, e.g. `'iD iMMMM iYYYY'`. */
+  /** Pattern used for the input's Hijri text, e.g. `'iD iMMMM iYYYY'`. */
   @Input() format = 'iYYYY-iMM-iDD'
+  /** `Intl.DateTimeFormatOptions` for Gregorian input text. */
+  @Input() gregorianFormat: Intl.DateTimeFormatOptions = DEFAULT_GREGORIAN_FORMAT_OPTIONS
+  /** Which representation appears in the input. */
+  @Input() inputDisplay: DatePickerInputDisplay = 'hijri'
   /** Placeholder text for the empty input. */
   @Input() inputPlaceholder?: string
   /** Accessible label for the input. */
@@ -161,12 +163,12 @@ export class HijriDatePicker implements OnChanges, OnDestroy {
   }
 
   protected commitDraft(): void {
-    if (this.draft().trim() === '') {
+    const parsed = parseDatePickerDraft(this.draft(), this.inputDisplay)
+    if (parsed === 'empty') {
       this.commit(undefined)
       return
     }
 
-    const parsed = parseDraft(this.draft())
     if (parsed) {
       this.commit(parsed)
     } else {
@@ -194,13 +196,26 @@ export class HijriDatePicker implements OnChanges, OnDestroy {
   }
 
   private formatted(): string {
-    const value = this.selected()
-    return value ? formatHijriDate(value, this.format, this.locale) : ''
+    return formatDatePickerValues(this.selected(), {
+      hijriFormat: this.format,
+      gregorianFormat: this.gregorianFormat,
+      locale: this.locale,
+      gregorianLocale: this.gregorianLocale ?? this.locale,
+      inputDisplay: this.inputDisplay,
+    }).value
   }
 
   private commit(next: HijriDateObject | undefined): void {
     if (this.value === undefined) this.uncontrolled.set(next)
-    this.draft.set(next ? formatHijriDate(next, this.format, this.locale) : '')
+    this.draft.set(
+      formatDatePickerValues(next, {
+        hijriFormat: this.format,
+        gregorianFormat: this.gregorianFormat,
+        locale: this.locale,
+        gregorianLocale: this.gregorianLocale ?? this.locale,
+        inputDisplay: this.inputDisplay,
+      }).value,
+    )
     this.valueChange.emit(next)
   }
 }

@@ -175,8 +175,16 @@ function togglePicker(which: 'month' | 'year') {
             >
               {{ state.placeholder.hy }}
             </button>
+            <span v-if="state.showGregorian && state.secondaryHeadingValue" class="taqwim-calendar-heading-secondary">{{
+              state.secondaryHeadingValue
+            }}</span>
           </template>
-          <template v-else>{{ state.headingValue }}</template>
+          <template v-else>
+            <span>{{ state.headingValue }}</span>
+            <span v-if="state.secondaryHeadingValue" class="taqwim-calendar-heading-secondary">{{
+              state.secondaryHeadingValue
+            }}</span>
+          </template>
         </HijriCalendarHeading>
 
         <HijriCalendarNext v-if="showNavigation" class="taqwim-calendar-nav-button" v-slot="{ disabled }">
@@ -231,8 +239,24 @@ function togglePicker(which: 'month' | 'year') {
         <HijriCalendarGridBody>
           <HijriCalendarGridRow v-for="(week, index) in month.weeks" :key="index">
             <HijriCalendarCell v-for="day in week" :key="`${day.date.hy}-${day.date.hm}-${day.date.hd}`" :day="day">
-              <HijriCalendarCellTrigger :day="day" v-slot="{ dayValue }">
-                <slot name="cell" :day-value="dayValue" :day="day">{{ dayValue }}</slot>
+              <HijriCalendarCellTrigger :day="day" v-slot="cell">
+                <slot name="cell" v-bind="cell">
+                  <span v-if="cell.secondaryDayValue" class="taqwim-calendar-cell-dates">
+                    <span
+                      class="taqwim-calendar-cell-primary"
+                      data-primary
+                      :data-calendar-system="state.dateEmphasis === 'gregorian' ? 'gregorian' : 'hijri'"
+                      >{{ cell.primaryDayValue }}</span
+                    >
+                    <span
+                      class="taqwim-calendar-cell-secondary"
+                      data-secondary
+                      :data-calendar-system="state.dateEmphasis === 'gregorian' ? 'hijri' : 'gregorian'"
+                      >{{ cell.secondaryDayValue }}</span
+                    >
+                  </span>
+                  <template v-else>{{ cell.dayValue }}</template>
+                </slot>
               </HijriCalendarCellTrigger>
             </HijriCalendarCell>
           </HijriCalendarGridRow>

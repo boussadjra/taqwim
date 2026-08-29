@@ -52,6 +52,7 @@
     "publish": "pnpm publish --access public"
   },
   "dependencies": {
+    "@taqwim/calendar-core": "workspace:*",
     "@taqwim/core": "workspace:*",
     "@taqwim/svelte": "workspace:*",
     "@taqwim/themes": "workspace:*"

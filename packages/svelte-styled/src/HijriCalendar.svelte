@@ -91,8 +91,14 @@
           >
             {state.placeholder.hy}
           </button>
+          {#if state.showGregorian && state.secondaryHeadingValue}
+            <span class="taqwim-calendar-heading-secondary">{state.secondaryHeadingValue}</span>
+          {/if}
         {:else}
-          {state.headingValue}
+          <span>{state.headingValue}</span>
+          {#if state.secondaryHeadingValue}
+            <span class="taqwim-calendar-heading-secondary">{state.secondaryHeadingValue}</span>
+          {/if}
         {/if}
       </HijriCalendarHeading>
 
@@ -156,7 +162,32 @@
                 <HijriCalendarGridRow>
                   {#each week as day (`${day.date.hy}-${day.date.hm}-${day.date.hd}`)}
                     <HijriCalendarCell {day}>
-                      <HijriCalendarCellTrigger {day} children={cell} />
+                      <HijriCalendarCellTrigger {day}>
+                        {#snippet children(cellProps)}
+                          {#if cell}
+                            {@render cell(cellProps)}
+                          {:else if cellProps.secondaryDayValue}
+                            <span class="taqwim-calendar-cell-dates">
+                              <span
+                                class="taqwim-calendar-cell-primary"
+                                data-primary
+                                data-calendar-system={state.dateEmphasis === 'gregorian' ? 'gregorian' : 'hijri'}
+                              >
+                                {cellProps.primaryDayValue}
+                              </span>
+                              <span
+                                class="taqwim-calendar-cell-secondary"
+                                data-secondary
+                                data-calendar-system={state.dateEmphasis === 'gregorian' ? 'hijri' : 'gregorian'}
+                              >
+                                {cellProps.secondaryDayValue}
+                              </span>
+                            </span>
+                          {:else}
+                            {cellProps.dayValue}
+                          {/if}
+                        {/snippet}
+                      </HijriCalendarCellTrigger>
                     </HijriCalendarCell>
                   {/each}
                 </HijriCalendarGridRow>

@@ -1,4 +1,5 @@
 <script lang="ts">
+import type { DatePickerInputDisplay } from '@taqwim/calendar-core'
 import type { HijriDateObject } from '@taqwim/core'
 import type { HijriCalendarProps } from './HijriCalendar.vue'
 
@@ -10,8 +11,12 @@ import type { HijriCalendarProps } from './HijriCalendar.vue'
  * silently kept the first.
  */
 export interface HijriDatePickerProps extends Omit<HijriCalendarProps, 'multiple'> {
-  /** Pattern used for the input's text, e.g. `'iD iMMMM iYYYY'`. @default 'iYYYY-iMM-iDD' */
+  /** Pattern used for the input's Hijri text, e.g. `'iD iMMMM iYYYY'`. @default 'iYYYY-iMM-iDD' */
   format?: string
+  /** `Intl.DateTimeFormatOptions` for Gregorian input text. @default ISO-like `YYYY-MM-DD` */
+  gregorianFormat?: Intl.DateTimeFormatOptions
+  /** Which representation appears in the input. @default 'hijri' */
+  inputDisplay?: DatePickerInputDisplay
   /** Placeholder text for the empty input. */
   inputPlaceholder?: string
   /** Accessible label for the input. @default 'Hijri date' */
@@ -22,12 +27,18 @@ export interface HijriDatePickerProps extends Omit<HijriCalendarProps, 'multiple
 
 export interface HijriDatePickerSlots {
   /** Replaces the trigger input entirely. */
-  trigger?: (props: { value: string; open: () => void; isOpen: boolean }) => unknown
+  trigger?: (props: {
+    value: string
+    hijriValue: string
+    gregorianValue: string
+    open: () => void
+    isOpen: boolean
+  }) => unknown
 }
 </script>
 
 <script setup lang="ts">
-import { formatHijriDate, isValidHijriDate, type HijriDateObject as HijriDate } from '@taqwim/core'
+import { DEFAULT_GREGORIAN_FORMAT_OPTIONS, formatDatePickerValues, parseDatePickerDraft } from '@taqwim/calendar-core'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import HijriCalendar from './HijriCalendar.vue'
 
@@ -35,6 +46,8 @@ let instances = 0
 
 const props = withDefaults(defineProps<HijriDatePickerProps>(), {
   format: 'iYYYY-iMM-iDD',
+  gregorianFormat: () => DEFAULT_GREGORIAN_FORMAT_OPTIONS,
+  inputDisplay: 'hijri',
   label: 'Hijri date',
   editable: true,
   locale: 'en',
@@ -66,6 +79,8 @@ const popoverId = `taqwim-datepicker-${++instances}`
 const calendarProps = computed(() => {
   const {
     format: _format,
+    gregorianFormat: _gregorianFormat,
+    inputDisplay: _inputDisplay,
     inputPlaceholder: _inputPlaceholder,
     label: _label,
     editable: _editable,
@@ -75,16 +90,26 @@ const calendarProps = computed(() => {
   return rest
 })
 
+const formatOptions = computed(() => ({
+  hijriFormat: props.format,
+  gregorianFormat: props.gregorianFormat,
+  locale: props.locale ?? 'en',
+  gregorianLocale: props.gregorianLocale ?? props.locale ?? 'en',
+  inputDisplay: props.inputDisplay,
+}))
+
 const isOpen = ref(false)
 const container = ref<HTMLElement>()
 const draft = ref('')
 
-const formatted = computed(() =>
-  modelValue.value ? formatHijriDate(modelValue.value, props.format, props.locale) : '',
-)
+const formatted = computed(() => formatDatePickerValues(modelValue.value, formatOptions.value))
 
 // The draft only diverges from the model while the user is mid-edit.
-watch(formatted, value => (draft.value = value), { immediate: true })
+watch(
+  () => formatted.value.value,
+  value => (draft.value = value),
+  { immediate: true },
+)
 
 function open() {
   if (props.disabled) return
@@ -100,41 +125,18 @@ function onSelect(value: HijriDateObject | HijriDateObject[] | undefined) {
   close()
 }
 
-/*
- * Deliberately not `@taqwim/core`'s `parseDateString`: that throws on bad input
- * and resolves an empty string to today, neither of which suits an input the
- * user is still typing into.
- */
-const YMD = /^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$/
-const DMY = /^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/
-
-function parseDraft(text: string): HijriDate | null {
-  const trimmed = text.trim()
-
-  const ymd = YMD.exec(trimmed)
-  const dmy = ymd ? null : DMY.exec(trimmed)
-  if (!ymd && !dmy) return null
-
-  const [hy, hm, hd] = ymd
-    ? [Number(ymd[1]), Number(ymd[2]), Number(ymd[3])]
-    : [Number(dmy![3]), Number(dmy![2]), Number(dmy![1])]
-
-  const candidate = { hy, hm, hd }
-  return isValidHijriDate(candidate) ? candidate : null
-}
-
 function commitDraft() {
-  if (draft.value.trim() === '') {
+  const parsed = parseDatePickerDraft(draft.value, props.inputDisplay)
+  if (parsed === 'empty') {
     modelValue.value = undefined
     return
   }
 
-  const parsed = parseDraft(draft.value)
   if (parsed) {
     modelValue.value = parsed
   } else {
     // Unparseable input reverts rather than silently clearing the selection.
-    draft.value = formatted.value
+    draft.value = formatted.value.value
   }
 }
 
@@ -168,7 +170,14 @@ onUnmounted(() => document.removeEventListener('pointerdown', onDocumentPointerD
     @focusout="onFocusOut"
     @keydown.escape="close"
   >
-    <slot name="trigger" :value="formatted" :open="open" :is-open="isOpen">
+    <slot
+      name="trigger"
+      :value="formatted.value"
+      :hijri-value="formatted.hijriValue"
+      :gregorian-value="formatted.gregorianValue"
+      :open="open"
+      :is-open="isOpen"
+    >
       <input
         v-bind="$attrs"
         v-model="draft"
@@ -180,7 +189,7 @@ onUnmounted(() => document.removeEventListener('pointerdown', onDocumentPointerD
         :aria-controls="popoverId"
         :aria-label="label"
         :placeholder="inputPlaceholder ?? format"
-        :readonly="!editable || readonly"
+        :readonly="!editable || readonly || inputDisplay === 'both'"
         :disabled="disabled"
         @focus="open"
         @click="open"

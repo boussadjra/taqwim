@@ -1,42 +1,47 @@
-import { formatHijriDate, isValidHijriDate, type HijriDateObject } from '@taqwim/core'
-import { createEffect, createSignal, createUniqueId, onCleanup, onMount, Show, splitProps, type JSX } from 'solid-js'
+import {
+  DEFAULT_GREGORIAN_FORMAT_OPTIONS,
+  formatDatePickerValues,
+  parseDatePickerDraft,
+  type DatePickerInputDisplay,
+} from '@taqwim/calendar-core'
+import type { HijriDateObject } from '@taqwim/core'
+import {
+  createEffect,
+  createMemo,
+  createSignal,
+  createUniqueId,
+  onCleanup,
+  onMount,
+  Show,
+  splitProps,
+  type JSX,
+} from 'solid-js'
 import { HijriCalendar, type HijriCalendarProps } from './HijriCalendar'
 
 export interface HijriDatePickerProps extends Omit<HijriCalendarProps, 'value' | 'onValueChange' | 'multiple'> {
   /** Controlled selection. */
   value?: HijriDateObject
   onValueChange?: (value: HijriDateObject | undefined) => void
-  /** Pattern used for the input's text, e.g. `'iD iMMMM iYYYY'`. @default 'iYYYY-iMM-iDD' */
+  /** Pattern used for the input's Hijri text, e.g. `'iD iMMMM iYYYY'`. @default 'iYYYY-iMM-iDD' */
   format?: string
+  /** `Intl.DateTimeFormatOptions` for Gregorian input text. @default ISO-like `YYYY-MM-DD` */
+  gregorianFormat?: Intl.DateTimeFormatOptions
+  /** Which representation appears in the input. @default 'hijri' */
+  inputDisplay?: DatePickerInputDisplay
   /** Placeholder text for the empty input. */
   inputPlaceholder?: string
   /** Accessible label for the input. @default 'Hijri date' */
   label?: string
   /** Let the user type a date as well as pick one. @default true */
   editable?: boolean
-}
-
-/*
- * Deliberately not `@taqwim/core`'s `parseDateString`: that throws on bad input
- * and resolves an empty string to today, neither of which suits an input the
- * user is still typing into.
- */
-const YMD = /^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$/
-const DMY = /^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/
-
-function parseDraft(text: string): HijriDateObject | null {
-  const trimmed = text.trim()
-
-  const ymd = YMD.exec(trimmed)
-  const dmy = ymd ? null : DMY.exec(trimmed)
-  if (!ymd && !dmy) return null
-
-  const [hy, hm, hd] = ymd
-    ? [Number(ymd[1]), Number(ymd[2]), Number(ymd[3])]
-    : [Number(dmy![3]), Number(dmy![2]), Number(dmy![1])]
-
-  const candidate = { hy, hm, hd }
-  return isValidHijriDate(candidate) ? candidate : null
+  /** Replaces the trigger input entirely. */
+  renderTrigger?: (props: {
+    value: string
+    hijriValue: string
+    gregorianValue: string
+    open: () => void
+    isOpen: boolean
+  }) => JSX.Element
 }
 
 export function HijriDatePicker(props: HijriDatePickerProps): JSX.Element {
@@ -45,12 +50,17 @@ export function HijriDatePicker(props: HijriDatePickerProps): JSX.Element {
     'defaultValue',
     'onValueChange',
     'format',
+    'gregorianFormat',
+    'inputDisplay',
     'inputPlaceholder',
     'label',
     'editable',
+    'renderTrigger',
   ])
 
   const format = () => local.format ?? 'iYYYY-iMM-iDD'
+  const gregorianFormat = () => local.gregorianFormat ?? DEFAULT_GREGORIAN_FORMAT_OPTIONS
+  const inputDisplay = () => local.inputDisplay ?? 'hijri'
   const label = () => local.label ?? 'Hijri date'
   const editable = () => local.editable ?? true
 
@@ -62,14 +72,20 @@ export function HijriDatePicker(props: HijriDatePickerProps): JSX.Element {
   const [isOpen, setIsOpen] = createSignal(false)
   // `role="combobox"` is only complete when it points at the popup it controls.
   const popoverId = createUniqueId()
-  const formatted = () => {
-    const value = selected()
-    return value ? formatHijriDate(value, format(), calendarProps.locale ?? 'en') : ''
-  }
 
-  const [draft, setDraft] = createSignal(formatted())
+  const formatOptions = createMemo(() => ({
+    hijriFormat: format(),
+    gregorianFormat: gregorianFormat(),
+    locale: calendarProps.locale ?? 'en',
+    gregorianLocale: calendarProps.gregorianLocale ?? calendarProps.locale ?? 'en',
+    inputDisplay: inputDisplay(),
+  }))
+
+  const formatted = createMemo(() => formatDatePickerValues(selected(), formatOptions()))
+
+  const [draft, setDraft] = createSignal(formatted().value)
   // The draft only diverges from the selection while the user is mid-edit.
-  createEffect(() => setDraft(formatted()))
+  createEffect(() => setDraft(formatted().value))
 
   let container: HTMLDivElement | undefined
 
@@ -112,17 +128,17 @@ export function HijriDatePicker(props: HijriDatePickerProps): JSX.Element {
   }
 
   function commitDraft() {
-    if (draft().trim() === '') {
+    const parsed = parseDatePickerDraft(draft(), inputDisplay())
+    if (parsed === 'empty') {
       commit(undefined)
       return
     }
 
-    const parsed = parseDraft(draft())
     if (parsed) {
       commit(parsed)
     } else {
       // Unparseable input reverts rather than silently clearing the selection.
-      setDraft(formatted())
+      setDraft(formatted().value)
     }
   }
 
@@ -137,32 +153,42 @@ export function HijriDatePicker(props: HijriDatePickerProps): JSX.Element {
         if (event.key === 'Escape') setIsOpen(false)
       }}
     >
-      <input
-        class="taqwim-datepicker-input"
-        type="text"
-        role="combobox"
-        aria-haspopup="dialog"
-        aria-expanded={isOpen()}
-        aria-controls={popoverId}
-        aria-label={label()}
-        placeholder={local.inputPlaceholder ?? format()}
-        readOnly={!editable() || calendarProps.readonly}
-        disabled={calendarProps.disabled}
-        value={draft()}
-        onInput={event => setDraft(event.currentTarget.value)}
-        onFocus={open}
-        onClick={open}
-        onChange={commitDraft}
-        onKeyDown={event => {
-          if (event.key === 'Enter') {
-            event.preventDefault()
-            commitDraft()
-          } else if (event.key === 'ArrowDown') {
-            event.preventDefault()
-            open()
-          }
-        }}
-      />
+      {local.renderTrigger ? (
+        local.renderTrigger({
+          value: formatted().value,
+          hijriValue: formatted().hijriValue,
+          gregorianValue: formatted().gregorianValue,
+          open,
+          isOpen: isOpen(),
+        })
+      ) : (
+        <input
+          class="taqwim-datepicker-input"
+          type="text"
+          role="combobox"
+          aria-haspopup="dialog"
+          aria-expanded={isOpen()}
+          aria-controls={popoverId}
+          aria-label={label()}
+          placeholder={local.inputPlaceholder ?? format()}
+          readOnly={!editable() || calendarProps.readonly || inputDisplay() === 'both'}
+          disabled={calendarProps.disabled}
+          value={draft()}
+          onInput={event => setDraft(event.currentTarget.value)}
+          onFocus={open}
+          onClick={open}
+          onChange={commitDraft}
+          onKeyDown={event => {
+            if (event.key === 'Enter') {
+              event.preventDefault()
+              commitDraft()
+            } else if (event.key === 'ArrowDown') {
+              event.preventDefault()
+              open()
+            }
+          }}
+        />
+      )}
 
       <Show when={isOpen()}>
         <div id={popoverId} class="taqwim-datepicker-popover" role="dialog" tabindex={-1} aria-label={label()}>

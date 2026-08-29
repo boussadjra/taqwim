@@ -28,6 +28,15 @@ export type { HijriCalendarLayout, HijriCalendarTheme }
 
 export type HijriCalendarSize = 'compact' | 'default' | 'large'
 
+export type HijriCalendarCellRenderProps = {
+  dayValue: string
+  hijriDayValue: string
+  gregorianDayValue: string
+  primaryDayValue: string
+  secondaryDayValue?: string
+  day: CalendarDay
+}
+
 export interface HijriCalendarProps extends HijriCalendarRootOptions {
   /**
    * Which bundled theme to render with.
@@ -60,9 +69,34 @@ export interface HijriCalendarProps extends HijriCalendarRootOptions {
   /** Replace the default chevrons. */
   navigationIcons?: { prev?: Component; next?: Component }
   /** Replaces the contents of a day cell. */
-  renderCell?: (props: { dayValue: string; day: CalendarDay }) => JSX.Element
+  renderCell?: (props: HijriCalendarCellRenderProps) => JSX.Element
   /** Replaces a weekday label. */
   renderWeekday?: (props: { weekday: string; index: number }) => JSX.Element
+}
+
+function renderDefaultCell(cell: HijriCalendarCellRenderProps, dateEmphasis: 'hijri' | 'gregorian'): JSX.Element {
+  if (cell.secondaryDayValue) {
+    return (
+      <span class="taqwim-calendar-cell-dates">
+        <span
+          class="taqwim-calendar-cell-primary"
+          data-primary
+          data-calendar-system={dateEmphasis === 'gregorian' ? 'gregorian' : 'hijri'}
+        >
+          {cell.primaryDayValue}
+        </span>
+        <span
+          class="taqwim-calendar-cell-secondary"
+          data-secondary
+          data-calendar-system={dateEmphasis === 'gregorian' ? 'hijri' : 'gregorian'}
+        >
+          {cell.secondaryDayValue}
+        </span>
+      </span>
+    )
+  }
+
+  return <>{cell.dayValue}</>
 }
 
 /*
@@ -127,7 +161,17 @@ export function HijriCalendar(props: HijriCalendarProps): JSX.Element {
               </Show>
 
               <HijriCalendarHeading class="taqwim-calendar-heading">
-                <Show when={selectableHeading()} fallback={rendered.state.headingValue}>
+                <Show
+                  when={selectableHeading()}
+                  fallback={
+                    <>
+                      <span>{rendered.state.headingValue}</span>
+                      <Show when={rendered.state.secondaryHeadingValue}>
+                        <span class="taqwim-calendar-heading-secondary">{rendered.state.secondaryHeadingValue}</span>
+                      </Show>
+                    </>
+                  }
+                >
                   <>
                     <button
                       type="button"
@@ -147,6 +191,9 @@ export function HijriCalendar(props: HijriCalendarProps): JSX.Element {
                     >
                       {rendered.state.placeholder.hy}
                     </button>
+                    <Show when={rendered.state.showGregorian && rendered.state.secondaryHeadingValue}>
+                      <span class="taqwim-calendar-heading-secondary">{rendered.state.secondaryHeadingValue}</span>
+                    </Show>
                   </>
                 </Show>
               </HijriCalendarHeading>
@@ -245,7 +292,11 @@ export function HijriCalendar(props: HijriCalendarProps): JSX.Element {
                                 {day => (
                                   <HijriCalendarCell day={day()}>
                                     <HijriCalendarCellTrigger day={day()}>
-                                      {local.renderCell ?? undefined}
+                                      {cell =>
+                                        local.renderCell
+                                          ? local.renderCell(cell)
+                                          : renderDefaultCell(cell, rendered.state.dateEmphasis ?? 'hijri')
+                                      }
                                     </HijriCalendarCellTrigger>
                                   </HijriCalendarCell>
                                 )}

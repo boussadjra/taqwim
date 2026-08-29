@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "@taqwim/angular": "workspace:*",
+    "@taqwim/calendar-core": "workspace:*",
     "@taqwim/core": "workspace:*",
     "@taqwim/themes": "workspace:*",
     "tslib": "^2.8.1"
