@@ -34,7 +34,7 @@ export interface CalendarFormatter {
   gregorianFullDate: (date: HijriDateObject) => string
   /** Compact Hijri label for secondary display, e.g. `'9 Ramadan'`. */
   hijriShortDate: (date: HijriDateObject) => string
-  /** Gregorian period spanned by a Hijri month, e.g. `'February – March 2026'`. */
+  /** Exact Gregorian span of a Hijri month, e.g. `'February 18 – March 19, 2026'`. */
   gregorianMonthRange: (month: HijriDateObject) => string
   /** Accessible label with both calendars when Gregorian display is enabled. */
   dualFullDate: (date: HijriDateObject) => string

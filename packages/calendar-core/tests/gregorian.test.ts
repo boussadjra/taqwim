@@ -39,16 +39,30 @@ describe('deriveGregorianValue', () => {
 describe('gregorianMonthRange', () => {
   const formatter = createFormatter('en', 'en')
 
-  it('shows one Gregorian month when the Hijri month fits entirely inside it', () => {
-    expect(gregorianMonthRange({ hy: 1446, hm: 6, hd: 1 }, 'en')).toMatch(/^December 2024$/)
+  it('shows the exact Gregorian boundary dates when the Hijri month fits inside one Gregorian month', () => {
+    const range = gregorianMonthRange({ hy: 1446, hm: 6, hd: 1 }, 'en')
+
+    expect(range).toContain('December')
+    expect(range).toContain('2024')
+    expect(range).toMatch(/2.*31/)
   })
 
   it('spans two Gregorian months within the same year', () => {
-    expect(formatter.gregorianMonthRange(RAMADAN_1447_START)).toBe('February – March 2026')
+    const range = formatter.gregorianMonthRange(RAMADAN_1447_START)
+
+    expect(range).toContain('February')
+    expect(range).toContain('March')
+    expect(range).toContain('2026')
+    expect(range).toMatch(/18.*19/)
   })
 
   it('spans a Gregorian year boundary', () => {
-    expect(gregorianMonthRange({ hy: 1447, hm: 7, hd: 1 }, 'en')).toBe('December 2025 – January 2026')
+    const range = gregorianMonthRange({ hy: 1447, hm: 7, hd: 1 }, 'en')
+
+    expect(range).toContain('December')
+    expect(range).toContain('2025')
+    expect(range).toContain('January')
+    expect(range).toContain('2026')
   })
 })
 
@@ -94,7 +108,11 @@ describe('createCalendar dual presentation', () => {
     })
     const state = store.getSnapshot()
 
-    expect(state.headingValue).toBe('February – March 2026')
+    expect(state.headingValue).toContain('February')
+    expect(state.headingValue).toContain('18')
+    expect(state.headingValue).toContain('March')
+    expect(state.headingValue).toContain('19')
+    expect(state.headingValue).toContain('2026')
     expect(state.secondaryHeadingValue).toContain('1447')
   })
 
@@ -106,7 +124,12 @@ describe('createCalendar dual presentation', () => {
       gregorianLocale: 'en',
     })
 
-    expect(store.getSnapshot().months[0]!.secondaryLabel).toBe('February – March 2026')
+    const secondaryLabel = store.getSnapshot().months[0]!.secondaryLabel!
+    expect(secondaryLabel).toContain('February')
+    expect(secondaryLabel).toContain('18')
+    expect(secondaryLabel).toContain('March')
+    expect(secondaryLabel).toContain('19')
+    expect(secondaryLabel).toContain('2026')
   })
 
   it('emits presentation data attributes on the root', () => {

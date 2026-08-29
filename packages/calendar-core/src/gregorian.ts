@@ -51,19 +51,13 @@ export function gregorianFullDate(date: Date, locale: string): string {
   }).format(date)
 }
 
-function gregorianMonthName(date: Date, locale: string): string {
-  return gregorianFormatter(locale, { month: 'long' }).format(date)
-}
-
-function gregorianMonthYear(date: Date, locale: string): string {
-  return gregorianFormatter(locale, { month: 'long', year: 'numeric' }).format(date)
-}
-
 /**
  * Gregorian period spanned by a Hijri month.
  *
  * A Hijri month often crosses two Gregorian months (or years), so the range is
  * derived from the first and last day of the Hijri month — never from day 1 alone.
+ * Including both boundary days makes the secondary day numbers in the grid
+ * understandable without squeezing month names into every cell.
  */
 export function gregorianMonthRange(month: HijriDateObject, locale: string): string {
   const first = startOfMonth(month)
@@ -73,20 +67,11 @@ export function gregorianMonthRange(month: HijriDateObject, locale: string): str
   const start = toGregorian(first)!
   const end = toGregorian(last)!
 
-  const startYear = start.getFullYear()
-  const endYear = end.getFullYear()
-  const startMonth = start.getMonth()
-  const endMonth = end.getMonth()
-
-  if (startYear === endYear && startMonth === endMonth) {
-    return gregorianMonthYear(start, locale)
-  }
-
-  if (startYear === endYear) {
-    return `${gregorianMonthName(start, locale)} – ${gregorianMonthYear(end, locale)}`
-  }
-
-  return `${gregorianMonthYear(start, locale)} – ${gregorianMonthYear(end, locale)}`
+  return gregorianFormatter(locale, {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).formatRange(start, end)
 }
 
 export function toGregorianDate(hijri: HijriDateObject): Date {
