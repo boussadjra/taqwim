@@ -254,12 +254,19 @@ export function HijriCalendarHeadCell({ children, ...rest }: DivProps & { childr
 }
 
 export function HijriCalendarCell({ day, children, ...rest }: DivProps & { day: CalendarDay; children?: ReactNode }) {
+  const { store, state } = useHijriCalendarContext()
+  // Re-render when the snapshot changes so tooltip labels track locale/options.
+  void state
+  const cellProps = store.getCellProps(day)
+
   return (
     <div
       role="gridcell"
       aria-selected={day.isSelected || undefined}
       aria-disabled={day.isDisabled || day.isUnavailable || undefined}
-      data-taqwim-calendar-cell=""
+      data-taqwim-calendar-cell={cellProps['data-taqwim-calendar-cell']}
+      data-tooltip={cellProps['data-tooltip']}
+      title={cellProps['data-tooltip']}
       data-disabled={day.isDisabled ? '' : undefined}
       data-outside-month={day.isOutsideMonth ? '' : undefined}
       {...rest}
