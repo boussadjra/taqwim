@@ -53,12 +53,23 @@ Both refuse selection; only the second stays in the tab order.
 
 ## Presentation
 
-| Option          | Default           |                                                                        |
-| --------------- | ----------------- | ---------------------------------------------------------------------- |
-| `locale`        | `'en'`            | `'en'`, `'ar'`, `'fr'`                                                 |
-| `dir`           | `'ltr'`           | `'rtl'` also mirrors the horizontal arrow keys                         |
-| `calendarLabel` | the visible month | Accessible name for the calendar                                       |
-| `initialFocus`  | `false`           | Focus the selection, else today, else the first of the month, on mount |
+| Option            | Default           |                                                                                 |
+| ----------------- | ----------------- | ------------------------------------------------------------------------------- |
+| `locale`          | `'en'`            | `'en'`, `'ar'`, `'fr'`                                                          |
+| `showGregorian`   | `false`           | Show the corresponding Gregorian date alongside Hijri dates in the grid         |
+| `dateEmphasis`    | `'hijri'`         | `'hijri'` or `'gregorian'` — which date is visually primary when both are shown |
+| `gregorianLocale` | `locale`          | Locale for Gregorian formatting (`Intl`, always `calendar: 'gregory'`)          |
+| `dir`             | `'ltr'`           | `'rtl'` also mirrors the horizontal arrow keys                                  |
+| `calendarLabel`   | the visible month | Accessible name for the calendar                                                |
+| `initialFocus`    | `false`           | Focus the selection, else today, else the first of the month, on mount          |
+
+Hijri remains the canonical value. `getSnapshot().gregorianValue` is derived
+from the selection via `toGregorian` — single dates become a `Date`, multiple
+selection becomes `Date[]`, and an empty selection is `undefined`.
+
+Styled `HijriDatePicker` adds `inputDisplay` (`'hijri'`, `'gregorian'`, or
+`'both'`) and `gregorianFormat` for the input field. These are independent of
+`showGregorian`, which only affects the popup grid.
 
 ## Reading the store directly
 

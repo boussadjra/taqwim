@@ -13,13 +13,15 @@ If you are writing your own styles, target these rather than class names.
 
 `[data-taqwim-calendar]`
 
-|                     |                                                       |
-| ------------------- | ----------------------------------------------------- |
-| `data-disabled`     | The whole calendar is disabled                        |
-| `data-readonly`     | Days render but cannot be selected                    |
-| `data-invalid`      | The current value falls outside `minValue`/`maxValue` |
-| `data-taqwim-theme` | Set by the styled packages' `theme` prop              |
-| `data-taqwim-size`  | Set by `size`, and absent at the default size         |
+|                       |                                                       |
+| --------------------- | ----------------------------------------------------- |
+| `data-disabled`       | The whole calendar is disabled                        |
+| `data-readonly`       | Days render but cannot be selected                    |
+| `data-invalid`        | The current value falls outside `minValue`/`maxValue` |
+| `data-show-gregorian` | Gregorian dates are visible in the grid               |
+| `data-date-emphasis`  | `'hijri'` or `'gregorian'` when dual dates are shown  |
+| `data-taqwim-theme`   | Set by the styled packages' `theme` prop              |
+| `data-taqwim-size`    | Set by `size`, and absent at the default size         |
 
 ## Grid and structure
 
@@ -40,15 +42,19 @@ If you are writing your own styles, target these rather than class names.
 
 `[data-taqwim-calendar-cell-trigger]`
 
-|                      |                                                |
-| -------------------- | ---------------------------------------------- |
-| `data-value`         | `iYYYY-iMM-iDD`, the stable handle for a day   |
-| `data-selected`      | Part of the current selection                  |
-| `data-today`         | The current Hijri day                          |
-| `data-outside-month` | Borrowed from an adjacent month                |
-| `data-disabled`      | Out of range, or your `isDateDisabled` said so |
-| `data-unavailable`   | Your `isDateUnavailable` said so               |
-| `data-focused`       | The roving-focus target                        |
+|                        |                                                |
+| ---------------------- | ---------------------------------------------- |
+| `data-value`           | `iYYYY-iMM-iDD`, the stable handle for a day   |
+| `data-gregorian-value` | `YYYY-MM-DD` when `showGregorian` is enabled   |
+| `data-selected`        | Part of the current selection                  |
+| `data-today`           | The current Hijri day                          |
+| `data-outside-month`   | Borrowed from an adjacent month                |
+| `data-disabled`        | Out of range, or your `isDateDisabled` said so |
+| `data-unavailable`     | Your `isDateUnavailable` said so               |
+| `data-focused`         | The roving-focus target                        |
+
+Styled dual-date cells use `data-primary` / `data-secondary` with
+`data-calendar-system="hijri"` or `"gregorian"` on the inner spans.
 
 Present attributes carry an empty string, so in CSS test for presence
 (`[data-selected]`) and in JavaScript use `hasAttribute` — `getAttribute` returns
