@@ -2,6 +2,7 @@
  * The live date picker, React. One of four — see the sibling `demos/*`
  * directories, and `CalendarDemo.tsx` for why they are duplicated.
  */
+import type { DateEmphasis, DatePickerInputDisplay } from '@taqwim/calendar-core'
 import type { HijriDateObject } from '@taqwim/core'
 import { HijriDatePicker, type HijriCalendarTheme } from '@taqwim/react-styled'
 import { useState, type ReactNode } from 'react'
@@ -13,6 +14,9 @@ export function DatePickerDemo({ theme = 'islamic' }: { theme?: HijriCalendarThe
   const [locale, setLocale] = useState('en')
   const [dir, setDir] = useState<'ltr' | 'rtl'>('ltr')
   const [editable, setEditable] = useState(true)
+  const [showGregorian, setShowGregorian] = useState(true)
+  const [dateEmphasis, setDateEmphasis] = useState<DateEmphasis>('hijri')
+  const [inputDisplay, setInputDisplay] = useState<DatePickerInputDisplay>('hijri')
   const [value, setValue] = useState<HijriDateObject | undefined>()
 
   const pickLocale = (next: string) => {
@@ -50,6 +54,32 @@ export function DatePickerDemo({ theme = 'islamic' }: { theme?: HijriCalendarThe
         <label className="demo-control">
           <input type="checkbox" checked={editable} onChange={e => setEditable(e.target.checked)} /> editable
         </label>
+
+        <label className="demo-control">
+          <input type="checkbox" checked={showGregorian} onChange={e => setShowGregorian(e.target.checked)} />{' '}
+          showGregorian
+        </label>
+
+        <label className="demo-control">
+          dateEmphasis
+          <select
+            value={dateEmphasis}
+            disabled={!showGregorian}
+            onChange={e => setDateEmphasis(e.target.value as DateEmphasis)}
+          >
+            <option value="hijri">hijri</option>
+            <option value="gregorian">gregorian</option>
+          </select>
+        </label>
+
+        <label className="demo-control">
+          inputDisplay
+          <select value={inputDisplay} onChange={e => setInputDisplay(e.target.value as DatePickerInputDisplay)}>
+            <option value="hijri">hijri</option>
+            <option value="gregorian">gregorian</option>
+            <option value="both">both</option>
+          </select>
+        </label>
       </div>
 
       <div className="demo-stage" data-tall>
@@ -59,6 +89,9 @@ export function DatePickerDemo({ theme = 'islamic' }: { theme?: HijriCalendarThe
           locale={locale}
           dir={dir}
           editable={editable}
+          showGregorian={showGregorian}
+          dateEmphasis={dateEmphasis}
+          inputDisplay={inputDisplay}
           label="Appointment date"
           value={value}
           onValueChange={setValue}

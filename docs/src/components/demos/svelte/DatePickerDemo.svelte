@@ -3,6 +3,7 @@
    * The live date picker, Svelte 5. One of four — see the sibling `demos/*`
    * directories, and `CalendarDemo.svelte` for why they are duplicated.
    */
+  import type { DateEmphasis, DatePickerInputDisplay } from '@taqwim/calendar-core'
   import type { HijriDateObject } from '@taqwim/core'
   import { HijriDatePicker, type HijriCalendarTheme } from '@taqwim/svelte-styled'
 
@@ -14,6 +15,9 @@
   let locale = $state('en')
   let dir = $state<'ltr' | 'rtl'>('ltr')
   let editable = $state(true)
+  let showGregorian = $state(true)
+  let dateEmphasis = $state<DateEmphasis>('hijri')
+  let inputDisplay = $state<DatePickerInputDisplay>('hijri')
   let value = $state<HijriDateObject | undefined>()
 
   const pickLocale = (next: string) => {
@@ -43,6 +47,25 @@
     </label>
 
     <label class="demo-control"> <input type="checkbox" bind:checked={editable} /> editable </label>
+
+    <label class="demo-control"> <input type="checkbox" bind:checked={showGregorian} /> showGregorian </label>
+
+    <label class="demo-control">
+      dateEmphasis
+      <select bind:value={dateEmphasis} disabled={!showGregorian}>
+        <option value="hijri">hijri</option>
+        <option value="gregorian">gregorian</option>
+      </select>
+    </label>
+
+    <label class="demo-control">
+      inputDisplay
+      <select bind:value={inputDisplay}>
+        <option value="hijri">hijri</option>
+        <option value="gregorian">gregorian</option>
+        <option value="both">both</option>
+      </select>
+    </label>
   </div>
 
   <div class="demo-stage" data-tall>
@@ -52,6 +75,9 @@
       {locale}
       {dir}
       {editable}
+      {showGregorian}
+      {dateEmphasis}
+      {inputDisplay}
       label="Appointment date"
       {value}
       onValueChange={next => (value = next)}

@@ -3,6 +3,7 @@
  * The live date picker, Vue. One of four — see the sibling `demos/*`
  * directories, and `CalendarDemo.vue` for why they are duplicated.
  */
+import type { DateEmphasis, DatePickerInputDisplay } from '@taqwim/calendar-core'
 import type { HijriDateObject } from '@taqwim/core'
 import { HijriDatePicker, type HijriCalendarTheme } from '@taqwim/vue-styled'
 import { computed, ref, watch } from 'vue'
@@ -14,6 +15,9 @@ const format = ref(FORMATS[0])
 const locale = ref('en')
 const dir = ref<'ltr' | 'rtl'>('ltr')
 const editable = ref(true)
+const showGregorian = ref(true)
+const dateEmphasis = ref<DateEmphasis>('hijri')
+const inputDisplay = ref<DatePickerInputDisplay>('hijri')
 const value = ref<HijriDateObject | undefined>()
 
 watch(locale, next => (dir.value = next === 'ar' ? 'rtl' : 'ltr'))
@@ -45,6 +49,25 @@ const selected = computed(() =>
       </label>
 
       <label class="demo-control"> <input v-model="editable" type="checkbox" /> editable </label>
+
+      <label class="demo-control"> <input v-model="showGregorian" type="checkbox" /> showGregorian </label>
+
+      <label class="demo-control">
+        dateEmphasis
+        <select v-model="dateEmphasis" :disabled="!showGregorian">
+          <option value="hijri">hijri</option>
+          <option value="gregorian">gregorian</option>
+        </select>
+      </label>
+
+      <label class="demo-control">
+        inputDisplay
+        <select v-model="inputDisplay">
+          <option value="hijri">hijri</option>
+          <option value="gregorian">gregorian</option>
+          <option value="both">both</option>
+        </select>
+      </label>
     </div>
 
     <div class="demo-stage" data-tall>
@@ -55,6 +78,9 @@ const selected = computed(() =>
         :locale="locale"
         :dir="dir"
         :editable="editable"
+        :show-gregorian="showGregorian"
+        :date-emphasis="dateEmphasis"
+        :input-display="inputDisplay"
         label="Appointment date"
       />
     </div>

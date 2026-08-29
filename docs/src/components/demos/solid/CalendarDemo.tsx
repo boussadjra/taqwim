@@ -7,6 +7,7 @@
  * idiomatic Solid, and a difference between the four should mean a difference
  * in the adapters rather than in a shared wrapper.
  */
+import type { DateEmphasis } from '@taqwim/calendar-core'
 import type { HijriDateObject } from '@taqwim/core'
 import { themeNames } from '@taqwim/themes/names'
 import { HijriCalendar, type HijriCalendarSize, type HijriCalendarTheme } from '@taqwim/solid-styled'
@@ -22,6 +23,8 @@ export function CalendarDemo(props: { theme?: HijriCalendarTheme; multiple?: boo
   const [locale, setLocale] = createSignal('en')
   const [dir, setDir] = createSignal<'ltr' | 'rtl'>('ltr')
   const [multiple, setMultiple] = createSignal(props.multiple ?? false)
+  const [showGregorian, setShowGregorian] = createSignal(false)
+  const [dateEmphasis, setDateEmphasis] = createSignal<DateEmphasis>('hijri')
   const [value, setValue] = createSignal<HijriDateObject | HijriDateObject[] | undefined>()
 
   // Arabic reads right to left and its week starts on Saturday, so picking it
@@ -106,6 +109,27 @@ export function CalendarDemo(props: { theme?: HijriCalendarTheme; multiple?: boo
         <label class="demo-control">
           <input type="checkbox" checked={multiple()} onChange={e => pickMultiple(e.currentTarget.checked)} /> multiple
         </label>
+
+        <label class="demo-control">
+          <input type="checkbox" checked={showGregorian()} onChange={e => setShowGregorian(e.currentTarget.checked)} />{' '}
+          showGregorian
+        </label>
+
+        <label class="demo-control">
+          dateEmphasis
+          <select
+            value={dateEmphasis()}
+            disabled={!showGregorian()}
+            onChange={e => setDateEmphasis(e.currentTarget.value as DateEmphasis)}
+          >
+            <option value="hijri" selected={dateEmphasis() === 'hijri'}>
+              hijri
+            </option>
+            <option value="gregorian" selected={dateEmphasis() === 'gregorian'}>
+              gregorian
+            </option>
+          </select>
+        </label>
       </div>
 
       <div class="demo-stage">
@@ -116,6 +140,8 @@ export function CalendarDemo(props: { theme?: HijriCalendarTheme; multiple?: boo
           dir={dir()}
           weekStartsOn={locale() === 'ar' ? 6 : 0}
           multiple={multiple()}
+          showGregorian={showGregorian()}
+          dateEmphasis={dateEmphasis()}
           value={value()}
           onValueChange={setValue}
         />

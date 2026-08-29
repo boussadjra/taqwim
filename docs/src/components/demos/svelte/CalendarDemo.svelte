@@ -8,6 +8,7 @@
    * at idiomatic Svelte, and a difference between the four should mean a
    * difference in the adapters rather than in a shared wrapper.
    */
+  import type { DateEmphasis } from '@taqwim/calendar-core'
   import type { HijriDateObject } from '@taqwim/core'
   import { themeNames } from '@taqwim/themes/names'
   import { HijriCalendar, type HijriCalendarSize, type HijriCalendarTheme } from '@taqwim/svelte-styled'
@@ -22,6 +23,8 @@
   let locale = $state('en')
   let dir = $state<'ltr' | 'rtl'>('ltr')
   let multiple = $state(initialMultiple)
+  let showGregorian = $state(false)
+  let dateEmphasis = $state<DateEmphasis>('hijri')
   let value = $state<HijriDateObject | HijriDateObject[] | undefined>()
 
   // Arabic reads right to left and its week starts on Saturday, so picking it
@@ -83,10 +86,33 @@
         onchange={e => pickMultiple((e.currentTarget as HTMLInputElement).checked)}
       /> multiple
     </label>
+
+    <label class="demo-control">
+      <input type="checkbox" bind:checked={showGregorian} /> showGregorian
+    </label>
+
+    <label class="demo-control">
+      dateEmphasis
+      <select bind:value={dateEmphasis} disabled={!showGregorian}>
+        <option value="hijri">hijri</option>
+        <option value="gregorian">gregorian</option>
+      </select>
+    </label>
   </div>
 
   <div class="demo-stage">
-    <HijriCalendar {theme} {size} {locale} {dir} {weekStartsOn} {multiple} {value} onValueChange={next => (value = next)} />
+    <HijriCalendar
+      {theme}
+      {size}
+      {locale}
+      {dir}
+      {weekStartsOn}
+      {multiple}
+      {showGregorian}
+      {dateEmphasis}
+      {value}
+      onValueChange={next => (value = next)}
+    />
   </div>
 
   <div class="demo-readout">

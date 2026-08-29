@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "_comment": "build is declared as a vp task in vite.config.ts",
-    "docs:dev": "node scripts/generate-tokens-page.js && pnpm -w exec typedoc --excludeNotDocumented && node scripts/prepare-api-docs.js && astro dev",
+    "docs:dev": "vp run dev",
     "docs:build": "node scripts/generate-tokens-page.js && pnpm -w exec typedoc --excludeNotDocumented && node scripts/prepare-api-docs.js && astro build",
     "docs:preview": "astro preview"
   },
@@ -15,6 +15,7 @@
     "@astrojs/starlight": "^0.41.5",
     "@astrojs/svelte": "^9.0.1",
     "@astrojs/vue": "^7.0.2",
+    "@taqwim/calendar-core": "workspace:*",
     "@taqwim/core": "workspace:*",
     "@taqwim/react-styled": "workspace:*",
     "@taqwim/solid-styled": "workspace:*",

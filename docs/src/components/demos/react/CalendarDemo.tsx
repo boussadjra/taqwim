@@ -7,6 +7,7 @@
  * idiomatic React, and a difference between the four should mean a difference
  * in the adapters rather than in a shared wrapper.
  */
+import type { DateEmphasis } from '@taqwim/calendar-core'
 import type { HijriDateObject } from '@taqwim/core'
 import { themeNames } from '@taqwim/themes/names'
 import { HijriCalendar, type HijriCalendarSize, type HijriCalendarTheme } from '@taqwim/react-styled'
@@ -24,6 +25,8 @@ export function CalendarDemo({
   const [locale, setLocale] = useState('en')
   const [dir, setDir] = useState<'ltr' | 'rtl'>('ltr')
   const [multiple, setMultiple] = useState(initialMultiple)
+  const [showGregorian, setShowGregorian] = useState(false)
+  const [dateEmphasis, setDateEmphasis] = useState<DateEmphasis>('hijri')
   const [value, setValue] = useState<HijriDateObject | HijriDateObject[] | undefined>()
 
   // Arabic reads right to left and its week starts on Saturday, so picking it
@@ -89,6 +92,23 @@ export function CalendarDemo({
         <label className="demo-control">
           <input type="checkbox" checked={multiple} onChange={e => pickMultiple(e.target.checked)} /> multiple
         </label>
+
+        <label className="demo-control">
+          <input type="checkbox" checked={showGregorian} onChange={e => setShowGregorian(e.target.checked)} />{' '}
+          showGregorian
+        </label>
+
+        <label className="demo-control">
+          dateEmphasis
+          <select
+            value={dateEmphasis}
+            disabled={!showGregorian}
+            onChange={e => setDateEmphasis(e.target.value as DateEmphasis)}
+          >
+            <option value="hijri">hijri</option>
+            <option value="gregorian">gregorian</option>
+          </select>
+        </label>
       </div>
 
       <div className="demo-stage">
@@ -99,6 +119,8 @@ export function CalendarDemo({
           dir={dir}
           weekStartsOn={locale === 'ar' ? 6 : 0}
           multiple={multiple}
+          showGregorian={showGregorian}
+          dateEmphasis={dateEmphasis}
           value={value}
           onValueChange={setValue}
         />

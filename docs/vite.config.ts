@@ -58,6 +58,18 @@ export default defineConfig({
          */
         cache: false,
       },
+      /*
+       * The live examples import `@taqwim/*-styled`, which in turn import
+       * headless adapters that call `getCellDisplayValues` from
+       * `@taqwim/calendar-core`. Starting dev without rebuilding those packages
+       * leaves a stale `dist/` in place and Vite dies on the missing export.
+       */
+      dev: {
+        command:
+          'node scripts/generate-tokens-page.js && pnpm -w exec typedoc --excludeNotDocumented && node scripts/prepare-api-docs.js && astro dev',
+        dependsOn: afterDeps,
+        cache: false,
+      },
     },
   },
 })

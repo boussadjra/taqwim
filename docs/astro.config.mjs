@@ -52,6 +52,17 @@ export default defineConfig({
           find: /^@taqwim\/themes$/,
           replacement: fileURLToPath(new URL('../packages/themes/dist/index.css', import.meta.url)),
         },
+        /*
+         * `@taqwim/solid-styled` ships uncompiled JSX under the `solid`
+         * condition. Astro compiles it from `/@fs/…/dist/source/`, and Vite's
+         * resolver for those files does not walk `solid-styled`'s nested
+         * `node_modules` the way Node does — same failure mode as `date-fns`
+         * below, and the same fix: point the bare specifier at the built file.
+         */
+        {
+          find: /^@taqwim\/calendar-core$/,
+          replacement: fileURLToPath(new URL('../packages/calendar-core/dist/index.js', import.meta.url)),
+        },
       ],
       /*
        * The styled packages must still be bundled rather than externalised,
@@ -90,7 +101,7 @@ export default defineConfig({
      * dependency of the docs and does not resolve from this directory.
      */
     optimizeDeps: {
-      include: ['@taqwim/core > date-fns'],
+      include: ['@taqwim/core > date-fns', '@taqwim/calendar-core'],
     },
   },
   integrations: [

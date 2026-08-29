@@ -2,6 +2,7 @@
  * The live date picker, Solid. One of four — see the sibling `demos/*`
  * directories, and `CalendarDemo.tsx` for why they are duplicated.
  */
+import type { DateEmphasis, DatePickerInputDisplay } from '@taqwim/calendar-core'
 import type { HijriDateObject } from '@taqwim/core'
 import { HijriDatePicker, type HijriCalendarTheme } from '@taqwim/solid-styled'
 import { createSignal, For, type JSX } from 'solid-js'
@@ -13,6 +14,9 @@ export function DatePickerDemo(props: { theme?: HijriCalendarTheme }): JSX.Eleme
   const [locale, setLocale] = createSignal('en')
   const [dir, setDir] = createSignal<'ltr' | 'rtl'>('ltr')
   const [editable, setEditable] = createSignal(true)
+  const [showGregorian, setShowGregorian] = createSignal(true)
+  const [dateEmphasis, setDateEmphasis] = createSignal<DateEmphasis>('hijri')
+  const [inputDisplay, setInputDisplay] = createSignal<DatePickerInputDisplay>('hijri')
   const [value, setValue] = createSignal<HijriDateObject | undefined>()
 
   const pickLocale = (next: string) => {
@@ -63,6 +67,45 @@ export function DatePickerDemo(props: { theme?: HijriCalendarTheme }): JSX.Eleme
         <label class="demo-control">
           <input type="checkbox" checked={editable()} onChange={e => setEditable(e.currentTarget.checked)} /> editable
         </label>
+
+        <label class="demo-control">
+          <input type="checkbox" checked={showGregorian()} onChange={e => setShowGregorian(e.currentTarget.checked)} />{' '}
+          showGregorian
+        </label>
+
+        <label class="demo-control">
+          dateEmphasis
+          <select
+            value={dateEmphasis()}
+            disabled={!showGregorian()}
+            onChange={e => setDateEmphasis(e.currentTarget.value as DateEmphasis)}
+          >
+            <option value="hijri" selected={dateEmphasis() === 'hijri'}>
+              hijri
+            </option>
+            <option value="gregorian" selected={dateEmphasis() === 'gregorian'}>
+              gregorian
+            </option>
+          </select>
+        </label>
+
+        <label class="demo-control">
+          inputDisplay
+          <select
+            value={inputDisplay()}
+            onChange={e => setInputDisplay(e.currentTarget.value as DatePickerInputDisplay)}
+          >
+            <option value="hijri" selected={inputDisplay() === 'hijri'}>
+              hijri
+            </option>
+            <option value="gregorian" selected={inputDisplay() === 'gregorian'}>
+              gregorian
+            </option>
+            <option value="both" selected={inputDisplay() === 'both'}>
+              both
+            </option>
+          </select>
+        </label>
       </div>
 
       <div class="demo-stage" data-tall>
@@ -72,6 +115,9 @@ export function DatePickerDemo(props: { theme?: HijriCalendarTheme }): JSX.Eleme
           locale={locale()}
           dir={dir()}
           editable={editable()}
+          showGregorian={showGregorian()}
+          dateEmphasis={dateEmphasis()}
+          inputDisplay={inputDisplay()}
           label="Appointment date"
           value={value()}
           onValueChange={setValue}

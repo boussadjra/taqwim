@@ -8,6 +8,7 @@
  * idiomatic React, and a difference between the four should mean a difference
  * in the adapters rather than in a shared wrapper.
  */
+import type { DateEmphasis } from '@taqwim/calendar-core'
 import type { HijriDateObject } from '@taqwim/core'
 import { themeNames } from '@taqwim/themes/names'
 import { HijriCalendar, type HijriCalendarSize, type HijriCalendarTheme } from '@taqwim/vue-styled'
@@ -23,6 +24,8 @@ const size = ref<HijriCalendarSize>('default')
 const locale = ref('en')
 const dir = ref<'ltr' | 'rtl'>('ltr')
 const multiple = ref(props.multiple)
+const showGregorian = ref(false)
+const dateEmphasis = ref<DateEmphasis>('hijri')
 const value = ref<HijriDateObject | HijriDateObject[] | undefined>()
 
 // Arabic reads right to left and its week starts on Saturday, so picking it
@@ -76,6 +79,16 @@ const selected = computed(() => {
       </label>
 
       <label class="demo-control"> <input v-model="multiple" type="checkbox" /> multiple </label>
+
+      <label class="demo-control"> <input v-model="showGregorian" type="checkbox" /> showGregorian </label>
+
+      <label class="demo-control">
+        dateEmphasis
+        <select v-model="dateEmphasis" :disabled="!showGregorian">
+          <option value="hijri">hijri</option>
+          <option value="gregorian">gregorian</option>
+        </select>
+      </label>
     </div>
 
     <div class="demo-stage">
@@ -87,6 +100,8 @@ const selected = computed(() => {
         :dir="dir"
         :week-starts-on="weekStartsOn"
         :multiple="multiple"
+        :show-gregorian="showGregorian"
+        :date-emphasis="dateEmphasis"
       />
     </div>
 
