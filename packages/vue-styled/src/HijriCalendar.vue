@@ -157,33 +157,74 @@ function togglePicker(which: 'month' | 'year') {
 
         <HijriCalendarHeading class="taqwim-calendar-heading">
           <template v-if="selectableHeading">
-            <button
-              type="button"
-              class="taqwim-calendar-heading-button"
-              data-taqwim-heading="month"
-              :aria-expanded="picker === 'month'"
-              @click="togglePicker('month')"
+            <span
+              class="taqwim-calendar-heading-primary"
+              :data-calendar-system="state.showGregorian && state.dateEmphasis === 'gregorian' ? 'gregorian' : 'hijri'"
             >
-              {{ months[state.placeholder.hm - 1] }}
-            </button>
-            <button
-              type="button"
-              class="taqwim-calendar-heading-button"
-              data-taqwim-heading="year"
-              :aria-expanded="picker === 'year'"
-              @click="togglePicker('year')"
+              <template v-if="state.showGregorian && state.dateEmphasis === 'gregorian'">
+                {{ state.headingValue }}
+              </template>
+              <template v-else>
+                <button
+                  type="button"
+                  class="taqwim-calendar-heading-button"
+                  data-taqwim-heading="month"
+                  :aria-expanded="picker === 'month'"
+                  @click="togglePicker('month')"
+                >
+                  {{ months[state.placeholder.hm - 1] }}
+                </button>
+                <button
+                  type="button"
+                  class="taqwim-calendar-heading-button"
+                  data-taqwim-heading="year"
+                  :aria-expanded="picker === 'year'"
+                  @click="togglePicker('year')"
+                >
+                  {{ state.placeholder.hy }}
+                </button>
+              </template>
+            </span>
+            <span
+              v-if="state.showGregorian && state.secondaryHeadingValue"
+              class="taqwim-calendar-heading-secondary"
+              :data-calendar-system="state.dateEmphasis === 'gregorian' ? 'hijri' : 'gregorian'"
             >
-              {{ state.placeholder.hy }}
-            </button>
-            <span v-if="state.showGregorian && state.secondaryHeadingValue" class="taqwim-calendar-heading-secondary">{{
-              state.secondaryHeadingValue
-            }}</span>
+              <template v-if="state.dateEmphasis === 'gregorian'">
+                <button
+                  type="button"
+                  class="taqwim-calendar-heading-button"
+                  data-taqwim-heading="month"
+                  :aria-expanded="picker === 'month'"
+                  @click="togglePicker('month')"
+                >
+                  {{ months[state.placeholder.hm - 1] }}
+                </button>
+                <button
+                  type="button"
+                  class="taqwim-calendar-heading-button"
+                  data-taqwim-heading="year"
+                  :aria-expanded="picker === 'year'"
+                  @click="togglePicker('year')"
+                >
+                  {{ state.placeholder.hy }}
+                </button>
+              </template>
+              <template v-else>{{ state.secondaryHeadingValue }}</template>
+            </span>
           </template>
           <template v-else>
-            <span>{{ state.headingValue }}</span>
-            <span v-if="state.secondaryHeadingValue" class="taqwim-calendar-heading-secondary">{{
-              state.secondaryHeadingValue
-            }}</span>
+            <span
+              class="taqwim-calendar-heading-primary"
+              :data-calendar-system="state.showGregorian && state.dateEmphasis === 'gregorian' ? 'gregorian' : 'hijri'"
+              >{{ state.headingValue }}</span
+            >
+            <span
+              v-if="state.secondaryHeadingValue"
+              class="taqwim-calendar-heading-secondary"
+              :data-calendar-system="state.dateEmphasis === 'gregorian' ? 'hijri' : 'gregorian'"
+              >{{ state.secondaryHeadingValue }}</span
+            >
           </template>
         </HijriCalendarHeading>
 

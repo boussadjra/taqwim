@@ -85,6 +85,18 @@ describe('month and year picker', () => {
     expect(yearButton(wrapper).text()).toBe('1445')
   })
 
+  it('promotes the Gregorian date span while keeping Hijri picker controls available', () => {
+    const wrapper = mountCalendar({ showGregorian: true, dateEmphasis: 'gregorian' })
+    const primary = wrapper.get('.taqwim-calendar-heading-primary')
+    const secondary = wrapper.get('.taqwim-calendar-heading-secondary')
+
+    expect(primary.attributes('data-calendar-system')).toBe('gregorian')
+    expect(primary.text()).toMatch(/March.*April.*2024/)
+    expect(secondary.attributes('data-calendar-system')).toBe('hijri')
+    expect(secondary.text()).toContain('Ramadan')
+    expect(secondary.element.contains(monthButton(wrapper).element)).toBe(true)
+  })
+
   it('opens the month grid from the month button', async () => {
     const wrapper = await openMonthPicker(mountCalendar())
 
