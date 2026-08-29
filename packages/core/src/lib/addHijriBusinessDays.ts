@@ -6,14 +6,11 @@ import type { HijriDateObject } from './types'
 import { DEFAULT_WEEKEND, shiftBusinessDays, type BusinessDayOptions } from './weekend'
 
 /**
- * @name addHijriBusinessDays
- * @category Day Helpers
- * @summary Add the specified number of business days to the given date.
- *
- * @description
  * Add the specified number of business days to the given date, skipping
  * weekend days. The weekend defaults to Friday/Saturday — the working week
  * across most of the Arab world — and is configurable.
+ *
+ * @category Day Helpers
  *
  * @param date - The date to be changed
  * @param amount - The amount of business days to be added.

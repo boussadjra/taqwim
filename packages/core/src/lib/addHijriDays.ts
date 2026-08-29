@@ -2,12 +2,9 @@ import { addDays } from 'date-fns'
 import { toHijri, toGregorian, isValidHijriDate, type HijriDateObject } from '.'
 
 /**
- * @name addHijriDays
- * @category Day Helpers
- * @summary Add the specified number of days to the given date.
- *
- * @description
  * Add the specified number of days to the given date.
+ *
+ * @category Day Helpers
  *
  * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
  *

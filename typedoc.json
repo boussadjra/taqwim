@@ -4,5 +4,6 @@
   "out": "docs/src/content/docs/api",
   "plugin": ["typedoc-plugin-markdown"],
   "excludeNotDocumentedKinds": ["Property", "Interface", "Namespace", "Variable", "TypeAlias"],
+  "intentionallyNotExported": ["DateObject"],
   "readme": "none"
 }

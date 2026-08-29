@@ -4,7 +4,7 @@ import type { HijriDateObject } from './types'
 /**
  * Returns the length of a month in the Hijri calendar.
  * Overload to support HijriDateObject as a single parameter.
- * @param hijriDate A HijriDateObject specifying the year and month.
+ * @param hyOrHijriDate A Hijri year, or a HijriDateObject specifying the year and month.
  * @returns The length of the month in days. Returns -1 if the month is invalid.
  */
 export function getDaysLengthInMonth(hyOrHijriDate: HijriDateObject): number
