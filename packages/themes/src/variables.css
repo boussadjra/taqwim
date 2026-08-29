@@ -83,11 +83,18 @@
   --hc-header-border: 1px solid #e5e7eb;
   --hc-cell-size: 2rem;
   --hc-cell-border-radius: 0.375rem;
+  --hc-heading-button-border-radius: 0.5rem;
+  --hc-dual-cell-border-radius: 0.5rem;
   --hc-cell-gap: var(--hc-spacing-xs);
   --hc-secondary-date-font-size: var(--hc-font-size-sm);
   --hc-secondary-date-opacity: 0.85;
   --hc-secondary-date-color: var(--hc-muted-foreground);
-  --hc-secondary-date-gap: 0.125rem;
+  --hc-secondary-date-gap: 0.1875rem;
+  --hc-heading-secondary-gap: 0.125rem;
+  --hc-dual-cell-min-height: calc(var(--hc-cell-size) + 0.625rem);
+  --hc-dual-cell-padding-y: calc(var(--hc-spacing-xs) + 0.0625rem);
+  --hc-dual-primary-font-size: calc(var(--hc-font-size-base) * 1.05);
+  --hc-dual-secondary-font-size: 0.625rem;
   --hc-nav-button-size: 2rem;
   --hc-nav-button-border-radius: var(--hc-cell-border-radius);
   --hc-grid-gap: var(--hc-cell-gap);
@@ -113,6 +120,8 @@
   --hc-font-size-lg: 1rem;
   --hc-header-padding: var(--hc-spacing-sm);
   --hc-grid-padding: var(--hc-spacing-xs);
+  --hc-dual-cell-min-height: calc(var(--hc-cell-size) + 0.5rem);
+  --hc-dual-secondary-font-size: 0.5625rem;
 }
 
 [data-taqwim-size='large'] {
@@ -122,6 +131,8 @@
   --hc-font-size-lg: 1.375rem;
   --hc-header-padding: var(--hc-spacing-lg);
   --hc-grid-padding: var(--hc-spacing-md);
+  --hc-dual-cell-min-height: calc(var(--hc-cell-size) + 0.75rem);
+  --hc-dual-secondary-font-size: 0.6875rem;
 }
 
 /* Smaller touch targets are wrong on phones; grow the cells instead. */

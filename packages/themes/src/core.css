@@ -54,6 +54,33 @@
   color: var(--hc-foreground);
 }
 
+/* The emphasized calendar leads; its exact companion range sits beneath. */
+.taqwim-calendar-heading-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  gap: var(--hc-spacing-xs);
+  max-width: 100%;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+[data-taqwim-calendar][data-show-gregorian] .taqwim-calendar-heading {
+  flex-direction: column;
+  gap: var(--hc-heading-secondary-gap);
+}
+
+[data-taqwim-calendar][data-show-gregorian] .taqwim-calendar-heading-button {
+  white-space: nowrap;
+}
+
+.taqwim-calendar-heading-secondary .taqwim-calendar-heading-button {
+  min-height: 1.5rem;
+  padding: 0.125rem var(--hc-spacing-xs);
+  font-weight: var(--hc-font-weight-medium);
+}
+
 /*
  * Month and year are separate buttons so the pickers are visible rather
  * than hidden behind a title that looked like static text.
@@ -65,7 +92,11 @@
   margin: 0;
   padding: var(--hc-spacing-xs) var(--hc-spacing-sm);
   border: none;
-  border-radius: var(--hc-cell-border-radius);
+  /*
+   * Circular themes set `--hc-cell-border-radius: 50%`, which reads as a pill
+   * on the wide month button and on dual-date cells that are taller than wide.
+   */
+  border-radius: min(var(--hc-cell-border-radius), var(--hc-heading-button-border-radius));
   background: transparent;
   color: inherit;
   font: inherit;
@@ -167,7 +198,7 @@
 .taqwim-calendar-picker-grid button {
   padding: var(--hc-spacing-sm) var(--hc-spacing-xs);
   border: none;
-  border-radius: var(--hc-cell-border-radius);
+  border-radius: min(var(--hc-cell-border-radius), var(--hc-heading-button-border-radius));
   background: transparent;
   color: var(--hc-foreground);
   font: inherit;
@@ -233,7 +264,7 @@
   height: auto;
   padding: var(--hc-spacing-xs) 0;
   border: none;
-  border-radius: var(--hc-cell-border-radius);
+  border-radius: min(var(--hc-cell-border-radius), var(--hc-dual-cell-border-radius));
   background: transparent;
   color: var(--hc-foreground);
   font-size: var(--hc-font-size-base);
@@ -247,28 +278,59 @@
   min-height: 1.75rem;
 }
 
+[data-taqwim-calendar][data-show-gregorian] [data-taqwim-calendar-cell-trigger] {
+  width: 100%;
+  min-width: 0;
+  min-height: var(--hc-dual-cell-min-height);
+  padding-block: var(--hc-dual-cell-padding-y);
+}
+
 .taqwim-calendar-cell-dates {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: var(--hc-secondary-date-gap);
-  line-height: 1.1;
+  width: 100%;
+  line-height: 1;
   max-width: 100%;
 }
 
 .taqwim-calendar-cell-primary {
   font-size: var(--hc-font-size-base);
   font-weight: inherit;
+  line-height: 1;
+  min-height: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+[data-taqwim-calendar][data-show-gregorian] .taqwim-calendar-cell-primary {
+  font-size: var(--hc-dual-primary-font-size);
+  font-weight: var(--hc-font-weight-semibold);
 }
 
 .taqwim-calendar-cell-secondary {
   font-size: var(--hc-secondary-date-font-size);
-  font-weight: var(--hc-font-weight-normal);
+  font-weight: var(--hc-font-weight-medium);
   color: var(--hc-secondary-date-color);
   opacity: var(--hc-secondary-date-opacity);
+  line-height: 1;
+  letter-spacing: 0.01em;
+  min-height: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
   /* Gregorian numerals stay LTR inside RTL layouts. */
   unicode-bidi: isolate;
+}
+
+[data-taqwim-calendar][data-show-gregorian] .taqwim-calendar-cell-secondary {
+  font-size: var(--hc-dual-secondary-font-size);
+  font-weight: var(--hc-font-weight-normal);
+  opacity: 1;
 }
 
 [data-taqwim-calendar-cell-trigger][data-selected] .taqwim-calendar-cell-secondary,
@@ -282,10 +344,47 @@
   width: 100%;
   margin-top: var(--hc-spacing-xs);
   font-size: var(--hc-secondary-date-font-size);
-  font-weight: var(--hc-font-weight-normal);
+  font-weight: var(--hc-font-weight-medium);
   color: var(--hc-secondary-date-color);
   text-align: center;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
   unicode-bidi: isolate;
+}
+
+/*
+ * Solid SSR cannot hydrate a fragment as the direct child of `<Show>`. A
+ * column flex wrapper keeps the layout identical while giving hydration a
+ * real element to anchor.
+ */
+.taqwim-calendar-heading-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--hc-heading-secondary-gap);
+  min-width: 0;
+}
+
+/*
+ * Panel layout expects the header, picker and months as flex children of the
+ * root. The styled Solid calendar wraps them in this element so it can avoid
+ * returning a fragment from its render prop; the wrapper participates in the
+ * panel flex row instead of using `display: contents`, which breaks Solid SSR
+ * hydration.
+ */
+.taqwim-calendar-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+[data-taqwim-calendar][data-show-gregorian] .taqwim-calendar-heading-secondary {
+  width: auto;
+  margin-top: 0;
+  font-size: var(--hc-secondary-date-font-size);
+  font-weight: var(--hc-font-weight-medium);
+  opacity: 1;
 }
 
 [data-taqwim-calendar-cell-trigger]:hover:not([data-disabled]):not([data-unavailable]) {
@@ -396,6 +495,13 @@
   align-items: flex-start;
 }
 
+[data-taqwim-layout='panel'] .taqwim-calendar-body {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1 0 100%;
+  align-items: flex-start;
+}
+
 [data-taqwim-layout='panel'] .taqwim-calendar-header {
   flex: 1 0 100%;
 }
@@ -415,6 +521,16 @@
 }
 
 @media (max-width: 640px) {
+  [data-taqwim-calendar][data-show-gregorian] .taqwim-calendar-heading-primary {
+    gap: 0;
+  }
+
+  [data-taqwim-calendar][data-show-gregorian] .taqwim-calendar-heading-primary .taqwim-calendar-heading-button {
+    gap: 0.25em;
+    padding-inline: 0.125rem;
+    font-size: var(--hc-font-size-base);
+  }
+
   /* Beside becomes below when there is no room beside. */
   [data-taqwim-layout='panel'] .taqwim-calendar-picker {
     flex: 1 0 100%;

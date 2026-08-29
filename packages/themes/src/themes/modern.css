@@ -1,4 +1,4 @@
-/* Modern — indigo/violet gradient with circular cells. */
+/* Modern — indigo/violet gradient with soft rounded day cells. */
 [data-taqwim-theme='modern'] {
   --hc-background: linear-gradient(135deg, #4338ca 0%, #6b21a8 100%);
   --hc-foreground: #ffffff;
@@ -25,7 +25,7 @@
   --hc-focus-ring-color: #ffffff;
 
   --hc-cell-size: 2.5rem;
-  --hc-cell-border-radius: 50%;
+  --hc-cell-border-radius: 0.5rem;
   --hc-nav-button-size: 2.5rem;
   --hc-nav-button-border-radius: 50%;
   --hc-header-padding: var(--hc-spacing-lg);
