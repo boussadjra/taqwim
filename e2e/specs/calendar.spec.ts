@@ -36,6 +36,8 @@ function day(page: Page, dayInMonth: number) {
 }
 
 const heading = (page: Page) => page.locator('[data-taqwim-calendar-heading]')
+const monthHeading = (page: Page) => page.locator('[data-taqwim-heading="month"]')
+const yearHeading = (page: Page) => page.locator('[data-taqwim-heading="year"]')
 const selection = (page: Page) => page.locator('[data-testid="selection"]')
 
 // Found by accessible name rather than a test id: the paging buttons' labels
@@ -163,13 +165,34 @@ test.describe('selection', () => {
 test.describe('paging', () => {
   test('moves forward and back a month', async ({ page }) => {
     await open(page)
-    const start = await heading(page).innerText()
+    const start = await monthHeading(page).innerText()
 
     await nextButton(page).click()
-    await expect(heading(page)).not.toHaveText(start)
+    await expect(monthHeading(page)).not.toHaveText(start)
 
     await prevButton(page).click()
-    await expect(heading(page)).toHaveText(start)
+    await expect(monthHeading(page)).toHaveText(start)
+  })
+
+  test('exposes month and year as separate heading buttons', async ({ page }) => {
+    await open(page)
+
+    await expect(monthHeading(page)).toHaveText('Ramadan')
+    await expect(yearHeading(page)).toHaveText('1445')
+  })
+
+  test('opens a month grid from the month button', async ({ page }) => {
+    await open(page)
+    await page.locator('[data-taqwim-heading="month"]').click()
+
+    await expect(page.locator('.taqwim-calendar-picker')).toBeVisible()
+  })
+
+  test('opens a year grid from the year button', async ({ page }) => {
+    await open(page)
+    await page.locator('[data-taqwim-heading="year"]').click()
+
+    await expect(page.locator('.taqwim-calendar-picker-grid button').first()).toHaveText('1343')
   })
 
   test('disables paging past the bounds', async ({ page }) => {
