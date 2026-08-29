@@ -43,6 +43,9 @@ export interface HijriCalendarRootProps {
   minValue?: HijriDateObject
   maxValue?: HijriDateObject
   locale?: string
+  showGregorian?: boolean
+  dateEmphasis?: import('@taqwim/calendar-core').DateEmphasis
+  gregorianLocale?: string
   dir?: 'ltr' | 'rtl'
   isDateDisabled?: Matcher
   isDateUnavailable?: Matcher
@@ -59,6 +62,8 @@ export interface HijriCalendarRootProps {
 export interface HijriCalendarRenderProps {
   months: CalendarMonth[]
   weekDays: string[]
+  modelValue: HijriDateObject | HijriDateObject[] | undefined
+  gregorianValue: Date | Date[] | undefined
   state: CalendarState
   store: CalendarStore
 }

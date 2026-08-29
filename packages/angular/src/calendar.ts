@@ -1,4 +1,5 @@
 import type { CalendarDay, CalendarMonth } from '@taqwim/calendar-core'
+import { getCellDisplayValues } from '@taqwim/calendar-core'
 import type { HijriDateObject } from '@taqwim/core'
 import {
   Component,
@@ -33,6 +34,8 @@ import type { HijriCalendarInputs, Matcher, WeekDayFormat, WeekStartsOn } from '
     '[attr.aria-label]': 'state().fullCalendarLabel',
     '[attr.dir]': 'state().dir',
     '[attr.data-taqwim-calendar]': '""',
+    '[attr.data-show-gregorian]': "state().showGregorian ? '' : null",
+    '[attr.data-date-emphasis]': 'state().showGregorian ? state().dateEmphasis : null',
     '[attr.data-disabled]': "state().disabled ? '' : null",
     '[attr.data-readonly]': "state().readonly ? '' : null",
     '[attr.data-invalid]': "state().isInvalid ? '' : null",
@@ -58,6 +61,7 @@ export class HijriCalendarRoot implements OnChanges, AfterViewInit {
 
   readonly months = computed(() => this.state().months)
   readonly weekDays = computed(() => this.state().weekDays)
+  readonly gregorianValue = computed(() => this.state().gregorianValue)
 
   @Input() defaultValue?: HijriCalendarInputs['defaultValue']
   @Input() value?: HijriCalendarInputs['value']
@@ -77,6 +81,9 @@ export class HijriCalendarRoot implements OnChanges, AfterViewInit {
   @Input() minValue?: HijriDateObject
   @Input() maxValue?: HijriDateObject
   @Input() locale?: string
+  @Input() showGregorian?: boolean
+  @Input() dateEmphasis?: HijriCalendarInputs['dateEmphasis']
+  @Input() gregorianLocale?: string
   @Input() dir?: 'ltr' | 'rtl'
   @Input() isDateDisabled?: Matcher
   @Input() isDateUnavailable?: Matcher
@@ -145,6 +152,9 @@ export class HijriCalendarRoot implements OnChanges, AfterViewInit {
       minValue: this.minValue,
       maxValue: this.maxValue,
       locale: this.locale,
+      showGregorian: this.showGregorian,
+      dateEmphasis: this.dateEmphasis,
+      gregorianLocale: this.gregorianLocale,
       dir: this.dir,
       isDateDisabled: this.isDateDisabled,
       isDateUnavailable: this.isDateUnavailable,
@@ -302,6 +312,7 @@ export class HijriCalendarCell {
     '[attr.aria-label]': "props()['aria-label']",
     '[attr.aria-disabled]': "props()['aria-disabled']",
     '[attr.data-value]': "props()['data-value']",
+    '[attr.data-gregorian-value]': "props()['data-gregorian-value'] ?? null",
     '[attr.data-taqwim-calendar-cell-trigger]': '""',
     '[attr.data-selected]': "day().isSelected ? '' : null",
     '[attr.data-disabled]': "day().isDisabled ? '' : null",
@@ -312,7 +323,18 @@ export class HijriCalendarCell {
     '(click)': 'onClick()',
     '(focus)': 'onFocus()',
   },
-  template: '{{ dayValue() }}',
+  template: `
+    @if (display().secondaryDayValue) {
+      <span class="taqwim-calendar-cell-primary" data-primary [attr.data-calendar-system]="primarySystem()">{{
+        display().primaryDayValue
+      }}</span>
+      <span class="taqwim-calendar-cell-secondary" data-secondary [attr.data-calendar-system]="secondarySystem()">{{
+        display().secondaryDayValue
+      }}</span>
+    } @else {
+      {{ display().dayValue }}
+    }
+  `,
 })
 export class HijriCalendarCellTrigger {
   private readonly calendar = inject(TaqwimCalendarService)
@@ -320,7 +342,20 @@ export class HijriCalendarCellTrigger {
   readonly day = input.required<CalendarDay>({ alias: 'taqwimCalendarCellTrigger' })
 
   protected readonly props = computed(() => this.calendar.store.getCellTriggerProps(this.day()))
-  protected readonly dayValue = computed(() => this.calendar.store.formatter.dayOfMonth(this.day().date))
+  protected readonly display = computed(() =>
+    getCellDisplayValues(
+      this.day(),
+      this.calendar.store.formatter,
+      this.calendar.state().showGregorian,
+      this.calendar.state().dateEmphasis,
+    ),
+  )
+  protected readonly primarySystem = computed(() =>
+    this.calendar.state().dateEmphasis === 'gregorian' ? 'gregorian' : 'hijri',
+  )
+  protected readonly secondarySystem = computed(() =>
+    this.calendar.state().dateEmphasis === 'gregorian' ? 'hijri' : 'gregorian',
+  )
 
   onClick(): void {
     // `select` re-checks these itself; this only avoids the pointless call.

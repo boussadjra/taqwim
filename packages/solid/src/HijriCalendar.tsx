@@ -1,4 +1,5 @@
 import type { CalendarDay, CalendarMonth } from '@taqwim/calendar-core'
+import { getCellDisplayValues } from '@taqwim/calendar-core'
 import { createEffect, onMount, splitProps, type JSX } from 'solid-js'
 import { HijriCalendarContext, useHijriCalendarContext } from './context'
 import { OPTION_KEYS, type HijriCalendarRootProps } from './types'
@@ -94,6 +95,12 @@ export function HijriCalendarRoot(props: HijriCalendarRootProps): JSX.Element {
           },
           get weekDays() {
             return state().weekDays
+          },
+          get modelValue() {
+            return state().value
+          },
+          get gregorianValue() {
+            return state().gregorianValue
           },
           get state() {
             return state()
@@ -276,12 +283,21 @@ export function HijriCalendarCell(props: DivProps & { day: CalendarDay; children
 export function HijriCalendarCellTrigger(
   props: ButtonProps & {
     day: CalendarDay
-    children?: JSX.Element | ((props: { dayValue: string; day: CalendarDay }) => JSX.Element)
+    children?:
+      | JSX.Element
+      | ((props: {
+          dayValue: string
+          hijriDayValue: string
+          gregorianDayValue: string
+          primaryDayValue: string
+          secondaryDayValue?: string
+          day: CalendarDay
+        }) => JSX.Element)
   },
 ): JSX.Element {
   const { store, state } = useHijriCalendarContext()
   const [local, rest] = splitProps(props, ['day', 'children'])
-  const dayValue = () => store.formatter.dayOfMonth(local.day.date)
+  const display = () => getCellDisplayValues(local.day, store.formatter, state().showGregorian, state().dateEmphasis)
 
   /*
    * The prop getters read the store's snapshot directly, which is not a signal.
@@ -311,8 +327,15 @@ export function HijriCalendarCellTrigger(
   return (
     <button {...triggerProps()} {...rest} onClick={onClick} onFocus={onFocus}>
       {local.children === undefined
-        ? dayValue()
-        : renderChildren(local.children, () => ({ dayValue: dayValue(), day: local.day }))}
+        ? display().dayValue
+        : renderChildren(local.children, () => ({
+            dayValue: display().dayValue,
+            hijriDayValue: display().hijriDayValue,
+            gregorianDayValue: display().gregorianDayValue,
+            primaryDayValue: display().primaryDayValue,
+            secondaryDayValue: display().secondaryDayValue,
+            day: local.day,
+          }))}
     </button>
   )
 }

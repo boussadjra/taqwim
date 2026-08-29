@@ -37,6 +37,12 @@ export interface HijriCalendarRootProps {
   minValue?: HijriDateObject
   /** The locale to use for formatting dates */
   locale?: string
+  /** Show the corresponding Gregorian date alongside Hijri dates. @default false */
+  showGregorian?: boolean
+  /** Which calendar is visually primary when both are shown. @default 'hijri' */
+  dateEmphasis?: import('@taqwim/calendar-core').DateEmphasis
+  /** Locale for Gregorian formatting. Defaults to `locale`. */
+  gregorianLocale?: string
   /** The number of months to display at once */
   numberOfMonths?: number
   /** Whether the calendar is disabled */
@@ -79,6 +85,8 @@ export interface HijriCalendarRootSlot {
     fixedWeeks: boolean
     /** The current selection */
     modelValue: HijriDateObject | HijriDateObject[] | undefined
+    /** Selection converted to Gregorian via `toGregorian`. */
+    gregorianValue: Date | Date[] | undefined
     /** The full snapshot, for anything the props above do not cover */
     state: CalendarState
     /** The store itself, for custom headers and other markup the primitives do not cover */
@@ -155,6 +163,9 @@ const { store, state } = useCalendar(
     minValue: props.minValue,
     maxValue: props.maxValue,
     locale: props.locale,
+    showGregorian: props.showGregorian,
+    dateEmphasis: props.dateEmphasis,
+    gregorianLocale: props.gregorianLocale,
     dir: props.dir,
     calendarLabel: props.calendarLabel,
     isDateDisabled: props.isDateDisabled,
@@ -226,6 +237,7 @@ function onKeydown(event: KeyboardEvent) {
       :locale="state.locale"
       :fixed-weeks="state.fixedWeeks"
       :model-value="state.value"
+      :gregorian-value="state.gregorianValue"
       :state="state"
       :store="store"
     />

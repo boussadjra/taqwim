@@ -1,11 +1,14 @@
 <script lang="ts">
+  import { getCellDisplayValues } from '@taqwim/calendar-core'
   import { getHijriCalendarContext } from './context'
   import type { HijriCalendarCellTriggerProps } from './types'
 
   let { day, children, ...rest }: HijriCalendarCellTriggerProps = $props()
 
   const calendar = getHijriCalendarContext()
-  const dayValue = $derived(calendar.store.formatter.dayOfMonth(day.date))
+  const display = $derived(
+    getCellDisplayValues(day, calendar.store.formatter, calendar.state.showGregorian, calendar.state.dateEmphasis),
+  )
 
   function onclick() {
     // `select` re-checks these itself; this only avoids the pointless call.
@@ -23,5 +26,16 @@
 </script>
 
 <button {...calendar.store.getCellTriggerProps(day)} {...rest} {onclick} {onfocus}>
-  {#if children}{@render children({ dayValue, day })}{:else}{dayValue}{/if}
+  {#if children}
+    {@render children({
+      dayValue: display.dayValue,
+      hijriDayValue: display.hijriDayValue,
+      gregorianDayValue: display.gregorianDayValue,
+      primaryDayValue: display.primaryDayValue,
+      secondaryDayValue: display.secondaryDayValue,
+      day,
+    })}
+  {:else}
+    {display.dayValue}
+  {/if}
 </button>

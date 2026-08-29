@@ -29,6 +29,9 @@ export interface HijriCalendarInputs {
   minValue?: HijriDateObject
   maxValue?: HijriDateObject
   locale?: string
+  showGregorian?: boolean
+  dateEmphasis?: import('@taqwim/calendar-core').DateEmphasis
+  gregorianLocale?: string
   dir?: 'ltr' | 'rtl'
   isDateDisabled?: Matcher
   isDateUnavailable?: Matcher

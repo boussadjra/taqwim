@@ -8,8 +8,12 @@ export interface HijriCalendarCellTriggerProps {
 
 export interface HijriCalendarCellTriggerSlot {
   default?: (props: {
-    /** The localised day number */
+    /** Primary display value for the cell */
     dayValue: string
+    hijriDayValue: string
+    gregorianDayValue: string
+    primaryDayValue: string
+    secondaryDayValue?: string
     /** The day, with all of its state flags */
     day: CalendarDay
     disabled: boolean
@@ -23,6 +27,7 @@ export interface HijriCalendarCellTriggerSlot {
 </script>
 
 <script setup lang="ts">
+import { getCellDisplayValues } from '@taqwim/calendar-core'
 import { computed } from 'vue'
 import { injectHijriCalendarRootContext } from './context'
 
@@ -46,7 +51,9 @@ const triggerProps = computed(() => {
   return store.getCellTriggerProps(props.day)
 })
 
-const dayValue = computed(() => store.formatter.dayOfMonth(props.day.date))
+const display = computed(() =>
+  getCellDisplayValues(props.day, store.formatter, state.value.showGregorian, state.value.dateEmphasis),
+)
 
 function onClick() {
   // `select` re-checks disabled/unavailable/readonly itself; this only avoids
@@ -68,7 +75,11 @@ function onFocus() {
 <template>
   <button v-bind="{ ...triggerProps, ...$attrs }" @click="onClick" @focus="onFocus">
     <slot
-      :day-value="dayValue"
+      :day-value="display.dayValue"
+      :hijri-day-value="display.hijriDayValue"
+      :gregorian-day-value="display.gregorianDayValue"
+      :primary-day-value="display.primaryDayValue"
+      :secondary-day-value="display.secondaryDayValue"
       :day="day"
       :disabled="day.isDisabled"
       :selected="day.isSelected"
@@ -77,7 +88,7 @@ function onFocus() {
       :unavailable="day.isUnavailable"
       :focused="day.isFocused"
     >
-      {{ dayValue }}
+      {{ display.dayValue }}
     </slot>
   </button>
 </template>

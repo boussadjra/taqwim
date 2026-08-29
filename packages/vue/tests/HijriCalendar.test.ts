@@ -2,7 +2,7 @@ import { getDaysLengthInMonth, type HijriDateObject } from '@taqwim/core'
 import { mount, type VueWrapper } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { h } from 'vue'
-import { HijriCalendarNext, HijriCalendarRoot } from '../src'
+import { HijriCalendarNext, HijriCalendarRoot, HijriCalendarCell, HijriCalendarCellTrigger } from '../src'
 import TestCalendar from './fixtures/TestCalendar.vue'
 
 const RAMADAN_1445: HijriDateObject = { hy: 1445, hm: 9, hd: 1 }
@@ -344,5 +344,61 @@ describe('today', () => {
     expect(wrapper.findAll('[data-today]')).toHaveLength(1)
 
     vi.useRealTimers()
+  })
+})
+
+describe('dual calendar presentation', () => {
+  it('defaults to Hijri-only presentation', () => {
+    const wrapper = mountCalendar()
+    expect(wrapper.get('[data-taqwim-calendar]').attributes('data-show-gregorian')).toBeUndefined()
+  })
+
+  it('exposes derived Gregorian selection in the root slot', () => {
+    let gregorian: Date | undefined
+    mount(HijriCalendarRoot, {
+      props: {
+        modelValue: { hy: 1445, hm: 9, hd: 1 },
+        defaultPlaceholder: RAMADAN_1445,
+        showGregorian: true,
+      },
+      slots: {
+        default: (props: { gregorianValue?: Date }) => {
+          gregorian = props.gregorianValue
+          return h('div')
+        },
+      },
+      attachTo: document.body,
+    })
+
+    expect(gregorian).toBeInstanceOf(Date)
+  })
+
+  it('exposes secondary day values from the cell trigger slot', () => {
+    const wrapper = mount(HijriCalendarRoot, {
+      props: { defaultPlaceholder: RAMADAN_1445, showGregorian: true },
+      slots: {
+        default: ({ months }: { months: { weeks: { date: { hy: number; hm: number; hd: number } }[][] }[] }) =>
+          h(
+            HijriCalendarCell,
+            { day: months[0]!.weeks.flat().find(d => d.date.hd === 9)! },
+            {
+              default: () =>
+                h(
+                  HijriCalendarCellTrigger,
+                  {
+                    day: months[0]!.weeks.flat().find(d => d.date.hd === 9)!,
+                  },
+                  {
+                    default: (slot: { secondaryDayValue?: string }) =>
+                      h('span', { 'data-testid': 'secondary' }, slot.secondaryDayValue ?? ''),
+                  },
+                ),
+            },
+          ),
+      },
+      attachTo: document.body,
+    })
+
+    expect(wrapper.get('[data-testid="secondary"]').text()).toBeTruthy()
   })
 })

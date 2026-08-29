@@ -54,6 +54,8 @@
   {@render children?.({
     months: calendar.state.months,
     weekDays: calendar.state.weekDays,
+    modelValue: calendar.state.value,
+    gregorianValue: calendar.state.gregorianValue,
     state: calendar.state,
     store,
   })}

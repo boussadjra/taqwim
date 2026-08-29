@@ -1,4 +1,5 @@
 import type { CalendarDay, CalendarMonth } from '@taqwim/calendar-core'
+import { getCellDisplayValues } from '@taqwim/calendar-core'
 import type { ComponentPropsWithoutRef, KeyboardEvent, ReactNode } from 'react'
 import { useEffect, useRef } from 'react'
 import { HijriCalendarProvider, useHijriCalendarContext } from './context'
@@ -50,6 +51,9 @@ const OPTION_KEYS = new Set<string>([
   'minValue',
   'maxValue',
   'locale',
+  'showGregorian',
+  'dateEmphasis',
+  'gregorianLocale',
   'dir',
   'isDateDisabled',
   'isDateUnavailable',
@@ -107,7 +111,14 @@ export function HijriCalendarRoot({ children, initialFocus, ...rest }: HijriCale
     <HijriCalendarProvider value={{ store, state }}>
       <div {...store.getRootProps()} {...domProps} ref={rootRef} onKeyDown={onKeyDown}>
         {typeof children === 'function'
-          ? children({ months: state.months, weekDays: state.weekDays, state, store })
+          ? children({
+              months: state.months,
+              weekDays: state.weekDays,
+              modelValue: state.value,
+              gregorianValue: state.gregorianValue,
+              state,
+              store,
+            })
           : children}
 
         {/* Inlined rather than classed: the headless package must not require a stylesheet. */}
@@ -264,10 +275,19 @@ export function HijriCalendarCellTrigger({
   ...rest
 }: ButtonProps & {
   day: CalendarDay
-  children?: ReactNode | ((props: { dayValue: string; day: CalendarDay }) => ReactNode)
+  children?:
+    | ReactNode
+    | ((props: {
+        dayValue: string
+        hijriDayValue: string
+        gregorianDayValue: string
+        primaryDayValue: string
+        secondaryDayValue?: string
+        day: CalendarDay
+      }) => ReactNode)
 }) {
-  const { store } = useHijriCalendarContext()
-  const dayValue = store.formatter.dayOfMonth(day.date)
+  const { store, state } = useHijriCalendarContext()
+  const display = getCellDisplayValues(day, store.formatter, state.showGregorian, state.dateEmphasis)
 
   function onClick() {
     // `select` re-checks these itself; this only avoids the pointless call.
@@ -285,7 +305,16 @@ export function HijriCalendarCellTrigger({
 
   return (
     <button {...withReactCasing(store.getCellTriggerProps(day))} {...rest} onClick={onClick} onFocus={onFocus}>
-      {typeof children === 'function' ? children({ dayValue, day }) : (children ?? dayValue)}
+      {typeof children === 'function'
+        ? children({
+            dayValue: display.dayValue,
+            hijriDayValue: display.hijriDayValue,
+            gregorianDayValue: display.gregorianDayValue,
+            primaryDayValue: display.primaryDayValue,
+            secondaryDayValue: display.secondaryDayValue,
+            day,
+          })
+        : (children ?? display.dayValue)}
     </button>
   )
 }

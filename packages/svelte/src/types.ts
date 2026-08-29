@@ -45,6 +45,9 @@ export interface HijriCalendarRootOptions {
   minValue?: HijriDateObject
   maxValue?: HijriDateObject
   locale?: string
+  showGregorian?: boolean
+  dateEmphasis?: import('@taqwim/calendar-core').DateEmphasis
+  gregorianLocale?: string
   dir?: 'ltr' | 'rtl'
   isDateDisabled?: Matcher
   isDateUnavailable?: Matcher
@@ -58,6 +61,8 @@ export interface HijriCalendarRootOptions {
 export interface HijriCalendarRenderProps {
   months: CalendarMonth[]
   weekDays: string[]
+  modelValue: HijriDateObject | HijriDateObject[] | undefined
+  gregorianValue: Date | Date[] | undefined
   state: CalendarState
   store: CalendarStore
 }
@@ -73,7 +78,18 @@ export type ButtonProps = Omit<HTMLButtonAttributes, 'children' | 'onclick' | 't
 export type HijriCalendarCellProps = DivProps & { day: CalendarDay; children?: Snippet }
 export type HijriCalendarCellTriggerProps = ButtonProps & {
   day: CalendarDay
-  children?: Snippet<[{ dayValue: string; day: CalendarDay }]>
+  children?: Snippet<
+    [
+      {
+        dayValue: string
+        hijriDayValue: string
+        gregorianDayValue: string
+        primaryDayValue: string
+        secondaryDayValue?: string
+        day: CalendarDay
+      },
+    ]
+  >
 }
 export type HijriCalendarGridProps = DivProps & {
   /** Optional for the single-month case, where it defaults to the only month. */
@@ -103,6 +119,9 @@ export const OPTION_KEYS = new Set<string>([
   'minValue',
   'maxValue',
   'locale',
+  'showGregorian',
+  'dateEmphasis',
+  'gregorianLocale',
   'dir',
   'isDateDisabled',
   'isDateUnavailable',
