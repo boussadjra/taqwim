@@ -229,7 +229,9 @@
   align-items: center;
   justify-content: center;
   width: var(--hc-cell-size);
-  height: var(--hc-cell-size);
+  min-height: var(--hc-cell-size);
+  height: auto;
+  padding: var(--hc-spacing-xs) 0;
   border: none;
   border-radius: var(--hc-cell-border-radius);
   background: transparent;
@@ -243,6 +245,47 @@
   /* Keep the tap target accessible even when the visual cell is small. */
   min-width: 1.75rem;
   min-height: 1.75rem;
+}
+
+.taqwim-calendar-cell-dates {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--hc-secondary-date-gap);
+  line-height: 1.1;
+  max-width: 100%;
+}
+
+.taqwim-calendar-cell-primary {
+  font-size: var(--hc-font-size-base);
+  font-weight: inherit;
+}
+
+.taqwim-calendar-cell-secondary {
+  font-size: var(--hc-secondary-date-font-size);
+  font-weight: var(--hc-font-weight-normal);
+  color: var(--hc-secondary-date-color);
+  opacity: var(--hc-secondary-date-opacity);
+  /* Gregorian numerals stay LTR inside RTL layouts. */
+  unicode-bidi: isolate;
+}
+
+[data-taqwim-calendar-cell-trigger][data-selected] .taqwim-calendar-cell-secondary,
+[data-taqwim-calendar-cell-trigger][data-today] .taqwim-calendar-cell-secondary {
+  color: inherit;
+  opacity: 0.9;
+}
+
+.taqwim-calendar-heading-secondary {
+  display: block;
+  width: 100%;
+  margin-top: var(--hc-spacing-xs);
+  font-size: var(--hc-secondary-date-font-size);
+  font-weight: var(--hc-font-weight-normal);
+  color: var(--hc-secondary-date-color);
+  text-align: center;
+  unicode-bidi: isolate;
 }
 
 [data-taqwim-calendar-cell-trigger]:hover:not([data-disabled]):not([data-unavailable]) {

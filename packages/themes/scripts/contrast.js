@@ -66,6 +66,14 @@ export const PAIRS = [
     minimum: 4.5,
   },
   {
+    id: 'secondary-date',
+    description: 'secondary date in a dual-date cell (secondary-date-color on the calendar surface)',
+    rule: '.taqwim-calendar-cell-secondary',
+    foreground: 'secondary-date-color',
+    surface: ['background'],
+    minimum: 4.5,
+  },
+  {
     id: 'outside-month',
     description: 'adjacent-month day (outside-month on the calendar surface)',
     rule: '[data-taqwim-calendar-cell-trigger][data-outside-month]',

@@ -84,6 +84,10 @@
   --hc-cell-size: 2rem;
   --hc-cell-border-radius: 0.375rem;
   --hc-cell-gap: var(--hc-spacing-xs);
+  --hc-secondary-date-font-size: var(--hc-font-size-sm);
+  --hc-secondary-date-opacity: 0.85;
+  --hc-secondary-date-color: var(--hc-muted-foreground);
+  --hc-secondary-date-gap: 0.125rem;
   --hc-nav-button-size: 2rem;
   --hc-nav-button-border-radius: var(--hc-cell-border-radius);
   --hc-grid-gap: var(--hc-cell-gap);
