@@ -82,6 +82,17 @@ test.describe('rendering', () => {
     await expect(day(page, 9)).toHaveAttribute('aria-label', /.+/)
     await expect(day(page, 9)).toHaveAttribute('data-value', '1445-09-09')
   })
+
+  test('exposes a hover tooltip label on every day cell', async ({ page }) => {
+    await open(page)
+
+    const cell = page.locator('[data-taqwim-calendar-cell]:not([data-outside-month])').filter({ has: day(page, 9) })
+    const tooltip = await cell.getAttribute('data-tooltip')
+    const label = await day(page, 9).getAttribute('aria-label')
+
+    expect(tooltip).toBeTruthy()
+    expect(tooltip).toBe(label)
+  })
 })
 
 test.describe('previously inert props', () => {
