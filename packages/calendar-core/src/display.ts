@@ -40,3 +40,8 @@ export function getCellDisplayValues(
     secondaryDayValue,
   }
 }
+
+/** Hover tooltip for a day trigger — mirrors the accessible name the store emits. */
+export function getCellTooltip(day: CalendarDay, formatter: CalendarFormatter, showGregorian: boolean): string {
+  return showGregorian ? formatter.dualFullDate(day.date) : formatter.fullDate(day.date)
+}

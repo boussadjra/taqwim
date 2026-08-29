@@ -147,6 +147,8 @@ describe('createCalendar dual presentation', () => {
     expect(store.getCellTriggerProps(day)['data-gregorian-value']).toBe(
       formatGregorianIsoDate(toGregorianDate(day.date)),
     )
+    expect(store.getCellTriggerProps(day)['data-tooltip']).toContain('1447')
+    expect(store.getCellTriggerProps(day)['data-tooltip']).toMatch(/2026|March/i)
   })
 
   it('keeps a stable snapshot when equivalent options are pushed again', () => {

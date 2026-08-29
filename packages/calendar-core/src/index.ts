@@ -1,4 +1,4 @@
-export { getCellDisplayValues, type CellDisplayValues } from './display'
+export { getCellDisplayValues, getCellTooltip, type CellDisplayValues } from './display'
 export { createCalendar } from './store'
 export { createFormatter, gregorianIsoDate } from './formatter'
 export {
@@ -29,6 +29,7 @@ export type {
   CalendarOptions,
   CalendarState,
   CalendarStore,
+  CellProps,
   CellTriggerProps,
   DateEmphasis,
   Direction,

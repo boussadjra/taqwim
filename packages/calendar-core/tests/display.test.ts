@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createFormatter } from '../src/formatter'
-import { getCellDisplayValues } from '../src/display'
+import { getCellDisplayValues, getCellTooltip } from '../src/display'
 import type { CalendarDay } from '../src/types'
 
 const RAMADAN_9: CalendarDay = {
@@ -34,5 +34,20 @@ describe('getCellDisplayValues', () => {
     const gregorianPrimary = getCellDisplayValues(RAMADAN_9, formatter, true, 'gregorian')
     expect(gregorianPrimary.primaryDayValue).toBe('19')
     expect(gregorianPrimary.secondaryDayValue).toBe('9')
+  })
+})
+
+describe('getCellTooltip', () => {
+  const formatter = createFormatter('en')
+
+  it('returns the Hijri full date when Gregorian is hidden', () => {
+    expect(getCellTooltip(RAMADAN_9, formatter, false)).toContain('1445')
+    expect(getCellTooltip(RAMADAN_9, formatter, false)).toMatch(/Ramadan|March/i)
+  })
+
+  it('returns both calendars when Gregorian is shown', () => {
+    const tooltip = getCellTooltip(RAMADAN_9, formatter, true)
+    expect(tooltip).toContain('1445')
+    expect(tooltip).toMatch(/2024|19/)
   })
 })

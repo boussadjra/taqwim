@@ -152,10 +152,13 @@ describe('accessibility props', () => {
         .months[0].weeks.flat()
         .find(d => d.isSelected)!
       const props = store.getCellTriggerProps(day)
+      const cell = store.getCellProps(day)
 
       expect(props['data-taqwim-calendar-cell-trigger']).toBe('')
       expect(props['data-value']).toBe('1446-03-10')
       expect(props['data-selected']).toBe('')
+      expect(props['data-tooltip']).toBe(props['aria-label'])
+      expect(cell['data-tooltip']).toBe(props['data-tooltip'])
       expect(props['aria-label']).toContain('1446')
       // `aria-selected` is invalid on `role="button"`; the enclosing gridcell
       // carries it instead.

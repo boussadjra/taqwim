@@ -1,6 +1,7 @@
 import { getDayInWeek, type HijriDateObject } from '@taqwim/core'
 import { compareDates, isSameDate, isSameMonth, shiftDays, shiftMonths, startOfMonth, todayHijri } from './dateUtils'
 import { sameState } from './equality'
+import { getCellTooltip } from './display'
 import { createFormatter, gregorianIsoDate } from './formatter'
 import { deriveGregorianValue, toGregorianDate } from './gregorian'
 import { buildMonthWeeks, buildWeekDays, visibleMonths, type RawDay } from './grid'
@@ -10,6 +11,7 @@ import type {
   CalendarOptions,
   CalendarState,
   CalendarStore,
+  CellProps,
   CellTriggerProps,
   DateEmphasis,
   Direction,
@@ -509,18 +511,33 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
     }
   }
 
+  function cellTooltip(day: CalendarDay): string {
+    const formatter = createFormatter(opt('locale'), gregorianLocale())
+    return getCellTooltip(day, formatter, opt('showGregorian'))
+  }
+
+  function getCellProps(day: CalendarDay): CellProps {
+    return {
+      'data-taqwim-calendar-cell': '',
+      'data-tooltip': cellTooltip(day),
+    }
+  }
+
   function getCellTriggerProps(day: CalendarDay): CellTriggerProps {
     const formatter = createFormatter(opt('locale'), gregorianLocale())
     const blocked = day.isDisabled || day.isUnavailable
     const showGregorian = opt('showGregorian')
+
+    const tooltip = cellTooltip(day)
 
     return {
       role: 'button',
       type: 'button',
       // Roving tabindex: exactly one cell is tabbable at a time.
       tabindex: day.isTabbable && !blocked ? 0 : -1,
-      'aria-label': showGregorian ? formatter.dualFullDate(day.date) : formatter.fullDate(day.date),
+      'aria-label': tooltip,
       'aria-disabled': blocked,
+      'data-tooltip': tooltip,
       'data-value': formatter.isoDate(day.date),
       ...(showGregorian ? { 'data-gregorian-value': gregorianIsoDate(day.date) } : {}),
       'data-taqwim-calendar-cell-trigger': '',
@@ -577,6 +594,7 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
     },
     getRootProps,
     getGridProps,
+    getCellProps,
     getCellTriggerProps,
     getPrevButtonProps,
     getNextButtonProps,

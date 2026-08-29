@@ -193,6 +193,13 @@ export interface GridProps {
   'data-readonly'?: ''
 }
 
+/** Attributes an adapter should spread onto a day's gridcell element. */
+export interface CellProps {
+  'data-taqwim-calendar-cell': ''
+  /** Full date label; `@taqwim/themes` shows this on hover/focus. */
+  'data-tooltip': string
+}
+
 /** Attributes an adapter should spread onto a day's trigger element. */
 export interface CellTriggerProps {
   role: 'button'
@@ -205,6 +212,8 @@ export interface CellTriggerProps {
    * `role="gridcell"` — which every adapter's Cell part already sets.
    */
   'aria-disabled': boolean
+  /** Shown on hover/focus by `@taqwim/themes`; matches `aria-label`. */
+  'data-tooltip': string
   'data-value': string
   'data-gregorian-value'?: string
   'data-taqwim-calendar-cell-trigger': ''
@@ -253,6 +262,7 @@ export interface CalendarStore {
   formatter: CalendarFormatter
   getRootProps: () => RootProps
   getGridProps: (month: CalendarMonth) => GridProps
+  getCellProps: (day: CalendarDay) => CellProps
   getCellTriggerProps: (day: CalendarDay) => CellTriggerProps
   getPrevButtonProps: () => PageButtonProps
   getNextButtonProps: () => PageButtonProps
