@@ -73,31 +73,74 @@
 
       <HijriCalendarHeading class="taqwim-calendar-heading">
         {#if selectableHeading}
-          <button
-            type="button"
-            class="taqwim-calendar-heading-button"
-            data-taqwim-heading="month"
-            aria-expanded={picker === 'month'}
-            onclick={() => togglePicker('month')}
+          <span
+            class="taqwim-calendar-heading-primary"
+            data-calendar-system={state.showGregorian && state.dateEmphasis === 'gregorian' ? 'gregorian' : 'hijri'}
           >
-            {months[state.placeholder.hm - 1]}
-          </button>
-          <button
-            type="button"
-            class="taqwim-calendar-heading-button"
-            data-taqwim-heading="year"
-            aria-expanded={picker === 'year'}
-            onclick={() => togglePicker('year')}
-          >
-            {state.placeholder.hy}
-          </button>
+            {#if state.showGregorian && state.dateEmphasis === 'gregorian'}
+              {state.headingValue}
+            {:else}
+              <button
+                type="button"
+                class="taqwim-calendar-heading-button"
+                data-taqwim-heading="month"
+                aria-expanded={picker === 'month'}
+                onclick={() => togglePicker('month')}
+              >
+                {months[state.placeholder.hm - 1]}
+              </button>
+              <button
+                type="button"
+                class="taqwim-calendar-heading-button"
+                data-taqwim-heading="year"
+                aria-expanded={picker === 'year'}
+                onclick={() => togglePicker('year')}
+              >
+                {state.placeholder.hy}
+              </button>
+            {/if}
+          </span>
           {#if state.showGregorian && state.secondaryHeadingValue}
-            <span class="taqwim-calendar-heading-secondary">{state.secondaryHeadingValue}</span>
+            <span
+              class="taqwim-calendar-heading-secondary"
+              data-calendar-system={state.dateEmphasis === 'gregorian' ? 'hijri' : 'gregorian'}
+            >
+              {#if state.dateEmphasis === 'gregorian'}
+                <button
+                  type="button"
+                  class="taqwim-calendar-heading-button"
+                  data-taqwim-heading="month"
+                  aria-expanded={picker === 'month'}
+                  onclick={() => togglePicker('month')}
+                >
+                  {months[state.placeholder.hm - 1]}
+                </button>
+                <button
+                  type="button"
+                  class="taqwim-calendar-heading-button"
+                  data-taqwim-heading="year"
+                  aria-expanded={picker === 'year'}
+                  onclick={() => togglePicker('year')}
+                >
+                  {state.placeholder.hy}
+                </button>
+              {:else}
+                {state.secondaryHeadingValue}
+              {/if}
+            </span>
           {/if}
         {:else}
-          <span>{state.headingValue}</span>
+          <span
+            class="taqwim-calendar-heading-primary"
+            data-calendar-system={state.showGregorian && state.dateEmphasis === 'gregorian' ? 'gregorian' : 'hijri'}
+            >{state.headingValue}</span
+          >
           {#if state.secondaryHeadingValue}
-            <span class="taqwim-calendar-heading-secondary">{state.secondaryHeadingValue}</span>
+            <span
+              class="taqwim-calendar-heading-secondary"
+              data-calendar-system={state.dateEmphasis === 'gregorian' ? 'hijri' : 'gregorian'}
+              >{state.secondaryHeadingValue}</span
+            >
           {/if}
         {/if}
       </HijriCalendarHeading>
