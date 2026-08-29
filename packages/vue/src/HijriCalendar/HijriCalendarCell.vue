@@ -8,9 +8,19 @@ export interface HijriCalendarCellProps {
 </script>
 
 <script setup lang="ts">
-defineProps<HijriCalendarCellProps>()
+import { computed } from 'vue'
+import { injectHijriCalendarRootContext } from './context'
+
+const props = defineProps<HijriCalendarCellProps>()
 
 defineOptions({ name: 'HijriCalendarCell' })
+
+const { store, state } = injectHijriCalendarRootContext()
+
+const cellProps = computed(() => {
+  void state.value
+  return store.getCellProps(props.day)
+})
 </script>
 
 <template>
@@ -18,7 +28,9 @@ defineOptions({ name: 'HijriCalendarCell' })
     role="gridcell"
     :aria-selected="day.isSelected || undefined"
     :aria-disabled="day.isDisabled || day.isUnavailable || undefined"
-    :data-taqwim-calendar-cell="''"
+    :data-taqwim-calendar-cell="cellProps['data-taqwim-calendar-cell']"
+    :data-tooltip="cellProps['data-tooltip']"
+    :title="cellProps['data-tooltip']"
     :data-disabled="day.isDisabled ? '' : undefined"
     :data-outside-month="day.isOutsideMonth ? '' : undefined"
   >
