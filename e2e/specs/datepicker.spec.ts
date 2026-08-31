@@ -67,10 +67,10 @@ test.describe('date picker popover', () => {
   test('selects and formats dates with the Civil calendar system', async ({ page }) => {
     await open(page, { calendar: 'islamic-civil' })
 
-    const civilToday = page.locator('[data-value="1448-03-16"]')
-    await expect(civilToday).toHaveAttribute('data-today', '')
+    const civilDate = page.locator('[data-value="1448-03-10"]')
+    await expect(civilDate).toHaveAttribute('aria-label', /Monday, 10 Rabi' al-awwal 1448/)
 
-    await page.locator('[data-value="1448-03-10"]').click()
+    await civilDate.click()
     await expect(page.locator('.taqwim-datepicker-input')).toHaveValue('1448-03-10')
   })
 })
