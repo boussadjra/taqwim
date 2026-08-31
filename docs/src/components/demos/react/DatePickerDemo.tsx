@@ -3,9 +3,11 @@
  * directories, and `CalendarDemo.tsx` for why they are duplicated.
  */
 import type { DateEmphasis, DatePickerInputDisplay } from '@taqwim/calendar-core'
-import type { HijriDateObject } from '@taqwim/core'
+import type { HijriCalendarId, HijriDateObject } from '@taqwim/core'
 import { HijriDatePicker, type HijriCalendarTheme } from '@taqwim/react-styled'
 import { useState, type ReactNode } from 'react'
+import { HIJRI_CALENDAR_OPTIONS, HIJRI_CALENDAR_SYSTEMS } from '../calendarSystems'
+import { DATE_EMPHASIS_OPTIONS, INPUT_DISPLAY_OPTIONS, LANGUAGE_OPTIONS } from '../demoOptions'
 
 const FORMATS = ['iYYYY-iMM-iDD', 'iDD/iMM/iYYYY', 'iD iMMMM iYYYY', 'iEEEE, iD iMMMM iYYYY']
 
@@ -17,6 +19,7 @@ export function DatePickerDemo({ theme = 'islamic' }: { theme?: HijriCalendarThe
   const [showGregorian, setShowGregorian] = useState(true)
   const [dateEmphasis, setDateEmphasis] = useState<DateEmphasis>('hijri')
   const [inputDisplay, setInputDisplay] = useState<DatePickerInputDisplay>('hijri')
+  const [calendarSystemId, setCalendarSystemId] = useState<HijriCalendarId>('islamic-umalqura')
   const [value, setValue] = useState<HijriDateObject | undefined>()
 
   const pickLocale = (next: string) => {
@@ -30,7 +33,22 @@ export function DatePickerDemo({ theme = 'islamic' }: { theme?: HijriCalendarThe
     <div className="demo not-content">
       <div className="demo-bar">
         <label className="demo-control">
-          Format
+          Hijri calendar
+          <select
+            value={calendarSystemId}
+            data-calendar-system-select
+            onChange={e => setCalendarSystemId(e.target.value as HijriCalendarId)}
+          >
+            {HIJRI_CALENDAR_OPTIONS.map(option => (
+              <option key={option.id} value={option.id}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className="demo-control">
+          Date format
           <select value={format} onChange={e => setFormat(e.target.value)}>
             {FORMATS.map(pattern => (
               <option key={pattern} value={pattern}>
@@ -41,49 +59,55 @@ export function DatePickerDemo({ theme = 'islamic' }: { theme?: HijriCalendarThe
         </label>
 
         <label className="demo-control">
-          Locale
+          Language
           <select value={locale} onChange={e => pickLocale(e.target.value)}>
-            {['en', 'ar', 'fr'].map(name => (
-              <option key={name} value={name}>
-                {name}
+            {LANGUAGE_OPTIONS.map(option => (
+              <option key={option.value} value={option.value}>
+                {option.label}
               </option>
             ))}
           </select>
         </label>
 
         <label className="demo-control">
-          <input type="checkbox" checked={editable} onChange={e => setEditable(e.target.checked)} /> editable
+          <input type="checkbox" checked={editable} onChange={e => setEditable(e.target.checked)} /> Allow typing
         </label>
 
         <label className="demo-control">
-          <input type="checkbox" checked={showGregorian} onChange={e => setShowGregorian(e.target.checked)} />{' '}
-          showGregorian
+          <input type="checkbox" checked={showGregorian} onChange={e => setShowGregorian(e.target.checked)} /> Show
+          Gregorian date
         </label>
 
         <label className="demo-control">
-          dateEmphasis
+          Emphasize
           <select
             value={dateEmphasis}
             disabled={!showGregorian}
             onChange={e => setDateEmphasis(e.target.value as DateEmphasis)}
           >
-            <option value="hijri">hijri</option>
-            <option value="gregorian">gregorian</option>
+            {DATE_EMPHASIS_OPTIONS.map(option => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </label>
 
         <label className="demo-control">
-          inputDisplay
+          Input shows
           <select value={inputDisplay} onChange={e => setInputDisplay(e.target.value as DatePickerInputDisplay)}>
-            <option value="hijri">hijri</option>
-            <option value="gregorian">gregorian</option>
-            <option value="both">both</option>
+            {INPUT_DISPLAY_OPTIONS.map(option => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </label>
       </div>
 
       <div className="demo-stage" data-tall>
         <HijriDatePicker
+          calendarSystem={HIJRI_CALENDAR_SYSTEMS[calendarSystemId]}
           theme={theme}
           format={format}
           locale={locale}

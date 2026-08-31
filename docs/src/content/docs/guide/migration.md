@@ -8,6 +8,13 @@ breaking changes. The old names get one final release that re-exports the new
 ones and is then deprecated, so nothing breaks the moment you update — but they
 will not receive fixes.
 
+## Multiple calendar systems require no migration
+
+Umm al-Qura remains the default for every core helper, calendar and date picker.
+Existing calls and component markup require no changes. Civil and TBLA are
+additive opt-ins through `calendarSystem`; see
+[Hijri calendar systems](/guide/calendar-systems/).
+
 | Before              | After                                                      |
 | ------------------- | ---------------------------------------------------------- |
 | `taqwim-core-utils` | `@taqwim/core`                                             |

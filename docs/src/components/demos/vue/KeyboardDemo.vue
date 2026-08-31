@@ -12,11 +12,14 @@
  * actually did. A key the store declines shows up unmarked, still doing
  * whatever the browser does with it.
  */
-import type { HijriDateObject } from '@taqwim/core'
+import type { HijriCalendarId, HijriDateObject } from '@taqwim/core'
 import { HijriCalendar } from '@taqwim/vue-styled'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { HIJRI_CALENDAR_OPTIONS, HIJRI_CALENDAR_SYSTEMS } from '../calendarSystems'
 
 const value = ref<HijriDateObject | undefined>()
+const calendarSystemId = ref<HijriCalendarId>('islamic-umalqura')
+const calendarSystem = computed(() => HIJRI_CALENDAR_SYSTEMS[calendarSystemId.value])
 const log = ref<{ id: number; label: string; consumed: boolean }[]>([])
 
 let nextId = 0
@@ -36,9 +39,20 @@ function onKeydown(event: KeyboardEvent) {
 
 <template>
   <div class="demo not-content">
+    <div class="demo-bar">
+      <label class="demo-control">
+        Hijri calendar
+        <select v-model="calendarSystemId" data-calendar-system-select>
+          <option v-for="option in HIJRI_CALENDAR_OPTIONS" :key="option.id" :value="option.id">
+            {{ option.label }}
+          </option>
+        </select>
+      </label>
+    </div>
+
     <!-- Bubble phase, so the adapter's own handler has already run. -->
     <div class="demo-stage" @keydown="onKeydown">
-      <HijriCalendar v-model="value" theme="islamic" />
+      <HijriCalendar v-model="value" :calendar-system="calendarSystem" theme="islamic" />
     </div>
 
     <div class="demo-keys" aria-live="polite">

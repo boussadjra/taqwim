@@ -28,6 +28,17 @@ same names, differing only where the host framework forces it — `v-model` in V
 | `pagedNavigation`       | `false` | Page by `numberOfMonths` rather than one month |
 | `nextPage` / `prevPage` | —       | Custom paging, e.g. a year at a time           |
 
+## Calendar system
+
+| Option           | Default            |                                                                                            |
+| ---------------- | ------------------ | ------------------------------------------------------------------------------------------ |
+| `calendarSystem` | `islamicUmmAlQura` | Strategy used for conversion, grid dates, navigation, validation and Gregorian equivalents |
+
+Import Civil or TBLA from its explicit `@taqwim/core/calendars/*` subpath and
+pass the object. There is no string registry. See
+[Hijri calendar systems](/guide/calendar-systems/) for imports, framework
+examples, range policy and persistence guidance.
+
 ## Grid shape
 
 | Option          | Default            |                                                            |

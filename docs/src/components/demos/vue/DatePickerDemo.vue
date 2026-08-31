@@ -4,9 +4,11 @@
  * directories, and `CalendarDemo.vue` for why they are duplicated.
  */
 import type { DateEmphasis, DatePickerInputDisplay } from '@taqwim/calendar-core'
-import type { HijriDateObject } from '@taqwim/core'
+import type { HijriCalendarId, HijriDateObject } from '@taqwim/core'
 import { HijriDatePicker, type HijriCalendarTheme } from '@taqwim/vue-styled'
 import { computed, ref, watch } from 'vue'
+import { HIJRI_CALENDAR_OPTIONS, HIJRI_CALENDAR_SYSTEMS } from '../calendarSystems'
+import { DATE_EMPHASIS_OPTIONS, INPUT_DISPLAY_OPTIONS, LANGUAGE_OPTIONS } from '../demoOptions'
 
 const FORMATS = ['iYYYY-iMM-iDD', 'iDD/iMM/iYYYY', 'iD iMMMM iYYYY', 'iEEEE, iD iMMMM iYYYY']
 
@@ -18,6 +20,8 @@ const editable = ref(true)
 const showGregorian = ref(true)
 const dateEmphasis = ref<DateEmphasis>('hijri')
 const inputDisplay = ref<DatePickerInputDisplay>('hijri')
+const calendarSystemId = ref<HijriCalendarId>('islamic-umalqura')
+const calendarSystem = computed(() => HIJRI_CALENDAR_SYSTEMS[calendarSystemId.value])
 const value = ref<HijriDateObject | undefined>()
 
 watch(locale, next => (dir.value = next === 'ar' ? 'rtl' : 'ltr'))
@@ -33,39 +37,49 @@ const selected = computed(() =>
   <div class="demo not-content">
     <div class="demo-bar">
       <label class="demo-control">
-        Format
+        Hijri calendar
+        <select v-model="calendarSystemId" data-calendar-system-select>
+          <option v-for="option in HIJRI_CALENDAR_OPTIONS" :key="option.id" :value="option.id">
+            {{ option.label }}
+          </option>
+        </select>
+      </label>
+
+      <label class="demo-control">
+        Date format
         <select v-model="format">
           <option v-for="pattern in FORMATS" :key="pattern" :value="pattern">{{ pattern }}</option>
         </select>
       </label>
 
       <label class="demo-control">
-        Locale
+        Language
         <select v-model="locale">
-          <option value="en">en</option>
-          <option value="ar">ar</option>
-          <option value="fr">fr</option>
+          <option v-for="option in LANGUAGE_OPTIONS" :key="option.value" :value="option.value">
+            {{ option.label }}
+          </option>
         </select>
       </label>
 
-      <label class="demo-control"> <input v-model="editable" type="checkbox" /> editable </label>
+      <label class="demo-control"> <input v-model="editable" type="checkbox" /> Allow typing </label>
 
-      <label class="demo-control"> <input v-model="showGregorian" type="checkbox" /> showGregorian </label>
+      <label class="demo-control"> <input v-model="showGregorian" type="checkbox" /> Show Gregorian date </label>
 
       <label class="demo-control">
-        dateEmphasis
+        Emphasize
         <select v-model="dateEmphasis" :disabled="!showGregorian">
-          <option value="hijri">hijri</option>
-          <option value="gregorian">gregorian</option>
+          <option v-for="option in DATE_EMPHASIS_OPTIONS" :key="option.value" :value="option.value">
+            {{ option.label }}
+          </option>
         </select>
       </label>
 
       <label class="demo-control">
-        inputDisplay
+        Input shows
         <select v-model="inputDisplay">
-          <option value="hijri">hijri</option>
-          <option value="gregorian">gregorian</option>
-          <option value="both">both</option>
+          <option v-for="option in INPUT_DISPLAY_OPTIONS" :key="option.value" :value="option.value">
+            {{ option.label }}
+          </option>
         </select>
       </label>
     </div>
@@ -73,6 +87,7 @@ const selected = computed(() =>
     <div class="demo-stage" data-tall>
       <HijriDatePicker
         v-model="value"
+        :calendar-system="calendarSystem"
         :theme="theme"
         :format="format"
         :locale="locale"

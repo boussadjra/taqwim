@@ -28,6 +28,20 @@ const calendar = createCalendar({
 calendar.subscribe(() => render(calendar.getSnapshot()))
 ```
 
+Pass an imported strategy to opt into another calendar. Leaving it out keeps
+the Umm al-Qura default.
+
+```typescript
+import { createCalendar } from '@taqwim/calendar-core'
+import { islamicCivil } from '@taqwim/core/calendars/islamic-civil'
+
+const calendar = createCalendar({ calendarSystem: islamicCivil })
+```
+
+The active strategy is used consistently for grid dates, navigation,
+validation, formatting and Gregorian equivalents. Changing it with
+`setOptions` rebuilds derived state without emitting a selection change.
+
 The store exposes a `subscribe` / `getSnapshot` pair, so it plugs directly into
 React's `useSyncExternalStore` and the equivalent primitive in every other
 framework. `getSnapshot()` returns a **stable reference** until something

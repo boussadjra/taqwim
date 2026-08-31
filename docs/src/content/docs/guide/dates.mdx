@@ -1,11 +1,14 @@
 ---
 title: Dates without a calendar
-description: Convert, compare, format and do arithmetic on Umm al-Qura Hijri dates with @taqwim/core — no framework, no DOM.
+description: Convert, compare, format and do arithmetic on Hijri dates with @taqwim/core — no framework, no DOM.
 ---
 
 Half of Taqwim has no user interface. `@taqwim/core` is the conversion table and
 the arithmetic on top of it: no framework, no DOM, and zero production dependencies. It runs in a server handler, a CLI, a worker,
 or a test.
+
+All examples on this page use the default Umm al-Qura calendar. Civil and TBLA
+are explicit opt-ins; see [Hijri calendar systems](/guide/calendar-systems/).
 
 If you came here for a calendar component, [Getting started](/guide/getting-started/)
 is the page you want. This one is for the date maths underneath it.
@@ -43,9 +46,9 @@ day back. Format it with `formatHijriDate`, or read the local parts, rather than
 round-tripping through UTC.
 :::
 
-## The supported range, and what happens outside it
+## The default supported range, and what happens outside it
 
-Conversion is table-driven from the Umm al-Qura data, so it is exact inside the
+Default conversion is table-driven from the Umm al-Qura data, so it is exact inside the
 table and impossible outside it. The table covers:
 
 | Calendar  | From          | To               |
@@ -110,7 +113,7 @@ addHijri({ hy: 1448, hm: 3, hd: 13 }, { years: 1, months: 2, weeks: 1, days: 3 }
 Note that `addHijriDays(start, 20)` lands in month 4, not on day 33 of month 3 —
 because Rabiʿ al-awwal 1448 has 29 days, not 30.
 
-## Month lengths are data, not a formula
+## Umm al-Qura month lengths are data, not a formula
 
 There is no leap rule to apply. A Hijri month is 29 or 30 days according to the
 table, and the only way to know which is to ask:

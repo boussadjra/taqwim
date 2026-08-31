@@ -71,6 +71,9 @@ appear between the source and the artifact, or between one runtime and another:
   locales do not default to a Hijri calendar for `MMMM`/`EEE` tokens.
 - **Every one of the ~56,000 days** the Umm al-Qura table covers, round-tripped
   Gregorian → Hijri → Gregorian in each cell.
+- **Civil and TBLA epoch, conversion and broad round-trip invariants**, loaded
+  from their ESM and CommonJS subpath exports. Their integer algorithms do not
+  use ICU's Hijri conversion data.
 
 ## Time zones are part of the matrix, on purpose
 

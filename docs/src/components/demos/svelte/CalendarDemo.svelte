@@ -9,9 +9,11 @@
    * difference in the adapters rather than in a shared wrapper.
    */
   import type { DateEmphasis } from '@taqwim/calendar-core'
-  import type { HijriDateObject } from '@taqwim/core'
+  import type { HijriCalendarId, HijriDateObject } from '@taqwim/core'
   import { themeNames } from '@taqwim/themes/names'
   import { HijriCalendar, type HijriCalendarSize, type HijriCalendarTheme } from '@taqwim/svelte-styled'
+  import { HIJRI_CALENDAR_OPTIONS, HIJRI_CALENDAR_SYSTEMS } from '../calendarSystems'
+  import { DATE_EMPHASIS_OPTIONS, DIRECTION_OPTIONS, LANGUAGE_OPTIONS, presetLabel, SIZE_OPTIONS } from '../demoOptions'
 
   let { theme: initialTheme = 'default', multiple: initialMultiple = false }: {
     theme?: HijriCalendarTheme
@@ -25,6 +27,8 @@
   let multiple = $state(initialMultiple)
   let showGregorian = $state(false)
   let dateEmphasis = $state<DateEmphasis>('hijri')
+  let calendarSystemId = $state<HijriCalendarId>('islamic-umalqura')
+  const calendarSystem = $derived(HIJRI_CALENDAR_SYSTEMS[calendarSystemId])
   let value = $state<HijriDateObject | HijriDateObject[] | undefined>()
 
   // Arabic reads right to left and its week starts on Saturday, so picking it
@@ -53,29 +57,37 @@
     <label class="demo-control">
       Theme
       <select bind:value={theme}>
-        {#each themeNames as name (name)}<option value={name}>{name}</option>{/each}
+        {#each themeNames as name (name)}<option value={name}>{presetLabel(name)}</option>{/each}
+      </select>
+    </label>
+
+    <label class="demo-control">
+      Hijri calendar
+      <select bind:value={calendarSystemId} data-calendar-system-select>
+        {#each HIJRI_CALENDAR_OPTIONS as option (option.id)}
+          <option value={option.id}>{option.label}</option>
+        {/each}
       </select>
     </label>
 
     <label class="demo-control">
       Size
       <select bind:value={size}>
-        {#each ['compact', 'default', 'large'] as name (name)}<option value={name}>{name}</option>{/each}
+        {#each SIZE_OPTIONS as option (option.value)}<option value={option.value}>{option.label}</option>{/each}
       </select>
     </label>
 
     <label class="demo-control">
-      Locale
+      Language
       <select value={locale} onchange={e => pickLocale((e.currentTarget as HTMLSelectElement).value)}>
-        {#each ['en', 'ar', 'fr'] as name (name)}<option value={name}>{name}</option>{/each}
+        {#each LANGUAGE_OPTIONS as option (option.value)}<option value={option.value}>{option.label}</option>{/each}
       </select>
     </label>
 
     <label class="demo-control">
-      Direction
+      Text direction
       <select bind:value={dir}>
-        <option value="ltr">ltr</option>
-        <option value="rtl">rtl</option>
+        {#each DIRECTION_OPTIONS as option (option.value)}<option value={option.value}>{option.label}</option>{/each}
       </select>
     </label>
 
@@ -84,24 +96,24 @@
         type="checkbox"
         checked={multiple}
         onchange={e => pickMultiple((e.currentTarget as HTMLInputElement).checked)}
-      /> multiple
+      /> Select multiple dates
     </label>
 
     <label class="demo-control">
-      <input type="checkbox" bind:checked={showGregorian} /> showGregorian
+      <input type="checkbox" bind:checked={showGregorian} /> Show Gregorian date
     </label>
 
     <label class="demo-control">
-      dateEmphasis
+      Emphasize
       <select bind:value={dateEmphasis} disabled={!showGregorian}>
-        <option value="hijri">hijri</option>
-        <option value="gregorian">gregorian</option>
+        {#each DATE_EMPHASIS_OPTIONS as option (option.value)}<option value={option.value}>{option.label}</option>{/each}
       </select>
     </label>
   </div>
 
   <div class="demo-stage">
     <HijriCalendar
+      {calendarSystem}
       {theme}
       {size}
       {locale}

@@ -8,10 +8,12 @@
  * in the adapters rather than in a shared wrapper.
  */
 import type { DateEmphasis } from '@taqwim/calendar-core'
-import type { HijriDateObject } from '@taqwim/core'
+import type { HijriCalendarId, HijriDateObject } from '@taqwim/core'
 import { themeNames } from '@taqwim/themes/names'
 import { HijriCalendar, type HijriCalendarSize, type HijriCalendarTheme } from '@taqwim/react-styled'
 import { useState, type ReactNode } from 'react'
+import { HIJRI_CALENDAR_OPTIONS, HIJRI_CALENDAR_SYSTEMS } from '../calendarSystems'
+import { DATE_EMPHASIS_OPTIONS, DIRECTION_OPTIONS, LANGUAGE_OPTIONS, presetLabel, SIZE_OPTIONS } from '../demoOptions'
 
 export function CalendarDemo({
   theme: initialTheme = 'default',
@@ -27,6 +29,7 @@ export function CalendarDemo({
   const [multiple, setMultiple] = useState(initialMultiple)
   const [showGregorian, setShowGregorian] = useState(false)
   const [dateEmphasis, setDateEmphasis] = useState<DateEmphasis>('hijri')
+  const [calendarSystemId, setCalendarSystemId] = useState<HijriCalendarId>('islamic-umalqura')
   const [value, setValue] = useState<HijriDateObject | HijriDateObject[] | undefined>()
 
   // Arabic reads right to left and its week starts on Saturday, so picking it
@@ -53,7 +56,22 @@ export function CalendarDemo({
           <select value={theme} onChange={e => setTheme(e.target.value as HijriCalendarTheme)}>
             {themeNames.map(name => (
               <option key={name} value={name}>
-                {name}
+                {presetLabel(name)}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className="demo-control">
+          Hijri calendar
+          <select
+            value={calendarSystemId}
+            data-calendar-system-select
+            onChange={e => setCalendarSystemId(e.target.value as HijriCalendarId)}
+          >
+            {HIJRI_CALENDAR_OPTIONS.map(option => (
+              <option key={option.id} value={option.id}>
+                {option.label}
               </option>
             ))}
           </select>
@@ -62,57 +80,65 @@ export function CalendarDemo({
         <label className="demo-control">
           Size
           <select value={size} onChange={e => setSize(e.target.value as HijriCalendarSize)}>
-            {['compact', 'default', 'large'].map(name => (
-              <option key={name} value={name}>
-                {name}
+            {SIZE_OPTIONS.map(option => (
+              <option key={option.value} value={option.value}>
+                {option.label}
               </option>
             ))}
           </select>
         </label>
 
         <label className="demo-control">
-          Locale
+          Language
           <select value={locale} onChange={e => pickLocale(e.target.value)}>
-            {['en', 'ar', 'fr'].map(name => (
-              <option key={name} value={name}>
-                {name}
+            {LANGUAGE_OPTIONS.map(option => (
+              <option key={option.value} value={option.value}>
+                {option.label}
               </option>
             ))}
           </select>
         </label>
 
         <label className="demo-control">
-          Direction
+          Text direction
           <select value={dir} onChange={e => setDir(e.target.value as 'ltr' | 'rtl')}>
-            <option value="ltr">ltr</option>
-            <option value="rtl">rtl</option>
+            {DIRECTION_OPTIONS.map(option => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </label>
 
         <label className="demo-control">
-          <input type="checkbox" checked={multiple} onChange={e => pickMultiple(e.target.checked)} /> multiple
+          <input type="checkbox" checked={multiple} onChange={e => pickMultiple(e.target.checked)} /> Select multiple
+          dates
         </label>
 
         <label className="demo-control">
-          <input type="checkbox" checked={showGregorian} onChange={e => setShowGregorian(e.target.checked)} />{' '}
-          showGregorian
+          <input type="checkbox" checked={showGregorian} onChange={e => setShowGregorian(e.target.checked)} /> Show
+          Gregorian date
         </label>
 
         <label className="demo-control">
-          dateEmphasis
+          Emphasize
           <select
             value={dateEmphasis}
             disabled={!showGregorian}
             onChange={e => setDateEmphasis(e.target.value as DateEmphasis)}
           >
-            <option value="hijri">hijri</option>
-            <option value="gregorian">gregorian</option>
+            {DATE_EMPHASIS_OPTIONS.map(option => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </label>
       </div>
 
       <div className="demo-stage">
         <HijriCalendar
+          calendarSystem={HIJRI_CALENDAR_SYSTEMS[calendarSystemId]}
           theme={theme}
           size={size}
           locale={locale}

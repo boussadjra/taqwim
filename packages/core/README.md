@@ -2,7 +2,9 @@
 
 ## Overview
 
-Taqwim provides a collection of utilities and components designed for managing Hijri dates in frontend applications. It includes a Hijri date converter, handler, and formatter built on the Umm al-Qura calendar system.
+Taqwim provides utilities for converting, validating, formatting and calculating
+Hijri dates. Umm al-Qura is the compatible default; deterministic Civil and
+TBLA calendars are available as explicit opt-ins.
 
 ## Installation
 
@@ -22,9 +24,26 @@ const hijriDate = toHijri(gregorianDate)
 console.log(hijriDate) // { hy: 1445, hm:9, hd: 1 }
 ```
 
+### Civil and TBLA
+
+Optional calendars use separate entry points, so default users do not bundle
+them.
+
+```javascript
+import { toHijri } from '@taqwim/core'
+import { islamicCivil } from '@taqwim/core/calendars/islamic-civil'
+
+toHijri('2026-08-30', { calendarSystem: islamicCivil })
+// { hy: 1448, hm: 3, hd: 16 }
+```
+
+Use `@taqwim/core/calendars/islamic-tbla` for the Thursday-epoch TBLA variant.
+Both are deterministic tabular algorithms. Omitting `calendarSystem` always
+means Umm al-Qura.
+
 ## Runtimes
 
-No DOM, nothing from `node:`, and one dependency. The built package is tested on
+No DOM, nothing from `node:`, and zero production dependencies. The built package is tested on
 every release across **runtime × module format × time zone**:
 
 |             | ESM | CommonJS |

@@ -4,8 +4,10 @@
    * directories, and `CalendarDemo.svelte` for why they are duplicated.
    */
   import type { DateEmphasis, DatePickerInputDisplay } from '@taqwim/calendar-core'
-  import type { HijriDateObject } from '@taqwim/core'
+  import type { HijriCalendarId, HijriDateObject } from '@taqwim/core'
   import { HijriDatePicker, type HijriCalendarTheme } from '@taqwim/svelte-styled'
+  import { HIJRI_CALENDAR_OPTIONS, HIJRI_CALENDAR_SYSTEMS } from '../calendarSystems'
+  import { DATE_EMPHASIS_OPTIONS, INPUT_DISPLAY_OPTIONS, LANGUAGE_OPTIONS } from '../demoOptions'
 
   const FORMATS = ['iYYYY-iMM-iDD', 'iDD/iMM/iYYYY', 'iD iMMMM iYYYY', 'iEEEE, iD iMMMM iYYYY']
 
@@ -18,6 +20,8 @@
   let showGregorian = $state(true)
   let dateEmphasis = $state<DateEmphasis>('hijri')
   let inputDisplay = $state<DatePickerInputDisplay>('hijri')
+  let calendarSystemId = $state<HijriCalendarId>('islamic-umalqura')
+  const calendarSystem = $derived(HIJRI_CALENDAR_SYSTEMS[calendarSystemId])
   let value = $state<HijriDateObject | undefined>()
 
   const pickLocale = (next: string) => {
@@ -33,43 +37,50 @@
 <div class="demo not-content">
   <div class="demo-bar">
     <label class="demo-control">
-      Format
+      Hijri calendar
+      <select bind:value={calendarSystemId} data-calendar-system-select>
+        {#each HIJRI_CALENDAR_OPTIONS as option (option.id)}
+          <option value={option.id}>{option.label}</option>
+        {/each}
+      </select>
+    </label>
+
+    <label class="demo-control">
+      Date format
       <select bind:value={format}>
         {#each FORMATS as pattern (pattern)}<option value={pattern}>{pattern}</option>{/each}
       </select>
     </label>
 
     <label class="demo-control">
-      Locale
+      Language
       <select value={locale} onchange={e => pickLocale((e.currentTarget as HTMLSelectElement).value)}>
-        {#each ['en', 'ar', 'fr'] as name (name)}<option value={name}>{name}</option>{/each}
+        {#each LANGUAGE_OPTIONS as option (option.value)}<option value={option.value}>{option.label}</option>{/each}
       </select>
     </label>
 
-    <label class="demo-control"> <input type="checkbox" bind:checked={editable} /> editable </label>
+    <label class="demo-control"> <input type="checkbox" bind:checked={editable} /> Allow typing </label>
 
-    <label class="demo-control"> <input type="checkbox" bind:checked={showGregorian} /> showGregorian </label>
+    <label class="demo-control"> <input type="checkbox" bind:checked={showGregorian} /> Show Gregorian date </label>
 
     <label class="demo-control">
-      dateEmphasis
+      Emphasize
       <select bind:value={dateEmphasis} disabled={!showGregorian}>
-        <option value="hijri">hijri</option>
-        <option value="gregorian">gregorian</option>
+        {#each DATE_EMPHASIS_OPTIONS as option (option.value)}<option value={option.value}>{option.label}</option>{/each}
       </select>
     </label>
 
     <label class="demo-control">
-      inputDisplay
+      Input shows
       <select bind:value={inputDisplay}>
-        <option value="hijri">hijri</option>
-        <option value="gregorian">gregorian</option>
-        <option value="both">both</option>
+        {#each INPUT_DISPLAY_OPTIONS as option (option.value)}<option value={option.value}>{option.label}</option>{/each}
       </select>
     </label>
   </div>
 
   <div class="demo-stage" data-tall>
     <HijriDatePicker
+      {calendarSystem}
       {theme}
       {format}
       {locale}

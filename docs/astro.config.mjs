@@ -167,6 +167,7 @@ export default defineConfig({
           items: [
             { label: 'Getting started', slug: 'guide/getting-started' },
             { label: 'Dates without a calendar', slug: 'guide/dates' },
+            { label: 'Hijri calendar systems', slug: 'guide/calendar-systems' },
             { label: 'Theming', slug: 'guide/theming' },
             { label: 'Accessibility and keyboard', slug: 'guide/accessibility' },
             { label: 'Server rendering', slug: 'guide/ssr' },

@@ -8,10 +8,12 @@
  * in the adapters rather than in a shared wrapper.
  */
 import type { DateEmphasis } from '@taqwim/calendar-core'
-import type { HijriDateObject } from '@taqwim/core'
+import type { HijriCalendarId, HijriDateObject } from '@taqwim/core'
 import { themeNames } from '@taqwim/themes/names'
 import { HijriCalendar, type HijriCalendarSize, type HijriCalendarTheme } from '@taqwim/solid-styled'
 import { createSignal, For, type JSX } from 'solid-js'
+import { HIJRI_CALENDAR_OPTIONS, HIJRI_CALENDAR_SYSTEMS } from '../calendarSystems'
+import { DATE_EMPHASIS_OPTIONS, DIRECTION_OPTIONS, LANGUAGE_OPTIONS, presetLabel, SIZE_OPTIONS } from '../demoOptions'
 
 export function CalendarDemo(props: { theme?: HijriCalendarTheme; multiple?: boolean }): JSX.Element {
   /*
@@ -25,6 +27,7 @@ export function CalendarDemo(props: { theme?: HijriCalendarTheme; multiple?: boo
   const [multiple, setMultiple] = createSignal(props.multiple ?? false)
   const [showGregorian, setShowGregorian] = createSignal(false)
   const [dateEmphasis, setDateEmphasis] = createSignal<DateEmphasis>('hijri')
+  const [calendarSystemId, setCalendarSystemId] = createSignal<HijriCalendarId>('islamic-umalqura')
   const [value, setValue] = createSignal<HijriDateObject | HijriDateObject[] | undefined>()
 
   // Arabic reads right to left and its week starts on Saturday, so picking it
@@ -61,7 +64,24 @@ export function CalendarDemo(props: { theme?: HijriCalendarTheme; multiple?: boo
             <For each={themeNames}>
               {name => (
                 <option value={name} selected={name === theme()}>
-                  {name}
+                  {presetLabel(name)}
+                </option>
+              )}
+            </For>
+          </select>
+        </label>
+
+        <label class="demo-control">
+          Hijri calendar
+          <select
+            value={calendarSystemId()}
+            data-calendar-system-select
+            onChange={e => setCalendarSystemId(e.currentTarget.value as HijriCalendarId)}
+          >
+            <For each={HIJRI_CALENDAR_OPTIONS}>
+              {option => (
+                <option value={option.id} selected={option.id === calendarSystemId()}>
+                  {option.label}
                 </option>
               )}
             </For>
@@ -71,10 +91,10 @@ export function CalendarDemo(props: { theme?: HijriCalendarTheme; multiple?: boo
         <label class="demo-control">
           Size
           <select value={size()} onChange={e => setSize(e.currentTarget.value as HijriCalendarSize)}>
-            <For each={['compact', 'default', 'large']}>
-              {name => (
-                <option value={name} selected={name === size()}>
-                  {name}
+            <For each={SIZE_OPTIONS}>
+              {option => (
+                <option value={option.value} selected={option.value === size()}>
+                  {option.label}
                 </option>
               )}
             </For>
@@ -82,12 +102,12 @@ export function CalendarDemo(props: { theme?: HijriCalendarTheme; multiple?: boo
         </label>
 
         <label class="demo-control">
-          Locale
+          Language
           <select value={locale()} onChange={e => pickLocale(e.currentTarget.value)}>
-            <For each={['en', 'ar', 'fr']}>
-              {name => (
-                <option value={name} selected={name === locale()}>
-                  {name}
+            <For each={LANGUAGE_OPTIONS}>
+              {option => (
+                <option value={option.value} selected={option.value === locale()}>
+                  {option.label}
                 </option>
               )}
             </For>
@@ -95,45 +115,49 @@ export function CalendarDemo(props: { theme?: HijriCalendarTheme; multiple?: boo
         </label>
 
         <label class="demo-control">
-          Direction
+          Text direction
           <select value={dir()} onChange={e => setDir(e.currentTarget.value as 'ltr' | 'rtl')}>
-            <option value="ltr" selected={dir() === 'ltr'}>
-              ltr
-            </option>
-            <option value="rtl" selected={dir() === 'rtl'}>
-              rtl
-            </option>
+            <For each={DIRECTION_OPTIONS}>
+              {option => (
+                <option value={option.value} selected={option.value === dir()}>
+                  {option.label}
+                </option>
+              )}
+            </For>
           </select>
         </label>
 
         <label class="demo-control">
-          <input type="checkbox" checked={multiple()} onChange={e => pickMultiple(e.currentTarget.checked)} /> multiple
+          <input type="checkbox" checked={multiple()} onChange={e => pickMultiple(e.currentTarget.checked)} /> Select
+          multiple dates
         </label>
 
         <label class="demo-control">
           <input type="checkbox" checked={showGregorian()} onChange={e => setShowGregorian(e.currentTarget.checked)} />{' '}
-          showGregorian
+          Show Gregorian date
         </label>
 
         <label class="demo-control">
-          dateEmphasis
+          Emphasize
           <select
             value={dateEmphasis()}
             disabled={!showGregorian()}
             onChange={e => setDateEmphasis(e.currentTarget.value as DateEmphasis)}
           >
-            <option value="hijri" selected={dateEmphasis() === 'hijri'}>
-              hijri
-            </option>
-            <option value="gregorian" selected={dateEmphasis() === 'gregorian'}>
-              gregorian
-            </option>
+            <For each={DATE_EMPHASIS_OPTIONS}>
+              {option => (
+                <option value={option.value} selected={option.value === dateEmphasis()}>
+                  {option.label}
+                </option>
+              )}
+            </For>
           </select>
         </label>
       </div>
 
       <div class="demo-stage">
         <HijriCalendar
+          calendarSystem={HIJRI_CALENDAR_SYSTEMS[calendarSystemId()]}
           theme={theme()}
           size={size()}
           locale={locale()}
