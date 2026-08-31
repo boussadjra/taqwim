@@ -1,11 +1,8 @@
 import {
-  EPOCH_DAY_RANGE,
-  epochDayOf,
-  epochDayToDate,
   getDaysLengthInMonth,
   isEqual,
-  toGregorian,
-  toHijri,
+  islamicUmmAlQura,
+  type HijriCalendarSystem,
   type HijriDateObject,
 } from '@taqwim/core'
 
@@ -18,42 +15,44 @@ import {
  * al-Qura table, and a calendar grid routinely reaches past its edges.
  */
 
-export function toEpochDayOrNull(date: HijriDateObject): number | null {
-  try {
-    const gregorian = toGregorian(date)
-    return gregorian ? epochDayOf(gregorian) : null
-  } catch {
-    return null
-  }
+export function toEpochDayOrNull(
+  date: HijriDateObject,
+  calendarSystem: HijriCalendarSystem = islamicUmmAlQura,
+): number | null {
+  return calendarSystem.toEpochDay(date)
 }
 
-export function fromEpochDayOrNull(epochDay: number): HijriDateObject | null {
-  if (epochDay < EPOCH_DAY_RANGE.min || epochDay > EPOCH_DAY_RANGE.max) {
-    return null
-  }
-  try {
-    return toHijri(epochDayToDate(epochDay))
-  } catch {
-    return null
-  }
+export function fromEpochDayOrNull(
+  epochDay: number,
+  calendarSystem: HijriCalendarSystem = islamicUmmAlQura,
+): HijriDateObject | null {
+  return calendarSystem.fromEpochDay(epochDay)
 }
 
 /** Shift a Hijri date by whole days, or `null` if the result leaves the supported range. */
-export function shiftDays(date: HijriDateObject, days: number): HijriDateObject | null {
-  const epochDay = toEpochDayOrNull(date)
-  return epochDay === null ? null : fromEpochDayOrNull(epochDay + days)
+export function shiftDays(
+  date: HijriDateObject,
+  days: number,
+  calendarSystem: HijriCalendarSystem = islamicUmmAlQura,
+): HijriDateObject | null {
+  const epochDay = toEpochDayOrNull(date, calendarSystem)
+  return epochDay === null ? null : fromEpochDayOrNull(epochDay + days, calendarSystem)
 }
 
 /**
  * Shift by whole months, clamping the day to the target month's length so that
  * e.g. the 30th of a 30-day month lands on the 29th of a 29-day month.
  */
-export function shiftMonths(date: HijriDateObject, months: number): HijriDateObject | null {
+export function shiftMonths(
+  date: HijriDateObject,
+  months: number,
+  calendarSystem: HijriCalendarSystem = islamicUmmAlQura,
+): HijriDateObject | null {
   const absolute = date.hy * 12 + (date.hm - 1) + months
   const hy = Math.floor(absolute / 12)
   const hm = (absolute % 12) + 1
 
-  const daysInMonth = getDaysLengthInMonth(hy, hm)
+  const daysInMonth = getDaysLengthInMonth(hy, hm, { calendarSystem })
   if (daysInMonth < 0) {
     return null
   }
@@ -79,10 +78,8 @@ export function isSameMonth(a: HijriDateObject, b: HijriDateObject): boolean {
 }
 
 /** Today as a Hijri date, or `null` if the system clock sits outside the table. */
-export function todayHijri(): HijriDateObject | null {
-  try {
-    return toHijri(new Date())
-  } catch {
-    return null
-  }
+export function todayHijri(calendarSystem: HijriCalendarSystem = islamicUmmAlQura): HijriDateObject | null {
+  const today = new Date()
+  const epochDay = Math.floor(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) / 86_400_000)
+  return calendarSystem.fromEpochDay(epochDay)
 }

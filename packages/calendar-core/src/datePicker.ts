@@ -1,4 +1,11 @@
-import { formatHijriDate, isValidHijriDate, toHijri, type HijriDateObject } from '@taqwim/core'
+import {
+  formatHijriDate,
+  islamicUmmAlQura,
+  isValidHijriDate,
+  toHijri,
+  type HijriCalendarSystem,
+  type HijriDateObject,
+} from '@taqwim/core'
 import {
   DEFAULT_GREGORIAN_FORMAT_OPTIONS,
   formatGregorianDate,
@@ -16,6 +23,7 @@ export interface DatePickerFormatOptions {
   locale: string
   gregorianLocale: string
   inputDisplay: DatePickerInputDisplay
+  calendarSystem?: HijriCalendarSystem
 }
 
 export interface DatePickerFormattedValues {
@@ -40,9 +48,10 @@ export function formatDatePickerValues(
   hijri: HijriDateObject | undefined,
   options: DatePickerFormatOptions,
 ): DatePickerFormattedValues {
-  const hijriValue = hijri ? formatHijriDate(hijri, options.hijriFormat, options.locale) : ''
+  const calendarSystem = options.calendarSystem ?? islamicUmmAlQura
+  const hijriValue = hijri ? formatHijriDate(hijri, options.hijriFormat, options.locale, { calendarSystem }) : ''
   const gregorianValue = hijri
-    ? formatGregorianForPicker(toGregorianDate(hijri), options.gregorianLocale, options.gregorianFormat)
+    ? formatGregorianForPicker(toGregorianDate(hijri, calendarSystem), options.gregorianLocale, options.gregorianFormat)
     : ''
 
   let value: string
@@ -65,7 +74,7 @@ const HIJRI_DMY = /^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/
 const GREGORIAN_YMD = /^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$/
 const GREGORIAN_DMY = /^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/
 
-function parseHijriNumeric(text: string): HijriDateObject | null {
+function parseHijriNumeric(text: string, calendarSystem: HijriCalendarSystem): HijriDateObject | null {
   const trimmed = text.trim()
   const ymd = HIJRI_YMD.exec(trimmed)
   const dmy = ymd ? null : HIJRI_DMY.exec(trimmed)
@@ -76,10 +85,10 @@ function parseHijriNumeric(text: string): HijriDateObject | null {
     : [Number(dmy![3]), Number(dmy![2]), Number(dmy![1])]
 
   const candidate = { hy, hm, hd }
-  return isValidHijriDate(candidate) ? candidate : null
+  return isValidHijriDate(candidate, { calendarSystem }) ? candidate : null
 }
 
-function parseGregorianNumeric(text: string): HijriDateObject | null {
+function parseGregorianNumeric(text: string, calendarSystem: HijriCalendarSystem): HijriDateObject | null {
   const trimmed = text.trim()
   const ymd = GREGORIAN_YMD.exec(trimmed)
   const dmy = ymd ? null : GREGORIAN_DMY.exec(trimmed)
@@ -94,7 +103,7 @@ function parseGregorianNumeric(text: string): HijriDateObject | null {
     return null
   }
 
-  return toHijri(date)
+  return toHijri(date, { calendarSystem })
 }
 
 /**
@@ -108,15 +117,16 @@ function parseGregorianNumeric(text: string): HijriDateObject | null {
 export function parseDatePickerDraft(
   text: string,
   inputDisplay: DatePickerInputDisplay,
+  calendarSystem: HijriCalendarSystem = islamicUmmAlQura,
 ): HijriDateObject | null | 'empty' {
   const trimmed = text.trim()
   if (trimmed === '') return 'empty'
 
   if (inputDisplay === 'gregorian') {
-    return parseGregorianNumeric(trimmed)
+    return parseGregorianNumeric(trimmed, calendarSystem)
   }
 
-  return parseHijriNumeric(trimmed)
+  return parseHijriNumeric(trimmed, calendarSystem)
 }
 
 export { DEFAULT_GREGORIAN_FORMAT_OPTIONS, BOTH_SEPARATOR }

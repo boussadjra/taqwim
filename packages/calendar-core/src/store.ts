@@ -1,4 +1,4 @@
-import { getDayInWeek, type HijriDateObject } from '@taqwim/core'
+import { getDayInWeek, islamicUmmAlQura, type HijriCalendarSystem, type HijriDateObject } from '@taqwim/core'
 import { compareDates, isSameDate, isSameMonth, shiftDays, shiftMonths, startOfMonth, todayHijri } from './dateUtils'
 import { sameState } from './equality'
 import { getCellTooltip } from './display'
@@ -27,6 +27,7 @@ import type {
  * `Direction` instead of narrowing to the literal `'ltr'`.
  */
 interface DefaultedOptions {
+  calendarSystem: HijriCalendarSystem
   weekStartsOn: WeekStartsOn
   weekdayFormat: WeekDayFormat
   fixedWeeks: boolean
@@ -44,6 +45,7 @@ interface DefaultedOptions {
 }
 
 const DEFAULTS: DefaultedOptions = {
+  calendarSystem: islamicUmmAlQura,
   weekStartsOn: 0,
   weekdayFormat: 'weekDaysMedium',
   fixedWeeks: false,
@@ -66,8 +68,8 @@ function toArray(value: HijriDateObject | HijriDateObject[] | undefined): HijriD
 }
 
 /** How far into its week a date sits, given where the week starts. 0 = first column. */
-function weekdayOffset(date: HijriDateObject, weekStartsOn: number): number {
-  const dayOfWeek = getDayInWeek(date)
+function weekdayOffset(date: HijriDateObject, weekStartsOn: number, calendarSystem: HijriCalendarSystem): number {
+  const dayOfWeek = getDayInWeek(date, { calendarSystem })
   return dayOfWeek === undefined ? 0 : (dayOfWeek - weekStartsOn + 7) % 7
 }
 
@@ -89,7 +91,8 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
     initialOptions.placeholder ??
     initialOptions.defaultPlaceholder ??
     startOfMonth(
-      toArray(initialOptions.value ?? initialOptions.defaultValue)[0] ?? todayHijri() ?? { hy: 1446, hm: 1, hd: 1 },
+      toArray(initialOptions.value ?? initialOptions.defaultValue)[0] ??
+        todayHijri(initialOptions.calendarSystem ?? islamicUmmAlQura) ?? { hy: 1446, hm: 1, hd: 1 },
     )
   let focusedDate: HijriDateObject | undefined
 
@@ -99,6 +102,7 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
     (options[key as keyof CalendarOptions] as DefaultedOptions[K] | undefined) ?? DEFAULTS[key]
 
   const gregorianLocale = () => options.gregorianLocale ?? opt('locale')
+  const calendarSystem = () => opt('calendarSystem')
 
   const currentValue = () => (options.value !== undefined ? options.value : internalValue)
   const currentPlaceholder = () => options.placeholder ?? internalPlaceholder
@@ -130,6 +134,7 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
   // ---------------------------------------------------------------- matchers
 
   function isOutOfBounds(date: HijriDateObject): boolean {
+    if (calendarSystem().toEpochDay(date) === null) return true
     const { minValue, maxValue } = options
     if (minValue && compareDates(date, minValue) < 0) return true
     if (maxValue && compareDates(date, maxValue) > 0) return true
@@ -166,7 +171,7 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
   function pageTarget(direction: 1 | -1): HijriDateObject | null {
     const placeholder = currentPlaceholder()
     const custom = direction === 1 ? options.nextPage : options.prevPage
-    return custom ? custom(placeholder) : shiftMonths(placeholder, direction * pageStep())
+    return custom ? custom(placeholder) : shiftMonths(placeholder, direction * pageStep(), calendarSystem())
   }
 
   function isPageDisabled(direction: 1 | -1): boolean {
@@ -274,7 +279,7 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
       return
     }
 
-    const today = todayHijri()
+    const today = todayHijri(calendarSystem())
     if (today && isVisible(today)) {
       focusDate(today)
       return
@@ -287,13 +292,13 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
 
   function moveFocus(days: number) {
     const from = focusedDate ?? startOfMonth(currentPlaceholder())
-    const next = shiftDays(from, days)
+    const next = shiftDays(from, days, calendarSystem())
     if (next) focusDate(next)
   }
 
   function moveFocusMonths(months: number) {
     const from = focusedDate ?? startOfMonth(currentPlaceholder())
-    const next = shiftMonths(from, months)
+    const next = shiftMonths(from, months, calendarSystem())
     if (next) focusDate(next)
   }
 
@@ -326,12 +331,12 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
         return true
       case 'Home': {
         const from = focusedDate ?? startOfMonth(currentPlaceholder())
-        moveFocus(-weekdayOffset(from, weekStartsOn))
+        moveFocus(-weekdayOffset(from, weekStartsOn, calendarSystem()))
         return true
       }
       case 'End': {
         const from = focusedDate ?? startOfMonth(currentPlaceholder())
-        moveFocus(6 - weekdayOffset(from, weekStartsOn))
+        moveFocus(6 - weekdayOffset(from, weekStartsOn, calendarSystem()))
         return true
       }
       case 'PageUp':
@@ -359,7 +364,7 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
   ): CalendarDay {
     return {
       date: raw.date,
-      gregorianDate: toGregorianDate(raw.date),
+      gregorianDate: toGregorianDate(raw.date, calendarSystem()),
       dayInMonth: raw.dayInMonth,
       dayOfWeek: raw.dayOfWeek,
       isOutsideMonth: raw.isOutsideMonth,
@@ -385,7 +390,7 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
   function tabbableDate(): HijriDateObject | undefined {
     if (focusedDate) return focusedDate
 
-    const candidates = [toArray(currentValue())[0], todayHijri() ?? undefined].filter(
+    const candidates = [toArray(currentValue())[0], todayHijri(calendarSystem()) ?? undefined].filter(
       (date): date is HijriDateObject => Boolean(date) && isVisible(date as HijriDateObject),
     )
 
@@ -405,7 +410,7 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
   }
 
   function monthHeadings(month: HijriDateObject, formatter: ReturnType<typeof createFormatter>) {
-    const hijri = formatter.monthYear(month)
+    const hijri = formatter.monthYear(startOfMonth(month))
     const gregorian = formatter.gregorianMonthRange(month)
 
     if (!opt('showGregorian')) {
@@ -422,13 +427,14 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
   function build(): CalendarState {
     const placeholder = currentPlaceholder()
     const locale = opt('locale')
-    const formatter = createFormatter(locale, gregorianLocale())
+    const activeCalendarSystem = calendarSystem()
+    const formatter = createFormatter(locale, gregorianLocale(), activeCalendarSystem)
     const showGregorian = opt('showGregorian')
     const dateEmphasis = opt('dateEmphasis')
     const weekStartsOn = opt('weekStartsOn')
     const fixedWeeks = opt('fixedWeeks')
     // Resolved once per build rather than once per cell.
-    const today = todayHijri() ?? undefined
+    const today = todayHijri(activeCalendarSystem) ?? undefined
     const tabbable = tabbableDate()
 
     const months: CalendarMonth[] = visibleMonths(placeholder, opt('numberOfMonths')).map(month => {
@@ -437,7 +443,7 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
         value: month,
         label: headings.label,
         secondaryLabel: headings.secondaryLabel,
-        weeks: buildMonthWeeks(month, weekStartsOn, fixedWeeks).map(week =>
+        weeks: buildMonthWeeks(month, weekStartsOn, fixedWeeks, activeCalendarSystem).map(week =>
           week.map(day => decorate(day, today, tabbable)),
         ),
       }
@@ -448,9 +454,10 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
     const primaryHeading = monthHeadings(placeholder, formatter)
 
     return {
+      calendarSystem: activeCalendarSystem,
       placeholder,
       value,
-      gregorianValue: deriveGregorianValue(value),
+      gregorianValue: deriveGregorianValue(value, activeCalendarSystem),
       focusedDate,
       months,
       weekDays: buildWeekDays(locale, opt('weekdayFormat'), weekStartsOn),
@@ -460,7 +467,7 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
         options.calendarLabel ??
         (showGregorian && primaryHeading.secondaryLabel
           ? `Calendar for ${primaryHeading.label}, ${primaryHeading.secondaryLabel}`
-          : `Calendar for ${formatter.monthYear(placeholder)}`),
+          : `Calendar for ${formatter.monthYear(startOfMonth(placeholder))}`),
       showGregorian,
       dateEmphasis,
       gregorianLocale: gregorianLocale(),
@@ -512,7 +519,7 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
   }
 
   function cellTooltip(day: CalendarDay): string {
-    const formatter = createFormatter(opt('locale'), gregorianLocale())
+    const formatter = createFormatter(opt('locale'), gregorianLocale(), calendarSystem())
     return getCellTooltip(day, formatter, opt('showGregorian'))
   }
 
@@ -524,7 +531,7 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
   }
 
   function getCellTriggerProps(day: CalendarDay): CellTriggerProps {
-    const formatter = createFormatter(opt('locale'), gregorianLocale())
+    const formatter = createFormatter(opt('locale'), gregorianLocale(), calendarSystem())
     const blocked = day.isDisabled || day.isUnavailable
     const showGregorian = opt('showGregorian')
 
@@ -539,7 +546,7 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
       'aria-disabled': blocked,
       'data-tooltip': tooltip,
       'data-value': formatter.isoDate(day.date),
-      ...(showGregorian ? { 'data-gregorian-value': gregorianIsoDate(day.date) } : {}),
+      ...(showGregorian ? { 'data-gregorian-value': gregorianIsoDate(day.date, calendarSystem()) } : {}),
       'data-taqwim-calendar-cell-trigger': '',
       ...(day.isSelected ? { 'data-selected': '' as const } : {}),
       ...(day.isDisabled ? { 'data-disabled': '' as const } : {}),
@@ -590,7 +597,7 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
     focusInitial,
     handleKeydown,
     get formatter() {
-      return createFormatter(opt('locale'), gregorianLocale())
+      return createFormatter(opt('locale'), gregorianLocale(), calendarSystem())
     },
     getRootProps,
     getGridProps,

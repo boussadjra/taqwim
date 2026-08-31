@@ -1,4 +1,10 @@
-import { getDaysLengthInMonth, toGregorian, type HijriDateObject } from '@taqwim/core'
+import {
+  getDaysLengthInMonth,
+  islamicUmmAlQura,
+  toGregorian,
+  type HijriCalendarSystem,
+  type HijriDateObject,
+} from '@taqwim/core'
 import { startOfMonth } from './dateUtils'
 
 export type DateEmphasis = 'hijri' | 'gregorian'
@@ -59,13 +65,17 @@ export function gregorianFullDate(date: Date, locale: string): string {
  * Including both boundary days makes the secondary day numbers in the grid
  * understandable without squeezing month names into every cell.
  */
-export function gregorianMonthRange(month: HijriDateObject, locale: string): string {
+export function gregorianMonthRange(
+  month: HijriDateObject,
+  locale: string,
+  calendarSystem: HijriCalendarSystem = islamicUmmAlQura,
+): string {
   const first = startOfMonth(month)
-  const daysInMonth = getDaysLengthInMonth(month.hy, month.hm)
+  const daysInMonth = getDaysLengthInMonth(month.hy, month.hm, { calendarSystem })
   const last: HijriDateObject = { hy: month.hy, hm: month.hm, hd: daysInMonth }
 
-  const start = toGregorian(first)!
-  const end = toGregorian(last)!
+  const start = toGregorian(first, { calendarSystem })!
+  const end = toGregorian(last, { calendarSystem })!
 
   return gregorianFormatter(locale, {
     day: 'numeric',
@@ -74,14 +84,21 @@ export function gregorianMonthRange(month: HijriDateObject, locale: string): str
   }).formatRange(start, end)
 }
 
-export function toGregorianDate(hijri: HijriDateObject): Date {
-  return toGregorian(hijri)!
+export function toGregorianDate(hijri: HijriDateObject, calendarSystem: HijriCalendarSystem = islamicUmmAlQura): Date {
+  return toGregorian(hijri, { calendarSystem })!
 }
 
 export function deriveGregorianValue(
   value: HijriDateObject | HijriDateObject[] | undefined,
+  calendarSystem: HijriCalendarSystem = islamicUmmAlQura,
 ): Date | Date[] | undefined {
   if (value === undefined) return undefined
-  if (Array.isArray(value)) return value.map(toGregorianDate)
-  return toGregorianDate(value)
+  try {
+    if (Array.isArray(value)) return value.map(date => toGregorianDate(date, calendarSystem))
+    return toGregorianDate(value, calendarSystem)
+  } catch {
+    // Controlled Hijri fields are preserved when a runtime strategy switch
+    // makes them invalid; there is no corresponding absolute date to expose.
+    return undefined
+  }
 }

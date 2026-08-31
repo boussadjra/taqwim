@@ -1,4 +1,4 @@
-import type { HijriDateObject } from '@taqwim/core'
+import type { HijriCalendarSystem, HijriDateObject } from '@taqwim/core'
 
 export type Direction = 'ltr' | 'rtl'
 
@@ -77,6 +77,8 @@ export interface CalendarMonth {
 }
 
 export interface CalendarState {
+  /** Calendar strategy used consistently for every derived value. */
+  calendarSystem: HijriCalendarSystem
   /** Which month the calendar is scrolled to. */
   placeholder: HijriDateObject
   value: HijriDateObject | HijriDateObject[] | undefined
@@ -114,6 +116,8 @@ export interface CalendarState {
 }
 
 export interface CalendarOptions {
+  /** Hijri calendar strategy. @default islamicUmmAlQura */
+  calendarSystem?: HijriCalendarSystem
   /** Initial selection for uncontrolled use. */
   defaultValue?: HijriDateObject | HijriDateObject[]
   /** Controlled selection. When set, the store will not mutate it directly. */

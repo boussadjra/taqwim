@@ -1,4 +1,11 @@
-import { getDayInWeek, getDaysLengthInMonth, getLocaleData, type HijriDateObject } from '@taqwim/core'
+import {
+  getDayInWeek,
+  getDaysLengthInMonth,
+  getLocaleData,
+  islamicUmmAlQura,
+  type HijriCalendarSystem,
+  type HijriDateObject,
+} from '@taqwim/core'
 import { fromEpochDayOrNull, isSameMonth, startOfMonth, toEpochDayOrNull } from './dateUtils'
 import type { WeekDayFormat, WeekStartsOn } from './types'
 
@@ -31,10 +38,15 @@ export function buildWeekDays(locale: string, format: WeekDayFormat, weekStartsO
  * @param fixedWeeks Pad to six rows so the calendar's height never changes
  *                   between months.
  */
-export function buildMonthWeeks(month: HijriDateObject, weekStartsOn: WeekStartsOn, fixedWeeks: boolean): RawDay[][] {
+export function buildMonthWeeks(
+  month: HijriDateObject,
+  weekStartsOn: WeekStartsOn,
+  fixedWeeks: boolean,
+  calendarSystem: HijriCalendarSystem = islamicUmmAlQura,
+): RawDay[][] {
   const first = startOfMonth(month)
-  const firstDayOfWeek = getDayInWeek(first)
-  const daysInMonth = getDaysLengthInMonth(month.hy, month.hm)
+  const firstDayOfWeek = getDayInWeek(first, { calendarSystem })
+  const daysInMonth = getDaysLengthInMonth(month.hy, month.hm, { calendarSystem })
 
   if (firstDayOfWeek === undefined || daysInMonth < 0) {
     return []
@@ -48,7 +60,7 @@ export function buildMonthWeeks(month: HijriDateObject, weekStartsOn: WeekStarts
     ? FIXED_WEEK_ROWS * DAYS_PER_WEEK - used
     : (DAYS_PER_WEEK - (used % DAYS_PER_WEEK)) % DAYS_PER_WEEK
 
-  const firstEpochDay = toEpochDayOrNull(first)
+  const firstEpochDay = toEpochDayOrNull(first, calendarSystem)
   if (firstEpochDay === null) {
     return []
   }
@@ -59,7 +71,7 @@ export function buildMonthWeeks(month: HijriDateObject, weekStartsOn: WeekStarts
   let week: RawDay[] = []
 
   for (let i = 0; i < totalDays; i++) {
-    const date = fromEpochDayOrNull(startEpochDay + i)
+    const date = fromEpochDayOrNull(startEpochDay + i, calendarSystem)
 
     // Near the table's edges the surrounding days may not be representable.
     // Drop the row rather than surfacing a half-built week.

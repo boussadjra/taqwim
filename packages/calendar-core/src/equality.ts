@@ -67,6 +67,7 @@ function sameGregorianValue(a: Date | Date[] | undefined, b: Date | Date[] | und
 
 export function sameState(a: CalendarState, b: CalendarState): boolean {
   return (
+    a.calendarSystem === b.calendarSystem &&
     a.headingValue === b.headingValue &&
     a.secondaryHeadingValue === b.secondaryHeadingValue &&
     a.fullCalendarLabel === b.fullCalendarLabel &&
