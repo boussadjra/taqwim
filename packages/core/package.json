@@ -1,6 +1,6 @@
 {
   "name": "@taqwim/core",
-  "version": "0.1.0-beta.6",
+  "version": "0.1.0-beta.7",
   "private": false,
   "description": "Deterministic Hijri date conversion, arithmetic and formatting for JavaScript",
   "keywords": [

@@ -9,7 +9,7 @@ Umm al-Qura Hijri date utilities, and an accessible calendar for **Vue, React, S
 
 Calendar behaviour — grid building, selection, paging, keyboard navigation, accessibility attributes — is implemented once in a framework-free state machine. Every adapter is a thin binding to it, so the five behave identically and emit the same markup.
 
-> **Beta.** The current release is `0.1.0-beta.2`, published under the `beta` dist-tag. The API is settling and can still change between betas.
+> **Beta.** The current release is `0.1.0-beta.7`, published under the `beta` dist-tag. The API is settling and can still change between betas.
 
 📖 **[Documentation](https://boussadjra.github.io/taqwim/)**
 
