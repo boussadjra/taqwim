@@ -339,7 +339,35 @@ test.describe('dual calendar presentation', () => {
     await open(page, { showGregorian: true, dateEmphasis: 'gregorian' })
 
     await expect(calendar(page)).toHaveAttribute('data-date-emphasis', 'gregorian')
-    await expect(heading(page)).toContainText('2026')
+    await expect(heading(page)).toContainText('2024')
+  })
+})
+
+test.describe('alternative calendar systems', () => {
+  test('keeps Civil heading, Gregorian labels, selection, paging and keyboard movement in step', async ({ page }) => {
+    await open(page, {
+      calendar: 'islamic-civil',
+      placeholder: '1448-03-01',
+      value: '1448-03-10',
+      showGregorian: true,
+      initialFocus: true,
+    })
+
+    const selected = page.locator('[data-value="1448-03-10"]')
+    await expect(heading(page)).toContainText('1448')
+    await expect(selected).toHaveAttribute('data-gregorian-value', '2026-08-24')
+
+    await page.keyboard.press('ArrowRight')
+    await expect(page.locator('[data-focused]')).toHaveAttribute('data-value', '1448-03-11')
+
+    await page.keyboard.press('Enter')
+    await expect(selection(page)).toHaveText('1448-03-11')
+
+    const start = await monthHeading(page).innerText()
+    await nextButton(page).click()
+    await expect(monthHeading(page)).not.toHaveText(start)
+    await prevButton(page).click()
+    await expect(monthHeading(page)).toHaveText(start)
   })
 })
 

@@ -7,7 +7,15 @@
  * `@angular/router`, which is scaffolding a consumer of the adapter does not
  * need to see.
  */
-import { getDayInWeek, type HijriDateObject } from '@taqwim/core'
+import {
+  getDayInWeek,
+  islamicUmmAlQura,
+  type HijriCalendarId,
+  type HijriCalendarSystem,
+  type HijriDateObject,
+} from '@taqwim/core'
+import { islamicCivil } from '@taqwim/core/calendars/islamic-civil'
+import { islamicTbla } from '@taqwim/core/calendars/islamic-tbla'
 import { layoutNames, themeNames } from '@taqwim/themes/names'
 import {
   HijriCalendar,
@@ -19,19 +27,63 @@ import {
 import { Component, computed, signal } from '@angular/core'
 
 const FORMATS = ['iYYYY-iMM-iDD', 'iDD/iMM/iYYYY', 'iD iMMMM iYYYY', 'iEEEE, iD iMMMM iYYYY']
+const SIZE_OPTIONS = [
+  { value: 'compact', label: 'Compact' },
+  { value: 'default', label: 'Default' },
+  { value: 'large', label: 'Large' },
+] as const satisfies readonly { value: HijriCalendarSize; label: string }[]
+const LANGUAGE_OPTIONS = [
+  { value: 'en', label: 'English' },
+  { value: 'ar', label: 'Arabic' },
+  { value: 'fr', label: 'French' },
+] as const
+const DIRECTION_OPTIONS = [
+  { value: 'ltr', label: 'Left to right' },
+  { value: 'rtl', label: 'Right to left' },
+] as const
+const WEEKDAY_OPTIONS = [
+  { value: 0, label: 'Sunday' },
+  { value: 1, label: 'Monday' },
+  { value: 2, label: 'Tuesday' },
+  { value: 3, label: 'Wednesday' },
+  { value: 4, label: 'Thursday' },
+  { value: 5, label: 'Friday' },
+  { value: 6, label: 'Saturday' },
+] as const
+const HIJRI_CALENDAR_OPTIONS = [
+  { id: 'islamic-umalqura', label: 'Umm al-Qura' },
+  { id: 'islamic-civil', label: 'Civil' },
+  { id: 'islamic-tbla', label: 'TBLA' },
+] as const satisfies readonly { id: HijriCalendarId; label: string }[]
+const HIJRI_CALENDAR_SYSTEMS = {
+  'islamic-umalqura': islamicUmmAlQura,
+  'islamic-civil': islamicCivil,
+  'islamic-tbla': islamicTbla,
+} satisfies Record<HijriCalendarId, HijriCalendarSystem>
+
+function calendarSystemIdFromSearch(): HijriCalendarId {
+  const requested = new URLSearchParams(window.location.search).get('calendar')
+  return HIJRI_CALENDAR_OPTIONS.some(option => option.id === requested)
+    ? (requested as HijriCalendarId)
+    : 'islamic-umalqura'
+}
 
 /** Everything both views share, so the two stay in step. */
 abstract class PlaygroundBase {
   protected readonly themeNames = themeNames
   protected readonly layoutNames = layoutNames
-  protected readonly sizes: HijriCalendarSize[] = ['compact', 'default', 'large']
-  protected readonly locales = ['en', 'ar', 'fr']
+  protected readonly sizeOptions = SIZE_OPTIONS
+  protected readonly languageOptions = LANGUAGE_OPTIONS
+  protected readonly directionOptions = DIRECTION_OPTIONS
+  protected readonly calendarSystemOptions = HIJRI_CALENDAR_OPTIONS
 
   protected readonly theme = signal<HijriCalendarTheme>('default')
   protected readonly layout = signal<HijriCalendarLayout>('default')
   protected readonly size = signal<HijriCalendarSize>('default')
   protected readonly locale = signal('en')
   protected readonly dir = signal<'ltr' | 'rtl'>('ltr')
+  protected readonly calendarSystemId = signal<HijriCalendarId>(calendarSystemIdFromSearch())
+  protected readonly calendarSystem = computed(() => HIJRI_CALENDAR_SYSTEMS[this.calendarSystemId()])
   protected readonly weekStartsOn = signal(0)
 
   protected readonly disabled = signal(false)
@@ -63,6 +115,13 @@ abstract class PlaygroundBase {
   protected setChecked(event: Event, target: { set: (value: boolean) => void }): void {
     target.set((event.target as HTMLInputElement).checked)
   }
+
+  protected presetLabel(value: string): string {
+    return value
+      .split('-')
+      .map(word => `${word.charAt(0).toUpperCase()}${word.slice(1)}`)
+      .join(' ')
+  }
 }
 
 const APPEARANCE = `
@@ -71,37 +130,54 @@ const APPEARANCE = `
     <label class="pg-field">
       Theme
       <select [value]="theme()" (change)="setFrom($event, theme)">
-        @for (name of themeNames; track name) { <option [value]="name">{{ name }}</option> }
+        @for (name of themeNames; track name) { <option [value]="name">{{ presetLabel(name) }}</option> }
+      </select>
+    </label>
+    <label class="pg-field">
+      Hijri calendar
+      <select
+        [value]="calendarSystemId()"
+        data-calendar-system-select
+        (change)="setFrom($event, calendarSystemId)"
+      >
+        @for (option of calendarSystemOptions; track option.id) {
+          <option [value]="option.id">{{ option.label }}</option>
+        }
       </select>
     </label>
     <label class="pg-field">
       Layout
       <select [value]="layout()" (change)="setFrom($event, layout)">
-        @for (name of layoutNames; track name) { <option [value]="name">{{ name }}</option> }
+        @for (name of layoutNames; track name) { <option [value]="name">{{ presetLabel(name) }}</option> }
       </select>
     </label>
     <label class="pg-field">
       Size
       <select [value]="size()" (change)="setFrom($event, size)">
-        @for (name of sizes; track name) { <option [value]="name">{{ name }}</option> }
+        @for (option of sizeOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
+        }
       </select>
     </label>
   </fieldset>`
 
 const LOCALE = `
   <fieldset class="pg-group">
-    <legend>Locale</legend>
+    <legend>Language and direction</legend>
     <label class="pg-field">
-      Locale
+      Language
       <select [value]="locale()" (change)="pickLocale($any($event.target).value)">
-        @for (name of locales; track name) { <option [value]="name">{{ name }}</option> }
+        @for (option of languageOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
+        }
       </select>
     </label>
     <label class="pg-field">
-      Direction
+      Text direction
       <select [value]="dir()" (change)="setFrom($event, dir)">
-        <option value="ltr">ltr</option>
-        <option value="rtl">rtl</option>
+        @for (option of directionOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
+        }
       </select>
     </label>
   </fieldset>`
@@ -120,13 +196,13 @@ const LOCALE = `
           <label class="pg-field">
             Week starts on
             <select [value]="weekStartsOn()" (change)="weekStartsOn.set(+$any($event.target).value)">
-              @for (day of days; track day) {
-                <option [value]="day">{{ day }}</option>
+              @for (option of weekdayOptions; track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
               }
             </select>
           </label>
           <label class="pg-field">
-            Months
+            Months shown
             <input
               type="number"
               min="1"
@@ -137,15 +213,15 @@ const LOCALE = `
           </label>
           <label class="pg-check">
             <input type="checkbox" [checked]="fixedWeeks()" (change)="setChecked($event, fixedWeeks)" />
-            <code>fixedWeeks</code>
+            Always show six weeks
           </label>
           <label class="pg-check">
             <input type="checkbox" [checked]="pagedNavigation()" (change)="setChecked($event, pagedNavigation)" />
-            <code>pagedNavigation</code>
+            Move all months together
           </label>
           <label class="pg-check">
             <input type="checkbox" [checked]="outside()" (change)="setChecked($event, outside)" />
-            <code>disableDaysOutsideCurrentView</code>
+            Disable dates outside visible months
           </label>
         </fieldset>
 
@@ -153,11 +229,11 @@ const LOCALE = `
           <legend>Selection</legend>
           <label class="pg-check">
             <input type="checkbox" [checked]="multiple()" (change)="setChecked($event, multiple)" />
-            <code>multiple</code>
+            Select multiple dates
           </label>
           <label class="pg-check">
             <input type="checkbox" [checked]="preventDeselect()" (change)="setChecked($event, preventDeselect)" />
-            <code>preventDeselect</code>
+            Keep at least one date selected
           </label>
         </fieldset>
 
@@ -165,18 +241,19 @@ const LOCALE = `
           <legend>Constraints</legend>
           <label class="pg-check">
             <input type="checkbox" [checked]="disabled()" (change)="setChecked($event, disabled)" />
-            <code>disabled</code>
+            Disable calendar
           </label>
           <label class="pg-check">
             <input type="checkbox" [checked]="readonly()" (change)="setChecked($event, readonly)" />
-            <code>readonly</code>
+            Read-only
           </label>
           <label class="pg-check">
-            <input type="checkbox" [checked]="bounded()" (change)="setChecked($event, bounded)" /> min/max
+            <input type="checkbox" [checked]="bounded()" (change)="setChecked($event, bounded)" />
+            Limit dates to 1446-01-05–1446-03-20
           </label>
           <label class="pg-check">
             <input type="checkbox" [checked]="noFridays()" (change)="setChecked($event, noFridays)" />
-            <code>isDateUnavailable</code> (Fridays)
+            Disable Fridays
           </label>
         </fieldset>
       </aside>
@@ -184,6 +261,7 @@ const LOCALE = `
       <section class="pg-stage">
         <div class="pg-preview">
           <taqwim-hijri-calendar
+            [calendarSystem]="calendarSystem()"
             [theme]="theme()"
             [layout]="layout()"
             [size]="size()"
@@ -222,7 +300,7 @@ export class CalendarPlayground extends PlaygroundBase {
   protected readonly value = signal<HijriDateObject | HijriDateObject[] | undefined>(undefined)
   protected readonly selection = computed(() => JSON.stringify(this.value() ?? null, null, 2))
 
-  protected readonly days = [0, 1, 2, 3, 4, 5, 6]
+  protected readonly weekdayOptions = WEEKDAY_OPTIONS
   protected readonly numberOfMonths = signal(1)
   protected readonly fixedWeeks = signal(false)
   protected readonly pagedNavigation = signal(false)
@@ -234,7 +312,9 @@ export class CalendarPlayground extends PlaygroundBase {
   protected readonly minValue = computed(() => (this.bounded() ? { hy: 1446, hm: 1, hd: 5 } : undefined))
   protected readonly maxValue = computed(() => (this.bounded() ? { hy: 1446, hm: 3, hd: 20 } : undefined))
   protected readonly isDateUnavailable = computed(() =>
-    this.noFridays() ? (date: HijriDateObject) => getDayInWeek(date) === 5 : undefined,
+    this.noFridays()
+      ? (date: HijriDateObject) => getDayInWeek(date, { calendarSystem: this.calendarSystem() }) === 5
+      : undefined,
   )
 }
 
@@ -250,7 +330,7 @@ export class CalendarPlayground extends PlaygroundBase {
         <fieldset class="pg-group">
           <legend>Input</legend>
           <label class="pg-field">
-            Format
+            Date format
             <select [value]="format()" (change)="setFrom($event, format)">
               @for (pattern of formats; track pattern) {
                 <option [value]="pattern">{{ pattern }}</option>
@@ -258,7 +338,7 @@ export class CalendarPlayground extends PlaygroundBase {
             </select>
           </label>
           <label class="pg-field">
-            aria-label
+            Accessible label
             <input type="text" [value]="ariaLabel()" (input)="setFrom($event, ariaLabel)" />
           </label>
           <label class="pg-field">
@@ -267,7 +347,7 @@ export class CalendarPlayground extends PlaygroundBase {
           </label>
           <label class="pg-check">
             <input type="checkbox" [checked]="editable()" (change)="setChecked($event, editable)" />
-            <code>editable</code>
+            Allow typing
           </label>
         </fieldset>
 
@@ -277,11 +357,11 @@ export class CalendarPlayground extends PlaygroundBase {
           <legend>State</legend>
           <label class="pg-check">
             <input type="checkbox" [checked]="disabled()" (change)="setChecked($event, disabled)" />
-            <code>disabled</code>
+            Disable date picker
           </label>
           <label class="pg-check">
             <input type="checkbox" [checked]="readonly()" (change)="setChecked($event, readonly)" />
-            <code>readonly</code>
+            Read-only
           </label>
         </fieldset>
       </aside>
@@ -289,6 +369,7 @@ export class CalendarPlayground extends PlaygroundBase {
       <section class="pg-stage">
         <div class="pg-preview">
           <taqwim-hijri-datepicker
+            [calendarSystem]="calendarSystem()"
             [theme]="theme()"
             [layout]="layout()"
             [size]="size()"

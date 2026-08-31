@@ -1,5 +1,7 @@
 import { HijriCalendar, type HijriCalendarSize, type HijriCalendarTheme } from '@taqwim/react-styled'
-import type { HijriDateObject } from '@taqwim/core'
+import { islamicUmmAlQura, type HijriDateObject } from '@taqwim/core'
+import { islamicCivil } from '@taqwim/core/calendars/islamic-civil'
+import { islamicTbla } from '@taqwim/core/calendars/islamic-tbla'
 import { useState } from 'react'
 import { formatSelection, readConfig } from './harness'
 
@@ -25,6 +27,11 @@ export function Harness() {
       </select>
 
       <HijriCalendar
+        calendarSystem={
+          { 'islamic-umalqura': islamicUmmAlQura, 'islamic-civil': islamicCivil, 'islamic-tbla': islamicTbla }[
+            config.calendar
+          ]
+        }
         theme={theme}
         size={config.size as HijriCalendarSize}
         locale={config.locale}

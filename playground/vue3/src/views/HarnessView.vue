@@ -5,7 +5,9 @@
  * Configuration comes from the query string so one Playwright spec can put
  * every framework's adapter into the same state. See `e2e/harness.ts`.
  */
-import type { HijriDateObject } from '@taqwim/core'
+import { islamicUmmAlQura, type HijriDateObject } from '@taqwim/core'
+import { islamicCivil } from '@taqwim/core/calendars/islamic-civil'
+import { islamicTbla } from '@taqwim/core/calendars/islamic-tbla'
 import { HijriCalendar, type HijriCalendarSize, type HijriCalendarTheme } from '@taqwim/vue-styled'
 import { ref } from 'vue'
 import { formatSelection, readConfig } from '../harness'
@@ -14,6 +16,11 @@ const config = readConfig(window.location.search)
 
 const theme = ref(config.theme as HijriCalendarTheme)
 const value = ref<HijriDateObject | HijriDateObject[] | undefined>(config.value)
+const calendarSystem = {
+  'islamic-umalqura': islamicUmmAlQura,
+  'islamic-civil': islamicCivil,
+  'islamic-tbla': islamicTbla,
+}[config.calendar]
 </script>
 
 <template>
@@ -24,6 +31,7 @@ const value = ref<HijriDateObject | HijriDateObject[] | undefined>(config.value)
   </select>
 
   <HijriCalendar
+    :calendar-system="calendarSystem"
     v-model="value"
     :theme="theme"
     :size="config.size as HijriCalendarSize"

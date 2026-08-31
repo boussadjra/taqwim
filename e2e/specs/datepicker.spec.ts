@@ -5,8 +5,10 @@ import { expect, test, type Page } from '@playwright/test'
  * (`/datepicker`); the others hang the same view off `#datepicker`. The rest of
  * the assertions are DOM-only, same as `calendar.spec.ts`.
  */
-async function open(page: Page) {
-  const path = test.info().project.name === 'vue' ? '/datepicker' : '/#datepicker'
+async function open(page: Page, query: Record<string, string> = {}) {
+  const params = new URLSearchParams(query)
+  const suffix = params.size > 0 ? `?${params}` : ''
+  const path = test.info().project.name === 'vue' ? `/datepicker${suffix}` : `/${suffix}#datepicker`
   await page.goto(path)
   await page.locator('.taqwim-datepicker-input').click()
   await page.waitForSelector('[data-taqwim-calendar]')
@@ -60,5 +62,15 @@ test.describe('date picker popover', () => {
     await page.locator('.pg-header strong').click()
 
     await expect(page.locator('[data-taqwim-calendar]')).toHaveCount(0)
+  })
+
+  test('selects and formats dates with the Civil calendar system', async ({ page }) => {
+    await open(page, { calendar: 'islamic-civil' })
+
+    const civilToday = page.locator('[data-value="1448-03-16"]')
+    await expect(civilToday).toHaveAttribute('data-today', '')
+
+    await page.locator('[data-value="1448-03-10"]').click()
+    await expect(page.locator('.taqwim-datepicker-input')).toHaveValue('1448-03-10')
   })
 })

@@ -6,7 +6,9 @@
  */
 import '@angular/compiler'
 
-import type { HijriDateObject } from '@taqwim/core'
+import { islamicUmmAlQura, type HijriDateObject } from '@taqwim/core'
+import { islamicCivil } from '@taqwim/core/calendars/islamic-civil'
+import { islamicTbla } from '@taqwim/core/calendars/islamic-tbla'
 import { HijriCalendar, type HijriCalendarSize, type HijriCalendarTheme } from '@taqwim/angular-styled'
 import { Component, provideZonelessChangeDetection, signal } from '@angular/core'
 import { bootstrapApplication } from '@angular/platform-browser'
@@ -31,6 +33,7 @@ const config = readConfig(window.location.search)
     </select>
 
     <taqwim-hijri-calendar
+      [calendarSystem]="calendarSystem"
       [theme]="theme()"
       [size]="size"
       [locale]="config.locale"
@@ -61,6 +64,11 @@ export class AppHarness {
   protected readonly config = config
   protected readonly themes = ['default', 'dark', 'islamic', 'neon', 'ocean']
   protected readonly size = config.size as HijriCalendarSize
+  protected readonly calendarSystem = {
+    'islamic-umalqura': islamicUmmAlQura,
+    'islamic-civil': islamicCivil,
+    'islamic-tbla': islamicTbla,
+  }[config.calendar]
 
   protected readonly theme = signal(config.theme as HijriCalendarTheme)
   protected readonly value = signal<HijriDateObject | HijriDateObject[] | undefined>(config.value)

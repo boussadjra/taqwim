@@ -7,7 +7,15 @@ import {
   type HijriCalendarTheme,
   type WeekStartsOn,
 } from '@taqwim/react-styled'
-import { getDayInWeek, type HijriDateObject } from '@taqwim/core'
+import {
+  getDayInWeek,
+  islamicUmmAlQura,
+  type HijriCalendarId,
+  type HijriCalendarSystem,
+  type HijriDateObject,
+} from '@taqwim/core'
+import { islamicCivil } from '@taqwim/core/calendars/islamic-civil'
+import { islamicTbla } from '@taqwim/core/calendars/islamic-tbla'
 import { useEffect, useState, type ReactNode } from 'react'
 import { Harness } from './HarnessView'
 
@@ -29,6 +37,45 @@ const VIEWS: { id: View; label: string }[] = [
 ]
 
 const FORMATS = ['iYYYY-iMM-iDD', 'iDD/iMM/iYYYY', 'iD iMMMM iYYYY', 'iEEEE, iD iMMMM iYYYY']
+const SIZE_OPTIONS = [
+  { value: 'compact', label: 'Compact' },
+  { value: 'default', label: 'Default' },
+  { value: 'large', label: 'Large' },
+] as const
+const LANGUAGE_OPTIONS = [
+  { value: 'en', label: 'English' },
+  { value: 'ar', label: 'Arabic' },
+  { value: 'fr', label: 'French' },
+] as const
+const DIRECTION_OPTIONS = [
+  { value: 'ltr', label: 'Left to right' },
+  { value: 'rtl', label: 'Right to left' },
+] as const
+const WEEKDAY_OPTIONS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as const
+const HIJRI_CALENDAR_OPTIONS = [
+  { id: 'islamic-umalqura', label: 'Umm al-Qura' },
+  { id: 'islamic-civil', label: 'Civil' },
+  { id: 'islamic-tbla', label: 'TBLA' },
+] as const satisfies readonly { id: HijriCalendarId; label: string }[]
+const HIJRI_CALENDAR_SYSTEMS = {
+  'islamic-umalqura': islamicUmmAlQura,
+  'islamic-civil': islamicCivil,
+  'islamic-tbla': islamicTbla,
+} satisfies Record<HijriCalendarId, HijriCalendarSystem>
+
+function presetLabel(value: string): string {
+  return value
+    .split('-')
+    .map(word => `${word.charAt(0).toUpperCase()}${word.slice(1)}`)
+    .join(' ')
+}
+
+function calendarSystemIdFromSearch(): HijriCalendarId {
+  const requested = new URLSearchParams(window.location.search).get('calendar')
+  return HIJRI_CALENDAR_OPTIONS.some(option => option.id === requested)
+    ? (requested as HijriCalendarId)
+    : 'islamic-umalqura'
+}
 
 function useHashView(): View {
   const read = () => (window.location.hash.replace('#', '') || 'harness') as View
@@ -52,11 +99,6 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
   )
 }
 
-/*
- * `label` is a node, not a string: most of these name a prop and belong in a
- * `<code>`, but `min/max` names two and reads as prose. Wrapping every label
- * in `<code>` marked the prose ones up as code in the React playground alone.
- */
 function Check({
   label,
   checked,
@@ -81,6 +123,7 @@ function useCommonState() {
   const [size, setSize] = useState<HijriCalendarSize>('default')
   const [locale, setLocale] = useState('en')
   const [dir, setDir] = useState<'ltr' | 'rtl'>('ltr')
+  const [calendarSystemId, setCalendarSystemId] = useState<HijriCalendarId>(calendarSystemIdFromSearch)
   // The store's own union, rather than an inline copy or an `as 0` cast: a cast
   // would have hidden the day the playground offered a day the calendar cannot
   // take.
@@ -101,7 +144,20 @@ function useCommonState() {
         <select value={theme} onChange={e => setTheme(e.target.value as HijriCalendarTheme)}>
           {themeNames.map(name => (
             <option key={name} value={name}>
-              {name}
+              {presetLabel(name)}
+            </option>
+          ))}
+        </select>
+      </Field>
+      <Field label="Hijri calendar">
+        <select
+          value={calendarSystemId}
+          data-calendar-system-select
+          onChange={e => setCalendarSystemId(e.target.value as HijriCalendarId)}
+        >
+          {HIJRI_CALENDAR_OPTIONS.map(option => (
+            <option key={option.id} value={option.id}>
+              {option.label}
             </option>
           ))}
         </select>
@@ -110,16 +166,16 @@ function useCommonState() {
         <select value={layout} onChange={e => setLayout(e.target.value as HijriCalendarLayout)}>
           {layoutNames.map(name => (
             <option key={name} value={name}>
-              {name}
+              {presetLabel(name)}
             </option>
           ))}
         </select>
       </Field>
       <Field label="Size">
         <select value={size} onChange={e => setSize(e.target.value as HijriCalendarSize)}>
-          {['compact', 'default', 'large'].map(name => (
-            <option key={name} value={name}>
-              {name}
+          {SIZE_OPTIONS.map(option => (
+            <option key={option.value} value={option.value}>
+              {option.label}
             </option>
           ))}
         </select>
@@ -129,26 +185,41 @@ function useCommonState() {
 
   const localeControls = (
     <fieldset className="pg-group">
-      <legend>Locale</legend>
-      <Field label="Locale">
+      <legend>Language and direction</legend>
+      <Field label="Language">
         <select value={locale} onChange={e => pickLocale(e.target.value)}>
-          {['en', 'ar', 'fr'].map(name => (
-            <option key={name} value={name}>
-              {name}
+          {LANGUAGE_OPTIONS.map(option => (
+            <option key={option.value} value={option.value}>
+              {option.label}
             </option>
           ))}
         </select>
       </Field>
-      <Field label="Direction">
+      <Field label="Text direction">
         <select value={dir} onChange={e => setDir(e.target.value as 'ltr' | 'rtl')}>
-          <option value="ltr">ltr</option>
-          <option value="rtl">rtl</option>
+          {DIRECTION_OPTIONS.map(option => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
         </select>
       </Field>
     </fieldset>
   )
 
-  return { theme, layout, size, locale, dir, setDir, weekStartsOn, setWeekStartsOn, appearance, localeControls }
+  return {
+    theme,
+    layout,
+    size,
+    locale,
+    dir,
+    setDir,
+    weekStartsOn,
+    setWeekStartsOn,
+    calendarSystem: HIJRI_CALENDAR_SYSTEMS[calendarSystemId],
+    appearance,
+    localeControls,
+  }
 }
 
 function CalendarPlayground() {
@@ -178,14 +249,14 @@ function CalendarPlayground() {
               value={common.weekStartsOn}
               onChange={e => common.setWeekStartsOn(Number(e.target.value) as WeekStartsOn)}
             >
-              {[0, 1, 2, 3, 4, 5, 6].map(day => (
+              {WEEKDAY_OPTIONS.map((label, day) => (
                 <option key={day} value={day}>
-                  {day}
+                  {label}
                 </option>
               ))}
             </select>
           </Field>
-          <Field label="Months">
+          <Field label="Months shown">
             <input
               type="number"
               min={1}
@@ -194,10 +265,10 @@ function CalendarPlayground() {
               onChange={e => setNumberOfMonths(Number(e.target.value))}
             />
           </Field>
-          <Check label={<code>fixedWeeks</code>} checked={fixedWeeks} onChange={setFixedWeeks} />
-          <Check label={<code>pagedNavigation</code>} checked={pagedNavigation} onChange={setPagedNavigation} />
+          <Check label="Always show six weeks" checked={fixedWeeks} onChange={setFixedWeeks} />
+          <Check label="Move all months together" checked={pagedNavigation} onChange={setPagedNavigation} />
           <Check
-            label={<code>disableDaysOutsideCurrentView</code>}
+            label="Disable dates outside visible months"
             checked={disableDaysOutsideCurrentView}
             onChange={setOutside}
           />
@@ -205,30 +276,23 @@ function CalendarPlayground() {
 
         <fieldset className="pg-group">
           <legend>Selection</legend>
-          <Check label={<code>multiple</code>} checked={multiple} onChange={setMultiple} />
-          <Check label={<code>preventDeselect</code>} checked={preventDeselect} onChange={setPreventDeselect} />
+          <Check label="Select multiple dates" checked={multiple} onChange={setMultiple} />
+          <Check label="Keep at least one date selected" checked={preventDeselect} onChange={setPreventDeselect} />
         </fieldset>
 
         <fieldset className="pg-group">
           <legend>Constraints</legend>
-          <Check label={<code>disabled</code>} checked={disabled} onChange={setDisabled} />
-          <Check label={<code>readonly</code>} checked={readonly} onChange={setReadonly} />
-          <Check label={<>min/max (1446-01-05 … 1446-03-20)</>} checked={bounded} onChange={setBounded} />
-          <Check
-            label={
-              <>
-                <code>isDateUnavailable</code> (Fridays)
-              </>
-            }
-            checked={noFridays}
-            onChange={setNoFridays}
-          />
+          <Check label="Disable calendar" checked={disabled} onChange={setDisabled} />
+          <Check label="Read-only" checked={readonly} onChange={setReadonly} />
+          <Check label="Limit dates to 1446-01-05–1446-03-20" checked={bounded} onChange={setBounded} />
+          <Check label="Disable Fridays" checked={noFridays} onChange={setNoFridays} />
         </fieldset>
       </aside>
 
       <section className="pg-stage">
         <div className="pg-preview">
           <HijriCalendar
+            calendarSystem={common.calendarSystem}
             theme={common.theme}
             layout={common.layout}
             size={common.size}
@@ -245,7 +309,9 @@ function CalendarPlayground() {
             readonly={readonly}
             minValue={bounded ? { hy: 1446, hm: 1, hd: 5 } : undefined}
             maxValue={bounded ? { hy: 1446, hm: 3, hd: 20 } : undefined}
-            isDateUnavailable={noFridays ? date => getDayInWeek(date) === 5 : undefined}
+            isDateUnavailable={
+              noFridays ? date => getDayInWeek(date, { calendarSystem: common.calendarSystem }) === 5 : undefined
+            }
             value={value}
             onValueChange={setValue}
           />
@@ -282,7 +348,7 @@ function DatePickerPlayground() {
 
         <fieldset className="pg-group">
           <legend>Input</legend>
-          <Field label="Format">
+          <Field label="Date format">
             <select value={format} onChange={e => setFormat(e.target.value)}>
               {FORMATS.map(pattern => (
                 <option key={pattern} value={pattern}>
@@ -291,27 +357,28 @@ function DatePickerPlayground() {
               ))}
             </select>
           </Field>
-          <Field label="aria-label">
+          <Field label="Accessible label">
             <input type="text" value={ariaLabel} onChange={e => setAriaLabel(e.target.value)} />
           </Field>
           <Field label="Placeholder">
             <input type="text" value={inputPlaceholder} onChange={e => setInputPlaceholder(e.target.value)} />
           </Field>
-          <Check label={<code>editable</code>} checked={editable} onChange={setEditable} />
+          <Check label="Allow typing" checked={editable} onChange={setEditable} />
         </fieldset>
 
         {common.localeControls}
 
         <fieldset className="pg-group">
           <legend>State</legend>
-          <Check label={<code>disabled</code>} checked={disabled} onChange={setDisabled} />
-          <Check label={<code>readonly</code>} checked={readonly} onChange={setReadonly} />
+          <Check label="Disable date picker" checked={disabled} onChange={setDisabled} />
+          <Check label="Read-only" checked={readonly} onChange={setReadonly} />
         </fieldset>
       </aside>
 
       <section className="pg-stage">
         <div className="pg-preview">
           <HijriDatePicker
+            calendarSystem={common.calendarSystem}
             theme={common.theme}
             layout={common.layout}
             size={common.size}

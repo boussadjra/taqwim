@@ -6,7 +6,7 @@
  * playground drives applies here too — plus the input's own text handling,
  * which is the part with the interesting failure modes.
  */
-import type { HijriDateObject } from '@taqwim/core'
+import type { HijriCalendarId, HijriDateObject } from '@taqwim/core'
 import { layoutNames, themeNames } from '@taqwim/themes/names'
 import {
   HijriDatePicker,
@@ -15,6 +15,8 @@ import {
   type HijriCalendarTheme,
 } from '@taqwim/vue-styled'
 import { computed, ref, watch } from 'vue'
+import { calendarSystemIdFromSearch, HIJRI_CALENDAR_OPTIONS, HIJRI_CALENDAR_SYSTEMS } from '../calendarSystems'
+import { DIRECTION_OPTIONS, LANGUAGE_OPTIONS, presetLabel, SIZE_OPTIONS } from '../playgroundOptions'
 
 const THEMES: readonly HijriCalendarTheme[] = themeNames
 const LAYOUTS: readonly HijriCalendarLayout[] = layoutNames
@@ -32,6 +34,8 @@ const inputPlaceholder = ref('')
 const editable = ref(true)
 const disabled = ref(false)
 const readonly = ref(false)
+const calendarSystemId = ref<HijriCalendarId>(calendarSystemIdFromSearch(window.location.search))
+const calendarSystem = computed(() => HIJRI_CALENDAR_SYSTEMS[calendarSystemId.value])
 
 // Arabic reads right to left; following the locale means the RTL case is what
 // you see when you pick Arabic rather than something to remember to set.
@@ -55,23 +59,32 @@ const selection = computed(() => JSON.stringify(value.value ?? null, null, 2))
         <label class="pg-field">
           Theme
           <select v-model="theme">
-            <option v-for="name in THEMES" :key="name" :value="name">{{ name }}</option>
+            <option v-for="name in THEMES" :key="name" :value="name">{{ presetLabel(name) }}</option>
+          </select>
+        </label>
+
+        <label class="pg-field">
+          Hijri calendar
+          <select v-model="calendarSystemId" data-calendar-system-select>
+            <option v-for="option in HIJRI_CALENDAR_OPTIONS" :key="option.id" :value="option.id">
+              {{ option.label }}
+            </option>
           </select>
         </label>
 
         <label class="pg-field">
           Layout
           <select v-model="layout">
-            <option v-for="name in LAYOUTS" :key="name" :value="name">{{ name }}</option>
+            <option v-for="name in LAYOUTS" :key="name" :value="name">{{ presetLabel(name) }}</option>
           </select>
         </label>
 
         <label class="pg-field">
           Size
           <select v-model="size">
-            <option value="compact">compact</option>
-            <option value="default">default</option>
-            <option value="large">large</option>
+            <option v-for="option in SIZE_OPTIONS" :key="option.value" :value="option.value">
+              {{ option.label }}
+            </option>
           </select>
         </label>
       </fieldset>
@@ -80,9 +93,11 @@ const selection = computed(() => JSON.stringify(value.value ?? null, null, 2))
         <legend>Input</legend>
 
         <label class="pg-field">
-          Format
+          Date format
           <select v-model="format">
-            <option v-for="pattern in FORMATS" :key="pattern" :value="pattern">{{ pattern }}</option>
+            <option v-for="pattern in FORMATS" :key="pattern" :value="pattern">
+              {{ pattern }}
+            </option>
           </select>
         </label>
 
@@ -96,26 +111,27 @@ const selection = computed(() => JSON.stringify(value.value ?? null, null, 2))
           <input v-model="inputPlaceholder" type="text" />
         </label>
 
-        <label class="pg-check"><input v-model="editable" type="checkbox" /> <code>editable</code></label>
+        <label class="pg-check"><input v-model="editable" type="checkbox" /> Allow typing</label>
       </fieldset>
 
       <fieldset class="pg-group">
-        <legend>Locale</legend>
+        <legend>Language and direction</legend>
 
         <label class="pg-field">
-          Locale
+          Language
           <select v-model="locale">
-            <option value="en">en</option>
-            <option value="ar">ar</option>
-            <option value="fr">fr</option>
+            <option v-for="option in LANGUAGE_OPTIONS" :key="option.value" :value="option.value">
+              {{ option.label }}
+            </option>
           </select>
         </label>
 
         <label class="pg-field">
-          Direction
+          Text direction
           <select v-model="dir">
-            <option value="ltr">ltr</option>
-            <option value="rtl">rtl</option>
+            <option v-for="option in DIRECTION_OPTIONS" :key="option.value" :value="option.value">
+              {{ option.label }}
+            </option>
           </select>
         </label>
       </fieldset>
@@ -123,8 +139,8 @@ const selection = computed(() => JSON.stringify(value.value ?? null, null, 2))
       <fieldset class="pg-group">
         <legend>State</legend>
 
-        <label class="pg-check"><input v-model="disabled" type="checkbox" /> <code>disabled</code></label>
-        <label class="pg-check"><input v-model="readonly" type="checkbox" /> <code>readonly</code></label>
+        <label class="pg-check"><input v-model="disabled" type="checkbox" /> Disable date picker</label>
+        <label class="pg-check"><input v-model="readonly" type="checkbox" /> Read-only</label>
       </fieldset>
     </aside>
 
@@ -132,6 +148,7 @@ const selection = computed(() => JSON.stringify(value.value ?? null, null, 2))
       <div class="pg-preview">
         <HijriDatePicker
           v-model="value"
+          :calendar-system="calendarSystem"
           :theme="theme"
           :layout="layout"
           :size="size"

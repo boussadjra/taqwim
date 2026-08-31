@@ -8,7 +8,15 @@
    * dependency-free, which is the point of these apps: they show what a
    * consumer gets, so the less scaffolding around the adapter the better.
    */
-  import { getDayInWeek, type HijriDateObject } from '@taqwim/core'
+  import {
+    getDayInWeek,
+    islamicUmmAlQura,
+    type HijriCalendarId,
+    type HijriCalendarSystem,
+    type HijriDateObject,
+  } from '@taqwim/core'
+  import { islamicCivil } from '@taqwim/core/calendars/islamic-civil'
+  import { islamicTbla } from '@taqwim/core/calendars/islamic-tbla'
   import { layoutNames, themeNames } from '@taqwim/themes/names'
   import {
     HijriCalendar,
@@ -27,7 +35,53 @@
   ] as const
 
   const FORMATS = ['iYYYY-iMM-iDD', 'iDD/iMM/iYYYY', 'iD iMMMM iYYYY', 'iEEEE, iD iMMMM iYYYY']
-  const DAYS: WeekStartsOn[] = [0, 1, 2, 3, 4, 5, 6]
+  const SIZE_OPTIONS = [
+    { value: 'compact', label: 'Compact' },
+    { value: 'default', label: 'Default' },
+    { value: 'large', label: 'Large' },
+  ] as const
+  const LANGUAGE_OPTIONS = [
+    { value: 'en', label: 'English' },
+    { value: 'ar', label: 'Arabic' },
+    { value: 'fr', label: 'French' },
+  ] as const
+  const DIRECTION_OPTIONS = [
+    { value: 'ltr', label: 'Left to right' },
+    { value: 'rtl', label: 'Right to left' },
+  ] as const
+  const WEEKDAY_OPTIONS = [
+    { value: 0, label: 'Sunday' },
+    { value: 1, label: 'Monday' },
+    { value: 2, label: 'Tuesday' },
+    { value: 3, label: 'Wednesday' },
+    { value: 4, label: 'Thursday' },
+    { value: 5, label: 'Friday' },
+    { value: 6, label: 'Saturday' },
+  ] as const satisfies readonly { value: WeekStartsOn; label: string }[]
+  const HIJRI_CALENDAR_OPTIONS = [
+    { id: 'islamic-umalqura', label: 'Umm al-Qura' },
+    { id: 'islamic-civil', label: 'Civil' },
+    { id: 'islamic-tbla', label: 'TBLA' },
+  ] as const satisfies readonly { id: HijriCalendarId; label: string }[]
+  const HIJRI_CALENDAR_SYSTEMS = {
+    'islamic-umalqura': islamicUmmAlQura,
+    'islamic-civil': islamicCivil,
+    'islamic-tbla': islamicTbla,
+  } satisfies Record<HijriCalendarId, HijriCalendarSystem>
+
+  const presetLabel = (value: string) =>
+    value
+      .split('-')
+      .map(word => `${word.charAt(0).toUpperCase()}${word.slice(1)}`)
+      .join(' ')
+
+  const requestedCalendarSystem = new URLSearchParams(window.location.search).get('calendar')
+  let calendarSystemId = $state<HijriCalendarId>(
+    HIJRI_CALENDAR_OPTIONS.some(option => option.id === requestedCalendarSystem)
+      ? (requestedCalendarSystem as HijriCalendarId)
+      : 'islamic-umalqura',
+  )
+  const calendarSystem = $derived(HIJRI_CALENDAR_SYSTEMS[calendarSystemId])
 
   const readView = () => window.location.hash.replace('#', '') || 'harness'
   let view = $state(readView())
@@ -85,7 +139,9 @@
   const pickedSelection = $derived(JSON.stringify(pickedDate ?? null, null, 2))
   const minValue = $derived(bounded ? { hy: 1446, hm: 1, hd: 5 } : undefined)
   const maxValue = $derived(bounded ? { hy: 1446, hm: 3, hd: 20 } : undefined)
-  const isDateUnavailable = $derived(noFridays ? (date: HijriDateObject) => getDayInWeek(date) === 5 : undefined)
+  const isDateUnavailable = $derived(
+    noFridays ? (date: HijriDateObject) => getDayInWeek(date, { calendarSystem }) === 5 : undefined,
+  )
 </script>
 
 {#snippet appearance()}
@@ -94,19 +150,27 @@
     <label class="pg-field">
       Theme
       <select bind:value={theme}>
-        {#each themeNames as name (name)}<option value={name}>{name}</option>{/each}
+        {#each themeNames as name (name)}<option value={name}>{presetLabel(name)}</option>{/each}
+      </select>
+    </label>
+    <label class="pg-field">
+      Hijri calendar
+      <select bind:value={calendarSystemId} data-calendar-system-select>
+        {#each HIJRI_CALENDAR_OPTIONS as option (option.id)}
+          <option value={option.id}>{option.label}</option>
+        {/each}
       </select>
     </label>
     <label class="pg-field">
       Layout
       <select bind:value={layout}>
-        {#each layoutNames as name (name)}<option value={name}>{name}</option>{/each}
+        {#each layoutNames as name (name)}<option value={name}>{presetLabel(name)}</option>{/each}
       </select>
     </label>
     <label class="pg-field">
       Size
       <select bind:value={size}>
-        {#each ['compact', 'default', 'large'] as name (name)}<option value={name}>{name}</option>{/each}
+        {#each SIZE_OPTIONS as option (option.value)}<option value={option.value}>{option.label}</option>{/each}
       </select>
     </label>
   </fieldset>
@@ -114,18 +178,17 @@
 
 {#snippet localeControls()}
   <fieldset class="pg-group">
-    <legend>Locale</legend>
+    <legend>Language and direction</legend>
     <label class="pg-field">
-      Locale
+      Language
       <select value={locale} onchange={e => pickLocale((e.currentTarget as HTMLSelectElement).value)}>
-        {#each ['en', 'ar', 'fr'] as name (name)}<option value={name}>{name}</option>{/each}
+        {#each LANGUAGE_OPTIONS as option (option.value)}<option value={option.value}>{option.label}</option>{/each}
       </select>
     </label>
     <label class="pg-field">
-      Direction
+      Text direction
       <select bind:value={dir}>
-        <option value="ltr">ltr</option>
-        <option value="rtl">rtl</option>
+        {#each DIRECTION_OPTIONS as option (option.value)}<option value={option.value}>{option.label}</option>{/each}
       </select>
     </label>
   </fieldset>
@@ -152,40 +215,40 @@
           <label class="pg-field">
             Week starts on
             <select bind:value={weekStartsOn}>
-              {#each DAYS as day (day)}<option value={day}>{day}</option>{/each}
+              {#each WEEKDAY_OPTIONS as option (option.value)}<option value={option.value}>{option.label}</option>{/each}
             </select>
           </label>
           <label class="pg-field">
-            Months
+            Months shown
             <input type="number" min="1" max="4" bind:value={numberOfMonths} />
           </label>
-          <label class="pg-check"><input type="checkbox" bind:checked={fixedWeeks} /> <code>fixedWeeks</code></label>
+          <label class="pg-check"><input type="checkbox" bind:checked={fixedWeeks} /> Always show six weeks</label>
           <label class="pg-check">
-            <input type="checkbox" bind:checked={pagedNavigation} /> <code>pagedNavigation</code>
+            <input type="checkbox" bind:checked={pagedNavigation} /> Move all months together
           </label>
           <label class="pg-check">
             <input type="checkbox" bind:checked={disableDaysOutsideCurrentView} />
-            <code>disableDaysOutsideCurrentView</code>
+            Disable dates outside visible months
           </label>
         </fieldset>
 
         <fieldset class="pg-group">
           <legend>Selection</legend>
-          <label class="pg-check"><input type="checkbox" bind:checked={multiple} /> <code>multiple</code></label>
+          <label class="pg-check"><input type="checkbox" bind:checked={multiple} /> Select multiple dates</label>
           <label class="pg-check">
-            <input type="checkbox" bind:checked={preventDeselect} /> <code>preventDeselect</code>
+            <input type="checkbox" bind:checked={preventDeselect} /> Keep at least one date selected
           </label>
         </fieldset>
 
         <fieldset class="pg-group">
           <legend>Constraints</legend>
-          <label class="pg-check"><input type="checkbox" bind:checked={disabled} /> <code>disabled</code></label>
-          <label class="pg-check"><input type="checkbox" bind:checked={readonly} /> <code>readonly</code></label>
+          <label class="pg-check"><input type="checkbox" bind:checked={disabled} /> Disable calendar</label>
+          <label class="pg-check"><input type="checkbox" bind:checked={readonly} /> Read-only</label>
           <label class="pg-check">
-            <input type="checkbox" bind:checked={bounded} /> min/max (1446-01-05 … 1446-03-20)
+            <input type="checkbox" bind:checked={bounded} /> Limit dates to 1446-01-05–1446-03-20
           </label>
           <label class="pg-check">
-            <input type="checkbox" bind:checked={noFridays} /> <code>isDateUnavailable</code> (Fridays)
+            <input type="checkbox" bind:checked={noFridays} /> Disable Fridays
           </label>
         </fieldset>
       </aside>
@@ -193,6 +256,7 @@
       <section class="pg-stage">
         <div class="pg-preview">
           <HijriCalendar
+            {calendarSystem}
             {theme}
             {layout}
             {size}
@@ -231,34 +295,35 @@
         <fieldset class="pg-group">
           <legend>Input</legend>
           <label class="pg-field">
-            Format
+            Date format
             <select bind:value={format}>
               {#each FORMATS as pattern (pattern)}<option value={pattern}>{pattern}</option>{/each}
             </select>
           </label>
           <label class="pg-field">
-            aria-label
+            Accessible label
             <input type="text" bind:value={ariaLabel} />
           </label>
           <label class="pg-field">
             Placeholder
             <input type="text" bind:value={inputPlaceholder} />
           </label>
-          <label class="pg-check"><input type="checkbox" bind:checked={editable} /> <code>editable</code></label>
+          <label class="pg-check"><input type="checkbox" bind:checked={editable} /> Allow typing</label>
         </fieldset>
 
         {@render localeControls()}
 
         <fieldset class="pg-group">
           <legend>State</legend>
-          <label class="pg-check"><input type="checkbox" bind:checked={disabled} /> <code>disabled</code></label>
-          <label class="pg-check"><input type="checkbox" bind:checked={readonly} /> <code>readonly</code></label>
+          <label class="pg-check"><input type="checkbox" bind:checked={disabled} /> Disable date picker</label>
+          <label class="pg-check"><input type="checkbox" bind:checked={readonly} /> Read-only</label>
         </fieldset>
       </aside>
 
       <section class="pg-stage">
         <div class="pg-preview">
           <HijriDatePicker
+            {calendarSystem}
             {theme}
             {layout}
             {size}

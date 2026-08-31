@@ -9,6 +9,7 @@
  */
 
 export interface HarnessConfig {
+  calendar: 'islamic-umalqura' | 'islamic-civil' | 'islamic-tbla'
   theme: string
   size: string
   locale: string
@@ -39,10 +40,12 @@ export function parseDate(text: string | null) {
 
 export function readConfig(search: string): HarnessConfig {
   const params = new URLSearchParams(search)
+  const calendar = params.get('calendar')
   const flag = (key: string) => params.get(key) === 'true' || params.get(key) === '1'
   const number = (key: string, fallback: number) => Number(params.get(key) ?? fallback)
 
   return {
+    calendar: calendar === 'islamic-civil' || calendar === 'islamic-tbla' ? calendar : 'islamic-umalqura',
     theme: params.get('theme') ?? 'default',
     size: params.get('size') ?? 'default',
     locale: params.get('locale') ?? 'en',

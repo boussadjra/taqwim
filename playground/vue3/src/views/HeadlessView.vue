@@ -6,7 +6,7 @@
  * `@taqwim/vue` ships no CSS of its own and that the `data-*` attributes the
  * store emits are enough to build a look from scratch.
  */
-import type { HijriDateObject } from '@taqwim/core'
+import type { HijriCalendarId, HijriDateObject } from '@taqwim/core'
 import {
   HijriCalendarCell,
   HijriCalendarCellTrigger,
@@ -21,38 +21,64 @@ import {
   HijriCalendarPrev,
   HijriCalendarRoot,
 } from '@taqwim/vue'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { calendarSystemIdFromSearch, HIJRI_CALENDAR_OPTIONS, HIJRI_CALENDAR_SYSTEMS } from '../calendarSystems'
 
 const value = ref<HijriDateObject>()
+const calendarSystemId = ref<HijriCalendarId>(calendarSystemIdFromSearch(window.location.search))
+const calendarSystem = computed(() => HIJRI_CALENDAR_SYSTEMS[calendarSystemId.value])
 </script>
 
 <template>
-  <div class="bare">
-    <HijriCalendarRoot v-model="value" initial-focus v-slot="{ months, weekDays }">
-      <HijriCalendarHeader class="row">
-        <HijriCalendarPrev>←</HijriCalendarPrev>
-        <HijriCalendarHeading />
-        <HijriCalendarNext>→</HijriCalendarNext>
-      </HijriCalendarHeader>
+  <div class="pg">
+    <aside class="pg-controls">
+      <fieldset class="pg-group">
+        <legend>Calendar</legend>
+        <label class="pg-field">
+          Hijri calendar
+          <select v-model="calendarSystemId" data-calendar-system-select>
+            <option v-for="option in HIJRI_CALENDAR_OPTIONS" :key="option.id" :value="option.id">
+              {{ option.label }}
+            </option>
+          </select>
+        </label>
+      </fieldset>
+    </aside>
 
-      <HijriCalendarGrid v-for="month in months" :key="month.label" :month="month">
-        <HijriCalendarGridHead>
-          <HijriCalendarGridRow class="row">
-            <HijriCalendarHeadCell v-for="day in weekDays" :key="day">{{ day }}</HijriCalendarHeadCell>
-          </HijriCalendarGridRow>
-        </HijriCalendarGridHead>
+    <section class="pg-stage">
+      <div class="bare">
+        <HijriCalendarRoot
+          v-model="value"
+          :calendar-system="calendarSystem"
+          initial-focus
+          v-slot="{ months, weekDays }"
+        >
+          <HijriCalendarHeader class="row">
+            <HijriCalendarPrev>←</HijriCalendarPrev>
+            <HijriCalendarHeading />
+            <HijriCalendarNext>→</HijriCalendarNext>
+          </HijriCalendarHeader>
 
-        <HijriCalendarGridBody>
-          <HijriCalendarGridRow v-for="(week, index) in month.weeks" :key="index" class="row">
-            <HijriCalendarCell v-for="day in week" :key="`${day.date.hm}-${day.date.hd}`" :day="day">
-              <HijriCalendarCellTrigger :day="day" />
-            </HijriCalendarCell>
-          </HijriCalendarGridRow>
-        </HijriCalendarGridBody>
-      </HijriCalendarGrid>
-    </HijriCalendarRoot>
+          <HijriCalendarGrid v-for="month in months" :key="month.label" :month="month">
+            <HijriCalendarGridHead>
+              <HijriCalendarGridRow class="row">
+                <HijriCalendarHeadCell v-for="day in weekDays" :key="day">{{ day }}</HijriCalendarHeadCell>
+              </HijriCalendarGridRow>
+            </HijriCalendarGridHead>
 
-    <pre>{{ value ?? 'null' }}</pre>
+            <HijriCalendarGridBody>
+              <HijriCalendarGridRow v-for="(week, index) in month.weeks" :key="index" class="row">
+                <HijriCalendarCell v-for="day in week" :key="`${day.date.hm}-${day.date.hd}`" :day="day">
+                  <HijriCalendarCellTrigger :day="day" />
+                </HijriCalendarCell>
+              </HijriCalendarGridRow>
+            </HijriCalendarGridBody>
+          </HijriCalendarGrid>
+        </HijriCalendarRoot>
+
+        <pre>{{ value ?? 'null' }}</pre>
+      </div>
+    </section>
   </div>
 </template>
 

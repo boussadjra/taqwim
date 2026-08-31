@@ -1,4 +1,12 @@
-import { getDayInWeek, type HijriDateObject } from '@taqwim/core'
+import {
+  getDayInWeek,
+  islamicUmmAlQura,
+  type HijriCalendarId,
+  type HijriCalendarSystem,
+  type HijriDateObject,
+} from '@taqwim/core'
+import { islamicCivil } from '@taqwim/core/calendars/islamic-civil'
+import { islamicTbla } from '@taqwim/core/calendars/islamic-tbla'
 import { layoutNames, themeNames } from '@taqwim/themes/names'
 import {
   HijriCalendar,
@@ -27,6 +35,53 @@ const VIEWS = [
 ] as const
 
 const FORMATS = ['iYYYY-iMM-iDD', 'iDD/iMM/iYYYY', 'iD iMMMM iYYYY', 'iEEEE, iD iMMMM iYYYY']
+const SIZE_OPTIONS = [
+  { value: 'compact', label: 'Compact' },
+  { value: 'default', label: 'Default' },
+  { value: 'large', label: 'Large' },
+] as const
+const LANGUAGE_OPTIONS = [
+  { value: 'en', label: 'English' },
+  { value: 'ar', label: 'Arabic' },
+  { value: 'fr', label: 'French' },
+] as const
+const DIRECTION_OPTIONS = [
+  { value: 'ltr', label: 'Left to right' },
+  { value: 'rtl', label: 'Right to left' },
+] as const
+const WEEKDAY_OPTIONS = [
+  { value: 0, label: 'Sunday' },
+  { value: 1, label: 'Monday' },
+  { value: 2, label: 'Tuesday' },
+  { value: 3, label: 'Wednesday' },
+  { value: 4, label: 'Thursday' },
+  { value: 5, label: 'Friday' },
+  { value: 6, label: 'Saturday' },
+] as const satisfies readonly { value: WeekStartsOn; label: string }[]
+const HIJRI_CALENDAR_OPTIONS = [
+  { id: 'islamic-umalqura', label: 'Umm al-Qura' },
+  { id: 'islamic-civil', label: 'Civil' },
+  { id: 'islamic-tbla', label: 'TBLA' },
+] as const satisfies readonly { id: HijriCalendarId; label: string }[]
+const HIJRI_CALENDAR_SYSTEMS = {
+  'islamic-umalqura': islamicUmmAlQura,
+  'islamic-civil': islamicCivil,
+  'islamic-tbla': islamicTbla,
+} satisfies Record<HijriCalendarId, HijriCalendarSystem>
+
+function presetLabel(value: string): string {
+  return value
+    .split('-')
+    .map(word => `${word.charAt(0).toUpperCase()}${word.slice(1)}`)
+    .join(' ')
+}
+
+function calendarSystemIdFromSearch(): HijriCalendarId {
+  const requested = new URLSearchParams(window.location.search).get('calendar')
+  return HIJRI_CALENDAR_OPTIONS.some(option => option.id === requested)
+    ? (requested as HijriCalendarId)
+    : 'islamic-umalqura'
+}
 
 export function App(): JSX.Element {
   const readView = () => window.location.hash.replace('#', '') || 'harness'
@@ -41,6 +96,8 @@ export function App(): JSX.Element {
   const [size, setSize] = createSignal<HijriCalendarSize>('default')
   const [locale, setLocale] = createSignal('en')
   const [dir, setDir] = createSignal<'ltr' | 'rtl'>('ltr')
+  const [calendarSystemId, setCalendarSystemId] = createSignal<HijriCalendarId>(calendarSystemIdFromSearch())
+  const calendarSystem = () => HIJRI_CALENDAR_SYSTEMS[calendarSystemId()]
   // The store's own union, rather than an inline copy or an `as 0` cast: a cast
   // would have hidden the day the playground offered a day the calendar cannot
   // take.
@@ -81,11 +138,6 @@ export function App(): JSX.Element {
   const [pickedDate, setPickedDate] = createSignal<HijriDateObject | undefined>()
   const pickedSelection = () => JSON.stringify(pickedDate() ?? null, null, 2)
 
-  /*
-   * `label` is a node, not a string: most of these name a prop and belong in a
-   * `<code>`, but `min/max` names two and reads as prose. Wrapping every label
-   * in `<code>` marked the prose ones up as code in the Solid playground alone.
-   */
   const check = (label: JSX.Element, get: () => boolean, set: (next: boolean) => void) => (
     <label class="pg-check">
       <input type="checkbox" checked={get()} onChange={event => set(event.currentTarget.checked)} />
@@ -99,19 +151,35 @@ export function App(): JSX.Element {
       <label class="pg-field">
         Theme
         <select value={theme()} onChange={e => setTheme(e.currentTarget.value as HijriCalendarTheme)}>
-          <For each={themeNames}>{name => <option value={name}>{name}</option>}</For>
+          <For each={themeNames}>{name => <option value={name}>{presetLabel(name)}</option>}</For>
+        </select>
+      </label>
+      <label class="pg-field">
+        Hijri calendar
+        <select
+          value={calendarSystemId()}
+          data-calendar-system-select
+          onChange={e => setCalendarSystemId(e.currentTarget.value as HijriCalendarId)}
+        >
+          <For each={HIJRI_CALENDAR_OPTIONS}>
+            {option => (
+              <option value={option.id} selected={option.id === calendarSystemId()}>
+                {option.label}
+              </option>
+            )}
+          </For>
         </select>
       </label>
       <label class="pg-field">
         Layout
         <select value={layout()} onChange={e => setLayout(e.currentTarget.value as HijriCalendarLayout)}>
-          <For each={layoutNames}>{name => <option value={name}>{name}</option>}</For>
+          <For each={layoutNames}>{name => <option value={name}>{presetLabel(name)}</option>}</For>
         </select>
       </label>
       <label class="pg-field">
         Size
         <select value={size()} onChange={e => setSize(e.currentTarget.value as HijriCalendarSize)}>
-          <For each={['compact', 'default', 'large']}>{name => <option value={name}>{name}</option>}</For>
+          <For each={SIZE_OPTIONS}>{option => <option value={option.value}>{option.label}</option>}</For>
         </select>
       </label>
     </fieldset>
@@ -119,18 +187,17 @@ export function App(): JSX.Element {
 
   const localeControls = () => (
     <fieldset class="pg-group">
-      <legend>Locale</legend>
+      <legend>Language and direction</legend>
       <label class="pg-field">
-        Locale
+        Language
         <select value={locale()} onChange={e => pickLocale(e.currentTarget.value)}>
-          <For each={['en', 'ar', 'fr']}>{name => <option value={name}>{name}</option>}</For>
+          <For each={LANGUAGE_OPTIONS}>{option => <option value={option.value}>{option.label}</option>}</For>
         </select>
       </label>
       <label class="pg-field">
-        Direction
+        Text direction
         <select value={dir()} onChange={e => setDir(e.currentTarget.value as 'ltr' | 'rtl')}>
-          <option value="ltr">ltr</option>
-          <option value="rtl">rtl</option>
+          <For each={DIRECTION_OPTIONS}>{option => <option value={option.value}>{option.label}</option>}</For>
         </select>
       </label>
     </fieldset>
@@ -166,11 +233,11 @@ export function App(): JSX.Element {
                     value={weekStartsOn()}
                     onChange={e => setWeekStartsOn(Number(e.currentTarget.value) as WeekStartsOn)}
                   >
-                    <For each={[0, 1, 2, 3, 4, 5, 6]}>{day => <option value={day}>{day}</option>}</For>
+                    <For each={WEEKDAY_OPTIONS}>{option => <option value={option.value}>{option.label}</option>}</For>
                   </select>
                 </label>
                 <label class="pg-field">
-                  Months
+                  Months shown
                   <input
                     type="number"
                     min="1"
@@ -179,35 +246,30 @@ export function App(): JSX.Element {
                     onInput={e => setNumberOfMonths(Number(e.currentTarget.value))}
                   />
                 </label>
-                {check(<code>fixedWeeks</code>, fixedWeeks, setFixedWeeks)}
-                {check(<code>pagedNavigation</code>, pagedNavigation, setPagedNavigation)}
-                {check(<code>disableDaysOutsideCurrentView</code>, outside, setOutside)}
+                {check(<>Always show six weeks</>, fixedWeeks, setFixedWeeks)}
+                {check(<>Move all months together</>, pagedNavigation, setPagedNavigation)}
+                {check(<>Disable dates outside visible months</>, outside, setOutside)}
               </fieldset>
 
               <fieldset class="pg-group">
                 <legend>Selection</legend>
-                {check(<code>multiple</code>, multiple, setMultiple)}
-                {check(<code>preventDeselect</code>, preventDeselect, setPreventDeselect)}
+                {check(<>Select multiple dates</>, multiple, setMultiple)}
+                {check(<>Keep at least one date selected</>, preventDeselect, setPreventDeselect)}
               </fieldset>
 
               <fieldset class="pg-group">
                 <legend>Constraints</legend>
-                {check(<code>disabled</code>, disabled, setDisabled)}
-                {check(<code>readonly</code>, readonly, setReadonly)}
-                {check(<>min/max (1446-01-05 … 1446-03-20)</>, bounded, setBounded)}
-                {check(
-                  <>
-                    <code>isDateUnavailable</code> (Fridays)
-                  </>,
-                  noFridays,
-                  setNoFridays,
-                )}
+                {check(<>Disable calendar</>, disabled, setDisabled)}
+                {check(<>Read-only</>, readonly, setReadonly)}
+                {check(<>Limit dates to 1446-01-05–1446-03-20</>, bounded, setBounded)}
+                {check(<>Disable Fridays</>, noFridays, setNoFridays)}
               </fieldset>
             </aside>
 
             <section class="pg-stage">
               <div class="pg-preview">
                 <HijriCalendar
+                  calendarSystem={calendarSystem()}
                   theme={theme()}
                   layout={layout()}
                   size={size()}
@@ -224,7 +286,9 @@ export function App(): JSX.Element {
                   readonly={readonly()}
                   minValue={bounded() ? { hy: 1446, hm: 1, hd: 5 } : undefined}
                   maxValue={bounded() ? { hy: 1446, hm: 3, hd: 20 } : undefined}
-                  isDateUnavailable={noFridays() ? date => getDayInWeek(date) === 5 : undefined}
+                  isDateUnavailable={
+                    noFridays() ? date => getDayInWeek(date, { calendarSystem: calendarSystem() }) === 5 : undefined
+                  }
                   value={value()}
                   onValueChange={setValue}
                 />
@@ -247,13 +311,13 @@ export function App(): JSX.Element {
               <fieldset class="pg-group">
                 <legend>Input</legend>
                 <label class="pg-field">
-                  Format
+                  Date format
                   <select value={format()} onChange={e => setFormat(e.currentTarget.value)}>
                     <For each={FORMATS}>{pattern => <option value={pattern}>{pattern}</option>}</For>
                   </select>
                 </label>
                 <label class="pg-field">
-                  aria-label
+                  Accessible label
                   <input type="text" value={ariaLabel()} onInput={e => setAriaLabel(e.currentTarget.value)} />
                 </label>
                 <label class="pg-field">
@@ -264,21 +328,22 @@ export function App(): JSX.Element {
                     onInput={e => setInputPlaceholder(e.currentTarget.value)}
                   />
                 </label>
-                {check(<code>editable</code>, editable, setEditable)}
+                {check(<>Allow typing</>, editable, setEditable)}
               </fieldset>
 
               {localeControls()}
 
               <fieldset class="pg-group">
                 <legend>State</legend>
-                {check(<code>disabled</code>, disabled, setDisabled)}
-                {check(<code>readonly</code>, readonly, setReadonly)}
+                {check(<>Disable date picker</>, disabled, setDisabled)}
+                {check(<>Read-only</>, readonly, setReadonly)}
               </fieldset>
             </aside>
 
             <section class="pg-stage">
               <div class="pg-preview">
                 <HijriDatePicker
+                  calendarSystem={calendarSystem()}
                   theme={theme()}
                   layout={layout()}
                   size={size()}

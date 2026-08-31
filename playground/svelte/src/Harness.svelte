@@ -5,11 +5,18 @@
    * Configuration comes from the query string so one Playwright spec can put
    * every framework's adapter into the same state. See `e2e/harness.ts`.
    */
-  import type { HijriDateObject } from '@taqwim/core'
+  import { islamicUmmAlQura, type HijriDateObject } from '@taqwim/core'
+  import { islamicCivil } from '@taqwim/core/calendars/islamic-civil'
+  import { islamicTbla } from '@taqwim/core/calendars/islamic-tbla'
   import { HijriCalendar, type HijriCalendarSize, type HijriCalendarTheme } from '@taqwim/svelte-styled'
   import { formatSelection, readConfig } from './harness'
 
   const config = readConfig(window.location.search)
+  const calendarSystem = {
+    'islamic-umalqura': islamicUmmAlQura,
+    'islamic-civil': islamicCivil,
+    'islamic-tbla': islamicTbla,
+  }[config.calendar]
 
   let theme = $state(config.theme as HijriCalendarTheme)
   let value = $state<HijriDateObject | HijriDateObject[] | undefined>(config.value)
@@ -22,6 +29,7 @@
 </select>
 
 <HijriCalendar
+  {calendarSystem}
   {theme}
   size={config.size as HijriCalendarSize}
   locale={config.locale}
