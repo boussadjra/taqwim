@@ -11,7 +11,7 @@
  */
 import { exit, report } from './checks.mjs'
 
-const [entryUrl] = globalThis.Deno ? globalThis.Deno.args : globalThis.process.argv.slice(2)
+const [entryUrl, civilUrl, tblaUrl] = globalThis.Deno ? globalThis.Deno.args : globalThis.process.argv.slice(2)
 
 if (!entryUrl) {
   console.log('FAIL harness: no entry URL was passed; run this through runtimes/run.mjs')
@@ -20,5 +20,7 @@ if (!entryUrl) {
 }
 
 const taqwim = await import(entryUrl)
+const civil = await import(civilUrl)
+const tbla = await import(tblaUrl)
 
-exit(report(taqwim, 'esm'))
+exit(report(taqwim, 'esm', civil, tbla))

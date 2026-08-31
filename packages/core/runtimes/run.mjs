@@ -44,7 +44,7 @@ const RUNTIMES = [
   {
     name: 'node',
     formats: ['esm', 'cjs'],
-    argv: (script, entry) => [script, entry],
+    argv: (script, entries) => [script, ...entries],
   },
   {
     name: 'deno',
@@ -55,12 +55,12 @@ const RUNTIMES = [
     // --allow-env because Deno gates the TZ lookup behind it,
     // and the time-zone axis is the whole reason this matrix has three columns.
     formats: ['esm'],
-    argv: (script, entry) => ['run', '--allow-read', '--allow-env', script, entry],
+    argv: (script, entries) => ['run', '--allow-read', '--allow-env', script, ...entries],
   },
   {
     name: 'bun',
     formats: ['esm', 'cjs'],
-    argv: (script, entry) => ['run', script, entry],
+    argv: (script, entries) => ['run', script, ...entries],
   },
 ]
 
@@ -135,14 +135,19 @@ function spawnCheck(executable, argv, timeZone) {
 /** Resolves the package's own export map, so this tests what a consumer would actually load. */
 function resolveEntryPoints() {
   const pkg = JSON.parse(readFileSync(join(PACKAGE_DIR, 'package.json'), 'utf8'))
-  const root = pkg.exports['.']
-  const entries = { esm: resolve(PACKAGE_DIR, root.import), cjs: resolve(PACKAGE_DIR, root.require) }
+  const paths = ['.', './calendars/islamic-civil', './calendars/islamic-tbla'].map(path => pkg.exports[path])
+  const entries = {
+    esm: paths.map(entry => resolve(PACKAGE_DIR, entry.import)),
+    cjs: paths.map(entry => resolve(PACKAGE_DIR, entry.require)),
+  }
 
-  for (const [format, path] of Object.entries(entries)) {
-    if (!existsSync(path)) {
-      console.error(`The ${format} entry declared in package.json is missing: ${path}`)
-      console.error('Build the package first:  vp run -F @taqwim/core build')
-      process.exit(1)
+  for (const [format, formatEntries] of Object.entries(entries)) {
+    for (const path of formatEntries) {
+      if (!existsSync(path)) {
+        console.error(`The ${format} entry declared in package.json is missing: ${path}`)
+        console.error('Build the package first:  vp run -F @taqwim/core build')
+        process.exit(1)
+      }
     }
   }
 
@@ -170,10 +175,10 @@ for (const runtime of RUNTIMES) {
   for (const format of runtime.formats) {
     // CommonJS takes a path; ESM needs a URL, because a bare Windows path is
     // not a valid dynamic-import specifier.
-    const entry = format === 'esm' ? pathToFileURL(entryPoints.esm).href : entryPoints.cjs
+    const entries = format === 'esm' ? entryPoints.esm.map(entry => pathToFileURL(entry).href) : entryPoints.cjs
 
     for (const timeZone of TIME_ZONES) {
-      const result = spawnCheck(executable, runtime.argv(ENTRY_SCRIPTS[format], entry), timeZone)
+      const result = spawnCheck(executable, runtime.argv(ENTRY_SCRIPTS[format], entries), timeZone)
       const stdout = result.stdout ?? ''
       const summary = /^RESULT (\S+) (\d+) (\d+) (\d+)$/m.exec(stdout)
       const label = `${runtime.name} ${version}  ${format}  ${timeZone}`

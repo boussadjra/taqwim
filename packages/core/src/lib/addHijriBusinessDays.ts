@@ -1,7 +1,5 @@
-import { epochDayOf, epochDayToDate } from './hDatesIndex'
+import { resolveCalendarSystem } from './calendarSystem'
 import { isValidHijriDate } from './isValidHijriDate'
-import { toGregorian } from './toGregorian'
-import { toHijri } from './toHijri'
 import type { HijriDateObject } from './types'
 import { DEFAULT_WEEKEND, shiftBusinessDays, type BusinessDayOptions } from './weekend'
 
@@ -32,15 +30,16 @@ export function addHijriBusinessDays(
   amount: number,
   options: BusinessDayOptions = {},
 ): HijriDateObject | null {
-  if (!date || !isValidHijriDate(date)) {
+  if (!date || !isValidHijriDate(date, options)) {
     return null
   }
 
-  const gregorianDate = toGregorian(date)
-  if (!gregorianDate) {
+  const calendarSystem = resolveCalendarSystem(options)
+  const epochDay = calendarSystem.toEpochDay(date)
+  if (epochDay === null) {
     return null
   }
 
-  const shifted = shiftBusinessDays(epochDayOf(gregorianDate), amount, options.weekend ?? DEFAULT_WEEKEND)
-  return toHijri(epochDayToDate(shifted))
+  const shifted = shiftBusinessDays(epochDay, amount, options.weekend ?? DEFAULT_WEEKEND)
+  return calendarSystem.fromEpochDay(shifted)
 }

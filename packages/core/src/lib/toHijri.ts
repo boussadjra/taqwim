@@ -1,7 +1,8 @@
 import { HijriRangeError } from './errors'
-import { daysInHijriMonth, epochDayOf, recordForEpochDay } from './hDatesIndex'
+import { epochDayOf } from './hDatesIndex'
 import { parseIsoDate } from './parseIsoDate'
-import type { HijriDateObject } from './types'
+import { resolveCalendarSystem } from './calendarSystem'
+import type { HijriCalendarSystemOptions, HijriDateObject } from './types'
 
 interface DateObject {
   year: number
@@ -9,9 +10,14 @@ interface DateObject {
   day: number
 }
 
-export function toHijri(date: DateObject | Date): HijriDateObject | null
-export function toHijri(year: number, month: number, day: number): HijriDateObject | null
-export function toHijri(date: string): HijriDateObject | null
+export function toHijri(date: DateObject | Date, options?: HijriCalendarSystemOptions): HijriDateObject | null
+export function toHijri(
+  year: number,
+  month: number,
+  day: number,
+  options?: HijriCalendarSystemOptions,
+): HijriDateObject | null
+export function toHijri(date: string, options?: HijriCalendarSystemOptions): HijriDateObject | null
 
 /**
  * Converts a Gregorian date to Hijri (Islamic) date.
@@ -24,10 +30,12 @@ export function toHijri(date: string): HijriDateObject | null
  */
 export function toHijri(
   dateOrYear: DateObject | Date | string | number | null,
-  month?: number,
+  monthOrOptions?: number | HijriCalendarSystemOptions,
   day?: number,
+  options?: HijriCalendarSystemOptions,
 ): HijriDateObject | null {
   let gregorianDate: Date
+  const calendarOptions = typeof monthOrOptions === 'object' ? monthOrOptions : options
 
   if (dateOrYear === null) {
     throw new Error('Invalid Gregorian date')
@@ -35,10 +43,10 @@ export function toHijri(
   if (typeof dateOrYear === 'string') {
     gregorianDate = parseIsoDate(dateOrYear)
   } else if (typeof dateOrYear === 'number') {
-    if (month === undefined || day === undefined) {
+    if (typeof monthOrOptions !== 'number' || day === undefined) {
       throw new Error('Invalid arguments')
     }
-    gregorianDate = new Date(dateOrYear, month - 1, day)
+    gregorianDate = new Date(dateOrYear, monthOrOptions - 1, day)
   } else if (dateOrYear instanceof Date) {
     gregorianDate = dateOrYear
   } else {
@@ -50,24 +58,10 @@ export function toHijri(
   }
 
   const epochDay = epochDayOf(gregorianDate)
-  const found = recordForEpochDay(epochDay)
+  const result = resolveCalendarSystem(calendarOptions).fromEpochDay(epochDay)
 
-  if (!found) {
+  if (!result) {
     throw HijriRangeError.forGregorianDate(gregorianDate)
   }
-
-  const { record, startEpochDay } = found
-  let remainingDays = epochDay - startEpochDay
-  let hijriMonth = 12
-
-  for (let i = 0; i < 12; i++) {
-    const daysThisMonth = daysInHijriMonth(record.dpm, i + 1)
-    if (remainingDays < daysThisMonth) {
-      hijriMonth = i + 1
-      break
-    }
-    remainingDays -= daysThisMonth
-  }
-
-  return { hy: record.hy, hm: hijriMonth, hd: remainingDays + 1 }
+  return result
 }

@@ -1,4 +1,4 @@
-import { type HijriDateObject, subHijriMonths, isValidHijriDate } from '.'
+import { isValidHijriDate, subHijriMonths, type HijriCalendarSystemOptions, type HijriDateObject } from '.'
 
 /**
  * Substracts a specified number of Hijri quarters from a given Hijri date.
@@ -20,9 +20,13 @@ import { type HijriDateObject, subHijriMonths, isValidHijriDate } from '.'
  * );
  * //=> { hy: 1444, hm: 9, hd: 29 };
  */
-export function subHijriQuarters(date: HijriDateObject, amount: number): HijriDateObject | null {
-  if (date && isValidHijriDate(date)) {
-    return subHijriMonths(date, amount * 3)
+export function subHijriQuarters(
+  date: HijriDateObject,
+  amount: number,
+  options?: HijriCalendarSystemOptions,
+): HijriDateObject | null {
+  if (date && isValidHijriDate(date, options)) {
+    return subHijriMonths(date, amount * 3, options)
   }
   return null
 }

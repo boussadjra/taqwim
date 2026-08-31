@@ -68,6 +68,7 @@ const PUBLIC_EXPORTS = [
   'isLessThan',
   'isLessThanOrEqual',
   'isValidHijriDate',
+  'islamicUmmAlQura',
   'normalizeHijriDate',
   'parseDateString',
   'recordForEpochDay',
@@ -123,7 +124,7 @@ function throws(fn, what, inspect) {
  * @param {Record<string, any>} t The `@taqwim/core` module namespace.
  * @returns {{ passed: number, failures: { name: string, message: string }[] }}
  */
-export function runChecks(t) {
+export function runChecks(t, civilModule, tblaModule) {
   const failures = []
   let passed = 0
 
@@ -168,6 +169,19 @@ export function runChecks(t) {
       if (roundTripped !== epochDay) mismatch = `epoch day ${epochDay} round-tripped to ${roundTripped}`
     }
     assert(mismatch === null, mismatch)
+  })
+
+  check('conversion: Civil and TBLA are deterministic and use distinct epochs', () => {
+    const civil = civilModule.islamicCivil
+    const tbla = tblaModule.islamicTbla
+    same(civil.toEpochDay({ hy: 1, hm: 1, hd: 1 }), -492148, 'Civil epoch')
+    same(tbla.toEpochDay({ hy: 1, hm: 1, hd: 1 }), -492149, 'TBLA epoch')
+    same(t.toHijri(2026, 8, 30, { calendarSystem: civil }), { hy: 1448, hm: 3, hd: 16 }, 'Civil conversion')
+    same(t.toHijri(2026, 8, 30, { calendarSystem: tbla }), { hy: 1448, hm: 3, hd: 17 }, 'TBLA conversion')
+    for (let epochDay = -500000; epochDay <= 50000; epochDay += 137) {
+      same(civil.toEpochDay(civil.fromEpochDay(epochDay)), epochDay, `Civil round-trip ${epochDay}`)
+      same(tbla.toEpochDay(tbla.fromEpochDay(epochDay)), epochDay, `TBLA round-trip ${epochDay}`)
+    }
   })
 
   check('range: both table boundaries convert', () => {
@@ -322,9 +336,9 @@ export function runChecks(t) {
  * the process exit code. Shared by both entry points so the ESM and CommonJS
  * legs report identically.
  */
-export function report(t, format) {
+export function report(t, format, civilModule, tblaModule) {
   const started = Date.now()
-  const { passed, failures } = runChecks(t)
+  const { passed, failures } = runChecks(t, civilModule, tblaModule)
   const elapsed = Date.now() - started
 
   for (const failure of failures) {

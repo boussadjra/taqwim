@@ -12,7 +12,7 @@
  * Deno consumers reach the package through `npm:@taqwim/core`, which resolves
  * the `import` condition, so there is no CommonJS story there to test.
  */
-const entryPath = process.argv[2]
+const [entryPath, civilPath, tblaPath] = process.argv.slice(2)
 
 async function main() {
   const { exit, report } = await import('./checks.mjs')
@@ -25,8 +25,10 @@ async function main() {
   }
 
   const taqwim = require(entryPath)
+  const civil = require(civilPath)
+  const tbla = require(tblaPath)
 
-  exit(report(taqwim, 'cjs'))
+  exit(report(taqwim, 'cjs', civil, tbla))
 }
 
 main()

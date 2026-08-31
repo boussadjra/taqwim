@@ -1,4 +1,4 @@
-import type { HijriDateObject, MonthDay } from './types'
+import type { HijriCalendarSystemOptions, HijriDateObject, MonthDay } from './types'
 import { getDaysLengthInMonth, getDayInWeek } from '.'
 
 /**
@@ -14,15 +14,16 @@ import { getDaysLengthInMonth, getDayInWeek } from '.'
 export function getMonthAdjacentDays(
   hijriDate: HijriDateObject,
   weekStartsOn = 0,
+  options?: HijriCalendarSystemOptions,
 ): {
   prevMonthDays: MonthDay[]
   nextMonthDays: MonthDay[]
 } {
-  const firstDayInWeek = getDayInWeek({ ...hijriDate, hd: 1 })
+  const firstDayInWeek = getDayInWeek({ ...hijriDate, hd: 1 }, options)
   if (firstDayInWeek === undefined) return { prevMonthDays: [], nextMonthDays: [] }
 
   const { hy, hm } = hijriDate
-  const daysInMonth = getDaysLengthInMonth(hy, hm)
+  const daysInMonth = getDaysLengthInMonth(hy, hm, options)
   if (daysInMonth < 0) return { prevMonthDays: [], nextMonthDays: [] }
 
   // How many cells precede day 1 in this layout.
@@ -30,7 +31,7 @@ export function getMonthAdjacentDays(
 
   const prevMonth = hm === 1 ? 12 : hm - 1
   const prevYear = hm === 1 ? hy - 1 : hy
-  const prevMonthLength = getDaysLengthInMonth(prevYear, prevMonth)
+  const prevMonthLength = getDaysLengthInMonth(prevYear, prevMonth, options)
   const prevMonthDays: MonthDay[] = []
 
   for (let i = leading; i > 0; i--) {

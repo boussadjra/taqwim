@@ -1,7 +1,9 @@
-import { getLocaleData, toGregorian } from '.'
+import { getLocaleData } from '.'
+import { resolveCalendarSystem } from './calendarSystem'
 import { formatGregorianToken } from './formatGregorian'
-import { dayOfWeekForHijriDate } from './hijriEpoch'
 import { isSupportedLocale } from './locales/availableLocales'
+import { toGregorianWithCalendar } from './toGregorianWithCalendar'
+import type { HijriCalendarSystemOptions } from './types'
 
 const FORMAT_TOKEN =
   /\biYYYY\b|\biYY\b|\biMM\b|\biM\b|\biMMM\b|\biMMMM\b|\biDD\b|\biD\b|\biE\b|\biEEE\b|\biEEEE\b|\byyyy\b|\byy\b|\by\b|\bMM\b|\bM\b|\bMMM\b|\bMMMM\b|\bdd\b|\bd\b|\bE\b|\bEEE\b|\bEEEE\b/g
@@ -45,12 +47,13 @@ export function formatHijriDate(
   hijriDate: { hy: number; hm: number; hd: number },
   formatStr: string,
   locale = 'en',
+  options?: HijriCalendarSystemOptions,
 ): string {
   if (!isSupportedLocale(locale)) {
     throw new Error(`The locale "${locale}" is not supported.`)
   }
 
-  const gregorianDate = toGregorian(hijriDate)
+  const gregorianDate = toGregorianWithCalendar(hijriDate, resolveCalendarSystem(options))
   if (!gregorianDate) {
     throw new Error('Invalid Hijri date')
   }
@@ -60,7 +63,7 @@ export function formatHijriDate(
   const hwShort = getLocaleData(locale, 'weekDaysShort')
   const hwLong = getLocaleData(locale, 'weekDaysLong')
   const hwNumeric = [0, 1, 2, 3, 4, 5, 6]
-  const dayOfWeek = dayOfWeekForHijriDate(hijriDate) ?? 0
+  const dayOfWeek = gregorianDate.getDay()
 
   return formatStr.replace(FORMAT_TOKEN, match => {
     switch (match) {

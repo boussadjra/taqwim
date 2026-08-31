@@ -1,8 +1,12 @@
-import { daysInHijriMonth, recordForHijriYear } from './hDatesIndex'
+import { resolveCalendarSystem } from './calendarSystem'
+import type { HijriCalendarSystemOptions } from './types'
 
-export function isValidHijriDate(date: { hy: number; hm: number; hd: number }): boolean
-export function isValidHijriDate(date: string, separator?: string): boolean
-export function isValidHijriDate(hy: number, hm: number, hd: number): boolean
+export function isValidHijriDate(
+  date: { hy: number; hm: number; hd: number },
+  options?: HijriCalendarSystemOptions,
+): boolean
+export function isValidHijriDate(date: string, separator?: string, options?: HijriCalendarSystemOptions): boolean
+export function isValidHijriDate(hy: number, hm: number, hd: number, options?: HijriCalendarSystemOptions): boolean
 /**
  * Checks if a given Hijri date is valid.
  *
@@ -13,28 +17,28 @@ export function isValidHijriDate(hy: number, hm: number, hd: number): boolean
  */
 export function isValidHijriDate(
   hy: number | string | { hy: number; hm: number; hd: number },
-  hm?: number | string,
-  hd?: number,
+  hmOrOptions?: number | string | HijriCalendarSystemOptions,
+  hdOrOptions?: number | HijriCalendarSystemOptions,
+  options?: HijriCalendarSystemOptions,
 ): boolean {
   if (typeof hy === 'string') {
-    const dateParts = hy.split((hm as string) || '-').map(Number)
+    const separator = typeof hmOrOptions === 'string' ? hmOrOptions : '-'
+    const calendarOptions =
+      typeof hmOrOptions === 'object' ? hmOrOptions : typeof hdOrOptions === 'object' ? hdOrOptions : options
+    const dateParts = hy.split(separator).map(Number)
     if (dateParts.length !== 3 || dateParts.some(Number.isNaN)) return false
     const [year, month, day] = dateParts
 
-    return isValidHijriDate(year, month, day)
+    return isValidHijriDate(year, month, day, calendarOptions)
   }
   if (typeof hy === 'object') {
-    return isValidHijriDate(hy.hy, hy.hm, hy.hd)
+    return isValidHijriDate(hy.hy, hy.hm, hy.hd, hmOrOptions as HijriCalendarSystemOptions | undefined)
   }
-  const yearRecord = recordForHijriYear(hy)
-  if (!yearRecord) {
-    return false
-  }
-
-  const month = hm as number
+  const month = hmOrOptions as number
   if (month < 1 || month > 12) {
     return false
   }
-
-  return hd! >= 1 && hd! <= daysInHijriMonth(yearRecord.dpm, month)
+  const days = resolveCalendarSystem(options).daysInMonth(hy, month)
+  const day = hdOrOptions as number
+  return days > 0 && day >= 1 && day <= days
 }

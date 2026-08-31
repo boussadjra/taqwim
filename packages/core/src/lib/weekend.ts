@@ -1,4 +1,5 @@
 import { dayOfWeekFromEpochDay } from './hDatesIndex'
+import type { HijriCalendarSystemOptions } from './calendars/types'
 
 /** Days of the week that are not business days, as `0` (Sunday) .. `6` (Saturday). */
 export type Weekend = readonly number[]
@@ -12,7 +13,7 @@ export type Weekend = readonly number[]
  */
 export const DEFAULT_WEEKEND: Weekend = [5, 6]
 
-export interface BusinessDayOptions {
+export interface BusinessDayOptions extends HijriCalendarSystemOptions {
   /**
    * Days of the week treated as non-working, as `0` (Sunday) .. `6` (Saturday).
    * @default [5, 6] // Friday, Saturday

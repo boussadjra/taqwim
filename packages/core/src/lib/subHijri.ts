@@ -1,4 +1,12 @@
-import { subHijriDays, subHijriMonths, subHijriWeeks, subHijriYears, type HijriDateObject, type HijriDuration } from '.'
+import {
+  subHijriDays,
+  subHijriMonths,
+  subHijriWeeks,
+  subHijriYears,
+  type HijriCalendarSystemOptions,
+  type HijriDateObject,
+  type HijriDuration,
+} from '.'
 
 /**
  * Substracts a Hijri duration from a given Hijri date.
@@ -22,7 +30,11 @@ import { subHijriDays, subHijriMonths, subHijriWeeks, subHijriYears, type HijriD
  * )
  * //=> { hy: 1444, hm: 6, hd: 5 }
  */
-export function subHijri(date: HijriDateObject, duration: HijriDuration) {
+export function subHijri(
+  date: HijriDateObject,
+  duration: HijriDuration,
+  options?: HijriCalendarSystemOptions,
+): HijriDateObject | null {
   const { years = 0, months = 0, days = 0, weeks = 0 } = duration
   let newDate: HijriDateObject | null = date
 
@@ -35,7 +47,7 @@ export function subHijri(date: HijriDateObject, duration: HijriDuration) {
 
   for (const { condition, func } of operations) {
     if (condition && newDate) {
-      newDate = func(newDate, condition)
+      newDate = func(newDate, condition, options)
     }
   }
 

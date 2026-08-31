@@ -1,4 +1,4 @@
-import { addHijriDays, isValidHijriDate, type HijriDateObject } from '.'
+import { addHijriDays, isValidHijriDate, type HijriCalendarSystemOptions, type HijriDateObject } from '.'
 
 /**
  * Adds a specified number of weeks to a Hijri date.
@@ -15,9 +15,13 @@ import { addHijriDays, isValidHijriDate, type HijriDateObject } from '.'
  * );
  * //=> { hy: 1445, hm: 11, hd: 12 }
  */
-export function addHijriWeeks(date: HijriDateObject, amount: number): HijriDateObject | null {
-  if (date && isValidHijriDate(date)) {
-    return addHijriDays(date, amount * 7)
+export function addHijriWeeks(
+  date: HijriDateObject,
+  amount: number,
+  options?: HijriCalendarSystemOptions,
+): HijriDateObject | null {
+  if (date && isValidHijriDate(date, options)) {
+    return addHijriDays(date, amount * 7, options)
   }
   return null
 }

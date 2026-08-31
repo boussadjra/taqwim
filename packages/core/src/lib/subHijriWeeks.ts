@@ -1,4 +1,4 @@
-import { subHijriDays, isValidHijriDate, type HijriDateObject } from '.'
+import { subHijriDays, isValidHijriDate, type HijriCalendarSystemOptions, type HijriDateObject } from '.'
 
 /**
  * Substracts a specified number of weeks from a Hijri date.
@@ -15,9 +15,13 @@ import { subHijriDays, isValidHijriDate, type HijriDateObject } from '.'
  * );
  * //=> { hy: 1445, hm: 9, hd: 1 }
  */
-export function subHijriWeeks(date: HijriDateObject, amount: number): HijriDateObject | null {
-  if (date && isValidHijriDate(date)) {
-    return subHijriDays(date, amount * 7)
+export function subHijriWeeks(
+  date: HijriDateObject,
+  amount: number,
+  options?: HijriCalendarSystemOptions,
+): HijriDateObject | null {
+  if (date && isValidHijriDate(date, options)) {
+    return subHijriDays(date, amount * 7, options)
   }
   return null
 }

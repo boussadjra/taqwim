@@ -1,4 +1,12 @@
-import { addHijriDays, addHijriMonths, addHijriWeeks, addHijriYears, type HijriDateObject, type HijriDuration } from '.'
+import {
+  addHijriDays,
+  addHijriMonths,
+  addHijriWeeks,
+  addHijriYears,
+  type HijriCalendarSystemOptions,
+  type HijriDateObject,
+  type HijriDuration,
+} from '.'
 
 /**
  * Adds a Hijri duration to a given Hijri date.
@@ -22,7 +30,11 @@ import { addHijriDays, addHijriMonths, addHijriWeeks, addHijriYears, type HijriD
  * )
  * //=> { hy: 1446, hm: 11, hd: 25 }
  */
-export function addHijri(date: HijriDateObject, duration: HijriDuration) {
+export function addHijri(
+  date: HijriDateObject,
+  duration: HijriDuration,
+  options?: HijriCalendarSystemOptions,
+): HijriDateObject | null {
   const { years = 0, months = 0, days = 0, weeks = 0 } = duration
   let newDate: HijriDateObject | null = date
 
@@ -35,7 +47,7 @@ export function addHijri(date: HijriDateObject, duration: HijriDuration) {
 
   for (const { condition, func } of operations) {
     if (condition && newDate) {
-      newDate = func(newDate, condition)
+      newDate = func(newDate, condition, options)
     }
   }
 

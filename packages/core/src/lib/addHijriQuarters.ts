@@ -1,4 +1,4 @@
-import { type HijriDateObject, addHijriMonths, isValidHijriDate } from '.'
+import { addHijriMonths, isValidHijriDate, type HijriCalendarSystemOptions, type HijriDateObject } from '.'
 
 /**
  * Adds a specified number of Hijri quarters to a given Hijri date.
@@ -20,9 +20,13 @@ import { type HijriDateObject, addHijriMonths, isValidHijriDate } from '.'
  * );
  * //=> { hy: 1446, hm: 1, hd: 29 }
  */
-export function addHijriQuarters(date: HijriDateObject, amount: number): HijriDateObject | null {
-  if (date && isValidHijriDate(date)) {
-    return addHijriMonths(date, amount * 3)
+export function addHijriQuarters(
+  date: HijriDateObject,
+  amount: number,
+  options?: HijriCalendarSystemOptions,
+): HijriDateObject | null {
+  if (date && isValidHijriDate(date, options)) {
+    return addHijriMonths(date, amount * 3, options)
   }
   return null
 }

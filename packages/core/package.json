@@ -2,7 +2,7 @@
   "name": "@taqwim/core",
   "version": "0.1.0-beta.6",
   "private": false,
-  "description": "Umm al-Qura Hijri date conversion, arithmetic and formatting for JavaScript",
+  "description": "Deterministic Hijri date conversion, arithmetic and formatting for JavaScript",
   "keywords": [
     "backend",
     "bun",
@@ -42,6 +42,30 @@
       },
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
+    },
+    "./calendars/islamic-umalqura": {
+      "types": {
+        "import": "./dist/calendars/islamic-umalqura.d.mts",
+        "require": "./dist/calendars/islamic-umalqura.d.cts"
+      },
+      "import": "./dist/calendars/islamic-umalqura.mjs",
+      "require": "./dist/calendars/islamic-umalqura.cjs"
+    },
+    "./calendars/islamic-civil": {
+      "types": {
+        "import": "./dist/calendars/islamic-civil.d.mts",
+        "require": "./dist/calendars/islamic-civil.d.cts"
+      },
+      "import": "./dist/calendars/islamic-civil.mjs",
+      "require": "./dist/calendars/islamic-civil.cjs"
+    },
+    "./calendars/islamic-tbla": {
+      "types": {
+        "import": "./dist/calendars/islamic-tbla.d.mts",
+        "require": "./dist/calendars/islamic-tbla.d.cts"
+      },
+      "import": "./dist/calendars/islamic-tbla.mjs",
+      "require": "./dist/calendars/islamic-tbla.cjs"
     },
     "./package.json": "./package.json"
   },

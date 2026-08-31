@@ -1,5 +1,5 @@
-import { isValidHijriDate, type HijriDateObject } from '.'
-import { shiftHijriDays } from './hijriEpoch'
+import { isValidHijriDate, type HijriCalendarSystemOptions, type HijriDateObject } from '.'
+import { resolveCalendarSystem, shiftWithCalendar } from './calendarSystem'
 
 /**
  * Subtract the specified number of days from the given date.
@@ -19,9 +19,13 @@ import { shiftHijriDays } from './hijriEpoch'
  * //=> { hy: 1445, hm: 10, hd: 11 }
  */
 
-export function subHijriDays(date: HijriDateObject, amount: number): HijriDateObject | null {
-  if (date && isValidHijriDate(date)) {
-    return shiftHijriDays(date, -amount)
+export function subHijriDays(
+  date: HijriDateObject,
+  amount: number,
+  options?: HijriCalendarSystemOptions,
+): HijriDateObject | null {
+  if (date && isValidHijriDate(date, options)) {
+    return shiftWithCalendar(date, -amount, resolveCalendarSystem(options))
   }
   return null
 }

@@ -24,3 +24,5 @@ export interface MonthDay {
   isToday?: boolean
   isAdjacent?: boolean
 }
+
+export type { HijriCalendarId, HijriCalendarSystem, HijriCalendarSystemOptions } from './calendars/types'
