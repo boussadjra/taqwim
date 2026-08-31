@@ -6,7 +6,7 @@ import type {
   WeekDayFormat,
   WeekStartsOn,
 } from '@taqwim/calendar-core'
-import type { HijriDateObject } from '@taqwim/core'
+import type { HijriCalendarSystem, HijriDateObject } from '@taqwim/core'
 import type { ReactNode } from 'react'
 
 /**
@@ -17,6 +17,7 @@ import type { ReactNode } from 'react'
  * framework forces it (`children` vs slots, `onValueChange` vs `v-model`).
  */
 export interface HijriCalendarRootProps {
+  calendarSystem?: HijriCalendarSystem
   /** Initial selection, for uncontrolled use. */
   defaultValue?: HijriDateObject | HijriDateObject[]
   /** Controlled selection. */

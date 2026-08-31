@@ -1,5 +1,5 @@
 import type { Matcher, WeekDayFormat, WeekStartsOn } from '@taqwim/calendar-core'
-import type { HijriDateObject } from '@taqwim/core'
+import type { HijriCalendarSystem, HijriDateObject } from '@taqwim/core'
 
 export type { Matcher, WeekDayFormat, WeekStartsOn }
 
@@ -11,6 +11,7 @@ export type { Matcher, WeekDayFormat, WeekStartsOn }
  * framework forces it (`@Output` events instead of callback props).
  */
 export interface HijriCalendarInputs {
+  calendarSystem?: HijriCalendarSystem
   defaultValue?: HijriDateObject | HijriDateObject[]
   value?: HijriDateObject | HijriDateObject[]
   defaultPlaceholder?: HijriDateObject

@@ -5,7 +5,7 @@ import {
   type DateEmphasis,
   type DatePickerInputDisplay,
 } from '@taqwim/calendar-core'
-import type { HijriDateObject } from '@taqwim/core'
+import type { HijriCalendarSystem, HijriDateObject } from '@taqwim/core'
 import {
   Component,
   ElementRef,
@@ -63,6 +63,7 @@ let instances = 0
         (keydown.escape)="isOpen.set(false)"
       >
         <taqwim-hijri-calendar
+          [calendarSystem]="calendarSystem"
           [theme]="theme"
           [size]="size"
           [layout]="layout"
@@ -88,6 +89,7 @@ let instances = 0
   `,
 })
 export class HijriDatePicker implements OnChanges, OnDestroy {
+  @Input() calendarSystem?: HijriCalendarSystem
   @Input() theme: HijriCalendarTheme = 'default'
   @Input() size: HijriCalendarSize = 'default'
   @Input() layout: HijriCalendarLayout = 'default'
@@ -163,7 +165,7 @@ export class HijriDatePicker implements OnChanges, OnDestroy {
   }
 
   protected commitDraft(): void {
-    const parsed = parseDatePickerDraft(this.draft(), this.inputDisplay)
+    const parsed = parseDatePickerDraft(this.draft(), this.inputDisplay, this.calendarSystem)
     if (parsed === 'empty') {
       this.commit(undefined)
       return
@@ -202,6 +204,7 @@ export class HijriDatePicker implements OnChanges, OnDestroy {
       locale: this.locale,
       gregorianLocale: this.gregorianLocale ?? this.locale,
       inputDisplay: this.inputDisplay,
+      calendarSystem: this.calendarSystem,
     }).value
   }
 
@@ -214,6 +217,7 @@ export class HijriDatePicker implements OnChanges, OnDestroy {
         locale: this.locale,
         gregorianLocale: this.gregorianLocale ?? this.locale,
         inputDisplay: this.inputDisplay,
+        calendarSystem: this.calendarSystem,
       }).value,
     )
     this.valueChange.emit(next)

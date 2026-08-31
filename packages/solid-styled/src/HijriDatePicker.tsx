@@ -79,6 +79,7 @@ export function HijriDatePicker(props: HijriDatePickerProps): JSX.Element {
     locale: calendarProps.locale ?? 'en',
     gregorianLocale: calendarProps.gregorianLocale ?? calendarProps.locale ?? 'en',
     inputDisplay: inputDisplay(),
+    calendarSystem: calendarProps.calendarSystem,
   }))
 
   const formatted = createMemo(() => formatDatePickerValues(selected(), formatOptions()))
@@ -128,7 +129,7 @@ export function HijriDatePicker(props: HijriDatePickerProps): JSX.Element {
   }
 
   function commitDraft() {
-    const parsed = parseDatePickerDraft(draft(), inputDisplay())
+    const parsed = parseDatePickerDraft(draft(), inputDisplay(), calendarProps.calendarSystem)
     if (parsed === 'empty') {
       commit(undefined)
       return

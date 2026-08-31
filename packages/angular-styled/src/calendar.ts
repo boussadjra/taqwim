@@ -1,4 +1,5 @@
 import { getLocaleData, MAX_HIJRI_YEAR, MIN_HIJRI_YEAR, type HijriDateObject } from '@taqwim/core'
+import type { HijriCalendarSystem } from '@taqwim/core'
 import { getCellDisplayValues, type CalendarDay, type DateEmphasis } from '@taqwim/calendar-core'
 import {
   HijriCalendarCell,
@@ -122,6 +123,7 @@ export class StyledCalendarCellTrigger {
   template: `
     <taqwim-calendar
       #root
+      [calendarSystem]="calendarSystem"
       [attr.data-taqwim-theme]="theme"
       [attr.data-taqwim-size]="size === 'default' ? null : size"
       [attr.data-taqwim-layout]="layout === 'default' ? null : layout"
@@ -365,6 +367,7 @@ export class HijriCalendar implements OnChanges {
   /** Show the month and year as separate heading buttons that open their pickers. */
   @Input() selectableHeading = true
 
+  @Input() calendarSystem?: HijriCalendarSystem
   @Input() defaultValue?: HijriCalendarInputs['defaultValue']
   @Input() value?: HijriCalendarInputs['value']
   @Input() defaultPlaceholder?: HijriDateObject

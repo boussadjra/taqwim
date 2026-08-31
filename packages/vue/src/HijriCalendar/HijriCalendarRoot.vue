@@ -8,11 +8,13 @@ import type {
   WeekDayFormat,
   WeekStartsOn,
 } from '@taqwim/calendar-core'
-import type { HijriDateObject } from '@taqwim/core'
+import type { HijriCalendarSystem, HijriDateObject } from '@taqwim/core'
 
 export type { Direction, Matcher, WeekDayFormat, WeekStartsOn }
 
 export interface HijriCalendarRootProps {
+  /** Hijri calendar strategy. Defaults to Umm al-Qura. */
+  calendarSystem?: HijriCalendarSystem
   /** The default selection, for uncontrolled use */
   defaultValue?: HijriDateObject | HijriDateObject[]
   /** The default placeholder date, for uncontrolled use */
@@ -146,6 +148,7 @@ let pendingFocus: string | undefined
 
 const { store, state } = useCalendar(
   (): CalendarOptions => ({
+    calendarSystem: props.calendarSystem,
     value: modelValue.value,
     defaultValue: props.defaultValue,
     placeholder: placeholder.value,

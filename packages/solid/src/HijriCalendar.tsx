@@ -319,9 +319,25 @@ export function HijriCalendarCellTrigger(
     return store.getCellTriggerProps(local.day)
   }
 
+  // A pointer focuses a button between pointerdown and click. Updating the
+  // snapshot during that focus can refresh render-prop children before
+  // Solid's delegated click reaches the button. Defer the store's focus move
+  // to the click for pointer interactions; keyboard/programmatic focus still
+  // updates immediately.
+  let pointerIsDown = false
+
+  function onPointerDown() {
+    pointerIsDown = true
+  }
+
+  function onPointerEnd() {
+    pointerIsDown = false
+  }
+
   function onClick() {
     // `select` re-checks these itself; this only avoids the pointless call.
     if (local.day.isDisabled || local.day.isUnavailable) return
+    store.focusDate(local.day.date)
     store.select(local.day.date)
   }
 
@@ -329,12 +345,20 @@ export function HijriCalendarCellTrigger(
     // Tabbing or clicking into a cell makes it the roving-focus target.
     // Re-reporting a date the store already holds would echo its own
     // programmatic `.focus()` back at it, so that case is skipped.
-    if (local.day.isDisabled || local.day.isFocused) return
+    if (pointerIsDown || local.day.isDisabled || local.day.isFocused) return
     store.focusDate(local.day.date)
   }
 
   return (
-    <button {...triggerProps()} {...rest} onClick={onClick} onFocus={onFocus}>
+    <button
+      {...triggerProps()}
+      {...rest}
+      onClick={onClick}
+      onFocus={onFocus}
+      onPointerDown={onPointerDown}
+      onPointerUp={onPointerEnd}
+      onPointerCancel={onPointerEnd}
+    >
       {hasChildren
         ? renderChildren(local.children, () => ({
             dayValue: display().dayValue,

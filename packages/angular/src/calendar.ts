@@ -1,6 +1,6 @@
 import type { CalendarDay, CalendarMonth, CellProps } from '@taqwim/calendar-core'
 import { getCellDisplayValues } from '@taqwim/calendar-core'
-import type { HijriDateObject } from '@taqwim/core'
+import type { HijriCalendarSystem, HijriDateObject } from '@taqwim/core'
 import {
   Component,
   Directive,
@@ -63,6 +63,7 @@ export class HijriCalendarRoot implements OnChanges, AfterViewInit {
   readonly weekDays = computed(() => this.state().weekDays)
   readonly gregorianValue = computed(() => this.state().gregorianValue)
 
+  @Input() calendarSystem?: HijriCalendarSystem
   @Input() defaultValue?: HijriCalendarInputs['defaultValue']
   @Input() value?: HijriCalendarInputs['value']
   @Input() defaultPlaceholder?: HijriDateObject
@@ -134,6 +135,7 @@ export class HijriCalendarRoot implements OnChanges, AfterViewInit {
 
   private pushOptions(): void {
     this.calendar.setOptions({
+      calendarSystem: this.calendarSystem,
       defaultValue: this.defaultValue,
       value: this.value,
       defaultPlaceholder: this.defaultPlaceholder,

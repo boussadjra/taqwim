@@ -40,6 +40,7 @@
     locale: calendarProps.locale ?? 'en',
     gregorianLocale: calendarProps.gregorianLocale ?? calendarProps.locale ?? 'en',
     inputDisplay,
+    calendarSystem: calendarProps.calendarSystem,
   })
 
   const formatted = $derived(formatDatePickerValues(selected, formatOptions))
@@ -61,7 +62,7 @@
   }
 
   function commitDraft() {
-    const parsed = parseDatePickerDraft(draft, inputDisplay)
+    const parsed = parseDatePickerDraft(draft, inputDisplay, calendarProps.calendarSystem)
     if (parsed === 'empty') {
       commit(undefined)
       return

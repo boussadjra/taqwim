@@ -47,7 +47,7 @@ export function HijriDatePicker({
   renderTrigger,
   ...calendarProps
 }: HijriDatePickerProps): ReactNode {
-  const { theme = 'default', disabled, readonly, locale = 'en', gregorianLocale } = calendarProps
+  const { theme = 'default', disabled, readonly, locale = 'en', gregorianLocale, calendarSystem } = calendarProps
 
   const [uncontrolled, setUncontrolled] = useState<HijriDateObject | undefined>(
     Array.isArray(defaultValue) ? defaultValue[0] : defaultValue,
@@ -66,8 +66,9 @@ export function HijriDatePicker({
       locale,
       gregorianLocale: gregorianLocale ?? locale,
       inputDisplay,
+      calendarSystem,
     }),
-    [format, gregorianFormat, locale, gregorianLocale, inputDisplay],
+    [format, gregorianFormat, locale, gregorianLocale, inputDisplay, calendarSystem],
   )
 
   const formatted = useMemo(() => formatDatePickerValues(selected, formatOptions), [selected, formatOptions])
@@ -87,7 +88,7 @@ export function HijriDatePicker({
   }
 
   function commitDraft() {
-    const parsed = parseDatePickerDraft(draft, inputDisplay)
+    const parsed = parseDatePickerDraft(draft, inputDisplay, calendarSystem)
     if (parsed === 'empty') {
       commit(undefined)
       return

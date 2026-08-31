@@ -96,6 +96,7 @@ const formatOptions = computed(() => ({
   locale: props.locale ?? 'en',
   gregorianLocale: props.gregorianLocale ?? props.locale ?? 'en',
   inputDisplay: props.inputDisplay,
+  calendarSystem: props.calendarSystem,
 }))
 
 const isOpen = ref(false)
@@ -126,7 +127,7 @@ function onSelect(value: HijriDateObject | HijriDateObject[] | undefined) {
 }
 
 function commitDraft() {
-  const parsed = parseDatePickerDraft(draft.value, props.inputDisplay)
+  const parsed = parseDatePickerDraft(draft.value, props.inputDisplay, props.calendarSystem)
   if (parsed === 'empty') {
     modelValue.value = undefined
     return

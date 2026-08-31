@@ -7,7 +7,7 @@ import type {
   WeekDayFormat,
   WeekStartsOn,
 } from '@taqwim/calendar-core'
-import type { HijriDateObject } from '@taqwim/core'
+import type { HijriCalendarSystem, HijriDateObject } from '@taqwim/core'
 import type { Snippet } from 'svelte'
 import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements'
 
@@ -19,6 +19,7 @@ import type { HTMLAttributes, HTMLButtonAttributes } from 'svelte/elements'
  * framework forces it (snippets instead of slots, callbacks instead of events).
  */
 export interface HijriCalendarRootOptions {
+  calendarSystem?: HijriCalendarSystem
   /** Initial selection, for uncontrolled use. */
   defaultValue?: HijriDateObject | HijriDateObject[]
   /** Controlled selection. Bindable. */
@@ -99,6 +100,7 @@ export type HijriCalendarGridProps = DivProps & {
 
 /** The option names, so the root can tell them from DOM attributes. */
 export const OPTION_KEYS = new Set<string>([
+  'calendarSystem',
   'defaultValue',
   'value',
   'onValueChange',

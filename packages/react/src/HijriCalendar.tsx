@@ -31,6 +31,7 @@ function withReactCasing<T extends { tabindex: 0 | -1 }>({ tabindex, ...rest }: 
  * split has to be explicit.
  */
 const OPTION_KEYS = new Set<string>([
+  'calendarSystem',
   'defaultValue',
   'value',
   'onValueChange',

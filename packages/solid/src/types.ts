@@ -6,7 +6,7 @@ import type {
   WeekDayFormat,
   WeekStartsOn,
 } from '@taqwim/calendar-core'
-import type { HijriDateObject } from '@taqwim/core'
+import type { HijriCalendarSystem, HijriDateObject } from '@taqwim/core'
 import type { JSX } from 'solid-js'
 
 /**
@@ -17,6 +17,7 @@ import type { JSX } from 'solid-js'
  * framework forces it.
  */
 export interface HijriCalendarRootOptions {
+  calendarSystem?: HijriCalendarSystem
   /** Initial selection, for uncontrolled use. */
   defaultValue?: HijriDateObject | HijriDateObject[]
   /** Controlled selection. */
@@ -73,6 +74,7 @@ export type HijriCalendarRootProps = HijriCalendarRootOptions &
 
 /** The option names, so the root can tell them from DOM attributes. */
 export const OPTION_KEYS = [
+  'calendarSystem',
   'defaultValue',
   'value',
   'onValueChange',
