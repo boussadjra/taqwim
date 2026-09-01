@@ -3,7 +3,7 @@ title: Taqwim
 description: Hijri date utilities and accessible calendar components for Vue, React, Svelte, Solid and Angular.
 template: splash
 hero:
-  tagline: One Umm al-Qura calendar, bound into five frameworks. Same behaviour, same keyboard, same attributes.
+  tagline: Three deterministic Hijri calendar systems, bound into five frameworks. Same behaviour, same keyboard, same attributes.
   image:
     file: ../../../public/logo.svg
   actions:
@@ -29,8 +29,8 @@ import LiveCalendar from '../../components/LiveCalendar.astro'
       <dd>Vue&nbsp;3 · React · Svelte&nbsp;5 · Solid · Angular</dd>
     </div>
     <div>
-      <dt>Covers</dt>
-      <dd>1343&ndash;1500&nbsp;AH, tabulated from Umm&nbsp;al-Qura</dd>
+      <dt>Calendar systems</dt>
+      <dd>Umm&nbsp;al-Qura · Islamic Civil · Islamic TBLA</dd>
     </div>
     <div>
       <dt>Ships</dt>
@@ -90,15 +90,17 @@ The working week runs Sunday to Thursday across most of the Arab world, so
 business-day arithmetic defaults to a Friday/Saturday weekend — overridable per
 call, never global.
 
-## What it will not do
+## Three systems, chosen explicitly
 
-Conversion is table-driven from the Umm al-Qura data, which makes it exact
-between **1343 and 1500 AH** (1 August 1924 to 16 November 2077) and impossible
-outside it. Ask for a date beyond the table and Taqwim throws `HijriRangeError`
-rather than returning a plausible wrong answer.
+Umm al-Qura remains the compatible default and follows Taqwim's bundled table
+from **1343 to 1500 AH** (1 August 1924 to 16 November 2077). Islamic Civil and
+Islamic TBLA are optional, proleptic arithmetic calendars for applications that
+need those specific rules beyond the table.
 
-Dates matter to the people reading them. A library that quietly guesses is worse
-than one that stops, so this one stops — and [says exactly where the edges are](/guide/dates/).
+They are not interchangeable labels for one date. The same Hijri fields can
+identify different absolute days, so Taqwim keeps the choice explicit instead
+of guessing from a locale. [Compare the three systems and select one](/guide/calendar-systems/),
+or read [the default range and error behavior](/guide/dates/).
 
 ## Themed with one attribute
 

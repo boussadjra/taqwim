@@ -42,6 +42,9 @@ The active strategy is used consistently for grid dates, navigation,
 validation, formatting and Gregorian equivalents. Changing it with
 `setOptions` rebuilds derived state without emitting a selection change.
 
+See the [calendar-system guide](https://taqwim.vercel.app/guide/calendar-systems/)
+for the Umm al-Qura, Civil and TBLA comparison and framework examples.
+
 The store exposes a `subscribe` / `getSnapshot` pair, so it plugs directly into
 React's `useSyncExternalStore` and the equivalent primitive in every other
 framework. `getSnapshot()` returns a **stable reference** until something

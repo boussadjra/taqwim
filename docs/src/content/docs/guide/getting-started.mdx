@@ -141,6 +141,27 @@ export class Example {
   </TabItem>
 </Tabs>
 
+## Choose a Hijri calendar system
+
+Every calendar uses Umm al-Qura by default. To use Islamic Civil or Islamic
+TBLA, add `@taqwim/core` directly, import the strategy, and pass it through the
+same `calendarSystem` option in every framework:
+
+```sh
+pnpm add @taqwim/core@beta
+```
+
+```ts
+import { islamicCivil } from '@taqwim/core/calendars/islamic-civil'
+
+// Vue:    <HijriCalendar :calendar-system="islamicCivil" />
+// Others: <HijriCalendar calendarSystem={islamicCivil} />
+```
+
+[Hijri calendar systems](/guide/calendar-systems/) compares Umm al-Qura,
+Islamic Civil and Islamic TBLA, including their ranges, epoch rules, imports
+and storage implications.
+
 ## The date picker
 
 `HijriDatePicker` is the same calendar behind a text input. It is single-select
@@ -169,9 +190,10 @@ formatHijriDate(later, 'iD iMMMM iYYYY', 'ar')
 toGregorian(later) // a Date at local midnight
 ```
 
-Conversion covers **1343–1500 AH** (1924–2077 CE), the range the Umm al-Qura
-table defines. Outside it, Taqwim throws `HijriRangeError` rather than returning
-a quietly wrong date.
+Default Umm al-Qura conversion covers **1343–1500 AH** (1924–2077 CE), the
+range its table defines. Outside it, Taqwim throws `HijriRangeError` rather than
+returning a quietly wrong date. Islamic Civil and Islamic TBLA are proleptic
+arithmetic alternatives; see [Hijri calendar systems](/guide/calendar-systems/).
 
 [Dates without a calendar](/guide/dates/) covers the rest of that
 package: arithmetic, business days, comparison, parsing and locale-aware

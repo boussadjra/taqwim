@@ -41,6 +41,9 @@ Use `@taqwim/core/calendars/islamic-tbla` for the Thursday-epoch TBLA variant.
 Both are deterministic tabular algorithms. Omitting `calendarSystem` always
 means Umm al-Qura.
 
+See the [calendar-system guide](https://taqwim.vercel.app/guide/calendar-systems/)
+for their range, epoch and persistence differences.
+
 ## Runtimes
 
 No DOM, nothing from `node:`, and zero production dependencies. The built package is tested on

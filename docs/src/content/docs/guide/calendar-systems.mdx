@@ -1,81 +1,123 @@
 ---
 title: Hijri calendar systems
-description: Choose Umm al-Qura, Civil or TBLA without changing Taqwim's date shape.
+description: Compare Umm al-Qura, Islamic Civil and Islamic TBLA, then select the right system for conversions and components.
 ---
 
-Taqwim uses **Umm al-Qura** (`islamic-umalqura`) by default. Existing code does
-not need to change, and its conversions, range errors and component output keep
-the same meaning.
+import { Tabs, TabItem } from '@astrojs/starlight/components'
+import CalendarSystemComparison from '../../../components/CalendarSystemComparison.astro'
 
-The other built-in choices are deterministic tabular calendars:
+Taqwim supports three deterministic Hijri calendar systems. **Umm al-Qura** is
+the backward-compatible default; **Islamic Civil** and **Islamic TBLA** are
+explicit arithmetic alternatives.
 
-| System      | Identifier         | Rule                                         | Range                                             |
-| ----------- | ------------------ | -------------------------------------------- | ------------------------------------------------- |
-| Umm al-Qura | `islamic-umalqura` | Taqwim's authoritative Saudi table           | 1343–1500 AH                                      |
-| Civil       | `islamic-civil`    | Fixed 30-year arithmetic cycle, Friday epoch | Proleptic; `Date` output is limited by JavaScript |
-| TBLA        | `islamic-tbla`     | The same arithmetic cycle, Thursday epoch    | Proleptic; `Date` output is limited by JavaScript |
+The choice matters. The same Gregorian day can have different Hijri fields in
+different systems, and the same `{ hy, hm, hd }` fields can identify different
+absolute days. Choose one system for a stored date and keep that choice with it.
 
-Civil and TBLA alternate 30- and 29-day months. Month 12 gains a day in years
-2, 5, 7, 10, 13, 16, 18, 21, 24, 26 and 29 of each 30-year cycle. TBLA's epoch
-is one day earlier than Civil's, so the same Hijri fields identify different
-absolute days.
+## Choose a system
 
-These are arithmetic calendars. They are not observational calendars and do
-not claim to reproduce local moon sightings. Taqwim does not expose plain
-`islamic`, because that identifier does not select one exact algorithm. It also
-does not expose `islamic-rgsa`: that identifier represents a Saudi sighting-based
-calendar and must not be approximated with arithmetic or a fixed offset.
+- **Umm al-Qura** (`islamic-umalqura`) — choose the compatible default for
+  existing Taqwim applications and integrations that expect its supplied
+  1343–1500 AH table.
+- **Islamic Civil** (`islamic-civil`) — choose the Friday-epoch arithmetic
+  calendar for deterministic calculations beyond that table, or for an
+  integration that names this identifier.
+- **Islamic TBLA** (`islamic-tbla`) — choose the Thursday-epoch arithmetic
+  calendar only when your data or integration specifically expects TBLA.
 
-## Core
+If an external contract, database or API names a calendar identifier, use that
+exact system. If it does not, do not infer one from the word “Hijri” alone.
 
-Optional algorithms have separate imports, so a default Umm al-Qura bundle does
-not include them.
+<CalendarSystemComparison />
+
+## How the systems differ
+
+### Umm al-Qura
+
+Taqwim's Umm al-Qura implementation reads month lengths from a bundled table.
+There is no formula to extend beyond the table, so conversion outside
+1343–1500 AH throws `HijriRangeError`. This bounded behaviour is deliberate: a
+missing table entry is reported instead of being replaced with a plausible but
+different calendar.
+
+Use Umm al-Qura when you need Taqwim's established default behaviour or when the
+date must match the supplied Umm al-Qura data. Existing code that does not pass
+`calendarSystem` continues to use it.
+
+### Islamic Civil
+
+Islamic Civil is a tabular calendar. Months 1, 3, 5, 7, 9 and 11 have 30 days;
+the alternating months have 29. Month 12 has 30 days in leap years 2, 5, 7, 10,
+13, 16, 18, 21, 24, 26 and 29 of each 30-year cycle.
+
+Because these rules are arithmetic, Taqwim can calculate backward and forward
+without a finite calendar table. The system uses the Friday epoch: 1 Muharram
+1 AH corresponds to 19 July 622 in the proleptic Gregorian calendar.
+
+Use it when a deterministic proleptic calendar is more important than matching
+Umm al-Qura data, or when another system explicitly uses the
+`islamic-civil` identifier.
+
+### Islamic TBLA
+
+Islamic TBLA uses exactly the same month lengths and 30-year leap cycle as
+Islamic Civil. Its epoch is Thursday instead of Friday: 1 Muharram 1 AH
+corresponds to 18 July 622 in the proleptic Gregorian calendar.
+
+That one-day epoch difference remains throughout the calendar. For the same
+Hijri fields, TBLA identifies the Gregorian day immediately before Civil. Use
+TBLA only when your data or integration specifically expects
+`islamic-tbla`; it is not an interchangeable spelling of Islamic Civil.
+
+:::caution[These are not moon-sighting calendars]
+None of these three choices represents a local observation of the crescent.
+Observed religious dates can vary by place and authority. Taqwim also does not
+expose the generic `islamic` identifier or Saudi sighting-based
+`islamic-rgsa`, because neither can be safely approximated by silently choosing
+one of these algorithms.
+:::
+
+The identifiers follow the calendar names defined by
+[Unicode CLDR](https://github.com/unicode-org/cldr/blob/main/common/bcp47/calendar.xml).
+Taqwim performs its own deterministic conversion; it does not delegate Hijri
+conversion to the host's `Intl` implementation.
+
+## Select a system in `@taqwim/core`
+
+Umm al-Qura is exported from the main entry and selected automatically. Civil
+and TBLA use explicit subpath imports so they stay out of the default bundle.
 
 ```ts
-import { formatHijriDate, toGregorian, toHijri } from '@taqwim/core'
+import { islamicUmmAlQura, toHijri } from '@taqwim/core'
 import { islamicCivil } from '@taqwim/core/calendars/islamic-civil'
 import { islamicTbla } from '@taqwim/core/calendars/islamic-tbla'
 
+toHijri('2026-08-30')
+// Umm al-Qura, because calendarSystem is omitted
+
 toHijri('2026-08-30', { calendarSystem: islamicCivil })
-// { hy: 1448, hm: 3, hd: 16 }
-
-toGregorian({ hy: 1448, hm: 3, hd: 17 }, { calendarSystem: islamicTbla })
-// Sun Aug 30 2026, local midnight
-
-formatHijriDate({ hy: 1448, hm: 3, hd: 10 }, 'iD iMMMM iYYYY — yyyy-MM-dd', 'en', { calendarSystem: islamicCivil })
-// "10 Rabi' al-awwal 1448 — 2026-08-24"
+toHijri('2026-08-30', { calendarSystem: islamicTbla })
+toHijri('2026-08-30', { calendarSystem: islamicUmmAlQura })
 ```
 
 The same final `{ calendarSystem }` option is available on calendar-dependent
 conversion, validation, month-length, weekday, arithmetic, business-day and
-formatting helpers. Leave it out for Umm al-Qura.
+formatting helpers.
 
-## Calendar strategy contract
+## Select a system in a calendar or date picker
 
-`HijriCalendarSystem` is a small, dependency-free strategy over integer epoch
-days:
+Add `@taqwim/core` as a direct dependency when your application imports an
+optional strategy:
 
-```ts
-interface HijriCalendarSystem {
-  readonly id: 'islamic-umalqura' | 'islamic-civil' | 'islamic-tbla'
-  toEpochDay(date: HijriDateObject): number | null
-  fromEpochDay(epochDay: number): HijriDateObject | null
-  daysInMonth(year: number, month: number): number
-  readonly minEpochDay?: number
-  readonly maxEpochDay?: number
-}
+```sh
+pnpm add @taqwim/core@beta
 ```
 
-Parsing Gregorian input, constructing `Date`, formatting, grid generation and
-navigation stay shared. A strategy only supplies calendar-specific date maths.
-The components receive the strategy object, not an identifier looked up in a
-global registry.
+Every headless and styled calendar and date picker accepts the same
+`calendarSystem` option.
 
-## Components
-
-Every headless and styled calendar and date picker accepts the same optional
-`calendarSystem` prop. The store uses that one strategy for headings, grids,
-selection, navigation, validation and Gregorian secondary dates.
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
 
 ```vue
 <script setup lang="ts">
@@ -88,13 +130,20 @@ import { HijriCalendar } from '@taqwim/vue-styled'
 </template>
 ```
 
+  </TabItem>
+  <TabItem label="React">
+
 ```tsx
-// React
 import { islamicCivil } from '@taqwim/core/calendars/islamic-civil'
 import { HijriCalendar } from '@taqwim/react-styled'
 
-;<HijriCalendar calendarSystem={islamicCivil} />
+export function Example() {
+  return <HijriCalendar calendarSystem={islamicCivil} />
+}
 ```
+
+  </TabItem>
+  <TabItem label="Svelte">
 
 ```svelte
 <script lang="ts">
@@ -105,33 +154,47 @@ import { HijriCalendar } from '@taqwim/react-styled'
 <HijriCalendar calendarSystem={islamicCivil} />
 ```
 
+  </TabItem>
+  <TabItem label="Solid">
+
 ```tsx
-// Solid
 import { islamicCivil } from '@taqwim/core/calendars/islamic-civil'
 import { HijriCalendar } from '@taqwim/solid-styled'
 
-;<HijriCalendar calendarSystem={islamicCivil} />
+export function Example() {
+  return <HijriCalendar calendarSystem={islamicCivil} />
+}
 ```
+
+  </TabItem>
+  <TabItem label="Angular">
 
 ```ts
-// Angular component
 import { islamicCivil } from '@taqwim/core/calendars/islamic-civil'
+import { HijriCalendar } from '@taqwim/angular-styled'
+import { Component } from '@angular/core'
 
-calendarSystem = islamicCivil
+@Component({
+  imports: [HijriCalendar],
+  template: `<taqwim-hijri-calendar [calendarSystem]="calendarSystem" />`,
+})
+export class Example {
+  readonly calendarSystem = islamicCivil
+}
 ```
 
-```html
-<taqwim-hijri-calendar [calendarSystem]="calendarSystem" />
-```
+  </TabItem>
+</Tabs>
 
-Changing the prop at runtime rebuilds derived state without emitting a
-selection change. A controlled numeric value is not rewritten if it is invalid
-under the new system; the calendar reports its existing invalid state.
+The active strategy controls conversion, headings, grid dates, navigation,
+validation, selection and Gregorian secondary dates. You can replace the prop
+at runtime; the calendar rebuilds its derived state without emitting a new
+selection.
 
-## Persist the system with the date
+## Store dates without losing their meaning
 
-`{ hy: 1448, hm: 3, hd: 10 }` is not an absolute day unless its Hijri system is
-known. If the fields themselves are the record, persist both:
+The object `{ hy: 1448, hm: 3, hd: 10 }` does not identify an absolute day by
+itself. If the Hijri fields are your stored record, persist the system too:
 
 ```ts
 {
@@ -140,22 +203,23 @@ known. If the fields themselves are the record, persist both:
 }
 ```
 
-For an appointment or other absolute event, prefer storing its canonical ISO
-Gregorian date and deriving the chosen Hijri presentation when rendering.
+For an appointment or another absolute event, prefer storing a canonical ISO
+Gregorian date and derive the chosen Hijri representation for display.
 
-## Bundles and runtimes
+When a controlled calendar switches systems, Taqwim does not rewrite its
+numeric value. A date valid under one system can be invalid under another when
+their month lengths differ, so validate stored fields with the same strategy
+that created them.
 
-`@taqwim/core` still has zero production dependencies. Its default entry only
-includes Umm al-Qura; Civil and TBLA enter a bundle only when their explicit
-subpaths are imported. Both optional variants share one small integer algorithm.
+## Compatibility checklist
 
-Node, Deno and Bun run the built ESM exports; Node and Bun also run CommonJS.
-The runtime checks cover all three calendars in UTC, Riyadh and Los Angeles.
-Conversion does not use `Intl`, so its result does not depend on locale, ICU's
-Hijri data or the host time zone. As before, `toGregorian` returns local
-midnight and `toHijri(Date)` reads local date parts.
-
-## Migration
-
-There is nothing to migrate for existing users. Omitting `calendarSystem`
-continues to select Umm al-Qura everywhere.
+- Omitting `calendarSystem` always means Umm al-Qura, preserving existing calls
+  and component markup.
+- `MIN_HIJRI_YEAR`, `MAX_HIJRI_YEAR` and the documented 1343–1500 AH range
+  describe the default Umm al-Qura table, not the proleptic calendars.
+- Import Civil and TBLA from their explicit subpaths. This keeps optional
+  algorithms out of applications that only use the default.
+- Do not exchange bare Hijri fields with another service unless both sides
+  agree on the calendar identifier.
+- Do not use any deterministic result as a substitute for a local religious
+  announcement based on observation.

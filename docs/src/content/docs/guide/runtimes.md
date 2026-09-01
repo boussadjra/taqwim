@@ -3,10 +3,10 @@ title: Node, Deno and Bun
 description: Where @taqwim/core runs, how to install it in each runtime, and what is actually tested.
 ---
 
-`@taqwim/core` is a conversion table and the arithmetic on top of it. It touches
-no DOM, imports nothing from `node:`, and ships with zero production dependencies.
-All it needs is `Date`, `Math`, `Intl`, and plain string work. So it runs wherever
-JavaScript does.
+`@taqwim/core` contains deterministic Hijri conversion strategies and the
+arithmetic on top of them. It touches no DOM, imports nothing from `node:`, and
+ships with zero production dependencies. All it needs is `Date`, `Math`, `Intl`,
+and plain string work. So it runs wherever JavaScript does.
 
 That is easy to claim and easy to get wrong, so it is tested rather than
 asserted. CI runs the built package through a matrix of

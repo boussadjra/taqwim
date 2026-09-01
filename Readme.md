@@ -5,13 +5,14 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue.svg)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Umm al-Qura Hijri date utilities, and an accessible calendar for **Vue, React, Svelte, Solid and Angular**.
+Deterministic Hijri date utilities with Umm al-Qura, Islamic Civil and Islamic
+TBLA calendars, plus accessible components for **Vue, React, Svelte, Solid and Angular**.
 
 Calendar behaviour — grid building, selection, paging, keyboard navigation, accessibility attributes — is implemented once in a framework-free state machine. Every adapter is a thin binding to it, so the five behave identically and emit the same markup.
 
 > **Beta.** The current release is `0.1.0-beta.7`, published under the `beta` dist-tag. The API is settling and can still change between betas.
 
-📖 **[Documentation](https://boussadjra.github.io/taqwim/)**
+📖 **[Documentation](https://taqwim.vercel.app/)**
 
 ## Packages
 
@@ -56,9 +57,29 @@ formatHijriDate({ hy: 1445, hm: 9, hd: 1 }, 'iYYYY/iMM/iDD', 'ar')
 // => ١٤٤٥/٠٩/٠١
 ```
 
-Conversion is table-driven and covers **1343–1500 AH** (1924–2077 CE). Outside that range it throws `HijriRangeError` rather than returning a silently wrong date. Business-day arithmetic defaults to a Friday/Saturday weekend, overridable per call.
+Default Umm al-Qura conversion is table-driven and covers **1343–1500 AH**
+(1924–2077 CE). Outside that range it throws `HijriRangeError` rather than
+returning a silently wrong date. Islamic Civil and Islamic TBLA are optional,
+proleptic arithmetic calendars. Business-day arithmetic defaults to a
+Friday/Saturday weekend, overridable per call.
 
-Full API: **[reference](https://boussadjra.github.io/taqwim/api/)**.
+### Calendar systems
+
+Omit `calendarSystem` for the compatible Umm al-Qura default, or import an
+optional strategy explicitly:
+
+```typescript
+import { toHijri } from '@taqwim/core'
+import { islamicCivil } from '@taqwim/core/calendars/islamic-civil'
+
+toHijri('2026-08-30', { calendarSystem: islamicCivil })
+```
+
+Calendars and date pickers accept the same `calendarSystem` option. See
+**[Hijri calendar systems](https://taqwim.vercel.app/guide/calendar-systems/)**
+for the Umm al-Qura, Civil and TBLA comparison, range rules and framework examples.
+
+Full API: **[reference](https://taqwim.vercel.app/api/)**.
 
 ### A calendar
 
@@ -101,7 +122,7 @@ Each theme is ~30 token overrides; structure is written once against the `data-*
 
 The grid is a real `role="grid"` with the roving tabindex a date picker is supposed to have: `Tab` enters and leaves it rather than walking 42 buttons, and arrows move within it, mirrored under `dir="rtl"`. Every bundled theme is measured against WCAG AA by a unit test on every run, and axe checks the rendered calendar end to end — neither is left to taste.
 
-Details: **[Accessibility and keyboard](https://boussadjra.github.io/taqwim/guide/accessibility/)**.
+Details: **[Accessibility and keyboard](https://taqwim.vercel.app/guide/accessibility/)**.
 
 ## Development
 

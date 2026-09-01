@@ -1,0 +1,235 @@
+<div class="calendar-system-visuals not-content">
+  <figure class="system-range">
+    <figcaption>
+      <strong>Range model</strong>
+      <span>Umm al-Qura is bounded by Taqwim's data. Civil and TBLA calculate dates in either direction.</span>
+    </figcaption>
+
+    <div class="range-axis" aria-hidden="true">
+      <span>Earlier</span>
+      <span>1924</span>
+      <span>Today</span>
+      <span>2077</span>
+      <span>Later</span>
+    </div>
+
+    <dl class="range-rows">
+      <div>
+        <dt>Umm al-Qura</dt>
+        <dd class="range-track">
+          <span class="range-bar range-bar--bounded">1343–1500 AH</span>
+        </dd>
+      </div>
+      <div>
+        <dt>Islamic Civil</dt>
+        <dd class="range-track">
+          <span class="range-bar range-bar--proleptic">Proleptic arithmetic</span>
+        </dd>
+      </div>
+      <div>
+        <dt>Islamic TBLA</dt>
+        <dd class="range-track">
+          <span class="range-bar range-bar--proleptic">Proleptic arithmetic</span>
+        </dd>
+      </div>
+    </dl>
+  </figure>
+
+  <figure class="system-epoch">
+    <figcaption>
+      <strong>Same fields, different epoch</strong>
+      <span>Civil and TBLA use the same month and leap-year rules. Their starting day is different.</span>
+    </figcaption>
+
+    <div class="epoch-rows">
+      <div class="epoch-row">
+        <span class="epoch-date">1 Muharram 1 AH</span>
+        <span class="epoch-arrow" aria-hidden="true">→</span>
+        <span class="epoch-rule">TBLA · Thursday epoch</span>
+        <span class="epoch-arrow" aria-hidden="true">→</span>
+        <span class="epoch-result">18 July 622</span>
+      </div>
+      <div class="epoch-row">
+        <span class="epoch-date">1 Muharram 1 AH</span>
+        <span class="epoch-arrow" aria-hidden="true">→</span>
+        <span class="epoch-rule">Civil · Friday epoch</span>
+        <span class="epoch-arrow" aria-hidden="true">→</span>
+        <span class="epoch-result">19 July 622</span>
+      </div>
+    </div>
+
+    <p class="epoch-note">Gregorian dates are proleptic. For the same Hijri fields, TBLA resolves one day earlier than Civil.</p>
+  </figure>
+</div>
+
+<style>
+  .calendar-system-visuals {
+    display: grid;
+    gap: 1rem;
+    margin-block: 1.5rem 2rem;
+  }
+
+  figure {
+    margin: 0;
+    padding: clamp(1rem, 2vw, 1.4rem);
+    border: 1px solid var(--sl-color-gray-6);
+    border-radius: var(--brand-radius);
+    background: var(--brand-surface-2);
+  }
+
+  figcaption {
+    display: grid;
+    gap: 0.25rem;
+    margin-bottom: 1.1rem;
+  }
+
+  figcaption strong {
+    font-family: var(--brand-font-display);
+    font-size: var(--sl-text-lg);
+    color: var(--sl-color-white);
+  }
+
+  figcaption span,
+  .epoch-note {
+    max-width: 68ch;
+    color: var(--sl-color-gray-2);
+    font-size: var(--sl-text-sm);
+    line-height: 1.6;
+  }
+
+  .range-axis {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    margin-inline-start: min(10rem, 28%);
+    padding-bottom: 0.4rem;
+    color: var(--sl-color-gray-3);
+    font-size: 0.72rem;
+    text-align: center;
+  }
+
+  .range-axis span:first-child {
+    text-align: start;
+  }
+
+  .range-axis span:last-child {
+    text-align: end;
+  }
+
+  .range-rows {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+  }
+
+  .range-rows > div {
+    display: grid;
+    grid-template-columns: min(10rem, 28%) 1fr;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .range-rows dt {
+    color: var(--sl-color-gray-1);
+    font-size: var(--sl-text-sm);
+    font-weight: 600;
+  }
+
+  .range-rows dd {
+    margin: 0;
+  }
+
+  .range-track {
+    position: relative;
+    min-height: 2rem;
+    border-radius: var(--brand-radius-sm);
+    background: var(--brand-surface);
+  }
+
+  .range-track::before {
+    content: '';
+    position: absolute;
+    inset: 50% 0 auto;
+    border-top: 1px dashed var(--sl-color-gray-5);
+  }
+
+  .range-bar {
+    position: absolute;
+    inset-block: 0.3rem;
+    display: grid;
+    place-items: center;
+    min-width: max-content;
+    padding-inline: 0.65rem;
+    border-radius: 0.35rem;
+    color: var(--brand-ink);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .range-bar--bounded {
+    inset-inline: 20%;
+    background: var(--brand-gold);
+  }
+
+  .range-bar--proleptic {
+    inset-inline: 0;
+    background: var(--brand-teal-bright);
+  }
+
+  .epoch-rows {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .epoch-row {
+    display: grid;
+    grid-template-columns: minmax(8rem, 1fr) auto minmax(10.5rem, 1.4fr) auto minmax(7rem, 0.8fr);
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.75rem;
+    border-radius: var(--brand-radius-sm);
+    background: var(--brand-surface);
+    color: var(--sl-color-gray-1);
+    font-size: var(--sl-text-sm);
+  }
+
+  .epoch-date,
+  .epoch-result {
+    font-weight: 600;
+  }
+
+  .epoch-rule {
+    color: var(--sl-color-accent-high);
+  }
+
+  .epoch-arrow {
+    color: var(--brand-gold);
+  }
+
+  .epoch-note {
+    margin: 0.85rem 0 0;
+  }
+
+  @media (max-width: 42rem) {
+    .range-axis {
+      display: none;
+    }
+
+    .range-rows > div {
+      grid-template-columns: 1fr;
+      gap: 0.3rem;
+    }
+
+    .range-track {
+      min-height: 2.25rem;
+    }
+
+    .epoch-row {
+      grid-template-columns: 1fr;
+      gap: 0.25rem;
+    }
+
+    .epoch-arrow {
+      display: none;
+    }
+  }
+</style>

@@ -35,9 +35,10 @@ same names, differing only where the host framework forces it — `v-model` in V
 | `calendarSystem` | `islamicUmmAlQura` | Strategy used for conversion, grid dates, navigation, validation and Gregorian equivalents |
 
 Import Civil or TBLA from its explicit `@taqwim/core/calendars/*` subpath and
-pass the object. There is no string registry. See
-[Hijri calendar systems](/guide/calendar-systems/) for imports, framework
-examples, range policy and persistence guidance.
+pass the strategy object. There is no string registry: the supported choices
+are `islamicUmmAlQura`, `islamicCivil` and `islamicTbla`. See
+[Hijri calendar systems](/guide/calendar-systems/) for the comparison, imports,
+framework examples, range policy and persistence guidance.
 
 ## Grid shape
 

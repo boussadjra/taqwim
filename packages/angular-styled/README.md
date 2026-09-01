@@ -34,6 +34,24 @@ export class Example {
 
 The stylesheet is imported for you.
 
+## Calendar systems
+
+Umm al-Qura is the default. Add `@taqwim/core` directly and pass an imported
+strategy to use Islamic Civil or Islamic TBLA:
+
+```ts
+import { islamicCivil } from '@taqwim/core/calendars/islamic-civil'
+
+readonly calendarSystem = islamicCivil
+```
+
+```html
+<taqwim-hijri-calendar [calendarSystem]="calendarSystem" />
+```
+
+[Compare the three systems](https://taqwim.vercel.app/guide/calendar-systems/)
+before storing or exchanging Hijri fields.
+
 ## Theming
 
 `theme` sets `data-taqwim-theme` on the calendar, so switching is an attribute change — no stylesheet swapping, and several themes can coexist on one page.

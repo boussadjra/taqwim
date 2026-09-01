@@ -3,9 +3,10 @@ title: Dates without a calendar
 description: Convert, compare, format and do arithmetic on Hijri dates with @taqwim/core — no framework, no DOM.
 ---
 
-Half of Taqwim has no user interface. `@taqwim/core` is the conversion table and
-the arithmetic on top of it: no framework, no DOM, and zero production dependencies. It runs in a server handler, a CLI, a worker,
-or a test.
+Half of Taqwim has no user interface. `@taqwim/core` contains the Hijri calendar
+strategies and the arithmetic built on them: no framework, no DOM, and zero
+production dependencies. It runs in a server handler, a CLI, a worker, or a
+test.
 
 All examples on this page use the default Umm al-Qura calendar. Civil and TBLA
 are explicit opt-ins; see [Hijri calendar systems](/guide/calendar-systems/).
@@ -78,6 +79,10 @@ MAX_HIJRI_YEAR // 1500
 
 `HijriRangeError` extends `RangeError`, so an existing `catch (e) { if (e instanceof RangeError) }`
 already handles it.
+
+This range applies only to the default Umm al-Qura strategy. Islamic Civil and
+Islamic TBLA calculate dates proleptically; compare their range and compatibility
+rules in [Hijri calendar systems](/guide/calendar-systems/).
 
 The error distinguishes _unsupported_ from _impossible_. A year outside the
 table throws `HijriRangeError`; a date that is inside the table but is not a

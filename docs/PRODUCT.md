@@ -17,9 +17,9 @@ The library spans five frameworks, so nearly every reader is reading past four f
 
 ## Product Purpose
 
-Documentation for Taqwim: Umm al-Qura Hijri date utilities and an accessible calendar for Vue, React, Svelte 5, Solid and Angular — thirteen packages versioned in lockstep.
+Documentation for Taqwim: deterministic Umm al-Qura, Islamic Civil and Islamic TBLA date utilities, with accessible calendars for Vue, React, Svelte 5, Solid and Angular — thirteen packages versioned in lockstep.
 
-The docs exist to make an unfamiliar calendar system tractable to developers who have never shipped one. Hijri dates are not Gregorian dates with different numbers: months are 29 or 30 days by tabulation, the weekend defaults to Friday/Saturday, the conversion table covers 1343–1500 AH and throws outside it. A developer who gets this wrong ships wrong dates to people for whom those dates matter.
+The docs exist to make unfamiliar Hijri calendar systems tractable to developers who have never shipped one. Hijri dates are not Gregorian dates with different numbers: the selected system determines month lengths and the absolute day represented by the fields, the weekend defaults to Friday/Saturday, and the default Umm al-Qura table covers 1343–1500 AH and throws outside it. A developer who gets this wrong ships wrong dates to people for whom those dates matter.
 
 Success is a developer choosing the library, integrating it correctly the first time, and understanding what it will not do before they hit it in production.
 
@@ -27,7 +27,7 @@ Success is a developer choosing the library, integrating it correctly the first 
 
 **Scholarly, careful, regional.**
 
-Umm al-Qura is a civil calendar with a real domain and a real community behind it. The docs should read like they were written by someone who takes that seriously — precise about what the tables cover, unembarrassed about the arithmetic, and treating Arabic and RTL as the primary case they were designed for rather than a localisation afterthought.
+Hijri calendar systems have real domains and real communities behind them. The docs should read like they were written by someone who takes that seriously — precise about what the Umm al-Qura table covers, explicit about the Civil and TBLA arithmetic rules, and treating Arabic and RTL as the primary case they were designed for rather than a localisation afterthought.
 
 Careful means the limits are stated as plainly as the features. The library throws `HijriRangeError` rather than returning a silently wrong date; the docs should have the same instinct.
 
@@ -43,7 +43,7 @@ Not academic-dry, and not chatty. The voice of a good reference work: confident,
 
 1. **Practice what you preach.** The library ships an accessibility guide and gates its own themes on a WCAG contrast audit. The docs are held to at least the bar they advocate; anything less discredits the guide on the page.
 2. **Show the real component.** Every demo imports the published package the way a reader's app would. If an adapter breaks, the docs break with it. Nothing on the site may style `[data-taqwim-*]` — showing readers something they cannot reproduce by installing the package is a lie in a demo's clothing.
-3. **Name the limits.** The supported range, the two documented Solid gaps, the Angular DOM-coverage gap, the Friday/Saturday default. A reader should learn the edges here rather than in production.
+3. **Name the limits.** The selected calendar system, the Umm al-Qura range, the Angular DOM-coverage gap, and the Friday/Saturday default. A reader should learn the edges here rather than in production.
 4. **The calendar is the subject.** Chrome, motion and decoration exist to frame a working calendar, never to compete with it. Arabic and RTL rendering are first-class throughout.
 5. **One framework at a time.** The reader declares theirs once; the site respects it on every page. Five parallel code blocks per concept is a failure of the design, not a feature of the coverage.
 

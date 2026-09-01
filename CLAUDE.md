@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Umm al-Qura Hijri date utilities and an accessible calendar for Vue 3, React, Svelte 5, Solid and Angular. Thirteen published `@taqwim/*` packages, versioned in lockstep.
+Deterministic Umm al-Qura, Islamic Civil and Islamic TBLA date utilities, with accessible calendars for Vue 3, React, Svelte 5, Solid and Angular. Thirteen published `@taqwim/*` packages, versioned in lockstep.
 
 ## Commands
 
@@ -100,7 +100,7 @@ Where an adapter cannot pass, it goes in `e2e/KNOWN-GAPS.md` with a real diagnos
 
 One exported function per file under `src/lib/`, re-exported from `index.ts`. Naming is `verbHijriNoun` (`toHijri`, `addHijriDays`, `formatHijriDate`), and subtraction mirrors addition (`addHijriMonths` ↔ `subHijriMonths`). Each function has a matching `tests/<functionName>.test.ts`.
 
-Conversion is table-driven (`hDates.ts`) covering **1343–1500 AH / 1924–2077 CE**, and throws `HijriRangeError` outside it rather than returning a silently wrong date. Business-day arithmetic defaults to a **Friday/Saturday** weekend, overridable per call. Gregorian parsing, day/week arithmetic and mixed formatting are implemented with small native helpers on top of the epoch-day model.
+The compatible default is table-driven (`hDates.ts`), covering **1343–1500 AH / 1924–2077 CE**, and throws `HijriRangeError` outside it rather than returning a silently wrong date. Civil and TBLA are explicit, proleptic tabular strategies under `src/lib/calendars/`. Business-day arithmetic defaults to a **Friday/Saturday** weekend, overridable per call. Gregorian parsing, day/week arithmetic and mixed formatting are implemented with small native helpers on top of the epoch-day model.
 
 The package touches no DOM and imports nothing from `node:`, so it is held to running on **Node, Deno and Bun**. `runtimes/` is the suite that proves it: one checks file run unchanged across runtime × module format × time zone, against `dist/` rather than `src/`. That is the only thing in the repo that observes the shipped artifact outside Node — Vitest never does. Adding a runtime means one entry in `runtimes/run.mjs`, not a new checks file; see `packages/core/runtimes/README.md`.
 

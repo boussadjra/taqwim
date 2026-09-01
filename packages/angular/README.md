@@ -72,13 +72,17 @@ The adapter is signal-driven and runs zoneless. It is compiled by `ngc` in parti
 
 ## Inputs and outputs
 
-Inputs use the same names every adapter uses: `defaultValue` · `value` · `defaultPlaceholder` · `placeholder` · `weekStartsOn` · `weekdayFormat` · `numberOfMonths` · `pagedNavigation` · `fixedWeeks` · `multiple` · `preventDeselect` · `minValue` · `maxValue` · `isDateDisabled` · `isDateUnavailable` · `disableDaysOutsideCurrentView` · `disabled` · `readonly` · `locale` · `dir` · `initialFocus` · `nextPage` · `prevPage` · `calendarLabel`.
+Inputs use the same names every adapter uses: `defaultValue` · `value` · `defaultPlaceholder` · `placeholder` · `calendarSystem` · `weekStartsOn` · `weekdayFormat` · `numberOfMonths` · `pagedNavigation` · `fixedWeeks` · `multiple` · `preventDeselect` · `minValue` · `maxValue` · `isDateDisabled` · `isDateUnavailable` · `disableDaysOutsideCurrentView` · `disabled` · `readonly` · `locale` · `dir` · `initialFocus` · `nextPage` · `prevPage` · `calendarLabel`.
+
+`calendarSystem` defaults to Umm al-Qura and accepts an imported Civil or TBLA
+strategy. [Compare the systems](https://taqwim.vercel.app/guide/calendar-systems/)
+before changing it; Hijri fields do not identify an absolute day without their system.
 
 Outputs: `valueChange` and `placeholderChange`.
 
 `minValue`/`maxValue` disable the out-of-range days themselves, not only the paging buttons, and the matchers are enforced for keyboard selection as well as clicks.
 
-Full reference: [Calendar options](https://boussadjra.github.io/taqwim/reference/options/).
+Full reference: [Calendar options](https://taqwim.vercel.app/reference/options/).
 
 ## Keyboard
 

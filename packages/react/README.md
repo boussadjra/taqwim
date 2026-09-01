@@ -92,7 +92,11 @@ Inline callbacks and matchers are safe to pass — the store compares built stat
 
 Controlled with `value` / `onValueChange` and `placeholder` / `onPlaceholderChange`; uncontrolled with `defaultValue` / `defaultPlaceholder`.
 
-`weekStartsOn` · `weekdayFormat` · `numberOfMonths` · `pagedNavigation` · `fixedWeeks` · `multiple` · `preventDeselect` · `minValue` · `maxValue` · `isDateDisabled` · `isDateUnavailable` · `disableDaysOutsideCurrentView` · `disabled` · `readonly` · `locale` · `dir` · `initialFocus` · `nextPage` · `prevPage` · `calendarLabel`
+`calendarSystem` · `weekStartsOn` · `weekdayFormat` · `numberOfMonths` · `pagedNavigation` · `fixedWeeks` · `multiple` · `preventDeselect` · `minValue` · `maxValue` · `isDateDisabled` · `isDateUnavailable` · `disableDaysOutsideCurrentView` · `disabled` · `readonly` · `locale` · `dir` · `initialFocus` · `nextPage` · `prevPage` · `calendarLabel`
+
+`calendarSystem` defaults to Umm al-Qura and accepts an imported Civil or TBLA
+strategy. [Compare the systems](https://taqwim.vercel.app/guide/calendar-systems/)
+before changing it; Hijri fields do not identify an absolute day without their system.
 
 `minValue`/`maxValue` disable the out-of-range days themselves, not only the paging buttons, and the matchers are enforced for keyboard selection as well as clicks.
 
