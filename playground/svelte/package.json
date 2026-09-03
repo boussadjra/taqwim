@@ -17,11 +17,11 @@
     "@taqwim/svelte": "workspace:*",
     "@taqwim/svelte-styled": "workspace:*",
     "@taqwim/themes": "workspace:*",
-    "svelte": "^5.56.8"
+    "svelte": "^5.57.0"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^7.2.0",
-    "svelte-check": "^4.7.4",
+    "@sveltejs/vite-plugin-svelte": "^7.3.0",
+    "svelte-check": "^4.7.6",
     "typescript": "~5.9.3",
     "vite": "^8.1.5"
   }
