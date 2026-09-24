@@ -54,11 +54,11 @@
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@angular/build": "^21.2.19",
-    "@angular/common": "^21.2.19",
-    "@angular/compiler": "^21.2.19",
-    "@angular/core": "^21.2.19",
-    "@angular/platform-browser": "^21.2.19",
+    "@angular/build": "^22.1.8",
+    "@angular/common": "^22.1.7",
+    "@angular/compiler": "^22.1.7",
+    "@angular/core": "^22.1.7",
+    "@angular/platform-browser": "^22.1.7",
     "@arethetypeswrong/cli": "^0.18.2",
     "jsdom": "^26.1.0",
     "publint": "^0.3.14",
