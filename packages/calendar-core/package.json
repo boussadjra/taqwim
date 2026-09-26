@@ -48,8 +48,7 @@
   "scripts": {
     "_comment": "build / test / test:coverage are declared as vp tasks in vite.config.ts",
     "test:watch": "vp exec vitest",
-    "prepublishOnly": "vp run build",
-    "publish": "pnpm publish"
+    "prepublishOnly": "vp run build"
   },
   "dependencies": {
     "@taqwim/core": "workspace:*"

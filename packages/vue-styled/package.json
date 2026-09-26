@@ -46,8 +46,7 @@
   "scripts": {
     "_comment": "build / test are declared as vp tasks in vite.config.ts",
     "test:watch": "vp exec vitest",
-    "prepublishOnly": "vp run build",
-    "publish": "pnpm publish --access public"
+    "prepublishOnly": "vp run build"
   },
   "dependencies": {
     "@taqwim/calendar-core": "workspace:*",
