@@ -13,6 +13,8 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     strategy:
       fail-fast: false
       matrix:
@@ -81,11 +83,14 @@ jobs:
         run: pnpm exec vp run -F taqwim-docs build
 
       - name: Upload coverage to Codecov
-        if: matrix.node-version == 22
+        # The coverage gate above is required; this external upload is optional
+        # until a Codecov token is configured for the repository.
+        if: matrix.node-version == 22 && env.CODECOV_TOKEN != ''
         uses: codecov/codecov-action@v7
         with:
           directory: ./packages/core/coverage
           fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   node-20:
     name: Node 20 compatibility
