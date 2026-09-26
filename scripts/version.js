@@ -226,11 +226,8 @@ function main() {
 
   console.log(`\nWrote ${targets.length} manifests.`)
   if (semver.prerelease(next)) {
-    const tag = semver.prerelease(next)[0]
     console.log(
-      `\n${next} is a prerelease. Publish it under its own dist-tag so that\n` +
-        `\`npm install @taqwim/vue\` does not resolve to it:\n\n` +
-        `  pnpm -r --filter "@taqwim/*" publish --access public --tag ${tag} --no-git-checks\n`,
+      `\n${next} is a prerelease. Preview the registry-backed plan with:\n\n  pnpm publish:packages --dry-run\n`,
     )
   }
 }

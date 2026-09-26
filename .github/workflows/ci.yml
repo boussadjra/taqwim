@@ -16,8 +16,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Node 18 is EOL and the packages now require >=20.
-        node-version: [20, 22, 24]
+        # pnpm 11 requires Node 22.13+. Node 20 checks the built artifact below.
+        node-version: [22, 24]
 
     steps:
       - name: Checkout code
@@ -86,6 +86,42 @@ jobs:
         with:
           directory: ./packages/core/coverage
           fail_ci_if_error: true
+
+  node-20:
+    name: Node 20 compatibility
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node.js 24 for the build toolchain
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Vite+
+        run: curl -fsSL https://vite.plus | bash
+
+      - name: Build core
+        run: pnpm exec vp run -F @taqwim/core build
+
+      - name: Switch to Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Check the built ESM and CommonJS packages
+        run: |
+          node --version
+          node packages/core/runtimes/esm.mjs "file://${GITHUB_WORKSPACE}/packages/core/dist/index.mjs" "file://${GITHUB_WORKSPACE}/packages/core/dist/calendars/islamic-civil.mjs" "file://${GITHUB_WORKSPACE}/packages/core/dist/calendars/islamic-tbla.mjs"
+          node packages/core/runtimes/cjs.cjs "$GITHUB_WORKSPACE/packages/core/dist/index.cjs" "$GITHUB_WORKSPACE/packages/core/dist/calendars/islamic-civil.cjs" "$GITHUB_WORKSPACE/packages/core/dist/calendars/islamic-tbla.cjs"
 
   runtimes:
     # @taqwim/core has no DOM, no `node:` imports and no framework, so it is

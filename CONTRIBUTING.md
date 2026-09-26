@@ -87,19 +87,20 @@ pnpm version:set patch --dry-run   # preview, write nothing
 
 It accepts an exact version or any semver release type (`major`, `minor`, `patch`, `premajor`, `preminor`, `prepatch`, `prerelease`), with `--preid alpha|beta|rc`. Continuing a prerelease keeps its identifier unless you ask for another, so `pnpm version:alpha` twice gives `alpha.2` then `alpha.3`. It writes only the `version` field in the thirteen package manifests, the workspace manifest, and the docs manifest — internal dependencies are `workspace:*`, which pnpm resolves at publish time — and it never touches `legacy/*`, which is frozen at the versions npm already has.
 
-Then publish:
+After the pull request merges, the Release workflow verifies the workspace and publishes the exact package versions through npm trusted publishing. It uses the `release` GitHub environment; each of the thirteen packages must trust `boussadjra/taqwim`, workflow `release.yml`, and environment `release` on npm. Enable the environment variable `NPM_TRUSTED_PUBLISHING=true` only after all thirteen publishers are attached. The workflow requests an OIDC token and npm provenance, and does not need an npm access token.
+
+To inspect the registry plan or resume a partial publish from a release runner:
 
 ```bash
-pnpm publish:packages           # add --dry-run to see the plan first
+pnpm publish:packages --dry-run
+pnpm publish:packages
 ```
 
 `scripts/publish.js` drives one `pnpm publish` per package. `pnpm -r publish` is the obvious tool and it does not survive contact with a thirteen-package release: it stops at the first package the registry rejects, and recovering means hand-assembling a filter of whatever did not make it. The script checks each package against the registry first and skips what is already there, so a re-run resumes rather than starting over, and it collects failures instead of stopping at the first one.
 
-It derives the dist-tag from the version — `0.1.0-beta.0` publishes under `beta`, so `pnpm add @taqwim/vue` cannot resolve to a prerelease. Override with `--tag`, and pass `--otp` if your npm account requires a one-time password.
+Until a stable version exists, prereleases publish under `latest`, so a bare install gets the newest beta. Once stable exists, a new prerelease publishes under its own identifier (`beta`, `rc`, and so on) and leaves stable `latest` alone. Override with `--tag` for an exceptional run.
 
-> npm forces a `latest` tag onto a package's **first ever** publish whatever `--tag` says, so the first prerelease of a new package will hold `latest` until a stable version exists to point it at. This is npm's behaviour, not the script's.
-
-If 2FA is set to `auth-and-writes`, use an **Automation** access token rather than a login token — an OTP is valid for about thirty seconds, which is not long enough for thirteen packages that each run a build first. The same applies to the `NPM_TOKEN` secret the release workflow uses.
+The script checks npm for each exact version and skips packages already published at that version. It can resume after a partial release. The Release workflow only publishes once `NPM_TRUSTED_PUBLISHING` is enabled in the `release` environment.
 
 ### Later: 1.0.0 and after
 
@@ -115,7 +116,7 @@ Changesets are the changelog. Write them for someone upgrading — what changed,
 
 > **Do not run `changeset version` during the alpha.** Pending changesets already describe the 1.0.0 release, including major bumps; applying them now would jump straight to 1.0.0 and overwrite whatever `scripts/version.js` set. They are consumed deliberately, when the project graduates.
 
-On merge to `main`, `.github/workflows/release.yml` builds, tests, verifies the packable output, and then opens or publishes a changesets version PR. Tarballs are published with npm provenance.
+On merge to `main`, `.github/workflows/release.yml` runs the release gate and publishes the version already committed to the package manifests through npm trusted publishing. During the prerelease line, it does not run `changeset version`, because the pending changesets are reserved for the stable release. Tarballs are published with npm provenance.
 
 ## Reporting issues
 

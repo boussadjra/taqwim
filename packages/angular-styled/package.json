@@ -61,6 +61,7 @@
     "@angular/build": "^21.2.19",
     "@angular/common": "^21.2.19",
     "@angular/compiler": "^21.2.19",
+    "@angular/compiler-cli": "^21.2.19",
     "@angular/core": "^21.2.19",
     "@angular/platform-browser": "^21.2.19",
     "@arethetypeswrong/cli": "^0.18.2",

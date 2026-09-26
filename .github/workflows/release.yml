@@ -5,32 +5,32 @@ on:
     branches:
       - main
 
-concurrency: release
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
-  release:
+  verify:
+    name: Verify release
+    if: github.repository == 'boussadjra/taqwim'
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-      # npm provenance is signed with this token, not with a long-lived secret.
-      id-token: write
+    timeout-minutes: 30
 
     steps:
-      - name: Checkout code
+      - name: Check out repository
         uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
 
-      - name: Setup pnpm
+      - name: Set up pnpm
         uses: pnpm/action-setup@v6
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: 'pnpm'
-          registry-url: 'https://registry.npmjs.org'
+          node-version: 24
+          cache: pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -38,32 +38,76 @@ jobs:
       - name: Install Vite+
         run: curl -fsSL https://vite.plus/install | bash
 
+      - name: Check formatting and lint
+        run: pnpm exec vp check
+
+      - name: Check types
+        run: pnpm exec vp run -r type-check
+
+      - name: Build packages and apps
+        run: pnpm exec vp run -r build
+
+      - name: Run unit tests
+        run: pnpm exec vp run -r test
+
+      - name: Check core coverage
+        run: pnpm exec vp run -F @taqwim/core -F @taqwim/calendar-core test:coverage
+
+      - name: Check package exports
+        run: pnpm exec vp run -r verify-package
+
+      - name: Install Playwright browser
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run shared browser tests
+        run: pnpm exec playwright test
+
+      - name: Build documentation
+        run: pnpm exec vp run -F taqwim-docs build
+
+  publish:
+    name: Publish packages
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: release
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Vite+
+        run: curl -fsSL https://vite.plus/install | bash
+
+      - name: Use npm with trusted publishing support
+        run: npm install --global npm@latest
+
       - name: Build packages
         run: pnpm exec vp run -r build
 
-      - name: Test
-        run: pnpm exec vp run -r test
-
-      - name: Verify what is about to be published
-        # Thirteen packages with dual ESM/CJS output: an export-map mistake is
-        # the likeliest shipping bug, and neither the build nor the tests catch
-        # one.
+      - name: Check package exports
         run: pnpm exec vp run -r verify-package
 
-      # Opens (or updates) a version PR while there are changesets, and
-      # publishes once that PR is merged. Lockstep is configured in
-      # .changeset/config.json, so every @taqwim/* package moves together.
-      - name: Create version PR or publish
-        uses: changesets/action@v2
-        with:
-          version: pnpm exec changeset version
-          publish: pnpm exec changeset publish
-          commit: 'chore(release): version packages'
-          title: 'chore(release): version packages'
+      # Enable only after every @taqwim/* package trusts this workflow and the
+      # release environment on npm. The script resumes any partial publish.
+      - name: Publish exact versions to npm
+        if: vars.NPM_TRUSTED_PUBLISHING == 'true'
+        run: pnpm publish:packages
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          # Signs each tarball with a link back to the workflow run that built
-          # it — a meaningful trust signal for a library handling religious
-          # dates.
-          NPM_CONFIG_PROVENANCE: true
+          NPM_CONFIG_PROVENANCE: 'true'
