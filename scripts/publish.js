@@ -126,6 +126,11 @@ async function main() {
   const manifests = names.map(name => {
     const directory = name.replace('@taqwim/', '')
     const json = JSON.parse(readFileSync(join(ROOT, 'packages', directory, 'package.json'), 'utf8'))
+    if (json.scripts?.publish) {
+      throw new Error(
+        `${name}: remove scripts.publish; pnpm runs it after publishing and it would publish the same version twice`,
+      )
+    }
     return { name, version: json.version }
   })
 
