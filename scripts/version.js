@@ -202,10 +202,11 @@ function main() {
   const current = currentVersion(manifests)
   const next = computeNext(current, options)
 
-  // The repo itself is not published, but it carries a version and it is
-  // confusing when it disagrees with everything it contains.
+  // The repo and docs are not published, but their versions should agree with
+  // the packages they contain and describe.
   const root = readManifest('package.json')
-  const targets = [...manifests, root]
+  const docs = readManifest('docs/package.json')
+  const targets = [...manifests, root, docs]
 
   console.log(`${current}  ->  ${next}\n`)
   const width = Math.max(...targets.map(m => (m.json.name ?? '').length))

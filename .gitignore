@@ -5,6 +5,7 @@ pnpm-debug.log*
 
 # misc
 node_modules
+.pnpm-store/
 .DS_Store
 dist
 dist-ssr

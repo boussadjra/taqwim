@@ -165,7 +165,7 @@ export class HijriDatePicker implements OnChanges, OnDestroy {
   }
 
   protected commitDraft(): void {
-    const parsed = parseDatePickerDraft(this.draft(), this.inputDisplay, this.calendarSystem)
+    const parsed = parseDatePickerDraft(this.draft(), this.inputDisplay, this.calendarSystem, this)
     if (parsed === 'empty') {
       this.commit(undefined)
       return

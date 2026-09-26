@@ -128,6 +128,15 @@ describe('month and year picker', () => {
 describe('date picker', () => {
   const input = () => screen.getByRole('combobox') as HTMLInputElement
 
+  it('rejects manual dates before minValue', () => {
+    const onValueChange = vi.fn()
+    render(() => <HijriDatePicker value={RAMADAN_1445} minValue={RAMADAN_1445} onValueChange={onValueChange} />)
+    fireEvent.input(input(), { target: { value: '1445-08-15' } })
+    fireEvent.change(input())
+    expect(onValueChange).not.toHaveBeenCalled()
+    expect(input().value).toBe('1445-09-01')
+  })
+
   it('renders the value in the configured format', () => {
     render(() => <HijriDatePicker value={RAMADAN_1445} />)
 

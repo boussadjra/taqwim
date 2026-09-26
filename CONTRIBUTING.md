@@ -85,7 +85,7 @@ pnpm version:set minor             # graduate: 0.1.0-beta.0 -> 0.1.0
 pnpm version:set patch --dry-run   # preview, write nothing
 ```
 
-It accepts an exact version or any semver release type (`major`, `minor`, `patch`, `premajor`, `preminor`, `prepatch`, `prerelease`), with `--preid alpha|beta|rc`. Continuing a prerelease keeps its identifier unless you ask for another, so `pnpm version:alpha` twice gives `alpha.2` then `alpha.3`. It writes only the `version` field — internal dependencies are `workspace:*`, which pnpm resolves at publish time — and it never touches `legacy/*`, which is frozen at the versions npm already has.
+It accepts an exact version or any semver release type (`major`, `minor`, `patch`, `premajor`, `preminor`, `prepatch`, `prerelease`), with `--preid alpha|beta|rc`. Continuing a prerelease keeps its identifier unless you ask for another, so `pnpm version:alpha` twice gives `alpha.2` then `alpha.3`. It writes only the `version` field in the thirteen package manifests, the workspace manifest, and the docs manifest — internal dependencies are `workspace:*`, which pnpm resolves at publish time — and it never touches `legacy/*`, which is frozen at the versions npm already has.
 
 Then publish:
 

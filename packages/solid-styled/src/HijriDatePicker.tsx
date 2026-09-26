@@ -129,7 +129,10 @@ export function HijriDatePicker(props: HijriDatePickerProps): JSX.Element {
   }
 
   function commitDraft() {
-    const parsed = parseDatePickerDraft(draft(), inputDisplay(), calendarProps.calendarSystem)
+    const parsed = parseDatePickerDraft(draft(), inputDisplay(), calendarProps.calendarSystem, {
+      ...calendarProps,
+      editable: editable(),
+    })
     if (parsed === 'empty') {
       commit(undefined)
       return

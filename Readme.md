@@ -10,7 +10,7 @@ TBLA calendars, plus accessible components for **Vue, React, Svelte, Solid and A
 
 Calendar behaviour — grid building, selection, paging, keyboard navigation, accessibility attributes — is implemented once in a framework-free state machine. Every adapter is a thin binding to it, so the five behave identically and emit the same markup.
 
-> **Beta.** The current release is `0.1.0-beta.7`, published under the `beta` dist-tag. The API is settling and can still change between betas.
+> **Beta.** This checkout targets `0.1.0-beta.8`. Published betas use the `beta` dist-tag. The API is settling and can still change between betas.
 
 📖 **[Documentation](https://taqwim.vercel.app/)**
 

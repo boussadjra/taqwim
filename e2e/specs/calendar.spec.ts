@@ -372,6 +372,17 @@ test.describe('alternative calendar systems', () => {
 })
 
 test.describe('accessibility', () => {
+  test('keeps a keyboard tab stop after paging away from the focused day', async ({ page }) => {
+    await open(page, { value: '1445-09-15', initialFocus: true })
+    await nextButton(page).click()
+    await expect(calendar(page).locator('[data-taqwim-calendar-cell-trigger][tabindex="0"]')).toHaveCount(1)
+  })
+
+  test('selects from the second visible month when adjacent days are disabled', async ({ page }) => {
+    await open(page, { numberOfMonths: 2, disableDaysOutsideCurrentView: true })
+    await page.locator('[data-value="1445-10-15"]:not([data-outside-month])').click()
+    await expect(selection(page)).toHaveText('1445-10-15')
+  })
   /*
    * A calendar is a high-risk widget and the roving focus is new code, so this
    * runs against every adapter rather than being spot-checked on one.

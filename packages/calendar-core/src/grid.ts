@@ -100,13 +100,20 @@ export function buildMonthWeeks(
 }
 
 /** The months a calendar shows, starting at `placeholder`. */
-export function visibleMonths(placeholder: HijriDateObject, numberOfMonths: number): HijriDateObject[] {
+export function visibleMonths(
+  placeholder: HijriDateObject,
+  numberOfMonths: number,
+  calendarSystem: HijriCalendarSystem = islamicUmmAlQura,
+): HijriDateObject[] {
   const months: HijriDateObject[] = []
   const base = startOfMonth(placeholder)
 
   for (let i = 0; i < numberOfMonths; i++) {
     const absolute = base.hy * 12 + (base.hm - 1) + i
-    months.push({ hy: Math.floor(absolute / 12), hm: (absolute % 12) + 1, hd: 1 })
+    const month = { hy: Math.floor(absolute / 12), hm: (((absolute % 12) + 12) % 12) + 1, hd: 1 }
+    // Multi-month views can reach beyond a finite calendar's supported range.
+    if (calendarSystem.toEpochDay(month) === null) break
+    months.push(month)
   }
 
   return months
