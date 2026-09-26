@@ -56,10 +56,10 @@
     "@changesets/cli": "^2.27.1",
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
-    "@playwright/test": "^1.54.2",
+    "@playwright/test": "^1.55.1",
     "@types/node": "^24.1.0",
-    "@vitest/coverage-v8": "^4.1.10",
-    "@vitest/ui": "^4.1.10",
+    "@vitest/coverage-v8": "^4.1.11",
+    "@vitest/ui": "^4.1.11",
     "commitizen": "^4.3.0",
     "cspell": "^8.8.4",
     "cz-conventional-changelog": "^3.3.0",
@@ -74,8 +74,8 @@
     "typescript": "~5.9.3",
     "unrun": "^0.3.1",
     "vite": "^8.1.5",
-    "vite-plus": "^0.2.6",
-    "vitest": "^4.1.10"
+    "vite-plus": "0.3.0",
+    "vitest": "^4.1.11"
   },
   "commitlint": {
     "extends": [

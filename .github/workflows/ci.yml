@@ -198,4 +198,6 @@ jobs:
         run: pnpm audit --audit-level moderate
 
       - name: Run license check
-        run: npx license-checker --onlyAllow 'MIT;Apache-2.0;BSD-3-Clause;BSD-2-Clause;ISC;0BSD'
+        # The private workspace root is not distributed. The accessibility
+        # test helper @axe-core/playwright declares MPL-2.0.
+        run: npx license-checker --excludePrivatePackages --onlyAllow 'MIT;Apache-2.0;BSD-3-Clause;BSD-2-Clause;ISC;0BSD;MPL-2.0'
