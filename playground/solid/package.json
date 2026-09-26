@@ -17,7 +17,7 @@
     "@taqwim/solid": "workspace:*",
     "@taqwim/solid-styled": "workspace:*",
     "@taqwim/themes": "workspace:*",
-    "solid-js": "^1.9.14"
+    "solid-js": "^1.9.15"
   },
   "devDependencies": {
     "typescript": "~5.9.3",
