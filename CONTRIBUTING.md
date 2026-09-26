@@ -4,7 +4,7 @@ Bug reports, fixes, features and questions are all welcome.
 
 ## Setup
 
-Node >= 20, pnpm, and [Vite+](https://vite.plus) — the workspace uses `vp` for tasks, linting, formatting and type-checking.
+Node 24, pnpm 11, and [Vite+](https://vite.plus) — the workspace uses `vp` for tasks, linting, formatting and type-checking. The published packages support older Node versions where their manifests declare them; CI checks the built core on Node 20 separately.
 
 ```bash
 git clone https://github.com/boussadjra/taqwim.git

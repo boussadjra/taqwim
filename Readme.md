@@ -126,7 +126,7 @@ Details: **[Accessibility and keyboard](https://taqwim.vercel.app/guide/accessib
 
 ## Development
 
-Requires Node >= 20, pnpm, and [Vite+](https://vite.plus) (`curl -fsSL https://vite.plus/install | bash`).
+Working in this repository requires Node 24, pnpm 11, and [Vite+](https://vite.plus) (`curl -fsSL https://vite.plus/install | bash`). Published package compatibility is stated in each package manifest.
 
 ```sh
 git clone https://github.com/boussadjra/taqwim.git
