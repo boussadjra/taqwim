@@ -306,6 +306,14 @@ export function runChecks(t, civilModule, tblaModule) {
     same(t.toEpochDay(1970, 1, 1), 0, 'the Unix epoch')
     same(t.dayOfWeekFromEpochDay(0), 4, 'epoch day 0 was a Thursday')
     same(t.toEpochDay(2024, 3, 11), 19793, 'a date inside the table')
+    for (const year of [0, 1, 42, 99]) {
+      const iso = `${String(year).padStart(4, '0')}-02-28`
+      const epochDay = Math.floor(Date.parse(`${iso}T00:00:00Z`) / 86_400_000)
+      same(t.toEpochDay(year, 2, 28), epochDay, `early year ${iso}`)
+      const local = t.epochDayToDate(epochDay)
+      sameLocalDate(local, [year, 2, 28], `early local year ${iso}`)
+      same(t.epochDayOf(local), epochDay, `early epoch roundtrip ${iso}`)
+    }
     for (const [year, month, day] of [
       [1924, 8, 1],
       [1970, 1, 1],

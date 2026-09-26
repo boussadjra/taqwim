@@ -17,9 +17,9 @@
  *   - **It does not stop at the first failure.** One package failing should not
  *     hide whether the other twelve would have worked. Failures are collected
  *     and reported together at the end.
- *   - **The dist-tag is derived, not remembered.** A prerelease publishes under
- *     its own identifier (`0.1.0-beta.0` -> `beta`), so `pnpm add @taqwim/vue`
- *     cannot resolve to it by accident. Overridable with --tag.
+ *   - **The dist-tag follows the release line.** Before a stable version exists,
+ *     prereleases update `latest` so a bare install gets the current beta. Once
+ *     stable exists, prereleases use their own identifier. Overridable with --tag.
  *
  *   node scripts/publish.js --dry-run
  *   node scripts/publish.js
@@ -62,7 +62,7 @@ Usage: node scripts/publish.js [options]
   version in its package.json.
 
 Options:
-  --tag <tag>      dist-tag to publish under (default: derived from the version)
+  --tag <tag>      dist-tag to publish under (default: latest until stable exists)
   --otp <code>     npm one-time password, if your account requires one
   --dry-run        print the plan and publish nothing
   --help
@@ -88,19 +88,14 @@ function parseArgs(argv) {
 }
 
 /**
- * The dist-tag a version should go out under.
- *
- * A prerelease publishing as `latest` is the mistake worth engineering away:
- * it makes `pnpm add @taqwim/vue` resolve to a beta for everyone. The
- * identifier is already in the version string, so read it from there rather
- * than trusting whoever typed the command to remember `--tag`.
- *
- * npm still forces a `latest` tag onto a package's very first publish whatever
- * this says. That resolves itself once a stable version exists to point it at.
+ * Keep `latest` current during the pre-stable line. After a stable release,
+ * preserve `latest` for stable and publish new prereleases to their own channel.
  */
-function tagFor(version) {
+function tagFor(version, published) {
   const identifier = /-([a-z]+)\.\d+$/.exec(version)?.[1]
-  return identifier ?? 'latest'
+  if (!identifier) return 'latest'
+  const stableExists = [...published].some(publishedVersion => /^\d+\.\d+\.\d+$/.test(publishedVersion))
+  return stableExists ? identifier : 'latest'
 }
 
 /** Asks the registry directly — `npm view` answers from a cache that lags a publish. */
@@ -140,15 +135,15 @@ async function main() {
   }
 
   const [version] = versions
-  const tag = options.tag ?? tagFor(version)
+  const plan = await Promise.all(
+    manifests.map(async manifest => {
+      const published = await publishedVersions(manifest.name)
+      return { ...manifest, published, alreadyPublished: published.has(version) }
+    }),
+  )
+  const tag = options.tag ?? tagFor(version, plan[0].published)
 
   console.log(`Publishing ${version} under the "${tag}" tag\n`)
-
-  const plan = []
-  for (const manifest of manifests) {
-    const published = await publishedVersions(manifest.name)
-    plan.push({ ...manifest, alreadyPublished: published.has(version) })
-  }
 
   const width = Math.max(...plan.map(entry => entry.name.length))
   for (const entry of plan) {

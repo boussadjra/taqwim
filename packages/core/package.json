@@ -1,6 +1,6 @@
 {
   "name": "@taqwim/core",
-  "version": "0.1.0-beta.7",
+  "version": "0.1.0-beta.8",
   "private": false,
   "description": "Deterministic Hijri date conversion, arithmetic and formatting for JavaScript",
   "keywords": [
@@ -78,14 +78,13 @@
     "prepublishOnly": "vp run build",
     "publish": "pnpm publish"
   },
-  "dependencies": {},
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.2",
-    "@vitest/coverage-v8": "^4.1.10",
+    "@vitest/coverage-v8": "^4.1.11",
     "publint": "^0.3.14",
     "tsdown": "^0.22.14",
     "typescript": "~5.9.3",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.11"
   },
   "config": {
     "commitizen": {

@@ -62,7 +62,7 @@
   }
 
   function commitDraft() {
-    const parsed = parseDatePickerDraft(draft, inputDisplay, calendarProps.calendarSystem)
+    const parsed = parseDatePickerDraft(draft, inputDisplay, calendarProps.calendarSystem, { ...calendarProps, editable })
     if (parsed === 'empty') {
       commit(undefined)
       return

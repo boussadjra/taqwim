@@ -146,46 +146,44 @@ const rootElement = ref<HTMLElement>()
 // Set by the store when the roving focus moves; consumed after the DOM updates.
 let pendingFocus: string | undefined
 
-const { store, state } = useCalendar(
-  (): CalendarOptions => ({
-    calendarSystem: props.calendarSystem,
-    value: modelValue.value,
-    defaultValue: props.defaultValue,
-    placeholder: placeholder.value,
-    defaultPlaceholder: props.defaultPlaceholder,
-    weekStartsOn: props.weekStartsOn,
-    weekdayFormat: props.weekdayFormat,
-    fixedWeeks: props.fixedWeeks,
-    numberOfMonths: props.numberOfMonths,
-    pagedNavigation: props.pagedNavigation,
-    multiple: props.multiple,
-    preventDeselect: props.preventDeselect,
-    disableDaysOutsideCurrentView: props.disableDaysOutsideCurrentView,
-    disabled: props.disabled,
-    readonly: props.readonly,
-    minValue: props.minValue,
-    maxValue: props.maxValue,
-    locale: props.locale,
-    showGregorian: props.showGregorian,
-    dateEmphasis: props.dateEmphasis,
-    gregorianLocale: props.gregorianLocale,
-    dir: props.dir,
-    calendarLabel: props.calendarLabel,
-    isDateDisabled: props.isDateDisabled,
-    isDateUnavailable: props.isDateUnavailable,
-    nextPage: props.nextPage,
-    prevPage: props.prevPage,
-    onValueChange: value => {
-      modelValue.value = value
-    },
-    onPlaceholderChange: value => {
-      placeholder.value = value
-    },
-    onFocusedDateChange: date => {
-      pendingFocus = date ? store.formatter.isoDate(date) : undefined
-    },
-  }),
-)
+const { store, state } = useCalendar((): CalendarOptions => ({
+  calendarSystem: props.calendarSystem,
+  value: modelValue.value,
+  defaultValue: props.defaultValue,
+  placeholder: placeholder.value,
+  defaultPlaceholder: props.defaultPlaceholder,
+  weekStartsOn: props.weekStartsOn,
+  weekdayFormat: props.weekdayFormat,
+  fixedWeeks: props.fixedWeeks,
+  numberOfMonths: props.numberOfMonths,
+  pagedNavigation: props.pagedNavigation,
+  multiple: props.multiple,
+  preventDeselect: props.preventDeselect,
+  disableDaysOutsideCurrentView: props.disableDaysOutsideCurrentView,
+  disabled: props.disabled,
+  readonly: props.readonly,
+  minValue: props.minValue,
+  maxValue: props.maxValue,
+  locale: props.locale,
+  showGregorian: props.showGregorian,
+  dateEmphasis: props.dateEmphasis,
+  gregorianLocale: props.gregorianLocale,
+  dir: props.dir,
+  calendarLabel: props.calendarLabel,
+  isDateDisabled: props.isDateDisabled,
+  isDateUnavailable: props.isDateUnavailable,
+  nextPage: props.nextPage,
+  prevPage: props.prevPage,
+  onValueChange: value => {
+    modelValue.value = value
+  },
+  onPlaceholderChange: value => {
+    placeholder.value = value
+  },
+  onFocusedDateChange: date => {
+    pendingFocus = date ? store.formatter.isoDate(date) : undefined
+  },
+}))
 
 provideHijriCalendarRootContext({ store, state })
 

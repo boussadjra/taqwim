@@ -3,6 +3,8 @@ import type { DatePickerInputDisplay } from '@taqwim/calendar-core'
 import type { HijriDateObject } from '@taqwim/core'
 import type { HijriCalendarProps } from './HijriCalendar.vue'
 
+let instances = 0
+
 /*
  * `multiple` is omitted, as it is in the React, Svelte and Solid pickers: the
  * input holds one formatted date and `v-model` is one `HijriDateObject`, so a
@@ -42,8 +44,6 @@ import { DEFAULT_GREGORIAN_FORMAT_OPTIONS, formatDatePickerValues, parseDatePick
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import HijriCalendar from './HijriCalendar.vue'
 
-let instances = 0
-
 const props = withDefaults(defineProps<HijriDatePickerProps>(), {
   format: 'iYYYY-iMM-iDD',
   gregorianFormat: () => DEFAULT_GREGORIAN_FORMAT_OPTIONS,
@@ -70,10 +70,11 @@ const modelValue = defineModel<HijriDateObject | undefined>({ default: undefined
 
 /*
  * `role="combobox"` is only complete when it points at the popup it controls,
- * so the popover needs a stable id. A module counter rather than `useId()`
- * keeps the Vue 3.3 peer range honest.
+ * so the popover needs a stable id. Assign it after hydration: a module
+ * counter can differ between server requests and the client. The popup is
+ * initially closed, and this also preserves support for Vue 3.3.
  */
-const popoverId = `taqwim-datepicker-${++instances}`
+const popoverId = ref<string>()
 
 // The picker owns the input's props; the rest belong to the calendar it opens.
 const calendarProps = computed(() => {
@@ -127,7 +128,7 @@ function onSelect(value: HijriDateObject | HijriDateObject[] | undefined) {
 }
 
 function commitDraft() {
-  const parsed = parseDatePickerDraft(draft.value, props.inputDisplay, props.calendarSystem)
+  const parsed = parseDatePickerDraft(draft.value, props.inputDisplay, props.calendarSystem, props)
   if (parsed === 'empty') {
     modelValue.value = undefined
     return
@@ -158,7 +159,10 @@ function onDocumentPointerDown(event: PointerEvent) {
   close()
 }
 
-onMounted(() => document.addEventListener('pointerdown', onDocumentPointerDown, true))
+onMounted(() => {
+  popoverId.value = `taqwim-datepicker-${++instances}`
+  document.addEventListener('pointerdown', onDocumentPointerDown, true)
+})
 onUnmounted(() => document.removeEventListener('pointerdown', onDocumentPointerDown, true))
 </script>
 

@@ -1,7 +1,7 @@
 # Taqwim
 
 [![CI](https://github.com/boussadjra/taqwim/workflows/CI/badge.svg)](https://github.com/boussadjra/taqwim/actions)
-[![npm](https://img.shields.io/npm/v/@taqwim/core/beta.svg)](https://www.npmjs.com/package/@taqwim/core)
+[![npm](https://img.shields.io/npm/v/@taqwim/core.svg)](https://www.npmjs.com/package/@taqwim/core)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue.svg)](https://www.typescriptlang.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -10,7 +10,7 @@ TBLA calendars, plus accessible components for **Vue, React, Svelte, Solid and A
 
 Calendar behaviour — grid building, selection, paging, keyboard navigation, accessibility attributes — is implemented once in a framework-free state machine. Every adapter is a thin binding to it, so the five behave identically and emit the same markup.
 
-> **Beta.** The current release is `0.1.0-beta.7`, published under the `beta` dist-tag. The API is settling and can still change between betas.
+> **Beta.** This checkout targets `0.1.0-beta.8`. Until a stable release exists, `latest` follows the newest beta. The API is settling and can still change between betas.
 
 📖 **[Documentation](https://taqwim.vercel.app/)**
 
@@ -41,7 +41,7 @@ Reach for **headless** when you are building your own markup, and **styled** whe
 ### Dates only
 
 ```sh
-pnpm add @taqwim/core@beta
+pnpm add @taqwim/core
 ```
 
 ```typescript
@@ -84,7 +84,7 @@ Full API: **[reference](https://taqwim.vercel.app/api/)**.
 ### A calendar
 
 ```sh
-pnpm add @taqwim/vue-styled@beta    # or react-styled, svelte-styled, solid-styled, angular-styled
+pnpm add @taqwim/vue-styled    # or react-styled, svelte-styled, solid-styled, angular-styled
 ```
 
 ```vue
@@ -126,7 +126,7 @@ Details: **[Accessibility and keyboard](https://taqwim.vercel.app/guide/accessib
 
 ## Development
 
-Requires Node >= 20, pnpm, and [Vite+](https://vite.plus) (`curl -fsSL https://vite.plus/install | bash`).
+Working in this repository requires Node 24, pnpm 11, and [Vite+](https://vite.plus) (`curl -fsSL https://vite.plus/install | bash`). Published package compatibility is stated in each package manifest.
 
 ```sh
 git clone https://github.com/boussadjra/taqwim.git

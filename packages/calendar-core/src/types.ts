@@ -86,7 +86,7 @@ export interface CalendarState {
   gregorianValue: Date | Date[] | undefined
   /** The roving-focus target. `undefined` until the calendar is focused. */
   focusedDate: HijriDateObject | undefined
-  /** One entry per `numberOfMonths`. */
+  /** Up to `numberOfMonths` entries, stopping at the calendar's supported range. */
   months: CalendarMonth[]
   /** Weekday labels, already rotated to match `weekStartsOn`. */
   weekDays: string[]

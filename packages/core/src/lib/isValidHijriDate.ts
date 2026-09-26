@@ -32,13 +32,13 @@ export function isValidHijriDate(
     return isValidHijriDate(year, month, day, calendarOptions)
   }
   if (typeof hy === 'object') {
-    return isValidHijriDate(hy.hy, hy.hm, hy.hd, hmOrOptions as HijriCalendarSystemOptions | undefined)
+    return hy !== null && isValidHijriDate(hy.hy, hy.hm, hy.hd, hmOrOptions as HijriCalendarSystemOptions | undefined)
   }
   const month = hmOrOptions as number
-  if (month < 1 || month > 12) {
+  const day = hdOrOptions as number
+  if (!Number.isInteger(hy) || !Number.isInteger(month) || !Number.isInteger(day) || month < 1 || month > 12) {
     return false
   }
   const days = resolveCalendarSystem(options).daysInMonth(hy, month)
-  const day = hdOrOptions as number
   return days > 0 && day >= 1 && day <= days
 }

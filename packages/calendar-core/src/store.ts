@@ -217,7 +217,7 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
   function select(date: HijriDateObject) {
     // Guarded here rather than only in the click handler, so keyboard
     // selection and programmatic calls honour the same rules.
-    if (!isSelectable(date, !isSameMonth(date, currentPlaceholder()))) return
+    if (!isSelectable(date, !isVisible(date))) return
 
     const value = currentValue()
 
@@ -255,7 +255,9 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
   // ------------------------------------------------------------------- focus
 
   function isVisible(date: HijriDateObject): boolean {
-    return visibleMonths(currentPlaceholder(), opt('numberOfMonths')).some(month => isSameMonth(month, date))
+    return visibleMonths(currentPlaceholder(), opt('numberOfMonths'), calendarSystem()).some(month =>
+      isSameMonth(month, date),
+    )
   }
 
   function focusDate(date: HijriDateObject | undefined) {
@@ -273,19 +275,7 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
   }
 
   function focusInitial() {
-    const selected = toArray(currentValue())[0]
-    if (selected && isVisible(selected)) {
-      focusDate(selected)
-      return
-    }
-
-    const today = todayHijri(calendarSystem())
-    if (today && isVisible(today)) {
-      focusDate(today)
-      return
-    }
-
-    focusDate(startOfMonth(currentPlaceholder()))
+    focusDate(tabbableDate())
   }
 
   // ---------------------------------------------------------------- keyboard
@@ -388,25 +378,23 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
    * users outside the grid, which is exactly what a roving tabindex is for.
    */
   function tabbableDate(): HijriDateObject | undefined {
-    if (focusedDate) return focusedDate
-
-    const candidates = [toArray(currentValue())[0], todayHijri(calendarSystem()) ?? undefined].filter(
+    const candidates = [focusedDate, toArray(currentValue())[0], todayHijri(calendarSystem()) ?? undefined].filter(
       (date): date is HijriDateObject => Boolean(date) && isVisible(date as HijriDateObject),
     )
 
     for (const candidate of candidates) {
-      if (!isDateDisabled(candidate)) return candidate
+      if (!isDateDisabled(candidate) && !isDateUnavailable(candidate)) return candidate
     }
 
-    const start = startOfMonth(currentPlaceholder())
-    if (!isDateDisabled(start)) return start
-
-    // A bounded month (minValue mid-month, say) has no selectable first day.
-    for (let day = 2; day <= 30; day++) {
-      const candidate = { ...start, hd: day }
-      if (!isDateDisabled(candidate)) return candidate
+    // The first month may be entirely blocked while a later month is usable.
+    for (const month of visibleMonths(currentPlaceholder(), opt('numberOfMonths'), calendarSystem())) {
+      const length = calendarSystem().daysInMonth(month.hy, month.hm)
+      for (let day = 1; day <= length; day++) {
+        const candidate = { ...month, hd: day }
+        if (!isDateDisabled(candidate) && !isDateUnavailable(candidate)) return candidate
+      }
     }
-    return start
+    return undefined
   }
 
   function monthHeadings(month: HijriDateObject, formatter: ReturnType<typeof createFormatter>) {
@@ -437,17 +425,19 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
     const today = todayHijri(activeCalendarSystem) ?? undefined
     const tabbable = tabbableDate()
 
-    const months: CalendarMonth[] = visibleMonths(placeholder, opt('numberOfMonths')).map(month => {
-      const headings = monthHeadings(month, formatter)
-      return {
-        value: month,
-        label: headings.label,
-        secondaryLabel: headings.secondaryLabel,
-        weeks: buildMonthWeeks(month, weekStartsOn, fixedWeeks, activeCalendarSystem).map(week =>
-          week.map(day => decorate(day, today, tabbable)),
-        ),
-      }
-    })
+    const months: CalendarMonth[] = visibleMonths(placeholder, opt('numberOfMonths'), activeCalendarSystem).map(
+      month => {
+        const headings = monthHeadings(month, formatter)
+        return {
+          value: month,
+          label: headings.label,
+          secondaryLabel: headings.secondaryLabel,
+          weeks: buildMonthWeeks(month, weekStartsOn, fixedWeeks, activeCalendarSystem).map(week =>
+            week.map(day => decorate(day, today, tabbable)),
+          ),
+        }
+      },
+    )
 
     const value = currentValue()
     const isInvalid = toArray(value).some(isOutOfBounds)

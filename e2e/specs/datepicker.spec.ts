@@ -65,6 +65,8 @@ test.describe('date picker popover', () => {
   })
 
   test('selects and formats dates with the Civil calendar system', async ({ page }) => {
+    // The picker opens at today; keep the fixture month visible on future runs.
+    await page.clock.setFixedTime(new Date('2026-08-24T12:00:00Z'))
     await open(page, { calendar: 'islamic-civil' })
 
     const civilDate = page.locator('[data-value="1448-03-10"]')

@@ -16,6 +16,12 @@ const WESTERN_WEEKEND = [SATURDAY, SUNDAY]
  * which is why the original business-day tests never caught the difference.
  */
 describe('business days and the weekend', () => {
+  it.each([Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY])(
+    'rejects a non-finite amount: %s',
+    amount => {
+      expect(() => addHijriBusinessDays({ hy: 1445, hm: 9, hd: 1 }, amount)).toThrow(/must be finite/)
+    },
+  )
   it('defaults to a Friday/Saturday weekend', () => {
     expect(DEFAULT_WEEKEND).toEqual([FRIDAY, SATURDAY])
   })

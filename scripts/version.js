@@ -202,10 +202,11 @@ function main() {
   const current = currentVersion(manifests)
   const next = computeNext(current, options)
 
-  // The repo itself is not published, but it carries a version and it is
-  // confusing when it disagrees with everything it contains.
+  // The repo and docs are not published, but their versions should agree with
+  // the packages they contain and describe.
   const root = readManifest('package.json')
-  const targets = [...manifests, root]
+  const docs = readManifest('docs/package.json')
+  const targets = [...manifests, root, docs]
 
   console.log(`${current}  ->  ${next}\n`)
   const width = Math.max(...targets.map(m => (m.json.name ?? '').length))
@@ -225,11 +226,8 @@ function main() {
 
   console.log(`\nWrote ${targets.length} manifests.`)
   if (semver.prerelease(next)) {
-    const tag = semver.prerelease(next)[0]
     console.log(
-      `\n${next} is a prerelease. Publish it under its own dist-tag so that\n` +
-        `\`npm install @taqwim/vue\` does not resolve to it:\n\n` +
-        `  pnpm -r --filter "@taqwim/*" publish --access public --tag ${tag} --no-git-checks\n`,
+      `\n${next} is a prerelease. Preview the registry-backed plan with:\n\n  pnpm publish:packages --dry-run\n`,
     )
   }
 }

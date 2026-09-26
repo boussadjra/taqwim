@@ -19,25 +19,27 @@ asserted. CI runs the built package through a matrix of
 | **Bun** 1   | ✓   | ✓        |
 
 Deno has no CommonJS column because a Deno consumer resolves the `import`
-condition; there is no CommonJS path to reach. Node 20, 22 and 24 all run the
-unit suite as well; the artifact matrix runs on 22. The whole thing lives in
+condition; there is no CommonJS path to reach. Node 22 and 24 run the
+workspace suite; Node 20 checks the built ESM and CommonJS artifacts separately
+because the workspace's pnpm version needs Node 22.13 or newer. The runtime matrix
+runs on 22. The whole thing lives in
 [`packages/core/runtimes`](https://github.com/boussadjra/taqwim/tree/main/packages/core/runtimes).
 
 ## Installing
 
 ```sh
 # Node, with any package manager
-pnpm add @taqwim/core@beta
+pnpm add @taqwim/core
 ```
 
 ```sh
 # Bun
-bun add @taqwim/core@beta
+bun add @taqwim/core
 ```
 
 ```sh
 # Deno
-deno add npm:@taqwim/core@beta
+deno add npm:@taqwim/core
 ```
 
 The import is the same in all three:
@@ -53,7 +55,7 @@ Deno can also skip the manifest entirely and reach for the package inline,
 which is the shortest path to a one-off script:
 
 ```ts
-import { toHijri } from 'npm:@taqwim/core@beta'
+import { toHijri } from 'npm:@taqwim/core'
 ```
 
 ## What the checks cover

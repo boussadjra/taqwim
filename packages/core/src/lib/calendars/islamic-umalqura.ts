@@ -6,6 +6,7 @@ import type { HijriCalendarSystem } from './types'
 export const islamicUmmAlQura: HijriCalendarSystem = {
   id: 'islamic-umalqura',
   toEpochDay(date) {
+    if (!Number.isInteger(date.hy) || !Number.isInteger(date.hm) || !Number.isInteger(date.hd)) return null
     const record = recordForHijriYear(date.hy)
     if (!record || date.hm < 1 || date.hm > 12) return null
     if (date.hd < 1 || date.hd > daysInHijriMonth(record.dpm, date.hm)) return null
@@ -13,6 +14,7 @@ export const islamicUmmAlQura: HijriCalendarSystem = {
   },
   fromEpochDay: epochDayToHijri,
   daysInMonth(year, month) {
+    if (!Number.isInteger(year) || !Number.isInteger(month)) return -1
     const record = recordForHijriYear(year)
     return record && month >= 1 && month <= 12 ? daysInHijriMonth(record.dpm, month) : -1
   },

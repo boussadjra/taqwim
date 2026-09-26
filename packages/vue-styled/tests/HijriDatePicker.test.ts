@@ -1,5 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
+import { createSSRApp, h, nextTick } from 'vue'
+import { renderToString } from 'vue/server-renderer'
 import HijriDatePicker from '../src/HijriDatePicker.vue'
 
 const RAMADAN_1445 = { hy: 1445, hm: 9, hd: 1 }
@@ -7,6 +9,29 @@ const RAMADAN_1445 = { hy: 1445, hm: 9, hd: 1 }
 const mountPicker = (props: Record<string, unknown> = {}) => mount(HijriDatePicker, { props, attachTo: document.body })
 
 describe('input', () => {
+  it('keeps server output stable across requests after client pickers have mounted', async () => {
+    const render = () => renderToString(createSSRApp({ render: () => h(HijriDatePicker) }))
+    const before = await render()
+    const picker = mountPicker()
+    await nextTick()
+    picker.unmount()
+    expect(await render()).toBe(before)
+  })
+
+  it('gives multiple pickers distinct popup IDs', async () => {
+    const first = mountPicker()
+    const second = mountPicker()
+    await nextTick()
+    const firstId = first.get('input').attributes('aria-controls')
+    const secondId = second.get('input').attributes('aria-controls')
+    expect(firstId).not.toBe(secondId)
+    await first.get('input').trigger('focus')
+    expect(first.get('[role="dialog"]').attributes('id')).toBe(firstId)
+    await second.get('input').trigger('focus')
+    expect(second.get('[role="dialog"]').attributes('id')).toBe(secondId)
+    first.unmount()
+    second.unmount()
+  })
   it('renders the model value in the configured format', () => {
     const input = mountPicker({ modelValue: RAMADAN_1445 }).get('input')
 
@@ -29,6 +54,12 @@ describe('input', () => {
 })
 
 describe('parsing typed input', () => {
+  it('rejects manual dates before minValue', async () => {
+    const wrapper = mountPicker({ modelValue: RAMADAN_1445, minValue: RAMADAN_1445 })
+    await wrapper.get('input').setValue('1445-08-15')
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+    expect(wrapper.get('input').element.value).toBe('1445-09-01')
+  })
   it.each([
     ['1446-03-15', { hy: 1446, hm: 3, hd: 15 }],
     ['1446/03/15', { hy: 1446, hm: 3, hd: 15 }],

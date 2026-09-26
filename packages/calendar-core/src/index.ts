@@ -6,6 +6,7 @@ export {
   BOTH_SEPARATOR,
   formatDatePickerValues,
   parseDatePickerDraft,
+  type DatePickerDraftOptions,
   type DatePickerFormatOptions,
   type DatePickerFormattedValues,
   type DatePickerInputDisplay,

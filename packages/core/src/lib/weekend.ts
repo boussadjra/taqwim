@@ -41,6 +41,9 @@ function toWeekendSet(weekend: Weekend): Set<number> {
  * start that falls on a weekend simply walks forward to the next working day.
  */
 export function shiftBusinessDays(startEpochDay: number, amount: number, weekend: Weekend): number {
+  if (!Number.isFinite(amount)) {
+    throw new RangeError('Business-day amount must be finite.')
+  }
   if (amount === 0) {
     return startEpochDay
   }

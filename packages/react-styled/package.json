@@ -1,6 +1,6 @@
 {
   "name": "@taqwim/react-styled",
-  "version": "0.1.0-beta.7",
+  "version": "0.1.0-beta.8",
   "private": false,
   "description": "Ready-to-use themed React Hijri calendar and date picker",
   "keywords": [
@@ -74,7 +74,7 @@
     "react-dom": "^19.1.1",
     "tsdown": "^0.22.14",
     "typescript": "~5.9.3",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.11"
   },
   "peerDependencies": {
     "react": ">=18.0.0",

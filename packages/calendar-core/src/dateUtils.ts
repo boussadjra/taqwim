@@ -50,7 +50,7 @@ export function shiftMonths(
 ): HijriDateObject | null {
   const absolute = date.hy * 12 + (date.hm - 1) + months
   const hy = Math.floor(absolute / 12)
-  const hm = (absolute % 12) + 1
+  const hm = (((absolute % 12) + 12) % 12) + 1
 
   const daysInMonth = getDaysLengthInMonth(hy, hm, { calendarSystem })
   if (daysInMonth < 0) {

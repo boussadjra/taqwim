@@ -1,6 +1,6 @@
 import { HijriRangeError } from './errors'
 import { epochDayOf } from './hDatesIndex'
-import { parseIsoDate } from './parseIsoDate'
+import { dateFromGregorianParts, parseIsoDate } from './parseIsoDate'
 import { resolveCalendarSystem } from './calendarSystem'
 import type { HijriCalendarSystemOptions, HijriDateObject } from './types'
 
@@ -46,11 +46,11 @@ export function toHijri(
     if (typeof monthOrOptions !== 'number' || day === undefined) {
       throw new Error('Invalid arguments')
     }
-    gregorianDate = new Date(dateOrYear, monthOrOptions - 1, day)
+    gregorianDate = dateFromGregorianParts(dateOrYear, monthOrOptions, day)
   } else if (dateOrYear instanceof Date) {
     gregorianDate = dateOrYear
   } else {
-    gregorianDate = new Date(dateOrYear.year, dateOrYear.month - 1, dateOrYear.day)
+    gregorianDate = dateFromGregorianParts(dateOrYear.year, dateOrYear.month, dateOrYear.day)
   }
 
   if (!(gregorianDate instanceof Date) || Number.isNaN(gregorianDate.getTime())) {

@@ -15,7 +15,11 @@ const MS_PER_DAY = 86_400_000
 
 /** Days since the Unix epoch for a Gregorian calendar date, timezone-independent. */
 export function toEpochDay(year: number, month: number, day: number): number {
-  return Math.floor(Date.UTC(year, month - 1, day) / MS_PER_DAY)
+  // Date.UTC and the multi-argument Date constructor remap years 0–99 to
+  // 1900–1999. Set the full year explicitly for proleptic calendar support.
+  const utc = new Date(0)
+  utc.setUTCFullYear(year, month - 1, day)
+  return Math.floor(utc.getTime() / MS_PER_DAY)
 }
 
 /** Epoch day of a `Date`, read in its local calendar (so "which day is it" matches the user's clock). */
@@ -26,7 +30,10 @@ export function epochDayOf(date: Date): number {
 /** Local midnight of the given epoch day. */
 export function epochDayToDate(epochDay: number): Date {
   const utc = new Date(epochDay * MS_PER_DAY)
-  return new Date(utc.getUTCFullYear(), utc.getUTCMonth(), utc.getUTCDate())
+  const local = new Date(0)
+  local.setFullYear(utc.getUTCFullYear(), utc.getUTCMonth(), utc.getUTCDate())
+  local.setHours(0, 0, 0, 0)
+  return local
 }
 
 /** Day of week for an epoch day: 0 = Sunday .. 6 = Saturday. (Epoch day 0 was a Thursday.) */
@@ -90,7 +97,7 @@ export function hijriYearStartEpochDay(hijriYear: number): number | undefined {
  * start, via binary search. Returns `undefined` outside the table's coverage.
  */
 export function recordForEpochDay(epochDay: number): { record: hDates; startEpochDay: number } | undefined {
-  if (epochDay < EPOCH_DAY_RANGE.min || epochDay > EPOCH_DAY_RANGE.max) {
+  if (!Number.isInteger(epochDay) || epochDay < EPOCH_DAY_RANGE.min || epochDay > EPOCH_DAY_RANGE.max) {
     return undefined
   }
 
