@@ -23,6 +23,9 @@ async function open(page: Page, query: Record<string, string | number | boolean>
 
   await page.goto(`/?${params}`)
   await page.waitForSelector('[data-taqwim-calendar]')
+  if (query.initialFocus) {
+    await expect(page.locator('[data-taqwim-calendar-cell-trigger]:focus')).toHaveCount(1)
+  }
 }
 
 const calendar = (page: Page) => page.locator('[data-taqwim-calendar]')
@@ -32,7 +35,7 @@ const inMonth = (page: Page) => page.locator('[data-taqwim-calendar-cell-trigger
 function day(page: Page, dayInMonth: number) {
   return page
     .locator(`[data-taqwim-calendar-cell-trigger]:not([data-outside-month])`)
-    .filter({ hasText: new RegExp(`^${dayInMonth}$`) })
+    .filter({ hasText: new RegExp(`^\\s*${dayInMonth}\\s*$`) })
 }
 
 const heading = (page: Page) => page.locator('[data-taqwim-calendar-heading]')
@@ -262,12 +265,10 @@ test.describe('keyboard', () => {
       await open(page, { value: '1445-09-15', initialFocus: true })
 
       await page.keyboard.press('Home')
-      const first = await focused(page).getAttribute('data-value')
+      await expect(focused(page)).toHaveAttribute('data-value', '1445-09-14')
 
       await page.keyboard.press('End')
-      const last = await focused(page).getAttribute('data-value')
-
-      expect(Number(last!.slice(-2)) - Number(first!.slice(-2))).toBe(6)
+      await expect(focused(page)).toHaveAttribute('data-value', '1445-09-20')
     })
 
     test('pages a month, and a year with Shift', async ({ page }) => {
@@ -293,9 +294,10 @@ test.describe('keyboard', () => {
       await open(page, { value: '1445-09-15', initialFocus: true })
 
       await page.keyboard.press('ArrowRight')
-
-      const active = await page.evaluate(() => document.activeElement?.getAttribute('data-value'))
-      expect(active).toBe('1445-09-16')
+      await expect(page.locator('[data-taqwim-calendar-cell-trigger]:focus')).toHaveAttribute(
+        'data-value',
+        '1445-09-16',
+      )
     })
   })
 })

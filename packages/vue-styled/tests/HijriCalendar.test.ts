@@ -78,6 +78,15 @@ describe('month and year picker', () => {
     return wrapper
   }
 
+  it('disables the interactive heading on a disabled calendar', async () => {
+    const wrapper = mountCalendar({ disabled: true })
+    expect((monthButton(wrapper).element as HTMLButtonElement).disabled).toBe(true)
+    expect((yearButton(wrapper).element as HTMLButtonElement).disabled).toBe(true)
+    await monthButton(wrapper).trigger('click')
+    expect(wrapper.find('.taqwim-calendar-picker').exists()).toBe(false)
+    wrapper.unmount()
+  })
+
   it('shows the month and year as separate heading buttons', () => {
     const wrapper = mountCalendar()
 

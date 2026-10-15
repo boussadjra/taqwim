@@ -112,20 +112,18 @@ export default defineConfig({
       description: 'Hijri date utilities and accessible calendar components for Vue, React, Svelte, Solid and Angular.',
       social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/boussadjra/taqwim' }],
       editLink: { baseUrl: 'https://github.com/boussadjra/taqwim/edit/main/docs/' },
-      customCss: ['./src/styles/theme.css', './src/styles/demo.css'],
+      customCss: ['./src/styles/theme.css', './src/styles/demo.css', './src/styles/home.css'],
       head: [
         { tag: 'link', attrs: { rel: 'preconnect', href: 'https://fonts.googleapis.com' } },
         { tag: 'link', attrs: { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: true } },
         {
           /*
-           * Four faces, each doing a job the others cannot.
+           * Three faces, each doing a job the others cannot.
            *
            * Literata is an ebook face, drawn for long reading rather than for
            * magazine covers, which is the register a reference work wants.
            * Public Sans is the plainest legible sans available at 16px and
-           * carries the body without competing with the headings. Instrument
-           * Serif is the display cut, one weight, used for the hero title and
-           * nothing else — a reading face at 4.5rem is just large body text.
+           * carries the body and the homepage's display headings.
            *
            * Amiri is the one that matters: a revival of the Bulaq Press naskh
            * cut in Cairo in 1905. The docs render Arabic month names on nearly
@@ -139,7 +137,6 @@ export default defineConfig({
             rel: 'stylesheet',
             href:
               'https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,600' +
-              '&family=Instrument+Serif:ital@0;1' +
               '&family=Public+Sans:wght@400;500;600' +
               '&family=Amiri:wght@400;700&display=swap',
           },
@@ -152,10 +149,13 @@ export default defineConfig({
            * module script in `FrameworkSwitcher.astro` is deferred.
            */
           tag: 'script',
-          content: `try{document.documentElement.dataset.framework=localStorage.getItem('taqwim-framework')||'vue'}catch(e){document.documentElement.dataset.framework='vue'}`,
+          content: `try{const f=localStorage.getItem('taqwim-framework');document.documentElement.dataset.framework=['vue','react','svelte','solid','angular'].includes(f)?f:'vue'}catch(e){document.documentElement.dataset.framework='vue'}`,
         },
       ],
       components: {
+        Hero: './src/components/HomeHero.astro',
+        ThemeProvider: './src/components/ThemeProvider.astro',
+        ThemeSelect: './src/components/ThemeSelect.astro',
         // Adds the framework switcher above every page's content.
         PageTitle: './src/components/PageTitle.astro',
         // Adds the section links to the header, next to the mark.

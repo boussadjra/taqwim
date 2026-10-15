@@ -1,8 +1,8 @@
 ---
 /**
  * The live date picker, in whichever framework the reader picked. Same
- * arrangement as `LiveCalendar.astro` — four islands, one visible, and no
- * Angular island because the plugin cannot compile one under Vite 8.
+ * arrangement as `LiveCalendar.astro` — four islands, one visible. Angular's
+ * playground is browser-tested, but no Angular island is embedded in Astro.
  */
 import { DatePickerDemo as ReactDatePickerDemo } from './demos/react/DatePickerDemo'
 import { DatePickerDemo as SolidDatePickerDemo } from './demos/solid/DatePickerDemo'
@@ -37,9 +37,9 @@ const { theme = 'islamic' } = Astro.props
   <div class="demo not-content">
     <div class="demo-stage demo-stage-note">
       <p>
-        No live Angular island here — <code>@analogjs/vite-plugin-angular</code> does not compile an Angular app under
-        Vite 8. The <code>playground/angular</code> source includes the date picker and its Hijri calendar switch, and
-        both are covered by Angular's strict template checks.
+        This documentation page does not embed an Angular date picker. The <code>playground/angular</code> app includes
+        the date picker and its Hijri calendar switch. The shared Playwright suite exercises them in the browser, and
+        Angular's strict template checks run during the build.
       </p>
     </div>
   </div>

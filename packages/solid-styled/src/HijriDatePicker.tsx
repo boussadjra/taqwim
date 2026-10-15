@@ -14,6 +14,7 @@ import {
   onMount,
   Show,
   splitProps,
+  untrack,
   type JSX,
 } from 'solid-js'
 import { HijriCalendar, type HijriCalendarProps } from './HijriCalendar'
@@ -34,7 +35,10 @@ export interface HijriDatePickerProps extends Omit<HijriCalendarProps, 'value' |
   label?: string
   /** Let the user type a date as well as pick one. @default true */
   editable?: boolean
-  /** Replaces the trigger input entirely. */
+  /**
+   * Replaces the trigger input entirely. Date text and `isOpen` are reactive
+   * getters: read them inside JSX. Destructuring captures their current values.
+   */
   renderTrigger?: (props: {
     value: string
     hijriValue: string
@@ -89,6 +93,8 @@ export function HijriDatePicker(props: HijriDatePickerProps): JSX.Element {
   createEffect(() => setDraft(formatted().value))
 
   let container: HTMLDivElement | undefined
+  let triggerElement: HTMLElement | undefined
+  let restoringFocus = false
 
   /*
    * A month page unmounts the focused day cell, which fires `focusout` with
@@ -124,8 +130,25 @@ export function HijriDatePicker(props: HijriDatePickerProps): JSX.Element {
   }
 
   function open() {
-    if (calendarProps.disabled) return
+    if (calendarProps.disabled || restoringFocus) return
+    const active = document.activeElement
+    if (active instanceof HTMLElement && container?.contains(active)) triggerElement = active
     setIsOpen(true)
+  }
+
+  function openAndFocus() {
+    if (calendarProps.disabled) return
+    open()
+    container?.querySelector<HTMLElement>('[data-taqwim-calendar-cell-trigger][tabindex="0"]')?.focus()
+  }
+
+  function close(restoreFocus = false) {
+    setIsOpen(false)
+    if (!restoreFocus) return
+    restoringFocus = true
+    const trigger = container?.querySelector<HTMLElement>('.taqwim-datepicker-input') ?? triggerElement
+    trigger?.focus()
+    restoringFocus = false
   }
 
   function commitDraft() {
@@ -148,23 +171,38 @@ export function HijriDatePicker(props: HijriDatePickerProps): JSX.Element {
 
   return (
     <div
-      ref={container}
+      ref={element => (container = element)}
       class="taqwim-datepicker"
       data-taqwim-theme={calendarProps.theme ?? 'default'}
       data-open={isOpen() ? '' : undefined}
       onFocusOut={onFocusOut}
       onKeyDown={event => {
-        if (event.key === 'Escape') setIsOpen(false)
+        if (event.key === 'Escape' && isOpen()) {
+          event.preventDefault()
+          close(true)
+        }
       }}
     >
       {local.renderTrigger ? (
-        local.renderTrigger({
-          value: formatted().value,
-          hijriValue: formatted().hijriValue,
-          gregorianValue: formatted().gregorianValue,
-          open,
-          isOpen: isOpen(),
-        })
+        // Keep the trigger node mounted while its fine-grained bindings update.
+        // Rebuilding it on open would leave focus restoration pointing at a detached node.
+        untrack(() =>
+          local.renderTrigger!({
+            get value() {
+              return formatted().value
+            },
+            get hijriValue() {
+              return formatted().hijriValue
+            },
+            get gregorianValue() {
+              return formatted().gregorianValue
+            },
+            open: openAndFocus,
+            get isOpen() {
+              return isOpen()
+            },
+          }),
+        )
       ) : (
         <input
           class="taqwim-datepicker-input"
@@ -188,7 +226,7 @@ export function HijriDatePicker(props: HijriDatePickerProps): JSX.Element {
               commitDraft()
             } else if (event.key === 'ArrowDown') {
               event.preventDefault()
-              open()
+              openAndFocus()
             }
           }}
         />
@@ -199,10 +237,10 @@ export function HijriDatePicker(props: HijriDatePickerProps): JSX.Element {
           <HijriCalendar
             {...calendarProps}
             value={selected()}
-            initialFocus
+            initialFocus={false}
             onValueChange={next => {
               commit(Array.isArray(next) ? next[0] : next)
-              setIsOpen(false)
+              close(true)
             }}
           />
         </div>

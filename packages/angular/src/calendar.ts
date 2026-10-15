@@ -97,10 +97,9 @@ export class HijriCalendarRoot implements OnChanges, AfterViewInit {
 
   // Set by the store when the roving focus moves; consumed after the render.
   private pendingFocus: string | undefined
+  private optionsInitialized = false
 
   constructor() {
-    this.pushOptions()
-
     /*
      * The store owns which date has focus; the adapter owns the DOM. Running
      * in an effect means the target cell exists even when the move paged the
@@ -126,6 +125,7 @@ export class HijriCalendarRoot implements OnChanges, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    if (!this.optionsInitialized) this.pushOptions()
     if (this.initialFocus) this.store.focusInitial()
   }
 
@@ -168,6 +168,7 @@ export class HijriCalendarRoot implements OnChanges, AfterViewInit {
         this.pendingFocus = date ? this.store.formatter.isoDate(date) : undefined
       },
     })
+    this.optionsInitialized = true
   }
 }
 

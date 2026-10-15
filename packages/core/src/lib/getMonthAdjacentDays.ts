@@ -34,7 +34,8 @@ export function getMonthAdjacentDays(
   const prevMonthLength = getDaysLengthInMonth(prevYear, prevMonth, options)
   const prevMonthDays: MonthDay[] = []
 
-  for (let i = leading; i > 0; i--) {
+  // The finite table has no previous month at its lower boundary.
+  for (let i = prevMonthLength < 0 ? 0 : leading; i > 0; i--) {
     const dayInMonth = prevMonthLength - i + 1
     prevMonthDays.push({
       dayInMonth,
@@ -45,6 +46,7 @@ export function getMonthAdjacentDays(
 
   const nextMonth = hm === 12 ? 1 : hm + 1
   const nextYear = hm === 12 ? hy + 1 : hy
+  const nextMonthLength = getDaysLengthInMonth(nextYear, nextMonth, options)
 
   // Day of the week immediately after the last day of the month.
   const dayAfterEnd = (firstDayInWeek + daysInMonth) % 7
@@ -54,7 +56,7 @@ export function getMonthAdjacentDays(
   const trailing = (weekStartsOn - dayAfterEnd + 7) % 7
 
   const nextMonthDays: MonthDay[] = []
-  for (let i = 0; i < trailing; i++) {
+  for (let i = 0; i < trailing && nextMonthLength >= 0; i++) {
     nextMonthDays.push({
       dayInMonth: i + 1,
       dayInWeek: (dayAfterEnd + i) % 7,

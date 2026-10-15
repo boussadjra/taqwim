@@ -7,7 +7,7 @@ import { parseDateString } from './parseDateString'
  * @returns The normalized Hijri date as a HijriDateObject.
  * @throws Error if the hijriDate is of invalid type.
  */
-export function normalizeHijriDate(hijriDate: ValidHijriDate): HijriDateObject {
+export function normalizeHijriDate(hijriDate: ValidHijriDate | ''): HijriDateObject {
   if (typeof hijriDate === 'object' && 'hy' in hijriDate && 'hm' in hijriDate && 'hd' in hijriDate) {
     // hijriDate is already a HijriDateObject
     return hijriDate

@@ -56,6 +56,9 @@ export function HijriDatePicker({
 
   const [isOpen, setIsOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLElement | null>(null)
+  const restoringFocus = useRef(false)
+  const [focusCalendarRequested, setFocusCalendarRequested] = useState(false)
   // `role="combobox"` is only complete when it points at the popup it controls.
   const popoverId = useId()
 
@@ -83,8 +86,34 @@ export function HijriDatePicker({
   }
 
   function open() {
-    if (disabled) return
+    if (disabled || restoringFocus.current) return
+    const active = document.activeElement
+    if (active instanceof HTMLElement && containerRef.current?.contains(active)) triggerRef.current = active
     setIsOpen(true)
+  }
+
+  function openAndFocus() {
+    if (disabled) return
+    open()
+    setFocusCalendarRequested(true)
+  }
+
+  // Ordinary input focus leaves the caret available for editing. ArrowDown
+  // and custom triggers explicitly move into the calendar after it renders.
+  useEffect(() => {
+    if (!isOpen || !focusCalendarRequested) return
+    containerRef.current?.querySelector<HTMLElement>('[data-taqwim-calendar-cell-trigger][tabindex="0"]')?.focus()
+    setFocusCalendarRequested(false)
+  }, [isOpen, focusCalendarRequested])
+
+  function close(restoreFocus = false) {
+    setIsOpen(false)
+    setFocusCalendarRequested(false)
+    if (!restoreFocus) return
+    restoringFocus.current = true
+    const trigger = containerRef.current?.querySelector<HTMLElement>('.taqwim-datepicker-input') ?? triggerRef.current
+    trigger?.focus()
+    restoringFocus.current = false
   }
 
   function commitDraft() {
@@ -128,7 +157,7 @@ export function HijriDatePicker({
     value: formatted.value,
     hijriValue: formatted.hijriValue,
     gregorianValue: formatted.gregorianValue,
-    open,
+    open: openAndFocus,
     isOpen,
   }
 
@@ -140,7 +169,10 @@ export function HijriDatePicker({
       data-open={isOpen ? '' : undefined}
       onBlur={onBlurCapture}
       onKeyDown={event => {
-        if (event.key === 'Escape') setIsOpen(false)
+        if (event.key === 'Escape' && isOpen) {
+          event.preventDefault()
+          close(true)
+        }
       }}
     >
       {renderTrigger ? (
@@ -168,7 +200,7 @@ export function HijriDatePicker({
               commitDraft()
             } else if (event.key === 'ArrowDown') {
               event.preventDefault()
-              open()
+              openAndFocus()
             }
           }}
         />
@@ -179,10 +211,10 @@ export function HijriDatePicker({
           <HijriCalendar
             {...calendarProps}
             value={selected}
-            initialFocus
+            initialFocus={false}
             onValueChange={next => {
               commit(Array.isArray(next) ? next[0] : next)
-              setIsOpen(false)
+              close(true)
             }}
           />
         </div>

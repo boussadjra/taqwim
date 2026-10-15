@@ -49,6 +49,11 @@ export default defineConfig({
         dependsOn: afterDeps,
         input: ['src/**', 'tests/**', 'vite.config.ts', 'package.json'],
       },
+      'type-check': {
+        command: 'tsc --noEmit -p tsconfig.json',
+        dependsOn: afterDeps,
+        input: ['src/**', 'tests/**', 'tsconfig*.json', 'vite.config.ts', 'package.json'],
+      },
       'test:coverage': {
         command: 'vitest run --coverage',
         dependsOn: afterDeps,

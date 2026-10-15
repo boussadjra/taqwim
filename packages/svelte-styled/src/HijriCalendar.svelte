@@ -46,7 +46,7 @@
   const NextIcon = $derived(navigationIcons?.next ?? ArrowRight)
 
   function togglePicker(which: 'month' | 'year') {
-    if (!selectableHeading) return
+    if (!selectableHeading || options.disabled) return
     picker = picker === which ? null : which
   }
 </script>
@@ -60,6 +60,7 @@
   {#snippet children({ months: visibleMonths, weekDays, state, store })}
     {@const jumpTo = (part: Partial<HijriDateObject>) => {
       // Day 1 keeps the jump inside the target month regardless of its length.
+      if (state.disabled) return
       store.setPlaceholder({ ...state.placeholder, ...part, hd: 1 })
       picker = null
     }}
@@ -84,6 +85,7 @@
                 type="button"
                 class="taqwim-calendar-heading-button"
                 data-taqwim-heading="month"
+                disabled={state.disabled}
                 aria-expanded={picker === 'month'}
                 onclick={() => togglePicker('month')}
               >
@@ -93,6 +95,7 @@
                 type="button"
                 class="taqwim-calendar-heading-button"
                 data-taqwim-heading="year"
+                disabled={state.disabled}
                 aria-expanded={picker === 'year'}
                 onclick={() => togglePicker('year')}
               >
@@ -110,7 +113,8 @@
                   type="button"
                   class="taqwim-calendar-heading-button"
                   data-taqwim-heading="month"
-                  aria-expanded={picker === 'month'}
+                  disabled={state.disabled}
+                aria-expanded={picker === 'month'}
                   onclick={() => togglePicker('month')}
                 >
                   {months[state.placeholder.hm - 1]}
@@ -119,7 +123,8 @@
                   type="button"
                   class="taqwim-calendar-heading-button"
                   data-taqwim-heading="year"
-                  aria-expanded={picker === 'year'}
+                  disabled={state.disabled}
+                aria-expanded={picker === 'year'}
                   onclick={() => togglePicker('year')}
                 >
                   {state.placeholder.hy}
@@ -164,6 +169,7 @@
               <button
                 type="button"
                 data-selected={state.placeholder.hm === index + 1 ? '' : undefined}
+                disabled={state.disabled}
                 onclick={() => jumpTo({ hm: index + 1 })}
               >
                 {month}
@@ -174,6 +180,7 @@
               <button
                 type="button"
                 data-selected={state.placeholder.hy === year ? '' : undefined}
+                disabled={state.disabled}
                 onclick={() => jumpTo({ hy: year })}
               >
                 {year}

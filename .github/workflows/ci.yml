@@ -41,6 +41,9 @@ jobs:
       - name: Check formatting, lint and types
         run: pnpm exec vp check
 
+      - name: Check release tooling
+        run: pnpm exec vp run test:release
+
       - name: Type check
         run: pnpm exec vp run -r type-check
 
@@ -194,8 +197,18 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run npm audit
-        run: pnpm audit --audit-level moderate
+      - name: Audit published dependencies
+        run: pnpm audit --prod --audit-level moderate
+
+      - name: Audit workspace dependencies
+        # Both remaining advisories are in dev-only Changesets dependencies.
+        # Neither has a published patch as of 2026-10-15. Keep all other
+        # moderate-or-higher findings blocking and remove these ignores once
+        # patched releases exist.
+        run: >-
+          pnpm audit --audit-level moderate
+          --ignore GHSA-vfj7-8cjw-p6xm
+          --ignore GHSA-hp3w-g68c-fv3c
 
       - name: Run license check
         # The private workspace root is not distributed. The accessibility

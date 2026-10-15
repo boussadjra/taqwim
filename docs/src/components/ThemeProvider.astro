@@ -1,0 +1,36 @@
+---
+import { Icon } from '@astrojs/starlight/components'
+---
+
+<!-- Restore before paint; browser storage is optional, including its getter. -->
+<script is:inline>
+  window.StarlightThemeProvider = (() => {
+    let storedTheme = ''
+    try {
+      const value = localStorage.getItem('starlight-theme')
+      if (value === 'light' || value === 'dark') storedTheme = value
+    } catch {
+      // Restricted browser storage must not prevent the theme controls loading.
+    }
+    const theme = storedTheme || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
+    document.documentElement.dataset.theme = theme
+    return {
+      updatePickers(theme = storedTheme || 'auto') {
+        document.querySelectorAll('starlight-theme-select').forEach(picker => {
+          const select = picker.querySelector('select')
+          if (select) select.value = theme
+          const template = document.querySelector('#theme-icons')
+          const icon = template?.content.querySelector('.' + theme)
+          const label = picker.querySelector('svg.label-icon')
+          if (icon && label) label.replaceChildren(...icon.cloneNode(true).childNodes)
+        })
+      },
+    }
+  })()
+</script>
+
+<template id="theme-icons">
+  <Icon name="sun" class="light" />
+  <Icon name="moon" class="dark" />
+  <Icon name="laptop" class="auto" />
+</template>

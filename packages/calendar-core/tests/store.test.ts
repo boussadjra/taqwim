@@ -4,6 +4,21 @@ import { createCalendar } from '../src/store'
 const DAY = { hy: 1446, hm: 3, hd: 10 }
 
 describe('store contract', () => {
+  it('seeds defaults from the first options update before an Angular template renders', () => {
+    const store = createCalendar()
+    const onPlaceholderChange = vi.fn()
+
+    store.setOptions({ defaultPlaceholder: DAY, defaultValue: DAY, onPlaceholderChange })
+
+    expect(store.getSnapshot().placeholder).toEqual(DAY)
+    expect(store.getSnapshot().value).toEqual(DAY)
+    expect(onPlaceholderChange).not.toHaveBeenCalled()
+
+    store.nextPage()
+    store.setOptions({ defaultPlaceholder: DAY })
+    expect(store.getSnapshot().placeholder.hm).toBe(4)
+  })
+
   it('returns a stable snapshot reference between changes', () => {
     // Required by React's useSyncExternalStore and the Solid/Svelte equivalents:
     // a fresh object each call would loop forever.

@@ -73,7 +73,11 @@ function splitProps(props: Record<string, unknown>) {
   return { options, domProps }
 }
 
-export function HijriCalendarRoot({ children, initialFocus, ...rest }: HijriCalendarRootProps & DivProps) {
+export function HijriCalendarRoot({
+  children,
+  initialFocus,
+  ...rest
+}: HijriCalendarRootProps & Omit<DivProps, keyof HijriCalendarRootProps>) {
   const rootRef = useRef<HTMLDivElement>(null)
   const pendingFocus = useRef<string | undefined>(undefined)
 

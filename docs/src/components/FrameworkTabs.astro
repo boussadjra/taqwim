@@ -1,0 +1,28 @@
+---
+import { Tabs } from '@astrojs/starlight/components'
+---
+
+<!-- FrameworkSwitcher owns the shared preference. Unsynced native tabs keep
+     their keyboard behaviour without a second, storage-dependent preference. -->
+<div class="framework-tabs" data-framework-tabs>
+  <Tabs><slot /></Tabs>
+</div>
+
+<!-- Apply the preference already restored in the document head before paint.
+     The shared switcher wires subsequent mouse and keyboard choices. -->
+<script is:inline>
+  {
+    const group = document.currentScript.previousElementSibling.querySelector('starlight-tabs')
+    const tabs = [...group.querySelectorAll('[role="tab"]')]
+    const panels = [...group.querySelectorAll(':scope > [role="tabpanel"]')]
+    const framework = document.documentElement.dataset.framework ?? 'vue'
+    const index = tabs.findIndex(tab => tab.textContent.trim().toLowerCase() === framework)
+    if (index >= 0) {
+      tabs.forEach((tab, i) => {
+        tab.setAttribute('aria-selected', String(i === index))
+        tab.tabIndex = i === index ? 0 : -1
+      })
+      panels.forEach((panel, i) => (panel.hidden = i !== index))
+    }
+  }
+</script>

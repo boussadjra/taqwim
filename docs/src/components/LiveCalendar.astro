@@ -7,11 +7,8 @@
  * intersect — so a page with this on it boots one framework, not four, and
  * picks up a second only if the reader switches to it.
  *
- * Angular has no island. `@analogjs/vite-plugin-angular` cannot compile an
- * Angular app under Vite 8, which is the same gap that keeps Angular out of
- * the default Playwright run — see `e2e/KNOWN-GAPS.md`. Rather than quietly
- * showing a Vue calendar under an Angular heading, that tab says so and gives
- * the reader the playground to run locally.
+ * Angular has no Astro island here. Its separate playground runs in the
+ * default Playwright suite; this tab points readers to that playground.
  */
 import { CalendarDemo as ReactCalendarDemo } from './demos/react/CalendarDemo'
 import { CalendarDemo as SolidCalendarDemo } from './demos/solid/CalendarDemo'
@@ -48,12 +45,11 @@ const { theme = 'default', multiple = false } = Astro.props
   <div class="demo not-content">
     <div class="demo-stage demo-stage-note">
       <p>
-        No live Angular island here. <code>@analogjs/vite-plugin-angular</code> does not compile an Angular app under
-        Vite 8, which is the same gap that keeps Angular out of the default end-to-end run.
+        This documentation page does not embed an Angular calendar. The <code>playground/angular</code> app runs in the
+        shared browser suite with the other four frameworks.
       </p>
       <p>
-        The adapter and <code>playground/angular</code> source — including the same Hijri calendar switch — are built
-        and type-checked by <code>ngc</code> with <code>strictTemplates</code> on every change.
+        The adapter and playground also build with Angular's <code>strictTemplates</code> checks.
       </p>
     </div>
   </div>

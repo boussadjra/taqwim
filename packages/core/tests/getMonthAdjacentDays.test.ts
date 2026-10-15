@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest'
 import { getMonthAdjacentDays } from '../src/lib/getMonthAdjacentDays'
 import { getDayInWeek } from '../src/lib/getDayInWeek'
 import { getDaysLengthInMonth } from '../src/lib/getDaysLengthInMonth'
+import { isValidHijriDate } from '../src/lib/isValidHijriDate'
+import { islamicCivil } from '../src/lib/calendars/islamic-civil'
 
 describe('getMonthAdjacentDays', () => {
   it('should return the days of the previous and next months of the given Hijri date', () => {
@@ -145,5 +147,28 @@ describe('getMonthAdjacentDays: padding to whole weeks', () => {
         expect(getDayInWeek(firstCell), `weekStartsOn=${weekStartsOn}`).toBe(weekStartsOn)
       }
     })
+  })
+})
+
+describe('getMonthAdjacentDays: finite calendar boundaries', () => {
+  it.each([0, 1, 2, 3, 4, 5, 6])('returns only real dates at both table edges for weekStartsOn=%i', weekStartsOn => {
+    const first = getMonthAdjacentDays({ hy: 1343, hm: 1, hd: 1 }, weekStartsOn)
+    const last = getMonthAdjacentDays({ hy: 1500, hm: 12, hd: 1 }, weekStartsOn)
+    expect(first.prevMonthDays).toEqual([])
+    expect(last.nextMonthDays).toEqual([])
+    for (const day of [...first.nextMonthDays, ...last.prevMonthDays]) {
+      expect(isValidHijriDate(day.date)).toBe(true)
+      expect(day.dayInWeek).toBe(getDayInWeek(day.date))
+    }
+  })
+
+  it('retains valid padding across year zero for a proleptic calendar', () => {
+    const options = { calendarSystem: islamicCivil }
+    const result = getMonthAdjacentDays({ hy: 0, hm: 1, hd: 1 }, 0, options)
+    expect(result.prevMonthDays.length).toBeGreaterThan(0)
+    for (const day of [...result.prevMonthDays, ...result.nextMonthDays]) {
+      expect(isValidHijriDate(day.date, options)).toBe(true)
+      expect(day.dayInWeek).toBe(getDayInWeek(day.date, options))
+    }
   })
 })

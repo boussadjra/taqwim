@@ -5,10 +5,10 @@ export interface HijriDateObject {
 }
 
 export interface HijriDuration {
-  years: number
-  months: number
-  days: number
-  weeks: number
+  years?: number
+  months?: number
+  days?: number
+  weeks?: number
 }
 
 export type DateTextSeparator = '/' | '-'

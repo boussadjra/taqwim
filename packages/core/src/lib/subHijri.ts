@@ -3,6 +3,7 @@ import {
   subHijriMonths,
   subHijriWeeks,
   subHijriYears,
+  isValidHijriDate,
   type HijriCalendarSystemOptions,
   type HijriDateObject,
   type HijriDuration,
@@ -35,6 +36,7 @@ export function subHijri(
   duration: HijriDuration,
   options?: HijriCalendarSystemOptions,
 ): HijriDateObject | null {
+  if (!date || !isValidHijriDate(date, options)) return null
   const { years = 0, months = 0, days = 0, weeks = 0 } = duration
   let newDate: HijriDateObject | null = date
 

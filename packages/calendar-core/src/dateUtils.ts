@@ -2,6 +2,7 @@ import {
   getDaysLengthInMonth,
   isEqual,
   islamicUmmAlQura,
+  toEpochDay,
   type HijriCalendarSystem,
   type HijriDateObject,
 } from '@taqwim/core'
@@ -80,6 +81,6 @@ export function isSameMonth(a: HijriDateObject, b: HijriDateObject): boolean {
 /** Today as a Hijri date, or `null` if the system clock sits outside the table. */
 export function todayHijri(calendarSystem: HijriCalendarSystem = islamicUmmAlQura): HijriDateObject | null {
   const today = new Date()
-  const epochDay = Math.floor(Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()) / 86_400_000)
+  const epochDay = toEpochDay(today.getFullYear(), today.getMonth() + 1, today.getDate())
   return calendarSystem.fromEpochDay(epochDay)
 }

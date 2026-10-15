@@ -3,10 +3,10 @@ title: Migrating to 1.0
 description: What changed between taqwim-core-utils / taqwim-vue and the @taqwim scope, and why.
 ---
 
-1.0 renames every package into the `@taqwim` scope and makes several deliberate
-breaking changes. The old names get one final release that re-exports the new
-ones and is then deprecated, so nothing breaks the moment you update — but they
-will not receive fixes.
+1.0 moves the maintained packages into the `@taqwim` scope and makes several
+deliberate breaking changes. The old unscoped packages remain available at
+their existing versions, but they will not receive fixes. Replace their package
+names and imports when upgrading.
 
 ## Multiple calendar systems require no migration
 

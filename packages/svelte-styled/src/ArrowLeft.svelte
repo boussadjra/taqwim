@@ -1,3 +1,5 @@
+<script lang="ts"></script>
+
 <!-- The chevrons always point "back" and "forward" in reading order — the
      stylesheet mirrors them under dir="rtl" rather than the components
      swapping, so a custom icon inherits the same behaviour. -->

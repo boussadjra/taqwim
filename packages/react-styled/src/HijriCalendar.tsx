@@ -133,10 +133,14 @@ export function HijriCalendar({
       {({ months: visibleMonths, weekDays, state, store }) => {
         // Day 1 keeps the jump inside the target month regardless of its length.
         const jumpTo = (part: Partial<HijriDateObject>) => {
+          if (state.disabled) return
           store.setPlaceholder({ ...state.placeholder, ...part, hd: 1 })
           setPicker(null)
         }
-        const togglePicker = (which: 'month' | 'year') => setPicker(current => (current === which ? null : which))
+        const togglePicker = (which: 'month' | 'year') => {
+          if (state.disabled) return
+          setPicker(current => (current === which ? null : which))
+        }
         const gregorianPrimary = state.showGregorian && state.dateEmphasis === 'gregorian'
         const hijriHeadingButtons = () => (
           <>
@@ -144,6 +148,7 @@ export function HijriCalendar({
               type="button"
               className="taqwim-calendar-heading-button"
               data-taqwim-heading="month"
+              disabled={state.disabled}
               aria-expanded={picker === 'month'}
               onClick={() => togglePicker('month')}
             >
@@ -153,6 +158,7 @@ export function HijriCalendar({
               type="button"
               className="taqwim-calendar-heading-button"
               data-taqwim-heading="year"
+              disabled={state.disabled}
               aria-expanded={picker === 'year'}
               onClick={() => togglePicker('year')}
             >
@@ -228,6 +234,7 @@ export function HijriCalendar({
                           key={month}
                           type="button"
                           data-selected={state.placeholder.hm === index + 1 ? '' : undefined}
+                          disabled={state.disabled}
                           onClick={() => jumpTo({ hm: index + 1 })}
                         >
                           {month}
@@ -238,6 +245,7 @@ export function HijriCalendar({
                           key={year}
                           type="button"
                           data-selected={state.placeholder.hy === year ? '' : undefined}
+                          disabled={state.disabled}
                           onClick={() => jumpTo({ hy: year })}
                         >
                           {year}

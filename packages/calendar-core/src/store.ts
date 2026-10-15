@@ -82,6 +82,10 @@ function weekdayOffset(date: HijriDateObject, weekStartsOn: number, calendarSyst
  */
 export function createCalendar(initialOptions: CalendarOptions = {}): CalendarStore {
   let options: CalendarOptions = { ...initialOptions }
+  // Angular creates its injectable store before bound inputs are available.
+  // Its first setOptions call supplies those initial inputs; other adapters
+  // provide them to createCalendar directly.
+  let initialDefaultsApplied = Object.keys(initialOptions).length > 0
   const listeners = new Set<() => void>()
 
   // Uncontrolled fallbacks. When the matching option is supplied the caller
@@ -171,7 +175,8 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
   function pageTarget(direction: 1 | -1): HijriDateObject | null {
     const placeholder = currentPlaceholder()
     const custom = direction === 1 ? options.nextPage : options.prevPage
-    return custom ? custom(placeholder) : shiftMonths(placeholder, direction * pageStep(), calendarSystem())
+    const target = custom ? custom(placeholder) : shiftMonths(placeholder, direction * pageStep(), calendarSystem())
+    return target && calendarSystem().toEpochDay(startOfMonth(target)) !== null ? target : null
   }
 
   function isPageDisabled(direction: 1 | -1): boolean {
@@ -193,6 +198,7 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
 
   function setPlaceholder(date: HijriDateObject) {
     const next = startOfMonth(date)
+    if (calendarSystem().toEpochDay(next) === null) return
     if (isSameMonth(next, currentPlaceholder())) return
 
     internalPlaceholder = next
@@ -577,6 +583,17 @@ export function createCalendar(initialOptions: CalendarOptions = {}): CalendarSt
     getSnapshot,
     setOptions(next) {
       options = { ...options, ...next }
+      if (!initialDefaultsApplied) {
+        internalValue = options.defaultValue
+        internalPlaceholder =
+          options.placeholder ??
+          options.defaultPlaceholder ??
+          startOfMonth(
+            toArray(options.value ?? options.defaultValue)[0] ??
+              todayHijri(options.calendarSystem ?? islamicUmmAlQura) ?? { hy: 1446, hm: 1, hd: 1 },
+          )
+        initialDefaultsApplied = true
+      }
       notify()
     },
     select,

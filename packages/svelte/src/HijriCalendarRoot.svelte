@@ -20,6 +20,11 @@
     },
   }))
 
+  const rootProps = $derived.by(() => {
+    void calendar.state
+    return calendar.store.getRootProps()
+  })
+
   const { store } = calendar
   setHijriCalendarContext(calendar)
 
@@ -50,7 +55,7 @@
   }
 </script>
 
-<div bind:this={rootElement} {...store.getRootProps()} {...split.domProps} {onkeydown}>
+<div bind:this={rootElement} {...rootProps} {...split.domProps} {onkeydown}>
   {@render children?.({
     months: calendar.state.months,
     weekDays: calendar.state.weekDays,

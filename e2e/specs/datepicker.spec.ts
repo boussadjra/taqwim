@@ -18,6 +18,29 @@ const prevButton = (page: Page) => page.getByRole('button', { name: 'Previous pa
 const nextButton = (page: Page) => page.getByRole('button', { name: 'Next page' })
 
 test.describe('date picker popover', () => {
+  test('keeps the input editable and restores focus after keyboard selection or Escape', async ({ page }) => {
+    await open(page)
+    const input = page.locator('.taqwim-datepicker-input')
+    await expect(input).toBeFocused()
+    await input.fill('1445-09-12')
+    await input.press('Enter')
+    await expect(input).toBeFocused()
+    await expect(input).toHaveValue('1445-09-12')
+
+    await input.press('ArrowDown')
+    const focusedDay = page.locator('[data-taqwim-calendar-cell-trigger]:focus')
+    await expect(focusedDay).toHaveCount(1)
+    await focusedDay.press('Escape')
+    await expect(input).toBeFocused()
+    await expect(input).toHaveAttribute('aria-expanded', 'false')
+
+    await input.press('ArrowDown')
+    await expect(focusedDay).toHaveCount(1)
+    await focusedDay.press('Enter')
+    await expect(input).toBeFocused()
+    await expect(input).toHaveAttribute('aria-expanded', 'false')
+  })
+
   test('shows prev/next and month/year heading buttons', async ({ page }) => {
     await open(page)
 

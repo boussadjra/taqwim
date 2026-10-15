@@ -6,8 +6,12 @@
 
   const calendar = getHijriCalendarContext()
   const resolved = $derived(month ?? calendar.state.months[0])
+  const gridProps = $derived.by(() => {
+    void calendar.state
+    return calendar.store.getGridProps(resolved)
+  })
 </script>
 
-<div tabindex="-1" {...calendar.store.getGridProps(resolved)} {...rest}>
+<div tabindex="-1" {...gridProps} {...rest}>
   {@render children?.(resolved)}
 </div>

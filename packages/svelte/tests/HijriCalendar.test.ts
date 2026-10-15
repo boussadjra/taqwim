@@ -60,6 +60,28 @@ describe('rendering', () => {
 })
 
 describe('previously inert props', () => {
+  it('updates root, grid, and paging accessibility attributes when options change', async () => {
+    const { rerender } = renderCalendar()
+    const root = () => document.querySelector('[data-taqwim-calendar]')!
+    const grid = () => document.querySelector('[data-taqwim-calendar-grid]')!
+
+    await rerender({ defaultPlaceholder: RAMADAN_1445, disabled: true, readonly: true, dir: 'rtl' })
+    expect(root().getAttribute('dir')).toBe('rtl')
+    expect(root().hasAttribute('data-disabled')).toBe(true)
+    expect(root().hasAttribute('data-readonly')).toBe(true)
+    expect(grid().getAttribute('aria-disabled')).toBe('true')
+    expect(grid().getAttribute('aria-readonly')).toBe('true')
+    expect(screen.getByTestId('prev').getAttribute('aria-disabled')).toBe('true')
+    expect(screen.getByTestId('next').hasAttribute('data-disabled')).toBe(true)
+
+    await rerender({ defaultPlaceholder: RAMADAN_1445, disabled: false, readonly: false, dir: 'ltr' })
+    expect(root().getAttribute('dir')).toBe('ltr')
+    expect(root().hasAttribute('data-disabled')).toBe(false)
+    expect(grid().hasAttribute('aria-disabled')).toBe(false)
+    expect(screen.getByTestId('prev').getAttribute('aria-disabled')).toBe('false')
+    expect(screen.getByTestId('next').hasAttribute('data-disabled')).toBe(false)
+  })
+
   it('renders several months', () => {
     renderCalendar({ numberOfMonths: 3 })
 

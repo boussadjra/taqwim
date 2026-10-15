@@ -28,11 +28,13 @@ describe.each([
   })
 
   it('round-trips every day across several complete cycles', () => {
+    const mismatches: { epochDay: number; actual: number | null }[] = []
     for (let epochDay = epoch - 2 * 10_631; epochDay <= epoch + 4 * 10_631; epochDay++) {
       const hijri = calendarSystem.fromEpochDay(epochDay)
-      expect(hijri).not.toBeNull()
-      expect(calendarSystem.toEpochDay(hijri!)).toBe(epochDay)
+      const actual = hijri && calendarSystem.toEpochDay(hijri)
+      if (actual !== epochDay) mismatches.push({ epochDay, actual })
     }
+    expect(mismatches).toEqual([])
   }, 15_000)
 
   it('round-trips Hijri fields across a broad proleptic range', () => {

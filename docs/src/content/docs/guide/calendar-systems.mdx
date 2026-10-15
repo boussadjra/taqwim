@@ -3,7 +3,8 @@ title: Hijri calendar systems
 description: Compare Umm al-Qura, Islamic Civil and Islamic TBLA, then select the right system for conversions and components.
 ---
 
-import { Tabs, TabItem } from '@astrojs/starlight/components'
+import { TabItem } from '@astrojs/starlight/components'
+import Tabs from '../../../components/FrameworkTabs.astro'
 import CalendarSystemComparison from '../../../components/CalendarSystemComparison.astro'
 
 Taqwim supports three deterministic Hijri calendar systems. **Umm al-Qura** is
@@ -116,7 +117,7 @@ pnpm add @taqwim/core
 Every headless and styled calendar and date picker accepts the same
 `calendarSystem` option.
 
-<Tabs syncKey="framework">
+<Tabs>
   <TabItem label="Vue">
 
 ```vue

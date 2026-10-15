@@ -8,6 +8,8 @@ import {
 import type { HijriCalendarSystem, HijriDateObject } from '@taqwim/core'
 import {
   Component,
+  Injector,
+  afterNextRender,
   ElementRef,
   EventEmitter,
   Input,
@@ -49,8 +51,8 @@ let instances = 0
       (click)="open()"
       (change)="commitDraft()"
       (keydown.enter)="$event.preventDefault(); commitDraft()"
-      (keydown.arrowdown)="$event.preventDefault(); open()"
-      (keydown.escape)="isOpen.set(false)"
+      (keydown.arrowdown)="$event.preventDefault(); openAndFocus()"
+      (keydown.escape)="$event.preventDefault(); close(true)"
     />
 
     @if (isOpen()) {
@@ -60,7 +62,7 @@ let instances = 0
         role="dialog"
         tabindex="-1"
         [attr.aria-label]="label"
-        (keydown.escape)="isOpen.set(false)"
+        (keydown.escape)="$event.preventDefault(); close(true)"
       >
         <taqwim-hijri-calendar
           [calendarSystem]="calendarSystem"
@@ -81,7 +83,7 @@ let instances = 0
           [maxValue]="maxValue"
           [disabled]="disabled"
           [readonly]="readonly"
-          [initialFocus]="true"
+          [initialFocus]="false"
           (valueChange)="onSelect($any($event))"
         />
       </div>
@@ -129,7 +131,9 @@ export class HijriDatePicker implements OnChanges, OnDestroy {
   protected readonly isOpen = signal(false)
   protected readonly draft = signal('')
 
-  private readonly host = inject(ElementRef<HTMLElement>)
+  private readonly host: ElementRef<HTMLElement> = inject(ElementRef)
+  private readonly injector = inject(Injector)
+  private restoringFocus = false
   private readonly uncontrolled = signal<HijriDateObject | undefined>(undefined)
 
   constructor() {
@@ -155,13 +159,33 @@ export class HijriDatePicker implements OnChanges, OnDestroy {
   }
 
   protected open(): void {
-    if (this.disabled) return
+    if (this.disabled || this.restoringFocus) return
     this.isOpen.set(true)
+  }
+
+  protected openAndFocus(): void {
+    if (this.disabled) return
+    this.open()
+    afterNextRender(
+      () => {
+        if (!this.isOpen()) return
+        this.host.nativeElement.querySelector<HTMLElement>('[data-taqwim-calendar-cell-trigger][tabindex="0"]')?.focus()
+      },
+      { injector: this.injector },
+    )
+  }
+
+  protected close(restoreFocus = false): void {
+    this.isOpen.set(false)
+    if (!restoreFocus) return
+    this.restoringFocus = true
+    this.host.nativeElement.querySelector<HTMLElement>('.taqwim-datepicker-input')?.focus()
+    this.restoringFocus = false
   }
 
   protected onSelect(next: HijriDateObject | HijriDateObject[] | undefined): void {
     this.commit(Array.isArray(next) ? next[0] : next)
-    this.isOpen.set(false)
+    this.close(true)
   }
 
   protected commitDraft(): void {

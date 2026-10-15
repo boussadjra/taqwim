@@ -25,6 +25,7 @@ describe('subHijriDays', () => {
     const date = null
     const amount = 10
 
+    // @ts-expect-error Exercise the runtime guard for JavaScript callers.
     const result = subHijriDays(date, amount)
 
     expect(result).toBeNull()

@@ -28,11 +28,10 @@ The option names are the same too — see
 [Umm al-Qura, Islamic Civil or Islamic TBLA](/guide/calendar-systems/).
 Porting an example between frameworks is a matter of syntax, not of behaviour.
 
-:::caution[Known gap]
-The Angular adapter is not yet covered by the shared end-to-end suite: the
-Analog Vite plugin cannot compile an Angular application under Vite 8. It is
-verified by `ngc` with `strictTemplates` on every build, which checks every
-component and template, but not at the DOM level. See
+:::note[Validation]
+The Angular adapter runs in the shared Playwright suite alongside the other
+four frameworks. Its build also runs `ngc` with `strictTemplates`. It does not
+have a separate Vitest component suite. See
 [`e2e/KNOWN-GAPS.md`](https://github.com/boussadjra/taqwim/blob/main/e2e/KNOWN-GAPS.md).
 
 Angular 21 or later. Angular 22 requires TypeScript 6, which the rest of the

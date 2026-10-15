@@ -56,13 +56,13 @@ function sameMonth(a: CalendarMonth, b: CalendarMonth): boolean {
 }
 
 function sameGregorianValue(a: Date | Date[] | undefined, b: Date | Date[] | undefined): boolean {
-  if (Array.isArray(a) !== Array.isArray(b)) return false
-  if (!Array.isArray(a) || !Array.isArray(b)) {
-    if (!a && !b) return true
-    if (!a || !b) return false
-    return a.getTime() === (b as Date).getTime()
+  if (Array.isArray(a) && Array.isArray(b)) {
+    return a.length === b.length && a.every((date, index) => date.getTime() === b[index]!.getTime())
   }
-  return a.length === b.length && a.every((date, index) => date.getTime() === b[index]!.getTime())
+  if (Array.isArray(a) || Array.isArray(b)) return false
+  if (!a && !b) return true
+  if (!a || !b) return false
+  return a.getTime() === b.getTime()
 }
 
 export function sameState(a: CalendarState, b: CalendarState): boolean {

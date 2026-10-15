@@ -10,7 +10,9 @@ TBLA calendars, plus accessible components for **Vue, React, Svelte, Solid and A
 
 Calendar behaviour — grid building, selection, paging, keyboard navigation, accessibility attributes — is implemented once in a framework-free state machine. Every adapter is a thin binding to it, so the five behave identically and emit the same markup.
 
-> **Beta.** This checkout targets `0.1.0-beta.8`. Until a stable release exists, `latest` follows the newest beta. The API is settling and can still change between betas.
+> **1.0 API.** The maintained packages use the `@taqwim` scope and a shared
+> `1.0.0` version. See the [migration guide](https://taqwim.vercel.app/guide/migration/)
+> before upgrading from the old unscoped packages.
 
 📖 **[Documentation](https://taqwim.vercel.app/)**
 
@@ -79,7 +81,7 @@ Calendars and date pickers accept the same `calendarSystem` option. See
 **[Hijri calendar systems](https://taqwim.vercel.app/guide/calendar-systems/)**
 for the Umm al-Qura, Civil and TBLA comparison, range rules and framework examples.
 
-Full API: **[reference](https://taqwim.vercel.app/api/)**.
+Full API: **[reference](https://taqwim.vercel.app/api/readme/)**.
 
 ### A calendar
 
@@ -147,9 +149,11 @@ vp run -r test
 
 Task graph, caching and cross-package dependencies are declared per package in `vite.config.ts` under `run.tasks`, not in `package.json`.
 
-### Known gaps
+### Browser coverage
 
-One is tracked openly in [`e2e/KNOWN-GAPS.md`](./e2e/KNOWN-GAPS.md): Angular is not yet covered by the end-to-end suite, because the Analog Vite plugin cannot compile it under Vite 8.
+The shared Playwright suite runs against Vue, React, Svelte, Solid and Angular.
+Angular is also checked by `ngc` with strict template checking. See
+[`e2e/KNOWN-GAPS.md`](./e2e/KNOWN-GAPS.md) for the remaining test-suite scope.
 
 ## Credits
 
