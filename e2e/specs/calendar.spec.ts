@@ -23,6 +23,9 @@ async function open(page: Page, query: Record<string, string | number | boolean>
 
   await page.goto(`/?${params}`)
   await page.waitForSelector('[data-taqwim-calendar]')
+  if (query.initialFocus) {
+    await expect(page.locator('[data-taqwim-calendar-cell-trigger]:focus')).toHaveCount(1)
+  }
 }
 
 const calendar = (page: Page) => page.locator('[data-taqwim-calendar]')
@@ -262,12 +265,10 @@ test.describe('keyboard', () => {
       await open(page, { value: '1445-09-15', initialFocus: true })
 
       await page.keyboard.press('Home')
-      const first = await focused(page).getAttribute('data-value')
+      await expect(focused(page)).toHaveAttribute('data-value', '1445-09-14')
 
       await page.keyboard.press('End')
-      const last = await focused(page).getAttribute('data-value')
-
-      expect(Number(last!.slice(-2)) - Number(first!.slice(-2))).toBe(6)
+      await expect(focused(page)).toHaveAttribute('data-value', '1445-09-20')
     })
 
     test('pages a month, and a year with Shift', async ({ page }) => {
