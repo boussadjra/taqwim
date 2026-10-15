@@ -44,6 +44,11 @@ export default defineConfig({
         dependsOn: afterDeps,
         input: ['src/**', 'tests/**', 'vite.config.ts', 'package.json'],
       },
+      'type-check': {
+        command: 'vue-tsc --noEmit -p tsconfig.json',
+        dependsOn: afterDeps,
+        input: ['src/**', 'tests/**', 'env.d.ts', 'tsconfig*.json', 'vite.config.ts', 'package.json'],
+      },
     },
   },
 })

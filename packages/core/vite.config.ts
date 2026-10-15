@@ -50,6 +50,10 @@ export default defineConfig({
         command: 'vitest run',
         input: ['src/**', 'tests/**', 'vite.config.ts', 'package.json'],
       },
+      'type-check': {
+        command: 'tsc --noEmit -p tsconfig.json',
+        input: ['src/**', 'tests/**', 'tsconfig*.json', 'vite.config.ts', 'package.json'],
+      },
       'test:coverage': {
         command: 'vitest run --coverage',
         input: ['src/**', 'tests/**', 'vite.config.ts', 'package.json'],

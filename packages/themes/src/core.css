@@ -452,13 +452,15 @@
  */
 [data-taqwim-calendar-cell][data-tooltip]::after {
   content: attr(data-tooltip);
-  display: block;
+  display: none;
   position: absolute;
   z-index: var(--hc-tooltip-z-index);
   bottom: calc(100% + var(--hc-tooltip-offset));
-  left: 50%;
+  inset-inline-start: 0;
   width: max-content;
-  max-width: var(--hc-tooltip-max-width);
+  /* Five columns fit from either outer group of three cells in a seven-day row. */
+  max-width: min(var(--hc-tooltip-max-width), calc(500% + 4 * var(--hc-grid-gap)));
+  box-sizing: border-box;
   padding: var(--hc-tooltip-padding);
   border-radius: var(--hc-tooltip-border-radius);
   background: var(--hc-tooltip-background);
@@ -468,10 +470,11 @@
   line-height: 1.35;
   text-align: center;
   white-space: normal;
+  overflow-wrap: anywhere;
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
-  transform: translateX(-50%) translateY(0.125rem);
+  transform: translateY(0.125rem);
   transition:
     opacity var(--hc-transition-fast),
     transform var(--hc-transition-fast),
@@ -479,18 +482,32 @@
   box-shadow: var(--hc-tooltip-shadow);
 }
 
+/* Logical edges keep labels inside their row in both LTR and RTL calendars. */
+[data-taqwim-calendar-cell][data-tooltip]:nth-child(4)::after {
+  inset-inline-start: auto;
+  left: 50%;
+  translate: -50% 0;
+}
+
+[data-taqwim-calendar-cell][data-tooltip]:nth-child(n + 5)::after {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+}
+
 @media (hover: hover) and (pointer: fine) {
   [data-taqwim-calendar-cell][data-tooltip]:hover::after {
+    display: block;
     opacity: 1;
     visibility: visible;
-    transform: translateX(-50%) translateY(0);
+    transform: translateY(0);
   }
 }
 
 [data-taqwim-calendar-cell][data-tooltip]:focus-within::after {
+  display: block;
   opacity: 1;
   visibility: visible;
-  transform: translateX(-50%) translateY(0);
+  transform: translateY(0);
 }
 
 @media (prefers-reduced-motion: reduce) {

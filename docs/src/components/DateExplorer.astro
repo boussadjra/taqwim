@@ -1,0 +1,67 @@
+---
+import { formatHijriDate, toHijri } from '@taqwim/core'
+const initialDate = '2026-10-02'
+const date = toHijri(initialDate)!
+---
+
+<div class="date-explorer not-content" data-date-explorer>
+  <div class="explorer-inputs">
+    <label>Gregorian date <input type="date" value={initialDate} data-gregorian-input /></label>
+    <label>Calendar system
+      <select data-system-input>
+        <option value="islamic-umalqura">Umm al-Qura</option>
+        <option value="islamic-civil">Islamic Civil</option>
+        <option value="islamic-tbla">Islamic TBLA</option>
+      </select>
+    </label>
+  </div>
+  <div class="explorer-result" aria-live="polite" aria-atomic="true">
+    <span class="explorer-label">Hijri date</span>
+    <strong data-date-result>{formatHijriDate(date, 'iD iMMMM iYYYY')}</strong>
+    <span lang="ar" dir="rtl" data-arabic-result>{formatHijriDate(date, 'iD iMMMM iYYYY', 'ar')}</span>
+    <p data-range-note>Umm al-Qura uses the bundled table, covering 1343–1500 AH.</p>
+  </div>
+  <pre class="explorer-code"><code data-explorer-code>toHijri('{initialDate}')
+// {JSON.stringify(date)}</code></pre>
+</div>
+
+<script>
+  import { formatHijriDate, HijriRangeError, toHijri, type HijriCalendarId } from '@taqwim/core'
+  import { HIJRI_CALENDAR_SYSTEMS } from './demos/calendarSystems'
+
+  for (const explorer of document.querySelectorAll<HTMLElement>('[data-date-explorer]')) {
+    const input = explorer.querySelector<HTMLInputElement>('[data-gregorian-input]')!
+    const system = explorer.querySelector<HTMLSelectElement>('[data-system-input]')!
+    const result = explorer.querySelector<HTMLElement>('[data-date-result]')!
+    const arabic = explorer.querySelector<HTMLElement>('[data-arabic-result]')!
+    const note = explorer.querySelector<HTMLElement>('[data-range-note]')!
+    const code = explorer.querySelector<HTMLElement>('[data-explorer-code]')!
+
+    function update() {
+      const calendarSystem = HIJRI_CALENDAR_SYSTEMS[system.value as HijriCalendarId]
+      const calendarName = system.value === 'islamic-civil' ? 'islamicCivil' : 'islamicTbla'
+      try {
+        if (!input.value || !input.validity.valid) throw new Error('invalid date')
+        const date = toHijri(input.value, { calendarSystem })
+        if (!date) throw new Error('invalid date')
+        result.textContent = formatHijriDate(date, 'iD iMMMM iYYYY', 'en', { calendarSystem })
+        arabic.textContent = formatHijriDate(date, 'iD iMMMM iYYYY', 'ar', { calendarSystem })
+        note.textContent = system.value === 'islamic-umalqura'
+          ? 'Umm al-Qura uses the bundled table, covering 1343–1500 AH.'
+          : 'This arithmetic system calculates dates beyond the Umm al-Qura table.'
+        const options = system.value === 'islamic-umalqura' ? '' : `, { calendarSystem: ${calendarName} }`
+        code.textContent = `toHijri('${input.value}'${options})\n// ${JSON.stringify(date)}`
+      } catch (error) {
+        result.textContent = error instanceof HijriRangeError ? 'Outside the Umm al-Qura table' : 'Choose a valid date'
+        arabic.textContent = ''
+        note.textContent = error instanceof HijriRangeError
+          ? 'Choose a date from 1 August 1924 to 16 November 2077, or select an arithmetic calendar.'
+          : 'Enter a complete Gregorian date to see its Hijri equivalent.'
+        code.textContent = '// Waiting for a supported date'
+      }
+    }
+
+    input.addEventListener('input', update)
+    system.addEventListener('change', update)
+  }
+</script>

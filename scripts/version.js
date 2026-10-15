@@ -23,37 +23,13 @@
  *   node scripts/version.js minor                 graduate out of prerelease
  *   node scripts/version.js patch --dry-run
  */
-import { readFileSync, writeFileSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
+import { writeFileSync } from 'node:fs'
+import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import semver from 'semver'
+import { readManifest, releaseManifests } from './release-manifests.js'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-
-/**
- * The lockstep set, by directory name under packages/.
- *
- * Listed rather than globbed so that adding a package is a deliberate decision
- * recorded in a diff, and so this stays in step with the `fixed` array in
- * .changeset/config.json. `legacy/*` is excluded on purpose: those are the
- * already-published `taqwim-vue` and `taqwim-core-utils`, frozen at the
- * versions npm has, and moving them would claim a release that never happened.
- */
-const PACKAGES = [
-  'core',
-  'calendar-core',
-  'themes',
-  'vue',
-  'vue-styled',
-  'react',
-  'react-styled',
-  'svelte',
-  'svelte-styled',
-  'solid',
-  'solid-styled',
-  'angular',
-  'angular-styled',
-]
 
 const RELEASE_TYPES = new Set(['major', 'minor', 'patch', 'premajor', 'preminor', 'prepatch', 'prerelease'])
 
@@ -110,22 +86,6 @@ function parseArgs(argv) {
 
   if (!options.target) usage('a version or release type is required')
   return options
-}
-
-/** Reads a package.json, keeping enough context to write it back untouched. */
-function readManifest(relativePath) {
-  const path = join(ROOT, relativePath)
-  const raw = readFileSync(path, 'utf8')
-  return { path, relativePath, raw, json: JSON.parse(raw) }
-}
-
-function collectManifests() {
-  const manifests = PACKAGES.map(name => readManifest(join('packages', name, 'package.json')))
-  const missing = manifests.filter(m => !m.json.version)
-  if (missing.length) {
-    throw new Error(`no version field in: ${missing.map(m => m.relativePath).join(', ')}`)
-  }
-  return manifests
 }
 
 /**
@@ -193,20 +153,25 @@ function withVersion(raw, version) {
   // four or more, so a "version" inside some config object cannot be hit.
   const pattern = /^(  "version": ")([^"]*)(")/m
   if (!pattern.test(raw)) throw new Error('no "version" field found to replace')
-  return raw.replace(pattern, `$1${version}$3`)
+  const nextRaw = raw.replace(pattern, (_, prefix, _current, suffix) => `${prefix}${version}${suffix}`)
+  if (JSON.parse(nextRaw).version !== version)
+    throw new Error('top-level "version" field could not be replaced unambiguously')
+  return nextRaw
 }
 
-function main() {
-  const options = parseArgs(process.argv.slice(2))
-  const manifests = collectManifests()
+export function versionWorkspace(options, rootPath = ROOT) {
+  const manifests = releaseManifests(rootPath)
   const current = currentVersion(manifests)
   const next = computeNext(current, options)
 
   // The repo and docs are not published, but their versions should agree with
   // the packages they contain and describe.
-  const root = readManifest('package.json')
-  const docs = readManifest('docs/package.json')
+  const root = readManifest(rootPath, 'package.json')
+  const docs = readManifest(rootPath, 'docs/package.json')
   const targets = [...manifests, root, docs]
+  // Validate every replacement before the first write. Dry runs exercise the
+  // same preflight, so a malformed final manifest cannot leave a partial bump.
+  const replacements = targets.map(manifest => ({ ...manifest, nextRaw: withVersion(manifest.raw, next) }))
 
   console.log(`${current}  ->  ${next}\n`)
   const width = Math.max(...targets.map(m => (m.json.name ?? '').length))
@@ -220,8 +185,8 @@ function main() {
     return
   }
 
-  for (const manifest of targets) {
-    writeFileSync(manifest.path, withVersion(manifest.raw, next))
+  for (const manifest of replacements) {
+    writeFileSync(manifest.path, manifest.nextRaw)
   }
 
   console.log(`\nWrote ${targets.length} manifests.`)
@@ -232,9 +197,11 @@ function main() {
   }
 }
 
-try {
-  main()
-} catch (error) {
-  console.error(`\nError: ${error.message}`)
-  process.exit(1)
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  try {
+    versionWorkspace(parseArgs(process.argv.slice(2)))
+  } catch (error) {
+    console.error(`\nError: ${error.message}`)
+    process.exitCode = 1
+  }
 }

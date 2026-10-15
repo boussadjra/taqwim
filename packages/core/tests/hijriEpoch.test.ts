@@ -8,7 +8,7 @@ const ramadan1 = { hy: 1445, hm: 9, hd: 1 }
 const shaabanLastDay = {
   hy: 1445,
   hm: 8,
-  hd: getDaysLengthInMonth({ hy: 1445, hm: 8 }),
+  hd: getDaysLengthInMonth(1445, 8),
 }
 
 describe('hijri epoch-day helpers', () => {

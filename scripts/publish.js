@@ -31,31 +31,16 @@
  * PUT to the registry.
  */
 import { spawnSync } from 'node:child_process'
-import { readFileSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
+import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import semver from 'semver'
+import { releaseManifests } from './release-manifests.js'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const REGISTRY = 'https://registry.npmjs.org'
 
-/**
- * The lockstep set, read from .changeset/config.json rather than listed again.
- *
- * `scripts/version.js` keeps its own copy by directory name because it has to
- * find the manifests before it can read them. This script only needs the
- * published names, and `fixed` already is that list — a third copy would be one
- * more thing to forget to update.
- */
-function lockstepPackages() {
-  const config = JSON.parse(readFileSync(join(ROOT, '.changeset', 'config.json'), 'utf8'))
-  const [fixed] = config.fixed ?? []
-  if (!fixed?.length) throw new Error('no "fixed" group in .changeset/config.json')
-  return fixed
-}
-
-function usage(message) {
-  if (message) console.error(`\nError: ${message}`)
-  console.error(`
+function usage() {
+  console.log(`
 Usage: node scripts/publish.js [options]
 
   Publishes every @taqwim/* package that is not already on the registry at the
@@ -67,41 +52,54 @@ Options:
   --dry-run        print the plan and publish nothing
   --help
 `)
-  process.exit(message ? 1 : 0)
 }
 
-function parseArgs(argv) {
-  const options = { tag: undefined, otp: undefined, dryRun: false }
+function validTag(tag) {
+  return typeof tag === 'string' && /^[a-z][a-z0-9._-]*$/i.test(tag) && !semver.validRange(tag)
+}
+
+export function parseArgs(argv) {
+  const options = { tag: undefined, otp: undefined, dryRun: false, help: false }
 
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i]
-    if (arg === '--help' || arg === '-h') usage()
+    if (arg === '--help' || arg === '-h') options.help = true
     else if (arg === '--dry-run') options.dryRun = true
-    else if (arg === '--tag') options.tag = argv[++i] ?? usage('--tag needs a value')
+    else if (arg === '--tag') options.tag = argv[++i]
     else if (arg.startsWith('--tag=')) options.tag = arg.slice('--tag='.length)
-    else if (arg === '--otp') options.otp = argv[++i] ?? usage('--otp needs a value')
+    else if (arg === '--otp') options.otp = argv[++i]
     else if (arg.startsWith('--otp=')) options.otp = arg.slice('--otp='.length)
-    else usage(`unknown argument "${arg}"`)
+    else throw new Error(`unknown argument "${arg}"`)
+
+    if (arg === '--tag' || arg.startsWith('--tag=')) {
+      if (!validTag(options.tag)) throw new Error('--tag needs a valid dist-tag, such as latest, beta or next')
+    }
+    if (arg === '--otp' || arg.startsWith('--otp=')) {
+      if (typeof options.otp !== 'string' || !/^\d+$/.test(options.otp)) {
+        throw new Error('--otp needs a numeric one-time password')
+      }
+    }
   }
 
   return options
 }
 
-/**
- * Keep `latest` current during the pre-stable line. After a stable release,
- * preserve `latest` for stable and publish new prereleases to their own channel.
- */
-function tagFor(version, published) {
-  const identifier = /-([a-z]+)\.\d+$/.exec(version)?.[1]
-  if (!identifier) return 'latest'
-  const stableExists = [...published].some(publishedVersion => /^\d+\.\d+\.\d+$/.test(publishedVersion))
-  return stableExists ? identifier : 'latest'
+/** Protect stable latest as soon as any member of the lockstep set has one. */
+export function tagFor(version, published) {
+  const prerelease = semver.prerelease(version)
+  if (!prerelease) return 'latest'
+  const stableExists = [...published].some(
+    publishedVersion => semver.valid(publishedVersion) && !semver.prerelease(publishedVersion),
+  )
+  const identifier = prerelease[0]
+  return stableExists ? (validTag(identifier) ? identifier : 'next') : 'latest'
 }
 
-/** Asks the registry directly — `npm view` answers from a cache that lags a publish. */
+/** Asks the registry directly — npm view can answer from a stale cache. */
 async function publishedVersions(name) {
   const response = await fetch(`${REGISTRY}/${name.replace('/', '%2F')}`, {
     headers: { accept: 'application/vnd.npm.install-v1+json' },
+    signal: AbortSignal.timeout(30_000),
   })
   if (response.status === 404) return new Set()
   if (!response.ok) throw new Error(`${name}: registry returned ${response.status}`)
@@ -113,40 +111,40 @@ function publish(name, { tag, otp }) {
   const args = ['--filter', name, 'publish', '--access', 'public', '--tag', tag, '--no-git-checks']
   if (otp) args.push('--otp', otp)
 
-  // shell: true because pnpm is a .cmd shim on Windows and spawn cannot launch
-  // one directly. No argument here contains a space, so no quoting is needed.
-  const result = spawnSync('pnpm', args, { cwd: ROOT, stdio: 'inherit', shell: true })
+  // Windows needs a shell for the .cmd shim. Manifest names and user-supplied
+  // tag/OTP values are validated before reaching it; other platforms do not.
+  const result = spawnSync('pnpm', args, { cwd: ROOT, stdio: 'inherit', shell: process.platform === 'win32' })
+  if (result.error) console.error(`${name}: could not start pnpm (${result.error.code})`)
   return result.status === 0
 }
 
-async function main() {
-  const options = parseArgs(process.argv.slice(2))
-  const names = lockstepPackages()
-
-  const manifests = names.map(name => {
-    const directory = name.replace('@taqwim/', '')
-    const json = JSON.parse(readFileSync(join(ROOT, 'packages', directory, 'package.json'), 'utf8'))
-    if (json.scripts?.publish) {
+export async function publishPackages(
+  options,
+  { rootPath = ROOT, versionsFor = publishedVersions, publishPackage = publish } = {},
+) {
+  const manifests = releaseManifests(rootPath).map(({ json }) => {
+    if (Object.hasOwn(json.scripts ?? {}, 'publish')) {
       throw new Error(
-        `${name}: remove scripts.publish; pnpm runs it after publishing and it would publish the same version twice`,
+        `${json.name}: remove scripts.publish; pnpm runs it after publishing and it would publish the same version twice`,
       )
     }
-    return { name, version: json.version }
+    return { name: json.name, version: json.version }
   })
 
   const versions = [...new Set(manifests.map(m => m.version))]
   if (versions.length > 1) {
-    usage(`packages are not in lockstep: ${versions.join(', ')}. Run pnpm version:set first.`)
+    throw new Error(`packages are not in lockstep: ${versions.join(', ')}. Run pnpm version:set first.`)
   }
 
   const [version] = versions
   const plan = await Promise.all(
     manifests.map(async manifest => {
-      const published = await publishedVersions(manifest.name)
+      const published = await versionsFor(manifest.name)
       return { ...manifest, published, alreadyPublished: published.has(version) }
     }),
   )
-  const tag = options.tag ?? tagFor(version, plan[0].published)
+  const published = new Set(plan.flatMap(entry => [...entry.published]))
+  const tag = options.tag ?? tagFor(version, published)
 
   console.log(`Publishing ${version} under the "${tag}" tag\n`)
 
@@ -170,7 +168,7 @@ async function main() {
   const failed = []
   for (const [index, entry] of pending.entries()) {
     console.log(`\n── ${entry.name}  (${index + 1}/${pending.length}) ──`)
-    if (!publish(entry.name, { tag, otp: options.otp })) failed.push(entry.name)
+    if (!publishPackage(entry.name, { tag, otp: options.otp })) failed.push(entry.name)
   }
 
   console.log('')
@@ -180,15 +178,19 @@ async function main() {
   }
 
   if (failed.length > 0) {
-    console.log(`\n${failed.length} of ${pending.length} failed. Re-run to retry just those:`)
-    console.log('  node scripts/publish.js')
-    process.exit(1)
+    throw new Error(`${failed.length} of ${pending.length} failed. Re-run node scripts/publish.js to retry just those.`)
   }
 
   console.log(`\nPublished ${pending.length} package${pending.length === 1 ? '' : 's'} at ${version}.`)
 }
 
-main().catch(error => {
-  console.error(error.message)
-  process.exit(1)
-})
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  try {
+    const options = parseArgs(process.argv.slice(2))
+    if (options.help) usage()
+    else await publishPackages(options)
+  } catch (error) {
+    console.error(error.message)
+    process.exitCode = 1
+  }
+}

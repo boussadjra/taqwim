@@ -6,6 +6,10 @@ import type { CalendarDay } from '../src/types'
 const RAMADAN_9: CalendarDay = {
   date: { hy: 1445, hm: 9, hd: 9 },
   gregorianDate: new Date(2024, 2, 19),
+  dayInMonth: 9,
+  dayOfWeek: 2,
+  isFocused: false,
+  isTabbable: false,
   isToday: false,
   isSelected: false,
   isDisabled: false,

@@ -1,5 +1,5 @@
 import type { HijriDateObject } from '@taqwim/core'
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { HijriCalendar, HijriDatePicker } from '../src'
 
@@ -72,6 +72,14 @@ describe('month and year picker', () => {
   const monthButton = () => document.querySelector('[data-taqwim-heading="month"]')!
   const yearButton = () => document.querySelector('[data-taqwim-heading="year"]')!
 
+  it('disables the interactive heading on a disabled calendar', () => {
+    render(<HijriCalendar defaultPlaceholder={RAMADAN_1445} disabled />)
+    expect((monthButton() as HTMLButtonElement).disabled).toBe(true)
+    expect((yearButton() as HTMLButtonElement).disabled).toBe(true)
+    fireEvent.click(monthButton())
+    expect(document.querySelector('.taqwim-calendar-picker')).toBeNull()
+  })
+
   it('shows the month and year as separate heading buttons', () => {
     render(<HijriCalendar defaultPlaceholder={RAMADAN_1445} />)
 
@@ -134,6 +142,30 @@ describe('month and year picker', () => {
 
 describe('date picker', () => {
   const input = () => screen.getByRole('combobox') as HTMLInputElement
+
+  it('keeps input focus for typing and enters the calendar on ArrowDown', () => {
+    render(<HijriDatePicker defaultPlaceholder={RAMADAN_1445} />)
+    act(() => input().focus())
+    expect(document.activeElement).toBe(input())
+
+    fireEvent.keyDown(input(), { key: 'ArrowDown' })
+    expect(document.activeElement?.hasAttribute('data-taqwim-calendar-cell-trigger')).toBe(true)
+
+    fireEvent.keyDown(document.activeElement!, { key: 'Escape' })
+    expect(document.activeElement).toBe(input())
+    expect(input().getAttribute('aria-expanded')).toBe('false')
+  })
+
+  it('returns focus after selecting with the keyboard', () => {
+    render(<HijriDatePicker defaultPlaceholder={RAMADAN_1445} />)
+    act(() => input().focus())
+    fireEvent.keyDown(input(), { key: 'ArrowDown' })
+    fireEvent.keyDown(document.activeElement!, { key: 'Enter' })
+
+    expect(document.activeElement).toBe(input())
+    expect(input().getAttribute('aria-expanded')).toBe('false')
+    expect(input().value).toBe('1445-09-01')
+  })
 
   it('rejects manual dates before minValue', () => {
     const onValueChange = vi.fn()

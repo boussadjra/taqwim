@@ -1,0 +1,56 @@
+---
+import { version } from '../../package.json'
+import FrameworkSwitcher from './FrameworkSwitcher.astro'
+import LiveCalendar from './LiveCalendar.astro'
+---
+
+<section class="home-hero not-content" aria-labelledby="_top">
+  <div class="home-introduction">
+    <a class="release-label" href="/guide/migration/">Version {version}<span>Beta</span></a>
+    <h1 id="_top" data-page-title>Hijri calendars,<br />ready for your app.</h1>
+    <p class="hero-description">
+      Precise dates. Accessible interactions. A calendar that feels at home in your framework — and in Arabic.
+    </p>
+    <div class="hero-actions">
+      <a class="home-button" href="/guide/getting-started/">Start building <span aria-hidden="true">→</span></a>
+      <a class="hero-text-link" href="https://github.com/boussadjra/taqwim">Explore the source <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="home-framework-choice">
+      <p>Choose your framework. The examples follow you.</p>
+      <FrameworkSwitcher />
+      <div class="home-install">
+        <code data-framework-example="vue">pnpm add @taqwim/vue-styled</code>
+        <code data-framework-example="react">pnpm add @taqwim/react-styled</code>
+        <code data-framework-example="svelte">pnpm add @taqwim/svelte-styled</code>
+        <code data-framework-example="solid">pnpm add @taqwim/solid-styled</code>
+        <code data-framework-example="angular">pnpm add @taqwim/angular-styled</code>
+        <button type="button" data-copy-install hidden aria-label="Copy install command">Copy</button>
+      </div>
+      <p class="copy-status" data-copy-status role="status"></p>
+    </div>
+  </div>
+  <div class="home-preview">
+    <div class="preview-heading"><span>Try the real component</span><span lang="ar" dir="rtl">تقويم</span></div>
+    <LiveCalendar theme="islamic" />
+    <p class="preview-note">Change the language, theme, or calendar system. Use the arrow keys to explore.</p>
+  </div>
+</section>
+
+<script>
+  const copyButton = document.querySelector<HTMLButtonElement>('[data-copy-install]')
+  if (copyButton && navigator.clipboard) {
+    copyButton.hidden = false
+    copyButton.addEventListener('click', async () => {
+      const framework = document.documentElement.dataset.framework ?? 'vue'
+      const command = document.querySelector<HTMLElement>(`.home-install [data-framework-example="${framework}"]`)
+      const status = document.querySelector<HTMLElement>('[data-copy-status]')
+      if (!command || !status) return
+      try {
+        await navigator.clipboard.writeText(command.textContent ?? '')
+        status.textContent = 'Install command copied.'
+      } catch {
+        status.textContent = 'Select the command to copy it.'
+      }
+    })
+  }
+</script>

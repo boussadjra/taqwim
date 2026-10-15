@@ -41,6 +41,19 @@ export default defineConfig({
     // package.json scripts that aren't declared in a `tasks` map are
     // uncached by default; opt them in so `vp run` can skip repeat work.
     cache: { tasks: true },
+    tasks: {
+      'test:release': {
+        command: 'node --test scripts/tests/release.test.js',
+        input: [
+          'scripts/**',
+          'docs/scripts/**',
+          '.changeset/config.json',
+          'packages/*/package.json',
+          'package.json',
+          'vite.config.ts',
+        ],
+      },
+    },
   },
   // Replaces lint-staged; run by .husky/pre-commit via `vp staged`.
   staged: {

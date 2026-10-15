@@ -41,7 +41,7 @@ export interface HijriDatePickerSlots {
 
 <script setup lang="ts">
 import { DEFAULT_GREGORIAN_FORMAT_OPTIONS, formatDatePickerValues, parseDatePickerDraft } from '@taqwim/calendar-core'
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import HijriCalendar from './HijriCalendar.vue'
 
 const props = withDefaults(defineProps<HijriDatePickerProps>(), {
@@ -103,6 +103,8 @@ const formatOptions = computed(() => ({
 const isOpen = ref(false)
 const container = ref<HTMLElement>()
 const draft = ref('')
+let triggerElement: HTMLElement | undefined
+let restoringFocus = false
 
 const formatted = computed(() => formatDatePickerValues(modelValue.value, formatOptions.value))
 
@@ -114,17 +116,31 @@ watch(
 )
 
 function open() {
-  if (props.disabled) return
+  if (props.disabled || restoringFocus) return
+  const active = document.activeElement
+  if (active instanceof HTMLElement && container.value?.contains(active)) triggerElement = active
   isOpen.value = true
 }
 
-function close() {
+async function openAndFocus() {
+  if (props.disabled) return
+  open()
+  await nextTick()
+  container.value?.querySelector<HTMLElement>('[data-taqwim-calendar-cell-trigger][tabindex="0"]')?.focus()
+}
+
+function close(restoreFocus = false) {
   isOpen.value = false
+  if (!restoreFocus) return
+  restoringFocus = true
+  const trigger = container.value?.querySelector<HTMLElement>('.taqwim-datepicker-input') ?? triggerElement
+  trigger?.focus()
+  restoringFocus = false
 }
 
 function onSelect(value: HijriDateObject | HijriDateObject[] | undefined) {
   modelValue.value = Array.isArray(value) ? value[0] : value
-  close()
+  close(true)
 }
 
 function commitDraft() {
@@ -173,14 +189,14 @@ onUnmounted(() => document.removeEventListener('pointerdown', onDocumentPointerD
     :data-taqwim-theme="theme"
     :data-open="isOpen ? '' : undefined"
     @focusout="onFocusOut"
-    @keydown.escape="close"
+    @keydown.escape.prevent="close(true)"
   >
     <slot
       name="trigger"
       :value="formatted.value"
       :hijri-value="formatted.hijriValue"
       :gregorian-value="formatted.gregorianValue"
-      :open="open"
+      :open="openAndFocus"
       :is-open="isOpen"
     >
       <input
@@ -200,7 +216,7 @@ onUnmounted(() => document.removeEventListener('pointerdown', onDocumentPointerD
         @click="open"
         @change="commitDraft"
         @keydown.enter.prevent="commitDraft"
-        @keydown.down.prevent="open"
+        @keydown.down.prevent="openAndFocus"
       />
     </slot>
 
@@ -212,7 +228,12 @@ onUnmounted(() => document.removeEventListener('pointerdown', onDocumentPointerD
       tabindex="-1"
       :aria-label="label"
     >
-      <HijriCalendar v-bind="calendarProps" :model-value="modelValue" initial-focus @update:model-value="onSelect" />
+      <HijriCalendar
+        v-bind="calendarProps"
+        :model-value="modelValue"
+        :initial-focus="false"
+        @update:model-value="onSelect"
+      />
     </div>
   </div>
 </template>

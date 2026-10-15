@@ -1,0 +1,98 @@
+---
+import DateExplorer from './DateExplorer.astro'
+import CalendarSystemComparison from './CalendarSystemComparison.astro'
+---
+
+<nav class="home-paths not-content" aria-label="Explore Taqwim">
+  <a href="/guide/getting-started/">
+    <span>Build your first calendar</span>
+    <span>
+      Installation and a working example <span aria-hidden="true">↗</span>
+    </span>
+  </a>
+  <a href="/guide/theming/">
+    <span>Make it yours</span>
+    <span>
+      33 themes and a shared token contract <span aria-hidden="true">↗</span>
+    </span>
+  </a>
+  <a href="/guide/accessibility/">
+    <span>Explore the keyboard</span>
+    <span>
+      Focus, navigation, selection, and RTL <span aria-hidden="true">↗</span>
+    </span>
+  </a>
+</nav>
+
+<section class="home-section home-date-section not-content" aria-labelledby="dates-heading">
+  <div class="section-introduction">
+    <h2 id="dates-heading">Start with a date.</h2>
+    <p>Conversions and arithmetic work on their own. No framework, no DOM, and no calendar component required.</p>
+    <p>Try the same Gregorian date with different systems. The rules you choose determine the result.</p>
+    <a href="/guide/dates/">
+      Work with date utilities <span aria-hidden="true">→</span>
+    </a>
+  </div>
+  <DateExplorer />
+</section>
+
+<section class="home-section not-content" aria-labelledby="systems-heading">
+  <div class="section-introduction section-introduction-wide">
+    <h2 id="systems-heading">The calendar system matters.</h2>
+    <p>
+      Umm al-Qura is the default: a deterministic table covering 1343–1500 AH. Islamic Civil and Islamic TBLA use
+      explicit arithmetic rules. The same Hijri fields can represent different absolute days.
+    </p>
+    <a href="/guide/calendar-systems/">
+      Understand the three systems <span aria-hidden="true">→</span>
+    </a>
+  </div>
+  <CalendarSystemComparison />
+</section>
+
+<section class="home-section home-foundation not-content" aria-labelledby="foundation-heading">
+  <div class="section-introduction">
+    <h2 id="foundation-heading">
+      One foundation.
+      <br />
+      Your framework.
+    </h2>
+    <p>
+      Grid building, selection, paging, and keyboard navigation live in one shared state machine. Each adapter binds
+      that behaviour to its framework.
+    </p>
+    <a href="/reference/options/">
+      Explore the calendar options <span aria-hidden="true">→</span>
+    </a>
+  </div>
+  <dl class="foundation-options">
+    <div>
+      <dt>Headless</dt>
+      <dd>Behaviour and accessible attributes. Bring your own markup and styles.</dd>
+    </div>
+    <div>
+      <dt>Styled</dt>
+      <dd>Ready-to-use calendars and date pickers, built from the public headless components.</dd>
+    </div>
+    <div>
+      <dt>Shared themes</dt>
+      <dd>One CSS custom-property contract across frameworks. Choose a theme with an attribute.</dd>
+    </div>
+  </dl>
+</section>
+
+<footer class="home-footer not-content">
+  <div>
+    <strong>
+      Taqwim{' '}
+      <span lang="ar" dir="rtl">
+        تقويم
+      </span>
+    </strong>
+    <p>Careful dates. Considered interfaces.</p>
+  </div>
+  <p>
+    Inspired by <a href="https://github.com/acamarata/luxon-hijri">luxon-hijri</a> by Aric Camarata. Open source under
+    the MIT license.
+  </p>
+</footer>

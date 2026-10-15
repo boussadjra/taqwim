@@ -32,7 +32,7 @@ const inMonth = (page: Page) => page.locator('[data-taqwim-calendar-cell-trigger
 function day(page: Page, dayInMonth: number) {
   return page
     .locator(`[data-taqwim-calendar-cell-trigger]:not([data-outside-month])`)
-    .filter({ hasText: new RegExp(`^${dayInMonth}$`) })
+    .filter({ hasText: new RegExp(`^\\s*${dayInMonth}\\s*$`) })
 }
 
 const heading = (page: Page) => page.locator('[data-taqwim-calendar-heading]')

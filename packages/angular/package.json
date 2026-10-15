@@ -1,6 +1,6 @@
 {
   "name": "@taqwim/angular",
-  "version": "0.1.0-beta.8",
+  "version": "1.0.0",
   "private": false,
   "description": "Headless Angular components for Hijri calendars, built on @taqwim/calendar-core",
   "keywords": [
@@ -43,7 +43,7 @@
     "access": "public"
   },
   "scripts": {
-    "_comment": "build / test are declared as vp tasks in vite.config.ts",
+    "_comment": "build / test / type-check are declared as vp tasks in vite.config.ts",
     "test:watch": "vp exec vitest",
     "prepublishOnly": "vp run build"
   },

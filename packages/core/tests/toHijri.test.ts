@@ -18,6 +18,7 @@ describe('toHijri', () => {
   it('should throw an error for a date null', () => {
     const gregorianDate = null // Invalid date object
     expect(() => {
+      // @ts-expect-error Exercise runtime validation of a null input.
       toHijri(gregorianDate)
     }).toThrow('Invalid Gregorian date')
   })

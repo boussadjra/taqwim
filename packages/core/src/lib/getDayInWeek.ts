@@ -10,7 +10,10 @@ import type { HijriCalendarSystemOptions } from './types'
  * @returns The day of the week as a number (0-6), where 0 represents Sunday, 1 represents Monday, and so on.
  *          Returns `undefined` if the provided Hijri date is invalid.
  */
-export const getDayInWeek = (hijriDate: ValidHijriDate, options?: HijriCalendarSystemOptions): number | undefined => {
+export const getDayInWeek = (
+  hijriDate: ValidHijriDate | '',
+  options?: HijriCalendarSystemOptions,
+): number | undefined => {
   const normalizedHijriDate = normalizeHijriDate(hijriDate)
   return dayOfWeekWithCalendar(normalizedHijriDate, resolveCalendarSystem(options))
 }

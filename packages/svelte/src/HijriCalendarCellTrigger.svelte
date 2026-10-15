@@ -6,6 +6,10 @@
   let { day, children, ...rest }: HijriCalendarCellTriggerProps = $props()
 
   const calendar = getHijriCalendarContext()
+  const triggerProps = $derived.by(() => {
+    void calendar.state
+    return calendar.store.getCellTriggerProps(day)
+  })
   const display = $derived(
     getCellDisplayValues(day, calendar.store.formatter, calendar.state.showGregorian, calendar.state.dateEmphasis),
   )
@@ -25,7 +29,7 @@
   }
 </script>
 
-<button {...calendar.store.getCellTriggerProps(day)} {...rest} {onclick} {onfocus}>
+<button {...triggerProps} {...rest} {onclick} {onfocus}>
   {#if children}
     {@render children({
       dayValue: display.dayValue,

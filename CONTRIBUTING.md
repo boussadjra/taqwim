@@ -70,53 +70,19 @@ The five adapters advertise the same prop names and emit the same `data-*` attri
 
 ## Versions and releases
 
-The thirteen `@taqwim/*` packages are versioned in **lockstep**: one version across all of them, because an adapter and the store it binds to must never be a version apart. Two mechanisms exist, for two different phases.
+The thirteen `@taqwim/*` packages are versioned in **lockstep**: one version across all of them, because an adapter and the store it binds to must never be a version apart. [Changesets](https://github.com/changesets/changesets) manages releases from 1.0.0 onward; `.changeset/config.json` declares all thirteen packages as one fixed group. `scripts/version.js` remains only for the historical prerelease line.
 
-### Now: the prerelease line
-
-While the project is pre-1.0, `scripts/version.js` is the only thing that writes a version number:
-
-```bash
-pnpm version:set 0.1.0-alpha.1     # an exact version
-pnpm version:alpha                 # 0.1.0-alpha.1 -> 0.1.0-alpha.2
-pnpm version:beta                  # 0.1.0-alpha.2 -> 0.1.0-beta.0
-pnpm version:set preminor --preid beta
-pnpm version:set minor             # graduate: 0.1.0-beta.0 -> 0.1.0
-pnpm version:set patch --dry-run   # preview, write nothing
-```
-
-It accepts an exact version or any semver release type (`major`, `minor`, `patch`, `premajor`, `preminor`, `prepatch`, `prerelease`), with `--preid alpha|beta|rc`. Continuing a prerelease keeps its identifier unless you ask for another, so `pnpm version:alpha` twice gives `alpha.2` then `alpha.3`. It writes only the `version` field in the thirteen package manifests, the workspace manifest, and the docs manifest — internal dependencies are `workspace:*`, which pnpm resolves at publish time — and it never touches `legacy/*`, which is frozen at the versions npm already has.
-
-After the pull request merges, the Release workflow verifies the workspace and publishes the exact package versions through npm trusted publishing. It uses the `release` GitHub environment; each of the thirteen packages must trust `boussadjra/taqwim`, workflow `release.yml`, and environment `release` on npm. Enable the environment variable `NPM_TRUSTED_PUBLISHING=true` only after all thirteen publishers are attached. The workflow requests an OIDC token and npm provenance, and does not need an npm access token.
-
-To inspect the registry plan or resume a partial publish from a release runner:
-
-```bash
-pnpm publish:packages --dry-run
-pnpm publish:packages
-```
-
-`scripts/publish.js` drives one `pnpm publish` per package. `pnpm -r publish` is the obvious tool and it does not survive contact with a thirteen-package release: it stops at the first package the registry rejects, and recovering means hand-assembling a filter of whatever did not make it. The script checks each package against the registry first and skips what is already there, so a re-run resumes rather than starting over, and it collects failures instead of stopping at the first one.
-
-Until a stable version exists, prereleases publish under `latest`, so a bare install gets the newest beta. Once stable exists, a new prerelease publishes under its own identifier (`beta`, `rc`, and so on) and leaves stable `latest` alone. Override with `--tag` for an exceptional run.
-
-The script checks npm for each exact version and skips packages already published at that version. It can resume after a partial release. The Release workflow only publishes once `NPM_TRUSTED_PUBLISHING` is enabled in the `release` environment.
-
-### Later: 1.0.0 and after
-
-[Changesets](https://github.com/changesets/changesets) is the release mechanism from 1.0.0 onward, and `.changeset/config.json` declares the same thirteen packages as `fixed` so lockstep holds there too.
-
-**Add a changeset with any PR that changes published code**, now included:
+**Add a changeset with any PR that changes published code**:
 
 ```bash
 pnpm changeset
 ```
 
-Changesets are the changelog. Write them for someone upgrading — what changed, and what they have to do about it — not as a commit summary.
+Changesets are the changelog. Write them for someone upgrading — what changed, and what they have to do about it — not as a commit summary. To prepare a release, run `pnpm changeset:status`, then `pnpm changeset:version`. Review all thirteen package versions and generated changelogs. Changesets does not update the private workspace and docs versions, so synchronize those separately. Run the local build, type checks, unit tests, coverage, package checks, and shared browser suite before publishing.
 
-> **Do not run `changeset version` during the alpha.** Pending changesets already describe the 1.0.0 release, including major bumps; applying them now would jump straight to 1.0.0 and overwrite whatever `scripts/version.js` set. They are consumed deliberately, when the project graduates.
+Preview the exact registry plan with `pnpm publish:packages --dry-run`. The script checks each package against npm and skips exact versions already published, so it can resume a partial release. It publishes stable versions under `latest` and keeps future prereleases under their own tag once stable exists.
 
-On merge to `main`, `.github/workflows/release.yml` runs the release gate and publishes the version already committed to the package manifests through npm trusted publishing. During the prerelease line, it does not run `changeset version`, because the pending changesets are reserved for the stable release. Tarballs are published with npm provenance.
+The CI workflow runs on pull requests to `main` and pushes to `main`; the Release workflow also runs on pushes to `main`. Both consume GitHub Actions minutes. Arrange an explicit Actions opt-in before pushing or merging a release. The Release workflow publishes only when `NPM_TRUSTED_PUBLISHING=true` is set in the `release` environment and all thirteen npm packages trust `boussadjra/taqwim`, `release.yml`, and that environment. It uses OIDC and npm provenance. A local version bump or a passing local check is not proof of npm publication.
 
 ## Reporting issues
 

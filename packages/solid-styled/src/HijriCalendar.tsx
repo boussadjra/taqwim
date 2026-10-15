@@ -136,7 +136,10 @@ function HijriCalendarBody(props: HijriCalendarChromeProps): JSX.Element {
 
   const months = () => getLocaleData(state().locale, 'monthsLong') as string[]
   const monthLabel = () => store.formatter.custom(state().placeholder, 'iMMMM')
-  const togglePicker = (which: 'month' | 'year') => setPicker(current => (current === which ? null : which))
+  const togglePicker = (which: 'month' | 'year') => {
+    if (state().disabled) return
+    setPicker(current => (current === which ? null : which))
+  }
   const gregorianPrimary = () => state().showGregorian && state().dateEmphasis === 'gregorian'
   const hijriHeadingButtons = () => (
     <>
@@ -144,6 +147,7 @@ function HijriCalendarBody(props: HijriCalendarChromeProps): JSX.Element {
         type="button"
         class="taqwim-calendar-heading-button"
         data-taqwim-heading="month"
+        disabled={state().disabled}
         aria-expanded={picker() === 'month'}
         onClick={() => togglePicker('month')}
       >
@@ -153,6 +157,7 @@ function HijriCalendarBody(props: HijriCalendarChromeProps): JSX.Element {
         type="button"
         class="taqwim-calendar-heading-button"
         data-taqwim-heading="year"
+        disabled={state().disabled}
         aria-expanded={picker() === 'year'}
         onClick={() => togglePicker('year')}
       >
@@ -163,6 +168,7 @@ function HijriCalendarBody(props: HijriCalendarChromeProps): JSX.Element {
 
   // Day 1 keeps the jump inside the target month regardless of its length.
   const jumpTo = (part: Partial<HijriDateObject>) => {
+    if (state().disabled) return
     store.setPlaceholder({ ...state().placeholder, ...part, hd: 1 })
     setPicker(null)
   }
@@ -225,6 +231,7 @@ function HijriCalendarBody(props: HijriCalendarChromeProps): JSX.Element {
                   <button
                     type="button"
                     data-selected={state().placeholder.hm === index() + 1 ? '' : undefined}
+                    disabled={state().disabled}
                     onClick={() => jumpTo({ hm: index() + 1 })}
                   >
                     {month}
@@ -238,6 +245,7 @@ function HijriCalendarBody(props: HijriCalendarChromeProps): JSX.Element {
                   <button
                     type="button"
                     data-selected={state().placeholder.hy === year ? '' : undefined}
+                    disabled={state().disabled}
                     onClick={() => jumpTo({ hy: year })}
                   >
                     {year}

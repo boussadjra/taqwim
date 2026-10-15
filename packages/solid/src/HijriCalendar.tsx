@@ -88,7 +88,7 @@ export function HijriCalendarRoot(props: HijriCalendarRootProps): JSX.Element {
 
   return (
     <HijriCalendarContext.Provider value={{ store, state }}>
-      <div ref={rootElement} {...rootProps()} {...domProps} onKeyDown={onKeyDown}>
+      <div ref={element => (rootElement = element)} {...rootProps()} {...domProps} onKeyDown={onKeyDown}>
         {renderChildren(local.children, () => ({
           get months() {
             return state().months

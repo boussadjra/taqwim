@@ -104,12 +104,12 @@ Cell trigger `[data-taqwim-calendar-cell-trigger]`, with `data-selected`, `data-
 
 [`@taqwim/themes`](../themes) is a ready-made stylesheet over exactly these.
 
-## Known issue
+## Validation
 
-This adapter is not yet covered by the shared end-to-end suite: the Analog Vite
-plugin cannot compile an Angular app under Vite 8. It is verified by `ngc` with
-`strictTemplates` on every build, which checks every component and template, but
-not at the DOM level. See [`e2e/KNOWN-GAPS.md`](../../e2e/KNOWN-GAPS.md).
+The Angular adapter runs in the shared Playwright suite alongside Vue, React,
+Svelte, and Solid. Its build also runs `ngc` with `strictTemplates`. It does not
+have a separate Vitest component suite. See
+[`e2e/KNOWN-GAPS.md`](../../e2e/KNOWN-GAPS.md).
 
 ## License
 

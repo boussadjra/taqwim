@@ -21,7 +21,6 @@
   border: 1px solid var(--demo-border);
   border-radius: var(--brand-radius);
   background: var(--demo-surface);
-  box-shadow: var(--brand-shadow);
   /* Day-cell tooltips render above the grid; clipping here hid them entirely. */
   overflow: visible;
 }
@@ -161,9 +160,6 @@
 
 /* Marks a demo that has not hydrated yet, so it does not look interactive
    before it is. */
-.demo:not(:defined) .demo-bar {
-  opacity: 0.5;
-}
 
 /* === Theme gallery === */
 

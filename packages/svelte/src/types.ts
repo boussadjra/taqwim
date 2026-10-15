@@ -69,7 +69,7 @@ export interface HijriCalendarRenderProps {
 }
 
 export type HijriCalendarRootProps = HijriCalendarRootOptions &
-  Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'dir'> & {
+  Omit<HTMLAttributes<HTMLDivElement>, keyof HijriCalendarRootOptions | 'children'> & {
     children?: Snippet<[HijriCalendarRenderProps]>
   }
 

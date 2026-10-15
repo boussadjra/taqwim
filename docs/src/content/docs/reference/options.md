@@ -54,14 +54,16 @@ framework examples, range policy and persistence guidance.
 | ------------------------------- | ------- | --------------------------------------------------------------------- |
 | `minValue` / `maxValue`         | —       | Bounds. Disables the days themselves, not just the paging buttons     |
 | `isDateDisabled`                | —       | Your own predicate. Enforced for keyboard selection as well as clicks |
-| `isDateUnavailable`             | —       | Rendered as struck through and refused, but still focusable           |
+| `isDateUnavailable`             | —       | Refuses selection; styled themes distinguish it visually              |
 | `disableDaysOutsideCurrentView` | `false` | Block days borrowed from adjacent months                              |
 | `disabled`                      | `false` | The whole calendar                                                    |
 | `readonly`                      | `false` | Days render normally but nothing can be selected                      |
 
 `isDateDisabled` and `isDateUnavailable` differ in intent: disabled means _not a
 valid choice here_, unavailable means _a real day that happens to be taken_.
-Both refuse selection; only the second stays in the tab order.
+Both refuse selection and are skipped when choosing the grid's entry Tab stop.
+Arrow navigation can still focus blocked dates so their labels remain available
+to keyboard users.
 
 ## Presentation
 

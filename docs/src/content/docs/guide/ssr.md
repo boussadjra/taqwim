@@ -12,8 +12,13 @@ unchanged. Two things are worth knowing before you render one.
 and a browser in Riyadh can disagree about which day it is, which shows up as a
 hydration mismatch on the `data-today` attribute.
 
-If that matters, pass an explicit `defaultPlaceholder` computed once and shared
-between server and client, rather than letting each resolve today independently.
+Share an explicit `defaultPlaceholder` between server and client to keep the
+initial visible month consistent. This does not override the today indicator:
+`data-today` still depends on each runtime's local date.
+
+For matching server and client markup, both renders must resolve the same local
+day. If your server cannot match the browser's date, render the calendar after
+mounting using your framework's client rendering facility.
 
 ## Focus is a client concern
 
@@ -27,8 +32,8 @@ configure.
 `setup`, and the `subscribe` call is cleaned up through `onScopeDispose`.
 
 **React** — `useSyncExternalStore` takes a third argument for the server
-snapshot; the adapter passes `getSnapshot` for both, since the store's snapshot
-is already environment-independent.
+snapshot; the adapter passes `getSnapshot` for both. Matching options and local
+dates are still required for matching initial markup.
 
 **Svelte** — the package ships uncompiled `.svelte` files under the `svelte`
 export condition so your compiler can target SSR or DOM as needed.

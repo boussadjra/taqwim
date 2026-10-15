@@ -39,6 +39,11 @@ export default defineConfig({
         dependsOn: ['build'],
         input: ['dist/**', 'package.json'],
       },
+      'type-check': {
+        command: 'svelte-check --tsconfig ./tsconfig.json',
+        dependsOn: afterDeps,
+        input: ['src/**', 'tests/**', 'tsconfig*.json', 'svelte.config.js', 'vite.config.ts', 'package.json'],
+      },
       build: {
         command: 'svelte-package --input src --output dist',
         dependsOn: afterDeps,

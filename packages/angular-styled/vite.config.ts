@@ -38,6 +38,11 @@ export default defineConfig({
         dependsOn: ['build'],
         input: ['dist/**', 'package.json'],
       },
+      'type-check': {
+        command: 'ngc -p tsconfig.json',
+        dependsOn: afterDeps,
+        input: ['src/**', 'tsconfig*.json', 'vite.config.ts', 'package.json'],
+      },
       build: {
         command: 'ngc -p tsconfig.build.json',
         dependsOn: afterDeps,

@@ -196,6 +196,7 @@ export class StyledCalendarCellTrigger {
                   type="button"
                   class="taqwim-calendar-heading-button"
                   data-taqwim-heading="month"
+                  [disabled]="!!disabled"
                   [attr.aria-expanded]="picker() === 'month'"
                   (click)="togglePicker('month')"
                 >
@@ -205,6 +206,7 @@ export class StyledCalendarCellTrigger {
                   type="button"
                   class="taqwim-calendar-heading-button"
                   data-taqwim-heading="year"
+                  [disabled]="!!disabled"
                   [attr.aria-expanded]="picker() === 'year'"
                   (click)="togglePicker('year')"
                 >
@@ -222,6 +224,7 @@ export class StyledCalendarCellTrigger {
                     type="button"
                     class="taqwim-calendar-heading-button"
                     data-taqwim-heading="month"
+                    [disabled]="!!disabled"
                     [attr.aria-expanded]="picker() === 'month'"
                     (click)="togglePicker('month')"
                   >
@@ -231,6 +234,7 @@ export class StyledCalendarCellTrigger {
                     type="button"
                     class="taqwim-calendar-heading-button"
                     data-taqwim-heading="year"
+                    [disabled]="!!disabled"
                     [attr.aria-expanded]="picker() === 'year'"
                     (click)="togglePicker('year')"
                   >
@@ -291,6 +295,7 @@ export class StyledCalendarCellTrigger {
                 <button
                   type="button"
                   [attr.data-selected]="root.state().placeholder.hm === index + 1 ? '' : null"
+                  [disabled]="!!disabled"
                   (click)="jumpTo(root, { hm: index + 1 })"
                 >
                   {{ month }}
@@ -301,6 +306,7 @@ export class StyledCalendarCellTrigger {
                 <button
                   type="button"
                   [attr.data-selected]="root.state().placeholder.hy === year ? '' : null"
+                  [disabled]="!!disabled"
                   (click)="jumpTo(root, { hy: year })"
                 >
                   {{ year }}
@@ -410,7 +416,7 @@ export class HijriCalendar implements OnChanges {
   }
 
   protected togglePicker(which: 'month' | 'year'): void {
-    if (!this.selectableHeading) return
+    if (!this.selectableHeading || this.disabled) return
     this.picker.update(current => (current === which ? null : which))
   }
 
@@ -419,6 +425,7 @@ export class HijriCalendar implements OnChanges {
     part: Partial<HijriDateObject>,
   ): void {
     // Day 1 keeps the jump inside the target month regardless of its length.
+    if (this.disabled) return
     root.store.setPlaceholder({ ...root.state().placeholder, ...part, hd: 1 })
     this.picker.set(null)
   }

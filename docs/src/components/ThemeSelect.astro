@@ -1,0 +1,65 @@
+---
+import Select from '@astrojs/starlight/components/Select.astro'
+---
+
+<starlight-theme-select>
+  <Select
+    icon="laptop"
+    label={Astro.locals.t('themeSelect.accessibleLabel')}
+    options={[
+      { label: Astro.locals.t('themeSelect.dark'), selected: false, value: 'dark' },
+      { label: Astro.locals.t('themeSelect.light'), selected: false, value: 'light' },
+      { label: Astro.locals.t('themeSelect.auto'), selected: true, value: 'auto' },
+    ]}
+    width="6.25em"
+  />
+</starlight-theme-select>
+
+<script is:inline>
+  StarlightThemeProvider.updatePickers()
+</script>
+
+<script>
+  type Theme = 'auto' | 'dark' | 'light'
+  const parseTheme = (value: unknown): Theme => value === 'light' || value === 'dark' ? value : 'auto'
+  const preferredTheme = () => matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+
+  function loadTheme(): Theme {
+    try {
+      return parseTheme(localStorage.getItem('starlight-theme'))
+    } catch {
+      return 'auto'
+    }
+  }
+
+  // Keep the choice in memory too, so system changes respect manual choices
+  // even when the browser cannot persist them.
+  let currentTheme = loadTheme()
+
+  function chooseTheme(theme: Theme): void {
+    currentTheme = theme
+    StarlightThemeProvider.updatePickers(theme)
+    document.documentElement.dataset.theme = theme === 'auto' ? preferredTheme() : theme
+    try {
+      localStorage.setItem('starlight-theme', theme === 'auto' ? '' : theme)
+    } catch {
+      // The selected theme still works for this page.
+    }
+  }
+
+  matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => {
+    if (currentTheme === 'auto') chooseTheme('auto')
+  })
+
+  class StarlightThemeSelect extends HTMLElement {
+    constructor() {
+      super()
+      chooseTheme(currentTheme)
+      this.querySelector('select')?.addEventListener('change', event => {
+        if (event.currentTarget instanceof HTMLSelectElement) chooseTheme(parseTheme(event.currentTarget.value))
+      })
+    }
+  }
+
+  if (!customElements.get('starlight-theme-select')) customElements.define('starlight-theme-select', StarlightThemeSelect)
+</script>

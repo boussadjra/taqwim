@@ -41,6 +41,9 @@ jobs:
       - name: Check formatting, lint and types
         run: pnpm exec vp check
 
+      - name: Check release tooling
+        run: pnpm exec vp run test:release
+
       - name: Type check
         run: pnpm exec vp run -r type-check
 

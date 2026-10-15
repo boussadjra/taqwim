@@ -36,6 +36,7 @@ describe('parseDateString', () => {
 
   it('should throw an error for an invalid date format', () => {
     const dateString = '01*01*1446'
+    // @ts-expect-error Exercise runtime validation with a malformed input.
     expect(() => parseDateString(dateString)).toThrow('Invalid date format')
   })
 })

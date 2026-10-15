@@ -129,3 +129,24 @@ describe('manual input constraints', () => {
     ).toEqual({ value: '', hijriValue: '', gregorianValue: '' })
   })
 })
+
+describe('calendar placeholder range', () => {
+  it.each([
+    ['nextPage', { hy: 1500, hm: 12, hd: 1 }, { hy: 1501, hm: 1, hd: 1 }],
+    ['prevPage', { hy: 1343, hm: 1, hd: 1 }, { hy: 1342, hm: 12, hd: 1 }],
+  ] as const)('disables an unrepresentable custom %s target without crashing', (direction, current, target) => {
+    const store = createCalendar({ defaultPlaceholder: current, [direction]: () => target })
+    const before = store.getSnapshot()
+    expect(direction === 'nextPage' ? before.isNextDisabled : before.isPrevDisabled).toBe(true)
+    store[direction]()
+    expect(store.getSnapshot()).toBe(before)
+  })
+
+  it('ignores programmatic placeholder changes outside the active calendar range', () => {
+    const store = createCalendar({ defaultPlaceholder: START })
+    const before = store.getSnapshot()
+    store.setPlaceholder({ hy: 1501, hm: 1, hd: 1 })
+    store.setPlaceholder({ hy: 1445, hm: 13, hd: 1 })
+    expect(store.getSnapshot()).toBe(before)
+  })
+})

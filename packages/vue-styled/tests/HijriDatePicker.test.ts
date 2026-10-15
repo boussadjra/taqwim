@@ -113,6 +113,29 @@ describe('parsing typed input', () => {
 })
 
 describe('popover', () => {
+  it('keeps input focus for typing and restores it after calendar interaction', async () => {
+    const wrapper = mountPicker({ defaultPlaceholder: RAMADAN_1445 })
+    const input = wrapper.get('input')
+    input.element.focus()
+    await nextTick()
+    expect(document.activeElement).toBe(input.element)
+
+    await input.trigger('keydown', { key: 'ArrowDown' })
+    await nextTick()
+    expect(document.activeElement?.hasAttribute('data-taqwim-calendar-cell-trigger')).toBe(true)
+    await wrapper.get('[data-taqwim-calendar-cell-trigger][tabindex="0"]').trigger('keydown', { key: 'Escape' })
+    expect(document.activeElement).toBe(input.element)
+    expect(input.attributes('aria-expanded')).toBe('false')
+
+    await input.trigger('keydown', { key: 'ArrowDown' })
+    await nextTick()
+    await wrapper.get('[data-taqwim-calendar-cell-trigger][tabindex="0"]').trigger('keydown', { key: 'Enter' })
+    expect(document.activeElement).toBe(input.element)
+    expect(input.attributes('aria-expanded')).toBe('false')
+    expect(input.element.value).toBe('1445-09-01')
+    wrapper.unmount()
+  })
+
   it('opens on focus and shows a calendar', async () => {
     const wrapper = mountPicker()
     await wrapper.get('input').trigger('focus')

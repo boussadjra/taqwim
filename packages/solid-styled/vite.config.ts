@@ -38,6 +38,11 @@ export default defineConfig({
         dependsOn: ['build'],
         input: ['dist/**', 'package.json'],
       },
+      'type-check': {
+        command: 'tsc --noEmit -p tsconfig.json',
+        dependsOn: afterDeps,
+        input: ['src/**', 'tests/**', 'tsconfig*.json', 'vite*.config.ts', 'package.json'],
+      },
       build: {
         // tsc emits the uncompiled source plus declarations; vite adds the
         // DOM-compiled fallback. Order matters — vite must not clear dist.

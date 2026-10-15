@@ -6,10 +6,14 @@
   let { children, ...rest }: ButtonProps & { children?: Snippet<[boolean]> } = $props()
 
   const calendar = getHijriCalendarContext()
+  const buttonProps = $derived.by(() => {
+    void calendar.state
+    return calendar.store.getNextButtonProps()
+  })
 </script>
 
 <button
-  {...calendar.store.getNextButtonProps()}
+  {...buttonProps}
   {...rest}
   disabled={calendar.state.isNextDisabled}
   onclick={() => calendar.store.nextPage()}

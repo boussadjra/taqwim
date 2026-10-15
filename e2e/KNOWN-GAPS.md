@@ -1,20 +1,10 @@
 # Known gaps in the shared suite
 
-The shared spec runs against every framework and is the definition of parity.
-Where an adapter does not pass it, that is recorded here rather than worked
-around in the spec, so the gap stays visible.
+All five framework playgrounds, including Angular, run the shared Playwright
+suite by default. Angular also runs `ngc` with `strictTemplates` during its
+package build. It does not have a separate Vitest component suite; its rendered
+behavior is checked by the shared browser suite.
 
-## Angular — excluded from the default run
-
-`@analogjs/vite-plugin-angular` does not compile an Angular app under Vite 8: it
-leaves `@Component` decorators to Vite's own transform, which emits a plain JS
-decorator helper, and the playground never bootstraps. The plugin reports
-`"…contains Angular decorators but is not in the TypeScript program"` even when
-the tsconfig resolves and includes the file.
-
-Until that lands, `@taqwim/angular` is verified by `ngc` with `strictTemplates`
-on every build — which does check every component and template — but **not** at
-the DOM level. Treat Angular parity as asserted by construction (it binds to the
-same store) rather than as tested.
-
-Run it on demand with `playwright test --project=angular`.
+The Angular playground must allow the Analog Vite plugin to emit compiled
+components (`noEmit` must not be set in `tsconfig.app.json`) and provide an
+`<app-root>` host in `index.html`.

@@ -3,7 +3,7 @@
  * Picks which framework's examples the reader sees, and remembers it.
  *
  * Every page writes its examples once per framework inside
- * `<div data-framework="…">`; this toggles which one is visible. The choice is
+ * `<div data-framework-example="…">`; this toggles which one is visible. The choice is
  * kept in localStorage and applied before paint, so moving between pages does
  * not flash the wrong language.
  *
@@ -27,26 +27,62 @@ const FRAMEWORKS = ['vue', 'react', 'svelte', 'solid', 'angular'] as const
 <script>
   const KEY = 'taqwim-framework'
   const FALLBACK = 'vue'
+  const wiredTabs = new WeakSet<HTMLElement>()
 
   function apply(framework: string) {
-    document.documentElement.dataset.framework = framework
+    const valid = ['vue', 'react', 'svelte', 'solid', 'angular'].includes(framework) ? framework : FALLBACK
+    document.documentElement.dataset.framework = valid
 
     for (const button of document.querySelectorAll<HTMLElement>('[data-framework-button]')) {
-      const active = button.dataset.frameworkButton === framework
+      const active = button.dataset.frameworkButton === valid
       button.setAttribute('aria-pressed', String(active))
+    }
+
+    for (const group of document.querySelectorAll<HTMLElement>('[data-framework-tabs] starlight-tabs')) {
+      const tabs = [...group.querySelectorAll<HTMLElement>('[role="tab"]')]
+      const panels = [...group.querySelectorAll<HTMLElement>(':scope > [role="tabpanel"]')]
+      const index = tabs.findIndex(tab => tab.textContent?.trim().toLowerCase() === valid)
+      if (index < 0) continue
+      tabs.forEach((tab, i) => {
+        tab.setAttribute('aria-selected', String(i === index))
+        tab.tabIndex = i === index ? 0 : -1
+      })
+      panels.forEach((panel, i) => (panel.hidden = i !== index))
     }
   }
 
   function choose(framework: string) {
-    localStorage.setItem(KEY, framework)
+    try {
+      localStorage.setItem(KEY, framework)
+    } catch {
+      // The current page remains usable when storage is blocked by the browser.
+    }
     apply(framework)
   }
 
   function wire() {
-    apply(localStorage.getItem(KEY) ?? FALLBACK)
+    let framework = FALLBACK
+    try {
+      framework = localStorage.getItem(KEY) ?? FALLBACK
+    } catch {
+      // Storage is optional; choosing examples must not depend on it.
+    }
+    apply(framework)
 
     for (const button of document.querySelectorAll<HTMLElement>('[data-framework-button]')) {
-      button.addEventListener('click', () => choose(button.dataset.frameworkButton!))
+      button.onclick = () => choose(button.dataset.frameworkButton!)
+    }
+
+    for (const group of document.querySelectorAll<HTMLElement>('[data-framework-tabs] starlight-tabs')) {
+      if (wiredTabs.has(group)) continue
+      wiredTabs.add(group)
+      // Native tabs handle keyboard/focus. Observe their choice so the live
+      // examples and every other framework tab group follow it as well.
+      new MutationObserver(() => {
+        const selected = group.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')
+        const framework = selected?.textContent?.trim().toLowerCase()
+        if (framework && framework !== document.documentElement.dataset.framework) choose(framework)
+      }).observe(group, { subtree: true, attributes: true, attributeFilter: ['aria-selected'] })
     }
   }
 
@@ -78,7 +114,8 @@ const FRAMEWORKS = ['vue', 'react', 'svelte', 'solid', 'angular'] as const
   }
 
   .framework-switcher button {
-    padding: 0.3rem 0.85rem;
+    min-height: 2.5rem;
+    padding: 0.4rem 0.85rem;
     border: none;
     border-radius: 999px;
     background: transparent;
@@ -106,22 +143,6 @@ const FRAMEWORKS = ['vue', 'react', 'svelte', 'solid', 'angular'] as const
     background: var(--brand-teal);
     color: var(--brand-ink);
     font-weight: 600;
-  }
-
-  /* The landing page includes the switcher itself — the splash template does
-     not render `PageTitle`, so nothing else would set `data-framework`. */
-  /* Fills the content column, like every other block on the page — see the
-     note on `.home-lede` in theme.css. */
-  .home-demo {
-    margin: 0 0 3rem;
-    text-align: start;
-  }
-
-  .home-demo .framework-switcher {
-    display: flex;
-    justify-content: center;
-    width: fit-content;
-    margin-inline: auto;
   }
 
   @media (prefers-reduced-motion: reduce) {

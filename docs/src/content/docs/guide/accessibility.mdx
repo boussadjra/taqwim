@@ -38,18 +38,19 @@ focused date is always on screen.
 
 ## The roving tabindex
 
-Exactly one cell is in the tab order at a time, so <kbd>Tab</kbd> enters and
-leaves the grid rather than walking forty-two buttons.
+When an enabled, available date is visible, one cell is in the tab order, so <kbd>Tab</kbd>
+enters and leaves the grid rather than walking forty-two buttons. If every
+visible date is blocked, none of the day buttons is a Tab stop.
 
 Before anything has been focused, that one cell is resolved in the same order
-`initialFocus` uses: the selected date, else today, else the first selectable day
-of the visible month. Disabled days are skipped — a `minValue` in the middle of a
-month must not strand keyboard users outside the grid.
+`initialFocus` uses: the selected date, else today, else the first enabled, available day
+across the visible months. Disabled and unavailable days are skipped. A blocked
+first month must not hide an available date in a later visible month.
 
 ## What the store emits
 
-The adapters do not compute accessibility attributes; the store does, and they
-spread what it returns.
+The shared state controls the accessibility information. Adapters spread the
+store's attribute bags and map each day's state onto their rendered elements.
 
 - Root: `role="application"` and an `aria-label` naming the visible month.
 - Grid: `role="grid"`, with `aria-readonly` / `aria-disabled` when applicable.

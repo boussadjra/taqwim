@@ -21,6 +21,27 @@ different framework wearing this one's name.
 
 <DatePickerDemo client:visible />
 
+## Custom date picker trigger
+
+`renderTrigger` keeps your trigger mounted while its date text and open state
+update. Read `trigger.value` and `trigger.isOpen` inside JSX; destructuring
+these properties in the callback captures their initial values.
+
+`trigger.open` opens the calendar and moves focus to a day. Escape and keyboard
+selection return focus to the trigger.
+
+```tsx
+import { HijriDatePicker } from '@taqwim/solid-styled'
+
+;<HijriDatePicker
+  renderTrigger={trigger => (
+    <button type="button" aria-haspopup="dialog" aria-expanded={trigger.isOpen} onClick={trigger.open}>
+      {trigger.value || 'Choose date'}
+    </button>
+  )}
+/>
+```
+
 ## Full reference
 
 The package README is the reference for this adapter and is kept next to the
