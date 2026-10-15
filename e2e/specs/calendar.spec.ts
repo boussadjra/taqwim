@@ -294,9 +294,10 @@ test.describe('keyboard', () => {
       await open(page, { value: '1445-09-15', initialFocus: true })
 
       await page.keyboard.press('ArrowRight')
-
-      const active = await page.evaluate(() => document.activeElement?.getAttribute('data-value'))
-      expect(active).toBe('1445-09-16')
+      await expect(page.locator('[data-taqwim-calendar-cell-trigger]:focus')).toHaveAttribute(
+        'data-value',
+        '1445-09-16',
+      )
     })
   })
 })
