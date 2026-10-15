@@ -72,8 +72,7 @@ above, and two colour-contrast failures in the default theme — the muted
 foreground at 2.53:1 and adjacent days at 1.67:1, the latter caused by fading
 them with `opacity`.
 
-:::note
-See `e2e/KNOWN-GAPS.md` in the repository for adapters not yet covered by the
-shared suite. Angular is currently verified by the Angular compiler rather than
-at the DOM level.
-:::
+The shared browser suite covers Vue, React, Svelte, Solid and Angular, including
+keyboard focus, selection and right-to-left interaction. Angular also passes
+strict template checking. See `e2e/KNOWN-GAPS.md` in the repository for the
+remaining test-suite scope.

@@ -61,7 +61,7 @@ The option names are the same too — see
 [Umm al-Qura, Islamic Civil or Islamic TBLA](/guide/calendar-systems/).
 Porting an example between frameworks is a matter of syntax, not of behaviour.
 
-:::note[Fixed in 0.1.0-alpha.3]
+:::note[Solid click selection]
 Clicking a day used to be dropped in Solid, and only in Solid: `HijriCalendarGrid`
 built its children from an expression that read the store snapshot, so any state
 change rebuilt the whole grid. A browser focuses a button before it clicks it,
@@ -69,6 +69,6 @@ that focus is a state change, and Solid delegates `click` to the document — so
 the click arrived at a button that had already been replaced.
 
 The render-prop argument is now passed as an accessor, so the expression no
-longer reads the store and the grid is updated in place. All twenty-eight shared
-specs pass.
+longer reads the store and the grid is updated in place. The shared browser
+suite checks click selection across all five adapters.
 :::
