@@ -16,8 +16,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # pnpm 11 requires Node 22.13+. Node 20 checks the built artifact below.
-        node-version: [22, 24]
+        # Install with supported Node releases; the built-artifact check below uses patched Node 22.
+        node-version: ['22.23.4', '24.22.1']
 
     steps:
       - name: Checkout code
@@ -103,8 +103,8 @@ jobs:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
 
-  node-20:
-    name: Node 20 compatibility
+  node-22:
+    name: Patched Node 22 compatibility
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -116,7 +116,7 @@ jobs:
       - name: Setup Node.js 24 for the build toolchain
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 24.22.1
           cache: pnpm
 
       - name: Install dependencies
@@ -128,10 +128,10 @@ jobs:
       - name: Build core
         run: pnpm exec vp run -F @taqwim/core build
 
-      - name: Switch to Node.js 20
+      - name: Switch to patched Node.js 22
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22.23.4
 
       - name: Check the built ESM and CommonJS packages
         run: |
@@ -156,7 +156,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 22.23.4
           cache: 'pnpm'
 
       - name: Setup Deno
@@ -191,7 +191,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 22.23.4
           cache: 'pnpm'
 
       - name: Install dependencies
