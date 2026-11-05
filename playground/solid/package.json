@@ -17,11 +17,11 @@
     "@taqwim/solid": "workspace:*",
     "@taqwim/solid-styled": "workspace:*",
     "@taqwim/themes": "workspace:*",
-    "solid-js": "^1.9.14"
+    "solid-js": "^1.9.18"
   },
   "devDependencies": {
     "typescript": "~5.9.3",
     "vite": "^8.1.5",
-    "vite-plugin-solid": "^2.11.14"
+    "vite-plugin-solid": "^2.11.15"
   }
 }
